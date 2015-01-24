@@ -63,10 +63,13 @@ public class TeamMatchStartingPositionFragment extends Fragment implements OnCli
                 ClipData data = ClipData.newPlainText("", "");
                 DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
                 view.startDrag(data, shadowBuilder, view, 0);
-                view.setVisibility(View.INVISIBLE);
+                //view.setVisibility(View.INVISIBLE);
+                return true;
+            } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                view.setVisibility(View.GONE);
                 return true;
             } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                view.setVisibility(View.VISIBLE);
+                //view.setVisibility(View.VISIBLE);
                 return true;
             } else {
                 return false;
@@ -204,7 +207,12 @@ public class TeamMatchStartingPositionFragment extends Fragment implements OnCli
                             RelativeLayout.LayoutParams.WRAP_CONTENT,
                             RelativeLayout.LayoutParams.WRAP_CONTENT
                     );
-                    params.setMargins((int)event.getX(), (int)event.getY(), 0, 0);
+                    params.alignWithParent = true;
+                    params.height = 150;
+                    params.width = 150;
+                    params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                    params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                    params.setMargins((int)event.getX() - ((int)((View) event.getLocalState()).getWidth() / 2), (int)event.getY() - ((int)((View) event.getLocalState()).getHeight() / 2), 0, 0);
                     view.setLayoutParams(params);
                     view.setVisibility(View.VISIBLE);
 
@@ -216,6 +224,9 @@ public class TeamMatchStartingPositionFragment extends Fragment implements OnCli
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     //v.setBackgroundDrawable(normalShape);
+                case DragEvent.ACTION_DRAG_LOCATION:
+                    v.setVisibility(View.VISIBLE);
+                    break;
                 default:
                     break;
             }

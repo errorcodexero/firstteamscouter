@@ -7,4 +7,4 @@
     android:state_checked="true"
     android:drawable="@drawable/blue_metallic_outline_toggle_on" />
 </selector>
-<!-- From: file:/C:/Users/sommervillet/AndroidStudioProjects/FirstTeamScouter/app/src/main/res/drawable/toggle_drawable_outline_blue.xml -->
+<!-- From: file:/C:/Users/Tom/AndroidStudioProjects/FirstTeamScouter/app/src/main/res/drawable/toggle_drawable_outline_blue.xml -->
