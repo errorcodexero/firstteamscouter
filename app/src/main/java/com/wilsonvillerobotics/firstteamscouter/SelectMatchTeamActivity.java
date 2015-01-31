@@ -98,11 +98,6 @@ public class SelectMatchTeamActivity extends Activity {
 			}
 		});
 		
-//		if(FTSUtilities.DEBUG) {
-//      	  FTSUtilities.printToConsole("SelectMatchTeamActivity::onCreate : Populating Test Data\n");
-//      	  tmDBAdapter.populateTestData();
-//        }
-
         activateSubmitButton();
 		populateMatchNumberSpinner();
 	}
@@ -206,13 +201,6 @@ public class SelectMatchTeamActivity extends Activity {
             	
             	Hashtable<String, String> teamsForMatch = new Hashtable<String, String>();
             	
-            	/*String red1 = MatchDataDBAdapter.COLUMN_NAME_RED_TEAM_ONE_ID;
-            	String red2 = MatchDataDBAdapter.COLUMN_NAME_RED_TEAM_TWO_ID;
-            	String red3 = MatchDataDBAdapter.COLUMN_NAME_RED_TEAM_THREE_ID;
-            	String blue1 = MatchDataDBAdapter.COLUMN_NAME_BLUE_TEAM_ONE_ID;
-            	String blue2 = MatchDataDBAdapter.COLUMN_NAME_BLUE_TEAM_TWO_ID;
-            	String blue3 = MatchDataDBAdapter.COLUMN_NAME_BLUE_TEAM_THREE_ID;*/
-            	
             	teamsForMatch.put("Red1", teamIDs.getString(teamIDs.getColumnIndexOrThrow(MatchDataDBAdapter.COLUMN_NAME_RED_TEAM_ONE_ID)));
             	teamsForMatch.put("Red2", teamIDs.getString(teamIDs.getColumnIndexOrThrow(MatchDataDBAdapter.COLUMN_NAME_RED_TEAM_TWO_ID)));
             	teamsForMatch.put("Red3", teamIDs.getString(teamIDs.getColumnIndexOrThrow(MatchDataDBAdapter.COLUMN_NAME_RED_TEAM_THREE_ID)));
@@ -263,71 +251,16 @@ public class SelectMatchTeamActivity extends Activity {
             	long tmID = tmDBAdapter.getTeamMatchID(matchID, teamID);
             	
             	FTSUtilities.printToConsole("SelectTeamMatchActivity::spinTeamNum.onItemSelected : teamID: " + String.valueOf(teamID) + "  tmID: " + String.valueOf(tmID));
-            	
-            	teamMatchIntent = new Intent(arg1.getContext(), EnterTeamMatchDataActivity.class);
-                teamMatchIntent.putExtra("tablet_id", tabletID);
-                teamMatchIntent.putExtra("field_orientation", fieldOrientationRedOnRight);
-                teamMatchIntent.putExtra("position", arg3);
-                teamMatchIntent.putExtra(TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID, teamID);
-                teamMatchIntent.putExtra(TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID, matchID);
-                teamMatchIntent.putExtra(TeamMatchDBAdapter._ID, String.valueOf(tmID));
-            	
-            	
-//				Spinner spinTeamNum = (Spinner)findViewById(R.id.spinTeamNumber);
-//
-//            	if(spinTeamNum != null) {
-//            		matchID = -1;
-//            		if(arg0.getItemAtPosition(arg2) != null) {
-//            			//FTSUtilities.printToConsole("Index: " + arg2 + " is match number: " + arg0.getItemAtPosition(arg2));
-//            			Cursor c = (Cursor)arg0.getItemAtPosition(arg2);
-//            			matchID = c.getLong(c.getColumnIndex(MatchDataDBAdapter._ID));
-//            			FTSUtilities.printToConsole("SelectTeamMatchActivity::spinMatchNum.onItemSelected : Cursor Length: " + c.getCount() + "  matchID: " + matchID);
-//            		}  else {
-//            			FTSUtilities.printToConsole("SelectTeamMatchActivity::spinMatchNum.onItemSelected : No item at position " + arg2);
-//            		}
-//            		
-//            		//MatchDataDBAdapter mDBAdapter = new MatchDataDBAdapter(getBaseContext()).open();
-//            		
-//	            	Cursor teamNumbers = tmDBAdapter.getTeamNumberForMatchAndAlliancePosition(matchID, tabletID);
-//	            	FTSUtilities.printToConsole("SelectTeamMatchActivity::spinMatchNum.onItemSelected : teamNumbers Cursor Length: " + teamNumbers.getCount());
-//	            	
-//	            	String[] teamFromColumns = new String[] {TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER, TeamMatchDBAdapter._ID};
-//	        		int[] teamToControlIDs = new int[] {android.R.id.text1, android.R.id.text2};
-//	            	
-//	        		SimpleCursorAdapter teamCA = new SimpleCursorAdapter(arg0.getContext(), android.R.layout.simple_spinner_item, teamNumbers,
-//	     			       teamFromColumns,
-//	     			       teamToControlIDs);
-//	
-//		     		teamCA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//		     		spinTeamNum.setAdapter(teamCA);
-//		     		
-//		     		//FTSUtilities.printToConsole("Printing team numbers for match " + matchNumber + "\nNumber of Teams: " + teamCA.getCount());
-//		     		spinTeamNum.setOnItemSelectedListener(new OnItemSelectedListener() {
-//
-//		                public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-//		                	Cursor value = (Cursor)arg0.getItemAtPosition(arg2);
-//		                    teamID = value.getLong(value.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID));
-//		                    Long tmID = value.getLong(value.getColumnIndex(TeamMatchDBAdapter._ID));
-//		                    // assuming string and if you want to get the value on click of list item
-//		                    // do what you intend to do on click of listview row
-//		                    
-//		                    FTSUtilities.printToConsole("SelectTeamMatchActivity::spinTeamNum.onItemSelected : teamID: " + String.valueOf(teamID) + "  tmID: " + String.valueOf(tmID));
-//		                    
-//		                    teamMatchIntent = new Intent(arg1.getContext(), EnterTeamMatchDataActivity.class);
-//		                    teamMatchIntent.putExtra("tablet_id", tabletID);
-//		                    teamMatchIntent.putExtra("position", arg3);
-//		                    teamMatchIntent.putExtra(TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID, teamID);
-//		                    teamMatchIntent.putExtra(TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID, matchID);
-//		                    teamMatchIntent.putExtra(TeamMatchDBAdapter._ID, String.valueOf(tmID));
-//		                    //startActivityForResult(teamMatchIntent, 0);
-//		                }
-//
-//						@Override
-//						public void onNothingSelected(AdapterView<?> arg0) {
-//							// do nothing
-//						}
-//            		});
-//            	}
+
+                if(arg1 != null) {
+                    teamMatchIntent = new Intent(arg1.getContext(), EnterTeamMatchDataActivity.class);
+                    teamMatchIntent.putExtra("tablet_id", tabletID);
+                    teamMatchIntent.putExtra("field_orientation", fieldOrientationRedOnRight);
+                    teamMatchIntent.putExtra("position", arg3);
+                    teamMatchIntent.putExtra(TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID, teamID);
+                    teamMatchIntent.putExtra(TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID, matchID);
+                    teamMatchIntent.putExtra(TeamMatchDBAdapter._ID, String.valueOf(tmID));
+                }
             }
 
             public void onNothingSelected(AdapterView<?> arg0) {

@@ -2,11 +2,9 @@ package com.wilsonvillerobotics.firstteamscouter;
 
 import java.util.Hashtable;
 
-import com.wilsonvillerobotics.firstteamscouter.TeamMatchData.STARTING_LOC;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
 import android.content.ClipData;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.DragEvent;
@@ -19,7 +17,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -100,7 +97,7 @@ public class TeamMatchAutoModeFragment extends Fragment implements OnClickListen
         rootView.findViewById(R.id.imgGreenCan1).setOnTouchListener(new MyTouchListener());
         rootView.findViewById(R.id.imgGreenCan2).setOnTouchListener(new MyTouchListener());
         rootView.findViewById(R.id.imgGreenCan3).setOnTouchListener(new MyTouchListener());
-        rootView.findViewById(R.id.layoutRelative).setOnDragListener(new MyDragListener());
+        rootView.findViewById(R.id.Auto_LayoutRelative).setOnDragListener(new MyDragListener());
 
         return rootView;
     }
@@ -288,36 +285,57 @@ public class TeamMatchAutoModeFragment extends Fragment implements OnClickListen
     class MyDragListener implements View.OnDragListener {
         Drawable enterShape = getResources().getDrawable(R.drawable.blue_metallic_outline_toggle_on);
         Drawable normalShape = getResources().getDrawable(R.drawable.blue_metallic_outline_toggle_off);
+        int startingLeftMargin, startingTopMargin;
+        View view;
+        RelativeLayout.LayoutParams params;
+        int height, width;
 
         @Override
         public boolean onDrag(View v, DragEvent event) {
             int action = event.getAction();
             switch (action) {
                 case DragEvent.ACTION_DRAG_STARTED:
-                    // do nothing
+                    view = (View) event.getLocalState();
+                    params = (RelativeLayout.LayoutParams)view.getLayoutParams();
+                    startingLeftMargin = params.leftMargin;
+                    startingTopMargin = params.topMargin;
+                    height = params.height;
+                    width = params.width;
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
                     //v.setBackgroundDrawable(enterShape);
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
-                    //v.setBackgroundDrawable(normalShape);
-                    break;
-                case DragEvent.ACTION_DROP:
-                    // Dropped, reassign View to ViewGroup
-                    FTSUtilities.printToConsole("TeamMatchStartingPositionFragment::DragEvent::ACTION_DROP\n");
-                    View view = (View) event.getLocalState();
+                    view = (View) event.getLocalState();
 
-                    String toastText = "onDrag Event X: " + event.getX() + " Y: " + event.getY();
-                    Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();
-
-                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                            RelativeLayout.LayoutParams.WRAP_CONTENT,
-                            RelativeLayout.LayoutParams.WRAP_CONTENT
+                    params = new RelativeLayout.LayoutParams(
+                            width,
+                            height
                     );
                     params.alignWithParent = true;
                     params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                     params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    params.setMargins((int)event.getX() - ((int)((View) event.getLocalState()).getWidth() / 2), (int)event.getY() - ((int)((View) event.getLocalState()).getHeight() / 2), 0, 0);
+                    params.setMargins(startingLeftMargin, startingTopMargin, 0, 0);
+                    view.setLayoutParams(params);
+                    view.setVisibility(View.VISIBLE);
+                    break;
+                case DragEvent.ACTION_DROP:
+                    // Dropped, reassign View to ViewGroup
+                    FTSUtilities.printToConsole("TeamMatchStartingPositionFragment::DragEvent::ACTION_DROP\n");
+                    view = (View) event.getLocalState();
+
+                    //String toastText = "onDrag Event X: " + event.getX() + " Y: " + event.getY();
+                    //Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();
+
+                    params = new RelativeLayout.LayoutParams(
+                            width,
+                            height
+                    );
+                    params.alignWithParent = true;
+                    params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                    params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                    //params.setMargins((int)event.getX() - (width / 2), (int)event.getY() - (height / 2), 0, 0);
+                    params.setMargins((int)event.getX() - 3*width/2, (int)event.getY() - height/2, 0, 0);
                     view.setLayoutParams(params);
                     view.setVisibility(View.VISIBLE);
 
