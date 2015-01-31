@@ -1,159 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:alignmentMode="alignBounds"
-    android:background="@drawable/field_end_800_367_blue"
+    android:background="@drawable/automode_background_2015"
     android:columnCount="12"
     android:orientation="horizontal"
     android:paddingLeft="25dp"
     android:paddingRight="25dp"
     android:rowCount="18"
-    android:rowOrderPreserved="true" >
+    android:rowOrderPreserved="true"
+    android:id="@+id/Auto_LayoutRelative">
 
-    <TextView
-        android:id="@+id/lblAutoHiScore"
-        android:layout_column="0"
-        android:layout_columnSpan="3"
-        android:layout_gravity="center"
-        android:layout_row="0"
-        android:text="@string/label_auto_hi"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/txtAutoScore"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_column="8"
-        android:layout_columnSpan="1"
-        android:layout_gravity="center"
-        android:layout_row="0"
-        android:gravity="center_vertical"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/lblAutoScore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="6"
-        android:layout_gravity="left|center_vertical"
-        android:layout_row="0"
-        android:text="@string/label_auto_score"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <Button
-        android:id="@+id/btnAutoHiScoreHot"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_column="0"
-        android:layout_gravity="center"
-        android:layout_marginLeft="20dp"
-        android:layout_row="1"
-        android:paddingLeft="10dp"
-        android:text="@string/text_button_hot_score"
-        android:textColor="#0000FF" />
-
-    <Button
-        android:id="@+id/btnAutoHiScoreCold"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_column="2"
-        android:layout_gravity="center"
-        android:layout_row="1"
-        android:text="@string/text_button_cold_score"
-        android:textColor="#0000FF" />
-
-    <Button
-        android:id="@+id/btnAutoHiMiss"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_column="3"
-        android:layout_gravity="center"
-        android:layout_row="8"
-        android:text="@string/text_button_miss_score"
-        android:textColor="#0000FF" />
-
-    <Button
-        android:id="@+id/btnAutoCollect"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_column="8"
-        android:layout_gravity="center"
-        android:layout_row="11"
-        android:text="@string/text_button_auto_collect"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#0000FF" />
-
-    <Button
-        android:id="@+id/btnAutoDefend"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_column="9"
-        android:layout_gravity="center"
-        android:layout_row="11"
-        android:text="@string/text_button_auto_defend"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#0000FF" />
-
-    <Button
-        android:id="@+id/btnAutoLoScoreHot"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_column="0"
-        android:layout_gravity="center"
-        android:layout_marginLeft="20dp"
-        android:layout_row="11"
-        android:text="@string/text_button_hot_score"
-        android:textColor="#0000FF" />
-
-    <Button
-        android:id="@+id/btnAutoLoScoreCold"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_column="1"
-        android:layout_gravity="center"
-        android:layout_row="12"
-        android:text="@string/text_button_cold_score"
-        android:textColor="#0000FF" />
-
-    <Button
-        android:id="@+id/btnAutoLoMiss"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_column="3"
-        android:layout_gravity="center"
-        android:layout_row="12"
-        android:text="@string/text_button_miss_score"
-        android:textColor="#0000FF" />
-
-    <Button
-        android:id="@+id/btnAutoMove"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_column="7"
-        android:layout_gravity="center"
-        android:layout_row="11"
-        android:text="@string/text_button_auto_move"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#0000FF" />
-
-    <TextView
-        android:id="@+id/lblAutoLoScore"
-        android:layout_column="0"
-        android:layout_columnSpan="3"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_row="8"
-        android:paddingBottom="10dp"
-        android:text="@string/label_auto_lo"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="38dp"
+        android:id="@+id/imgYellowTote1"
+        android:src="@drawable/yellow_tote_top_down_25x38"
+        android:layout_gravity="left|top"
+        android:layout_marginLeft="548dp"
+        android:layout_marginTop="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" />
 
     <Switch
         android:id="@+id/switchUndo"
-        android:layout_column="9"
-        android:layout_columnSpan="2"
         android:layout_gravity="center_horizontal|top"
         android:layout_marginTop="5dp"
-        android:layout_row="0"
-        android:text="@string/text_button_Undo" />
+        android:layout_height="50dp"
+        android:layout_width="200dp"
+        android:text="@string/text_button_Undo"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true" />
 
-</GridLayout>
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="38dp"
+        android:id="@+id/imgYellowTote2"
+        android:src="@drawable/yellow_tote_top_down_25x38"
+        android:layout_gravity="left|top"
+        android:layout_marginLeft="548dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="149dp" />
+
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="38dp"
+        android:id="@+id/imgYellowTote3"
+        android:src="@drawable/yellow_tote_top_down_25x38"
+        android:layout_gravity="left|top"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="548dp"
+        android:layout_marginTop="238dp" />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/imgGreenCan1"
+        android:src="@drawable/green_can_top_down_40x40"
+        android:layout_gravity="left|top"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="540dp"
+        android:layout_marginTop="98dp" />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/imgGreenCan2"
+        android:src="@drawable/green_can_top_down_40x40"
+        android:layout_gravity="left|top"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="540dp"
+        android:layout_marginTop="187dp" />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/imgGreenCan3"
+        android:src="@drawable/green_can_top_down_40x40"
+        android:layout_gravity="left|top"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="540dp"
+        android:layout_marginTop="276dp" />
+
+</RelativeLayout>

@@ -40,17 +40,17 @@ public class TeamMatchStartingPositionFragment extends Fragment implements OnCli
     	
         View rootView = inflater.inflate(R.layout.fragment_team_match_starting_position, container, false);
         
-        int backgroundResource = R.drawable.starting_position_background;
+        int backgroundResource = R.drawable.starting_position_background_2015;
         if(this.tmData.tabletID.startsWith("Red")) {
-        	backgroundResource = R.drawable.starting_position_red_background;
+        	backgroundResource = R.drawable.starting_position_background_2015; //starting_position_red_background;
         } else if(this.tmData.tabletID.startsWith("Blue")) {
-        	backgroundResource = R.drawable.starting_position_blue_background;
+        	backgroundResource = R.drawable.starting_position_background_2015; //starting_position_blue_background;
         }
         rootView.setBackgroundResource(backgroundResource);
         
         this.helpHash = new Hashtable<STARTING_LOC, String>();
 
-        rootView.findViewById(R.id.myimage1).setOnTouchListener(new MyTouchListener());
+        rootView.findViewById(R.id.imgRobot).setOnTouchListener(new MyTouchListener());
         rootView.findViewById(R.id.layoutRelative).setOnDragListener(new MyDragListener());
 
 		return rootView;
@@ -185,7 +185,7 @@ public class TeamMatchStartingPositionFragment extends Fragment implements OnCli
         @Override
         public boolean onDrag(View v, DragEvent event) {
             int action = event.getAction();
-            switch (event.getAction()) {
+            switch (action) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     // do nothing
                     break;
@@ -208,8 +208,6 @@ public class TeamMatchStartingPositionFragment extends Fragment implements OnCli
                             RelativeLayout.LayoutParams.WRAP_CONTENT
                     );
                     params.alignWithParent = true;
-                    params.height = 150;
-                    params.width = 150;
                     params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                     params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                     params.setMargins((int)event.getX() - ((int)((View) event.getLocalState()).getWidth() / 2), (int)event.getY() - ((int)((View) event.getLocalState()).getHeight() / 2), 0, 0);

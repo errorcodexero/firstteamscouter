@@ -5,15 +5,19 @@ import java.util.Hashtable;
 import com.wilsonvillerobotics.firstteamscouter.TeamMatchData.STARTING_LOC;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
+import android.content.ClipData;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -27,10 +31,6 @@ public class TeamMatchAutoModeFragment extends Fragment implements OnClickListen
 	private TeamMatchData tmData;
 	
 	private Integer buttonIDs[] = {
-			R.id.btnAutoHiScoreHot,
-			R.id.btnAutoLoScoreHot,
-			R.id.btnAutoHiScoreCold,
-			R.id.btnAutoLoScoreCold,
 			R.id.btnAutoHiMiss,
 			R.id.btnAutoLoMiss,
 			R.id.btnAutoMove,
@@ -58,10 +58,6 @@ public class TeamMatchAutoModeFragment extends Fragment implements OnClickListen
         View rootView = inflater.inflate(R.layout.fragment_team_match_automode, container, false);
         
         helpHash = new Hashtable<Integer, String>();
-    	helpHash.put(R.id.btnAutoHiScoreHot, "Score in the Hi Goal while lit for a Hot Goal");
-    	helpHash.put(R.id.btnAutoLoScoreHot, "Score in the Lo Goal while lit for a Hot Goal");
-    	helpHash.put(R.id.btnAutoHiScoreCold, "Score in the Hi Goal while unlit");
-    	helpHash.put(R.id.btnAutoLoScoreCold, "Score in the Lo Goal while unlit");
     	helpHash.put(R.id.btnAutoHiMiss, "Missing a shot aimed for the Hi Goal");
     	helpHash.put(R.id.btnAutoLoMiss, "Missing a shot aimed for the Lo Goal");
     	helpHash.put(R.id.btnAutoMove, "Moving out of the white zone (completely) away rom the truss.");
@@ -87,18 +83,47 @@ public class TeamMatchAutoModeFragment extends Fragment implements OnClickListen
         
         this.undo = false;
 		
-        for(int ID : buttonIDs) {
-	        buttonHash.put(ID, (Button) rootView.findViewById(ID));
-	        buttonHash.get(ID).setOnClickListener(this);
-        }
+        //for(int ID : buttonIDs) {
+	    //    buttonHash.put(ID, (Button) rootView.findViewById(ID));
+	    //    buttonHash.get(ID).setOnClickListener(this);
+        //}
 
         if(this.tmData.tabletID.startsWith("Red")) {
-        	rootView.setBackgroundDrawable(getResources().getDrawable(R.drawable.field_end_800_367_red));
+        	rootView.setBackgroundDrawable(getResources().getDrawable(R.drawable.automode_background_2015)); //.field_end_800_367_red));
         } else if(this.tmData.tabletID.startsWith("Blue")) {
-        	rootView.setBackgroundDrawable(getResources().getDrawable(R.drawable.field_end_800_367_blue));
+        	rootView.setBackgroundDrawable(getResources().getDrawable(R.drawable.automode_background_2015)); //.field_end_800_367_blue));
         }
 
+        rootView.findViewById(R.id.imgYellowTote1).setOnTouchListener(new MyTouchListener());
+        rootView.findViewById(R.id.imgYellowTote2).setOnTouchListener(new MyTouchListener());
+        rootView.findViewById(R.id.imgYellowTote3).setOnTouchListener(new MyTouchListener());
+        rootView.findViewById(R.id.imgGreenCan1).setOnTouchListener(new MyTouchListener());
+        rootView.findViewById(R.id.imgGreenCan2).setOnTouchListener(new MyTouchListener());
+        rootView.findViewById(R.id.imgGreenCan3).setOnTouchListener(new MyTouchListener());
+        rootView.findViewById(R.id.layoutRelative).setOnDragListener(new MyDragListener());
+
         return rootView;
+    }
+
+    private final class MyTouchListener implements View.OnTouchListener {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                ClipData data = ClipData.newPlainText("", "");
+                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+                view.startDrag(data, shadowBuilder, view, 0);
+                //view.setVisibility(View.INVISIBLE);
+                return true;
+            } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                view.setVisibility(View.GONE);
+                return true;
+            } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                //view.setVisibility(View.VISIBLE);
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
     
     static TeamMatchAutoModeFragment newInstance(Long teamMatchID) {
@@ -123,18 +148,6 @@ public class TeamMatchAutoModeFragment extends Fragment implements OnClickListen
 			Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 		} else {
 	        switch (btnID) {
-	        case R.id.btnAutoHiScoreHot:
-	        	btnAutoHiScoreHotOnClick(v);
-	        	break;
-	        case R.id.btnAutoHiScoreCold:
-	        	btnAutoHiScoreColdOnClick(v);
-	        	break;
-	        case R.id.btnAutoLoScoreHot:
-	        	btnAutoLoScoreHotOnClick(v);
-	        	break;
-	        case R.id.btnAutoLoScoreCold:
-	        	btnAutoLoScoreColdOnClick(v);
-	    		break;
 	        case R.id.btnAutoHiMiss:
 	        	btnAutoHiMissOnClick(v);
 	        	break;
@@ -271,4 +284,58 @@ public class TeamMatchAutoModeFragment extends Fragment implements OnClickListen
 		}
 		this.tmData.setSavedDataState(savedData, "btnAutoCollectOnClick");
 	}
+
+    class MyDragListener implements View.OnDragListener {
+        Drawable enterShape = getResources().getDrawable(R.drawable.blue_metallic_outline_toggle_on);
+        Drawable normalShape = getResources().getDrawable(R.drawable.blue_metallic_outline_toggle_off);
+
+        @Override
+        public boolean onDrag(View v, DragEvent event) {
+            int action = event.getAction();
+            switch (action) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    // do nothing
+                    break;
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    //v.setBackgroundDrawable(enterShape);
+                    break;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    //v.setBackgroundDrawable(normalShape);
+                    break;
+                case DragEvent.ACTION_DROP:
+                    // Dropped, reassign View to ViewGroup
+                    FTSUtilities.printToConsole("TeamMatchStartingPositionFragment::DragEvent::ACTION_DROP\n");
+                    View view = (View) event.getLocalState();
+
+                    String toastText = "onDrag Event X: " + event.getX() + " Y: " + event.getY();
+                    Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();
+
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.WRAP_CONTENT,
+                            RelativeLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    params.alignWithParent = true;
+                    params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                    params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                    params.setMargins((int)event.getX() - ((int)((View) event.getLocalState()).getWidth() / 2), (int)event.getY() - ((int)((View) event.getLocalState()).getHeight() / 2), 0, 0);
+                    view.setLayoutParams(params);
+                    view.setVisibility(View.VISIBLE);
+
+                    //ViewGroup owner = (ViewGroup) view.getParent();
+                    //owner.removeView(view);
+                    //LinearLayout container = (LinearLayout) v;
+                    //container.addView(view);
+                    //view.setVisibility(View.VISIBLE);
+                    break;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    //v.setBackgroundDrawable(normalShape);
+                case DragEvent.ACTION_DRAG_LOCATION:
+                    v.setVisibility(View.VISIBLE);
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+    }
 }

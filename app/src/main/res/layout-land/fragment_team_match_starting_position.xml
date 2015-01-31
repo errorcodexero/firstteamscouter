@@ -9,15 +9,15 @@
     android:id="@+id/layoutRelative">
 
     <ImageView
-        android:layout_width="100dp"
+        android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/myimage1"
+        android:id="@+id/imgRobot"
         android:layout_gravity="right"
-        android:src="@drawable/blue_metallic_outline_toggle_off"
+        android:src="@drawable/robot_50x50"
         android:contentDescription="Robot"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="20dp"
+        android:layout_marginTop="50dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="20dp" />
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="50dp" />
 
 </RelativeLayout>
