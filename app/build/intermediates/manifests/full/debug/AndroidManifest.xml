@@ -68,7 +68,16 @@
             android:name="com.wilsonvillerobotics.firstteamscouter.TeamMatchInformationActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name="com.wilsonvillerobotics.firstteamscouter.BluetoothSetupActivity"
+            android:name="com.wilsonvillerobotics.firstteamscouter.MatchAutoModeActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name="com.wilsonvillerobotics.firstteamscouter.MatchTeleModeActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name="com.wilsonvillerobotics.firstteamscouter.MatchStartingPositionActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name="com.wilsonvillerobotics.firstteamscouter.MatchNotesActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name="com.wilsonvillerobotics.firstteamscouter.SetPreferenceActivity"

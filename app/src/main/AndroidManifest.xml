@@ -64,7 +64,13 @@
             android:screenOrientation="landscape" ></activity>
         <activity android:name="TeamMatchInformationActivity"
             android:screenOrientation="landscape" ></activity>
-        <activity android:name="BluetoothSetupActivity"
+        <activity android:name=".MatchAutoModeActivity"
+            android:screenOrientation="landscape" ></activity>
+        <activity android:name=".MatchTeleModeActivity"
+            android:screenOrientation="landscape" ></activity>
+        <activity android:name=".MatchStartingPositionActivity"
+            android:screenOrientation="landscape" ></activity>
+        <activity android:name=".MatchNotesActivity"
             android:screenOrientation="landscape" ></activity>
         <activity android:name="SetPreferenceActivity"
             android:screenOrientation="landscape" ></activity>

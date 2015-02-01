@@ -31,6 +31,8 @@ public class SelectMatchTeamActivity extends Activity {
 	protected Button btnSubmit;
 	protected Intent teamMatchIntent;
 	private String tabletID;
+
+    private int matchNumber;
 	
 	private TextView txtRed1;
 	private TextView txtRed2;
@@ -56,6 +58,7 @@ public class SelectMatchTeamActivity extends Activity {
 		Intent intent = getIntent();
 		this.tabletID = intent.getStringExtra("tablet_id");
 		this.fieldOrientationRedOnRight = intent.getBooleanExtra("field_orientation", false);
+        this.matchNumber = intent.getIntExtra("match_number", 0);
 
 		txtRed1 = (TextView) findViewById(R.id.txtRed1);
 		txtRed2 = (TextView) findViewById(R.id.txtRed2);
@@ -164,10 +167,10 @@ public class SelectMatchTeamActivity extends Activity {
 	private void populateMatchNumberSpinner() {
 		if(tmDBAdapter == null) return;
 		
-		Cursor matchNumbers = tmDBAdapter.getAllMatchNumbers();
+		final Cursor matchNumbers = tmDBAdapter.getAllMatchNumbers();
 		FTSUtilities.printToConsole("SelectMatchTeamActivity::populateMatchNumberSpinner : Number of Matches Returned: " + String.valueOf(matchNumbers.getCount()));
 		
-		Spinner spinMatchNum = (Spinner)findViewById(R.id.spinMatchNumber);
+		final Spinner spinMatchNum = (Spinner)findViewById(R.id.spinMatchNumber);
 		
 		// which columns map to which layout controls
 		String[] matchFromColumns = new String[] {MatchDataDBAdapter.COLUMN_NAME_MATCH_NUMBER, MatchDataDBAdapter._ID};
@@ -178,20 +181,20 @@ public class SelectMatchTeamActivity extends Activity {
 			       matchFromColumns,
 			       matchToControlIDs);
 
-		
-		matchCA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinMatchNum.setAdapter(matchCA);
-		
+        matchCA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinMatchNum.setAdapter(matchCA);
+        spinMatchNum.setSelection(matchNumber % matchCA.getCount());
+
 		spinMatchNum.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-            public void onItemSelected(AdapterView<?> arg0, View arg1,
-                    int arg2, long arg3) {
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
             	
             	matchID = -1;
             	if(arg0.getItemAtPosition(arg2) != null) {
             		Cursor c = (Cursor)arg0.getItemAtPosition(arg2);
             		matchID = c.getLong(c.getColumnIndex(MatchDataDBAdapter._ID));
-            		FTSUtilities.printToConsole("SelectTeamMatchActivity::spinMatchNum.onItemSelected : Cursor Length: " + c.getCount() + "  matchID: " + matchID);
+                    matchNumber = arg0.getSelectedItemPosition();
+                    FTSUtilities.printToConsole("SelectTeamMatchActivity::spinMatchNum.onItemSelected : Cursor Length: " + c.getCount() + "  matchID: " + matchID);
             	} else {
             		FTSUtilities.printToConsole("SelectTeamMatchActivity::spinMatchNum.onItemSelected : No item at position " + arg2);
             	}
@@ -253,9 +256,10 @@ public class SelectMatchTeamActivity extends Activity {
             	FTSUtilities.printToConsole("SelectTeamMatchActivity::spinTeamNum.onItemSelected : teamID: " + String.valueOf(teamID) + "  tmID: " + String.valueOf(tmID));
 
                 if(arg1 != null) {
-                    teamMatchIntent = new Intent(arg1.getContext(), EnterTeamMatchDataActivity.class);
+                    teamMatchIntent = new Intent(arg1.getContext(), MatchStartingPositionActivity.class);
                     teamMatchIntent.putExtra("tablet_id", tabletID);
                     teamMatchIntent.putExtra("field_orientation", fieldOrientationRedOnRight);
+                    teamMatchIntent.putExtra("match_number", matchNumber);
                     teamMatchIntent.putExtra("position", arg3);
                     teamMatchIntent.putExtra(TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID, teamID);
                     teamMatchIntent.putExtra(TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID, matchID);

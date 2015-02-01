@@ -10,7 +10,7 @@
     android:paddingRight="25dp"
     android:rowCount="18"
     android:rowOrderPreserved="true"
-    android:id="@+id/Auto_LayoutRelative">
+    android:id="@+id/Auto_Frag_LayoutRelative">
 
     <ImageView
         android:layout_width="25dp"

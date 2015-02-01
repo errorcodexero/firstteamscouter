@@ -137,15 +137,33 @@ ADDED from AndroidManifest.xml:65:9
 		ADDED from AndroidManifest.xml:66:13
 	android:name
 		ADDED from AndroidManifest.xml:65:19
-activity#com.wilsonvillerobotics.firstteamscouter.BluetoothSetupActivity
+activity#com.wilsonvillerobotics.firstteamscouter.MatchAutoModeActivity
 ADDED from AndroidManifest.xml:67:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:68:13
 	android:name
 		ADDED from AndroidManifest.xml:67:19
-activity#com.wilsonvillerobotics.firstteamscouter.SetPreferenceActivity
+activity#com.wilsonvillerobotics.firstteamscouter.MatchTeleModeActivity
 ADDED from AndroidManifest.xml:69:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:70:13
 	android:name
 		ADDED from AndroidManifest.xml:69:19
+activity#com.wilsonvillerobotics.firstteamscouter.MatchStartingPositionActivity
+ADDED from AndroidManifest.xml:71:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:72:13
+	android:name
+		ADDED from AndroidManifest.xml:71:19
+activity#com.wilsonvillerobotics.firstteamscouter.MatchNotesActivity
+ADDED from AndroidManifest.xml:73:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:74:13
+	android:name
+		ADDED from AndroidManifest.xml:73:19
+activity#com.wilsonvillerobotics.firstteamscouter.SetPreferenceActivity
+ADDED from AndroidManifest.xml:75:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:76:13
+	android:name
+		ADDED from AndroidManifest.xml:75:19
