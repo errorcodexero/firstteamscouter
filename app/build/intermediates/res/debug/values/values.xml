@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="http://schemas.android.com/apk/res/android">
-    <!-- From: file:/C:/Users/Tom/AndroidStudioProjects/FirstTeamScouter/app/src/main/res/values/arrays.xml -->
+    <!-- From: file:/C:/Users/TomS/AndroidStudioProjects/fourteentwentyfive/firstteamscouter2015/app/src/main/res/values/arrays.xml -->
     <eat-comment/>
     <string-array name="TabletIDs">
         <item name="Red1">Red1</item>
@@ -24,11 +24,11 @@
         <item name="60000">60000</item>
         <item name="300000">300000</item>
     </string-array>
-    <!-- From: file:/C:/Users/Tom/AndroidStudioProjects/FirstTeamScouter/app/src/main/res/values/colors.xml -->
+    <!-- From: file:/C:/Users/TomS/AndroidStudioProjects/fourteentwentyfive/firstteamscouter2015/app/src/main/res/values/colors.xml -->
     <eat-comment/>
     <color ns1:id="@+id/colorRed" ns1:layout_height="wrap_content" ns1:layout_width="wrap_content" name="Red">#FF0000</color>
     <color ns1:id="@+id/colorWhite" ns1:layout_height="wrap_content" ns1:layout_width="wrap_content" name="White">#000000</color>
-    <!-- From: file:/C:/Users/Tom/AndroidStudioProjects/FirstTeamScouter/app/src/main/res/values/dimens.xml -->
+    <!-- From: file:/C:/Users/TomS/AndroidStudioProjects/fourteentwentyfive/firstteamscouter2015/app/src/main/res/values/dimens.xml -->
     <eat-comment/>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
@@ -37,7 +37,7 @@
     <dimen name="main_activity_text">64sp</dimen>
     <dimen name="note_container_height">200dp</dimen>
     <dimen name="note_container_width">200dp</dimen>
-    <!-- From: file:/C:/Users/Tom/AndroidStudioProjects/FirstTeamScouter/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/C:/Users/TomS/AndroidStudioProjects/fourteentwentyfive/firstteamscouter2015/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="action_settings">Settings</string>
     <string name="app_name">FIRST Team Scouter</string>
@@ -110,7 +110,7 @@
     <string name="title_activity_team_informatrion">Team Information</string>
     <string name="title_activity_team_match_list">Select the Match &amp; Team</string>
     <string name="title_activity_view_data">View Data</string>
-    <!-- From: file:/C:/Users/Tom/AndroidStudioProjects/FirstTeamScouter/app/src/main/res/values/styles.xml -->
+    <!-- From: file:/C:/Users/TomS/AndroidStudioProjects/fourteentwentyfive/firstteamscouter2015/app/src/main/res/values/styles.xml -->
     <eat-comment/>
     <style name="AppBaseTheme" parent="android:Theme.Light">
         <!--

@@ -197,11 +197,11 @@ public class TeamMatchStartingPositionFragment extends Fragment implements OnCli
                     break;
                 case DragEvent.ACTION_DROP:
                     // Dropped, reassign View to ViewGroup
-                    FTSUtilities.printToConsole("TeamMatchStartingPositionFragment::DragEvent::ACTION_DROP\n");
+                    //FTSUtilities.printToConsole("TeamMatchStartingPositionFragment::DragEvent::ACTION_DROP\n");
                     View view = (View) event.getLocalState();
 
-                    String toastText = "onDrag Event X: " + event.getX() + " Y: " + event.getY();
-                    Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();
+                    //String toastText = "onDrag Event X: " + event.getX() + " Y: " + event.getY();
+                    //Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();
 
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                             RelativeLayout.LayoutParams.WRAP_CONTENT,

@@ -6,6 +6,7 @@ import com.wilsonvillerobotics.firstteamscouter.TeamMatchData.ZONE;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
 import android.os.Bundle;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,95 +69,100 @@ public class TeamMatchTeleModeFragment extends Fragment implements OnClickListen
 
     	this.teamMatchID = getArguments() != null ? getArguments().getLong("tmID") : -1;
 
-        View rootView = inflater.inflate(R.layout.fragment_team_match_telemode, container, false);
-        
-        helpHash = new Hashtable<Integer, String>();
-    	helpHash.put(R.id.btnTeleHiScore,"Scoring in the Hi goal");
-    	helpHash.put(R.id.btnTeleHiMiss,"Missing a shot aimed at the Hi goal");
-    	helpHash.put(R.id.btnTeleLoScore,"Scoring in the Lo goal");
-    	helpHash.put(R.id.btnTeleLoMiss,"Missing a shot aimed at the Lo goal");
-    	helpHash.put(R.id.btnTeleLongPass,"Accurate pass across a long distance");
-    	helpHash.put(R.id.btnTeleLongPassMiss,"Missing a pass across a long distance");
-    	helpHash.put(R.id.btnDefendBlueZone,"Successfully defending in the Blue zone - blocking a pass, shot, or robot.");
-    	helpHash.put(R.id.btnDefendWhiteZone,"Successfully defending in the White zone - blocking a pass, shot, or robot.");
-    	helpHash.put(R.id.btnDefendRedZone,"Successfully defending in the Red zone - blocking a pass, shot, or robot.");
-    	helpHash.put(R.id.btnDefendGoalZone,"Successfully defending in the Goalie zone - blocking a shot aimed at the Hi goal.");
-    	helpHash.put(R.id.btnPossessBlueZone,"Successfully possessing the ball in the Blue zone");
-    	helpHash.put(R.id.btnPossessWhiteZone,"Successfully possessing the ball in the White zone");
-    	helpHash.put(R.id.btnPossessRedZone,"Successfully possessing the ball in the Red zone");
-    	helpHash.put(R.id.btnTrussToss,"Successful toss over the truss");
-    	helpHash.put(R.id.btnTrussMiss,"Failure to make a toss over the truss (bounced off, went out of bounds, too low, etc)");
-    	helpHash.put(R.id.btnTossCaught,"Successfully caught a toss over the truss!");
-    	helpHash.put(R.id.btnTossMiss,"Missed catching a toss over the truss");
-    	helpHash.put(R.id.btnTeleShortPass,"Accurate pass over short distance - usually two robots almost touching");
-    	helpHash.put(R.id.btnTeleShortPassMiss,"Missing a pass to another robot at a small distance");
+        View rootView = null;
+        try {
+            rootView = inflater.inflate(R.layout.fragment_team_match_telemode, container, false);
 
-        this.txtTeleScore = (TextView) rootView.findViewById(R.id.txtTeleScore);
-        this.txtTeleStat = (TextView) rootView.findViewById(R.id.txtTeleStat);
-        
-        this.updateTeleScore();
+            helpHash = new Hashtable<Integer, String>();
+            helpHash.put(R.id.btnTeleHiScore,"Scoring in the Hi goal");
+            helpHash.put(R.id.btnTeleHiMiss,"Missing a shot aimed at the Hi goal");
+            helpHash.put(R.id.btnTeleLoScore,"Scoring in the Lo goal");
+            helpHash.put(R.id.btnTeleLoMiss,"Missing a shot aimed at the Lo goal");
+            helpHash.put(R.id.btnTeleLongPass,"Accurate pass across a long distance");
+            helpHash.put(R.id.btnTeleLongPassMiss,"Missing a pass across a long distance");
+            helpHash.put(R.id.btnDefendBlueZone,"Successfully defending in the Blue zone - blocking a pass, shot, or robot.");
+            helpHash.put(R.id.btnDefendWhiteZone,"Successfully defending in the White zone - blocking a pass, shot, or robot.");
+            helpHash.put(R.id.btnDefendRedZone,"Successfully defending in the Red zone - blocking a pass, shot, or robot.");
+            helpHash.put(R.id.btnDefendGoalZone,"Successfully defending in the Goalie zone - blocking a shot aimed at the Hi goal.");
+            helpHash.put(R.id.btnPossessBlueZone,"Successfully possessing the ball in the Blue zone");
+            helpHash.put(R.id.btnPossessWhiteZone,"Successfully possessing the ball in the White zone");
+            helpHash.put(R.id.btnPossessRedZone,"Successfully possessing the ball in the Red zone");
+            helpHash.put(R.id.btnTrussToss,"Successful toss over the truss");
+            helpHash.put(R.id.btnTrussMiss,"Failure to make a toss over the truss (bounced off, went out of bounds, too low, etc)");
+            helpHash.put(R.id.btnTossCaught,"Successfully caught a toss over the truss!");
+            helpHash.put(R.id.btnTossMiss,"Missed catching a toss over the truss");
+            helpHash.put(R.id.btnTeleShortPass,"Accurate pass over short distance - usually two robots almost touching");
+            helpHash.put(R.id.btnTeleShortPassMiss,"Missing a pass to another robot at a small distance");
 
-        this.undo = false;
-		
-        buttonHash = new Hashtable<Integer, Button>(); 
+            this.txtTeleScore = (TextView) rootView.findViewById(R.id.txtTeleScore);
+            this.txtTeleStat = (TextView) rootView.findViewById(R.id.txtTeleStat);
 
-        switchUndo = (Switch) rootView.findViewById(R.id.switchUndo);
-        switchUndo.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            this.updateTeleScore();
 
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				undo = isChecked;
-				//setButtonBackgrounds();
-				FTSUtilities.setButtonStyles(buttonHash, undo);
-			}
-        	
-        });
-        
-        for(int ID : buttonIDs) {
-	        buttonHash.put(ID, (Button) rootView.findViewById(ID));
-	        buttonHash.get(ID).setOnClickListener(this);
+            this.undo = false;
+
+            buttonHash = new Hashtable<Integer, Button>();
+
+            switchUndo = (Switch) rootView.findViewById(R.id.switchUndo);
+            switchUndo.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    undo = isChecked;
+                    //setButtonBackgrounds();
+                    FTSUtilities.setButtonStyles(buttonHash, undo);
+                }
+
+            });
+
+            for(int ID : buttonIDs) {
+                buttonHash.put(ID, (Button) rootView.findViewById(ID));
+                buttonHash.get(ID).setOnClickListener(this);
+            }
+
+            this.gridTeleModeLayout = (GridLayout) rootView.findViewById(R.id.gridTeleModeLayout);
+
+
+            Spec colSpecLeft = GridLayout.spec(5, 1);
+            Spec colSpecRight = GridLayout.spec(8, 2);
+
+            Button bluePossess = buttonHash.get(R.id.btnPossessBlueZone);
+            Button redPossess = buttonHash.get(R.id.btnPossessRedZone);
+            Button blueDefend = buttonHash.get(R.id.btnDefendBlueZone);
+            Button redDefend = buttonHash.get(R.id.btnDefendRedZone);
+
+            GridLayout.LayoutParams bluePossessLP = (GridLayout.LayoutParams)bluePossess.getLayoutParams();
+            GridLayout.LayoutParams redPossessLP = (GridLayout.LayoutParams)redPossess.getLayoutParams();
+            GridLayout.LayoutParams blueDefendLP = (GridLayout.LayoutParams)blueDefend.getLayoutParams();
+            GridLayout.LayoutParams redDefendLP = (GridLayout.LayoutParams)redDefend.getLayoutParams();
+
+            if(fieldOrientationRedOnRight) {
+                rootView.setBackgroundDrawable(getResources().getDrawable(R.drawable.field_800x367_blue_on_left));
+
+                bluePossessLP.columnSpec = colSpecLeft;
+                blueDefendLP.columnSpec = colSpecLeft;
+
+                redPossessLP.columnSpec = colSpecRight;
+                redDefendLP.columnSpec = colSpecRight;
+            } else {
+                rootView.setBackgroundDrawable(getResources().getDrawable(R.drawable.field_800x367_red_on_left));
+
+                bluePossessLP.columnSpec = colSpecRight;
+                blueDefendLP.columnSpec = colSpecRight;
+
+                redPossessLP.columnSpec = colSpecLeft;
+                redDefendLP.columnSpec = colSpecLeft;
+            }
+
+            bluePossess.setLayoutParams(bluePossessLP);
+            redPossess.setLayoutParams(redPossessLP);
+            blueDefend.setLayoutParams(blueDefendLP);
+            redDefend.setLayoutParams(redDefendLP);
         }
-        
-        this.gridTeleModeLayout = (GridLayout) rootView.findViewById(R.id.gridTeleModeLayout);
-        
-        
-        Spec colSpecLeft = GridLayout.spec(5, 1);
-        Spec colSpecRight = GridLayout.spec(8, 2);
-        
-        Button bluePossess = buttonHash.get(R.id.btnPossessBlueZone);
-    	Button redPossess = buttonHash.get(R.id.btnPossessRedZone);
-    	Button blueDefend = buttonHash.get(R.id.btnDefendBlueZone);
-    	Button redDefend = buttonHash.get(R.id.btnDefendRedZone);
-    	
-        GridLayout.LayoutParams bluePossessLP = (GridLayout.LayoutParams)bluePossess.getLayoutParams();
-        GridLayout.LayoutParams redPossessLP = (GridLayout.LayoutParams)redPossess.getLayoutParams();
-        GridLayout.LayoutParams blueDefendLP = (GridLayout.LayoutParams)blueDefend.getLayoutParams();
-        GridLayout.LayoutParams redDefendLP = (GridLayout.LayoutParams)redDefend.getLayoutParams();
-    	
-        if(fieldOrientationRedOnRight) {
-        	rootView.setBackgroundDrawable(getResources().getDrawable(R.drawable.field_800x367_blue_on_left));
-        	
-        	bluePossessLP.columnSpec = colSpecLeft;
-        	blueDefendLP.columnSpec = colSpecLeft;
-        	
-        	redPossessLP.columnSpec = colSpecRight;
-        	redDefendLP.columnSpec = colSpecRight;
-        } else {
-        	rootView.setBackgroundDrawable(getResources().getDrawable(R.drawable.field_800x367_red_on_left));
-        	        	
-        	bluePossessLP.columnSpec = colSpecRight;
-        	blueDefendLP.columnSpec = colSpecRight;
-        	
-        	redPossessLP.columnSpec = colSpecLeft;
-        	redDefendLP.columnSpec = colSpecLeft;
+        catch(InflateException ie) {
+            FTSUtilities.printToConsole("InflateException::message: " + ie.getMessage());
         }
-        
-        bluePossess.setLayoutParams(bluePossessLP);
-        redPossess.setLayoutParams(redPossessLP);
-        blueDefend.setLayoutParams(blueDefendLP);
-        redDefend.setLayoutParams(redDefendLP);
-
-		return rootView;
+        return rootView;
     }
     
     static TeamMatchTeleModeFragment newInstance(Long teamMatchID) {

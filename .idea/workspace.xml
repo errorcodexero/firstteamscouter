@@ -4,11 +4,8 @@
     <shared>
       <config>
         <devices>
-          <device id="7.0&quot; Tablet Fragment View" />
-          <device id="7&quot; Fragment View Full Screen" />
           <device id="7in WSVGA (Tablet)" />
           <device id="Nexus 7 2013" />
-          <device id="7 inch Lanscape Tablet" />
         </devices>
         <target>android-16</target>
       </config>
@@ -31,7 +28,19 @@
           <theme>@style/AppTheme</theme>
         </config>
       </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_import_match_data.xml">
+        <config>
+          <state>Landscape</state>
+          <theme>@style/AppTheme</theme>
+        </config>
+      </layout>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_team_match_automode.xml">
+        <config>
+          <state>Landscape</state>
+          <theme>@style/AppTheme</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_team_match_telemode.xml">
         <config>
           <state>Landscape</state>
           <theme>@style/AppTheme</theme>
@@ -65,32 +74,89 @@
       <file leaf-file-name="TeamMatchStartingPositionFragment.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchStartingPositionFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2870" max-vertical-offset="3672">
-              <caret line="208" column="22" selection-start-line="208" selection-start-column="22" selection-end-line="208" selection-end-column="22" />
-              <folding />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2929" max-vertical-offset="3825">
+              <caret line="199" column="22" selection-start-line="199" selection-start-column="22" selection-end-line="199" selection-end-column="22" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="method#onCreateView#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+                <element signature="method#onTouch#0;class#MyTouchListener#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+                <element signature="method#updateToggleButtonStates#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+                <element signature="method#onActivityCreated#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+                <element signature="method#newInstance#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+                <element signature="method#onClick#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+                <element signature="method#resetToggleButtonsExcept#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+                <element signature="method#setStartingLoc#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+                <element signature="method#setOrResetStartingLoc#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="fragment_team_match_automode.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_team_match_automode.xml">
+          <provider selected="true" editor-type-id="android-designer">
+            <state />
+          </provider>
           <provider editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="1632">
+            <state vertical-scroll-proportion="0.0" vertical-offset="442" max-vertical-offset="1632">
               <caret line="26" column="36" selection-start-line="26" selection-start-column="36" selection-end-line="26" selection-end-column="36" />
               <folding />
             </state>
-          </provider>
-          <provider selected="true" editor-type-id="android-designer">
-            <state />
           </provider>
         </entry>
       </file>
       <file leaf-file-name="TeamMatchAutoModeFragment.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchAutoModeFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5921376" vertical-offset="4978" max-vertical-offset="5763">
-              <caret line="333" column="50" selection-start-line="333" selection-start-column="50" selection-end-line="333" selection-end-column="50" />
-              <folding />
+            <state vertical-scroll-proportion="0.59149724" vertical-offset="2893" max-vertical-offset="4658">
+              <caret line="321" column="59" selection-start-line="321" selection-start-column="59" selection-end-line="321" selection-end-column="59" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="method#onCreateView#0;class#TeamMatchAutoModeFragment#0" expanded="true" />
+                <element signature="e#2768#2992#0" expanded="true" />
+                <element signature="e#2971#2972#0" expanded="true" />
+                <element signature="method#onTouch#0;class#MyTouchListener#0;class#TeamMatchAutoModeFragment#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TeamMatchTeleModeFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchTeleModeFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="2315" max-vertical-offset="8143">
+              <caret line="159" column="51" selection-start-line="159" selection-start-column="51" selection-end-line="159" selection-end-column="51" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#4596#4932#0" expanded="true" />
+                <element signature="e#4916#4917#0" expanded="true" />
+                <element signature="method#newInstance#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="e#7577#7578#0" expanded="true" />
+                <element signature="e#7607#7608#0" expanded="true" />
+                <element signature="method#onClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnTeleHighScoreOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnTeleHiMissOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnTeleLowScoreOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnTeleLoMissOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnTeleLongPassOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnTeleLongPassMissOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnTeleShortPassOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnTeleShortPassMissOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnPossessBlueZoneOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnPossessedWhiteZoneOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnPossessedRedZoneOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnDefendBlueZoneOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnDefendWhiteZoneOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnDefendRedZoneOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnDefendGoalZoneOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnTrussTossOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnTrussMissOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnTossCaughtOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#btnTossMissedOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#updateTeleScore#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#updateTeleStat#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+                <element signature="method#setFieldOrientation#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -98,7 +164,7 @@
       <file leaf-file-name="SelectMatchTeamActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/SelectMatchTeamActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4301">
+            <state vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="1190">
               <caret line="32" column="28" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
               <folding />
             </state>
@@ -150,19 +216,19 @@
         <entry>
           <key>
             <ExternalProjectPojo>
-              <option name="name" value="FirstTeamScouter" />
+              <option name="name" value="firstteamscouter2015" />
               <option name="path" value="$PROJECT_DIR$" />
             </ExternalProjectPojo>
           </key>
           <value>
             <list>
               <ExternalProjectPojo>
-                <option name="name" value="FirstTeamScouter" />
-                <option name="path" value="$PROJECT_DIR$" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
                 <option name="name" value=":app" />
                 <option name="path" value="$PROJECT_DIR$/app" />
+              </ExternalProjectPojo>
+              <ExternalProjectPojo>
+                <option name="name" value="firstteamscouter2015" />
+                <option name="path" value="$PROJECT_DIR$" />
               </ExternalProjectPojo>
             </list>
           </value>
@@ -563,11 +629,6 @@
         </entry>
       </map>
     </option>
-    <option name="modificationStamps">
-      <map>
-        <entry key="$PROJECT_DIR$" value="4262793104817" />
-      </map>
-    </option>
     <option name="projectBuildClasspath">
       <map>
         <entry key="$PROJECT_DIR$">
@@ -581,10 +642,10 @@
                         <option name="entries">
                           <list>
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/gradle/1.0.0/gradle-1.0.0-sources.jar" />
-                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/1.0.0/builder-1.0.0-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/1.0.0/builder-model-1.0.0-sources.jar" />
-                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/1.0.0/builder-model-1.0.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/1.0.0/builder-1.0.0-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/gradle/1.0.0/gradle-1.0.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/1.0.0/builder-model-1.0.0.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/1.0.0/builder-1.0.0.jar" />
                           </list>
                         </option>
@@ -598,10 +659,10 @@
                         <option name="entries">
                           <list>
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/gradle/1.0.0/gradle-1.0.0-sources.jar" />
-                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/1.0.0/builder-1.0.0-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/1.0.0/builder-model-1.0.0-sources.jar" />
-                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/1.0.0/builder-model-1.0.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/1.0.0/builder-1.0.0-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/gradle/1.0.0/gradle-1.0.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder-model/1.0.0/builder-model-1.0.0.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/build/builder/1.0.0/builder-1.0.0.jar" />
                           </list>
                         </option>
@@ -611,7 +672,7 @@
                   </entry>
                 </map>
               </option>
-              <option name="name" value="FirstTeamScouter" />
+              <option name="name" value="app" />
               <option name="projectBuildClasspath">
                 <list>
                   <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/ant-1.9.3.jar" />
@@ -682,10 +743,12 @@
       <list>
         <option value="$PROJECT_DIR$/import-summary.txt" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout-land/fragment_team_match_starting_position.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchStartingPositionFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_team_match_automode.xml" />
         <option value="$PROJECT_DIR$/app/build/generated/source/r/debug/com/wilsonvillerobotics/firstteamscouter/R.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/SelectMatchTeamActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_import_match_data.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchTeleModeFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchStartingPositionFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchAutoModeFragment.java" />
       </list>
     </option>
@@ -693,8 +756,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1552" />
-    <option name="height" value="853" />
+    <option name="width" value="1936" />
+    <option name="height" value="1066" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -782,24 +845,6 @@
               <option name="myItemId" value="app" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="firstteamscouter" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FirstTeamScouter" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
-            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
@@ -821,11 +866,59 @@
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="recentsLimit" value="5" />
     <property name="FullScreen" value="false" />
-    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="192.168.167.101:5555" />
-    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="7in_WVGA_API_19" />
-    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager2.WIDTH" value="204" />
+    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="192.168.93.101:5555" />
+    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="API18_Tablet_7" />
+    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager2.WIDTH" value="266" />
   </component>
   <component name="RunManager" selected="Android Application.app">
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
       <module name="" />
       <option name="TESTING_TYPE" value="0" />
@@ -845,14 +938,6 @@
       <option name="CLEAR_LOGCAT" value="false" />
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
       <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
-      <method />
-    </configuration>
-    <configuration default="true" type="Remote" factoryName="Remote">
-      <option name="USE_SOCKET_TRANSPORT" value="true" />
-      <option name="SERVER_MODE" value="false" />
-      <option name="SHMEM_ADDRESS" value="javadebug" />
-      <option name="HOST" value="localhost" />
-      <option name="PORT" value="5005" />
       <method />
     </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
@@ -894,46 +979,6 @@
       <option name="PASS_PARENT_ENVS" value="true" />
       <module name="" />
       <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="JUnit" factoryName="JUnit">
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
-      </option>
-      <envs />
-      <patterns />
-      <method />
-    </configuration>
-    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
-      <module name="" />
-      <option name="ACTIVITY_CLASS" value="" />
-      <option name="MODE" value="default_activity" />
-      <option name="DEPLOY" value="true" />
-      <option name="ARTIFACT_NAME" value="" />
-      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
-      <option name="PREFERRED_AVD" value="" />
-      <option name="USE_COMMAND_LINE" value="true" />
-      <option name="COMMAND_LINE" value="" />
-      <option name="WIPE_USER_DATA" value="false" />
-      <option name="DISABLE_BOOT_ANIMATION" value="false" />
-      <option name="NETWORK_SPEED" value="full" />
-      <option name="NETWORK_LATENCY" value="none" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
-      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
       <method />
     </configuration>
     <configuration default="false" name="app" type="AndroidRunConfigurationType" factoryName="Android Application">
@@ -987,38 +1032,38 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1552" height="853" extended-state="6" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
+    <editor active="false" />
     <layout>
-      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.375" sideWeight="0.63538873" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.375" sideWeight="0.36461127" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3275862" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3275862" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.37472528" sideWeight="0.33955225" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20107238" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3275862" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20095949" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37472528" sideWeight="0.6604478" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3297587" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902297" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3297587" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32902297" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1045,28 +1090,118 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchStartingPositionFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3944" max-vertical-offset="4080">
-          <caret line="232" column="5" selection-start-line="180" selection-start-column="4" selection-end-line="232" selection-end-column="5" />
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4080">
+          <caret line="208" column="22" selection-start-line="208" selection-start-column="22" selection-end-line="208" selection-end-column="22" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#onCreateView#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onTouch#0;class#MyTouchListener#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#updateToggleButtonStates#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onActivityCreated#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#newInstance#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onClick#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#resetToggleButtonsExcept#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#setStartingLoc#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#setOrResetStartingLoc#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_team_match_automode.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="442" max-vertical-offset="1632">
+          <caret line="26" column="36" selection-start-line="26" selection-start-column="36" selection-end-line="26" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchAutoModeFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1887" max-vertical-offset="2431">
+          <caret line="333" column="50" selection-start-line="333" selection-start-column="50" selection-end-line="333" selection-end-column="50" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#onCreateView#0;class#TeamMatchAutoModeFragment#0" expanded="true" />
+            <element signature="e#2768#2992#0" expanded="true" />
+            <element signature="e#2971#2972#0" expanded="true" />
+            <element signature="method#onTouch#0;class#MyTouchListener#0;class#TeamMatchAutoModeFragment#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/SelectMatchTeamActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="544" max-vertical-offset="4743">
+          <caret line="32" column="28" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/ImportMatchDataActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1530" max-vertical-offset="9112">
+          <caret line="90" column="76" selection-start-line="90" selection-start-column="76" selection-end-line="90" selection-end-column="76" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/automode_background_2015.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build/generated/source/r/debug/com/wilsonvillerobotics/firstteamscouter/R.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="527" max-vertical-offset="6460">
+          <caret line="31" column="32" selection-start-line="31" selection-start-column="32" selection-end-line="31" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchStartingPositionFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3944" max-vertical-offset="4080">
+          <caret line="232" column="5" selection-start-line="180" selection-start-column="4" selection-end-line="232" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#onCreateView#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onTouch#0;class#MyTouchListener#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#updateToggleButtonStates#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onActivityCreated#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#newInstance#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onClick#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#resetToggleButtonsExcept#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#setStartingLoc#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#setOrResetStartingLoc#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_team_match_automode.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="1632">
           <caret line="26" column="36" selection-start-line="26" selection-start-column="36" selection-end-line="26" selection-end-column="36" />
           <folding />
         </state>
       </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchAutoModeFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1105" max-vertical-offset="5474">
           <caret line="88" column="10" selection-start-line="88" selection-start-column="10" selection-end-line="88" selection-end-column="10" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#onCreateView#0;class#TeamMatchAutoModeFragment#0" expanded="true" />
+            <element signature="e#2768#2992#0" expanded="true" />
+            <element signature="e#2971#2972#0" expanded="true" />
+            <element signature="method#onTouch#0;class#MyTouchListener#0;class#TeamMatchAutoModeFragment#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1095,26 +1230,43 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4080">
           <caret line="232" column="5" selection-start-line="180" selection-start-column="4" selection-end-line="232" selection-end-column="5" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#onCreateView#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onTouch#0;class#MyTouchListener#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#updateToggleButtonStates#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onActivityCreated#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#newInstance#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onClick#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#resetToggleButtonsExcept#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#setStartingLoc#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#setOrResetStartingLoc#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_team_match_automode.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="1632">
           <caret line="26" column="36" selection-start-line="26" selection-start-column="36" selection-end-line="26" selection-end-column="36" />
           <folding />
         </state>
       </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchAutoModeFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="4611" max-vertical-offset="5406">
           <caret line="88" column="10" selection-start-line="88" selection-start-column="10" selection-end-line="88" selection-end-column="10" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#onCreateView#0;class#TeamMatchAutoModeFragment#0" expanded="true" />
+            <element signature="e#2768#2992#0" expanded="true" />
+            <element signature="e#2971#2972#0" expanded="true" />
+            <element signature="method#onTouch#0;class#MyTouchListener#0;class#TeamMatchAutoModeFragment#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1143,26 +1295,43 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3944" max-vertical-offset="4080">
           <caret line="232" column="5" selection-start-line="180" selection-start-column="4" selection-end-line="232" selection-end-column="5" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#onCreateView#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onTouch#0;class#MyTouchListener#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#updateToggleButtonStates#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onActivityCreated#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#newInstance#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onClick#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#resetToggleButtonsExcept#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#setStartingLoc#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#setOrResetStartingLoc#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_team_match_automode.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="1632">
           <caret line="26" column="36" selection-start-line="26" selection-start-column="36" selection-end-line="26" selection-end-column="36" />
           <folding />
         </state>
       </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchAutoModeFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="4611" max-vertical-offset="5406">
           <caret line="88" column="10" selection-start-line="88" selection-start-column="10" selection-end-line="88" selection-end-column="10" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#onCreateView#0;class#TeamMatchAutoModeFragment#0" expanded="true" />
+            <element signature="e#2768#2992#0" expanded="true" />
+            <element signature="e#2971#2972#0" expanded="true" />
+            <element signature="method#onTouch#0;class#MyTouchListener#0;class#TeamMatchAutoModeFragment#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1188,62 +1357,84 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_enter_team_match_data.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6188">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-land/activity_enter_team_match_data.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6188">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchStartingPositionFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2955" max-vertical-offset="3740">
           <caret line="210" column="37" selection-start-line="210" selection-start-column="37" selection-end-line="210" selection-end-column="37" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#onCreateView#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onTouch#0;class#MyTouchListener#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#updateToggleButtonStates#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onActivityCreated#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#newInstance#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onClick#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#resetToggleButtonsExcept#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#setStartingLoc#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#setOrResetStartingLoc#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_enter_team_match_data.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6188">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-land/activity_enter_team_match_data.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6188">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchStartingPositionFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2806" max-vertical-offset="3519">
           <caret line="208" column="53" selection-start-line="208" selection-start-column="53" selection-end-line="208" selection-end-column="53" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#onCreateView#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onTouch#0;class#MyTouchListener#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#updateToggleButtonStates#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onActivityCreated#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#newInstance#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onClick#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#resetToggleButtonsExcept#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#setStartingLoc#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#setOrResetStartingLoc#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1269,25 +1460,25 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-land/activity_enter_team_match_data.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6188">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_enter_team_match_data.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6188">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/robot.png">
@@ -1296,14 +1487,14 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout-land/fragment_team_match_starting_position.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="493">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/automode_background_2015.png">
@@ -1319,30 +1510,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Program Files (x86)/Android/android-sdk/sources/android-14/com/android/server/am/ActivityManagerService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.37037036" vertical-offset="238892" max-vertical-offset="239054">
-          <caret line="14222" column="0" selection-start-line="14222" selection-start-column="0" selection-end-line="14222" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/ImportMatchDataActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="835" max-vertical-offset="8279">
           <caret line="90" column="76" selection-start-line="90" selection-start-column="76" selection-end-line="90" selection-end-column="76" />
           <folding />
         </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_team_match_automode.xml">
-      <provider editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="1632">
-          <caret line="26" column="36" selection-start-line="26" selection-start-column="36" selection-end-line="26" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/SelectMatchTeamActivity.java">
@@ -1353,19 +1526,107 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_import_match_data.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="136">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_team_match_telemode.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="119">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchTeleModeFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2315" max-vertical-offset="8143">
+          <caret line="159" column="51" selection-start-line="159" selection-start-column="51" selection-end-line="159" selection-end-column="51" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#4596#4932#0" expanded="true" />
+            <element signature="e#4916#4917#0" expanded="true" />
+            <element signature="method#newInstance#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="e#7577#7578#0" expanded="true" />
+            <element signature="e#7607#7608#0" expanded="true" />
+            <element signature="method#onClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnTeleHighScoreOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnTeleHiMissOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnTeleLowScoreOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnTeleLoMissOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnTeleLongPassOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnTeleLongPassMissOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnTeleShortPassOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnTeleShortPassMissOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnPossessBlueZoneOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnPossessedWhiteZoneOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnPossessedRedZoneOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnDefendBlueZoneOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnDefendWhiteZoneOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnDefendRedZoneOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnDefendGoalZoneOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnTrussTossOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnTrussMissOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnTossCaughtOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#btnTossMissedOnClick#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#updateTeleScore#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#updateTeleStat#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+            <element signature="method#setFieldOrientation#0;class#TeamMatchTeleModeFragment#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchStartingPositionFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2870" max-vertical-offset="3672">
-          <caret line="208" column="22" selection-start-line="208" selection-start-column="22" selection-end-line="208" selection-end-column="22" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="2929" max-vertical-offset="3825">
+          <caret line="199" column="22" selection-start-line="199" selection-start-column="22" selection-end-line="199" selection-end-column="22" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#onCreateView#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onTouch#0;class#MyTouchListener#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#updateToggleButtonStates#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onActivityCreated#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#newInstance#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#onClick#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#resetToggleButtonsExcept#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#setStartingLoc#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+            <element signature="method#setOrResetStartingLoc#0;class#TeamMatchStartingPositionFragment#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_team_match_automode.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="1632">
+          <caret line="26" column="36" selection-start-line="26" selection-start-column="36" selection-end-line="26" selection-end-column="36" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/wilsonvillerobotics/firstteamscouter/TeamMatchAutoModeFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5921376" vertical-offset="4978" max-vertical-offset="5763">
-          <caret line="333" column="50" selection-start-line="333" selection-start-column="50" selection-end-line="333" selection-end-column="50" />
-          <folding />
+        <state vertical-scroll-proportion="0.59149724" vertical-offset="2893" max-vertical-offset="4658">
+          <caret line="321" column="59" selection-start-line="321" selection-start-column="59" selection-end-line="321" selection-end-column="59" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#onCreateView#0;class#TeamMatchAutoModeFragment#0" expanded="true" />
+            <element signature="e#2768#2992#0" expanded="true" />
+            <element signature="e#2971#2972#0" expanded="true" />
+            <element signature="method#onTouch#0;class#MyTouchListener#0;class#TeamMatchAutoModeFragment#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

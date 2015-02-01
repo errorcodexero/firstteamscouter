@@ -26,6 +26,8 @@ public class TeamMatchAutoModeFragment extends Fragment implements OnClickListen
 	public static String myTitle;
 	protected Long teamMatchID;
 	private TeamMatchData tmData;
+    int windowwidth;
+    int windowheight;
 	
 	private Integer buttonIDs[] = {
 			R.id.btnAutoHiMiss,
@@ -49,7 +51,12 @@ public class TeamMatchAutoModeFragment extends Fragment implements OnClickListen
             Bundle savedInstanceState) {
     	
     	myTitle = "Auto Mode";
-    	
+
+        windowwidth = this.getActivity().getWindowManager().getDefaultDisplay().getWidth();
+        windowheight = this.getActivity().getWindowManager().getDefaultDisplay().getHeight();
+
+        FTSUtilities.printToConsole("TeamMatchAutoModeFragment:: width " +windowwidth + "  height " +windowheight);
+
     	this.teamMatchID = getArguments() != null ? getArguments().getLong("tmID") : -1;
     	
         View rootView = inflater.inflate(R.layout.fragment_team_match_automode, container, false);
@@ -106,6 +113,11 @@ public class TeamMatchAutoModeFragment extends Fragment implements OnClickListen
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
             if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                String message = "TeamMatchAutoModeFragment::onTouch::ACTION_DOWN\nView coordinates: X: " + view.getX() + " Y: " + view.getY();
+                message += "\nmotionEvent Raw Coordinates: X: " + motionEvent.getRawX() + " Y: " + motionEvent.getRawY();
+                message += "\nmotionEvent Coordinates: X: " + motionEvent.getX() + " Y: " + motionEvent.getY();
+                FTSUtilities.printToConsole(message);
+
                 ClipData data = ClipData.newPlainText("", "");
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
                 view.startDrag(data, shadowBuilder, view, 0);
@@ -116,6 +128,10 @@ public class TeamMatchAutoModeFragment extends Fragment implements OnClickListen
                 return true;
             } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 //view.setVisibility(View.VISIBLE);
+                String message = "TeamMatchAutoModeFragment::onTouch::ACTION_UP\nView coordinates: X: " + view.getX() + " Y: " + view.getY();
+                message += "\nmotionEvent Raw Coordinates: X: " + motionEvent.getRawX() + " Y: " + motionEvent.getRawY();
+                message += "\nmotionEvent Coordinates: X: " + motionEvent.getX() + " Y: " + motionEvent.getY();
+                FTSUtilities.printToConsole(message);
                 return true;
             } else {
                 return false;
@@ -293,6 +309,12 @@ public class TeamMatchAutoModeFragment extends Fragment implements OnClickListen
         @Override
         public boolean onDrag(View v, DragEvent event) {
             int action = event.getAction();
+            int view_x_cord = (int) v.getX();
+            int view_y_cord = (int) v.getY();
+            int event_x_cord = (int) event.getX();
+            int event_y_cord = (int) event.getY();
+            String message = "";
+
             switch (action) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     view = (View) event.getLocalState();
@@ -301,11 +323,19 @@ public class TeamMatchAutoModeFragment extends Fragment implements OnClickListen
                     startingTopMargin = params.topMargin;
                     height = params.height;
                     width = params.width;
+
+                    message = "TeamMatchAutoModeFragment::DragEvent::ACTION_DRAG_STARTED\n";
+                    message += "View coordinates: X: " + view_x_cord + " Y: " + view_y_cord;
+                    message += "\nDragEvent Coordinates: X: " + event_x_cord + " Y: " + event_y_cord;
+                    FTSUtilities.printToConsole(message);
+
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
+                    //FTSUtilities.printToConsole("TeamMatchAutoModeFragment::DragEvent::ACTION_DRAG_ENTERED\n");
                     //v.setBackgroundDrawable(enterShape);
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
+                    FTSUtilities.printToConsole("TeamMatchAutoModeFragment::DragEvent::ACTION_DRAG_EXITED\n");
                     view = (View) event.getLocalState();
 
                     params = new RelativeLayout.LayoutParams(
@@ -321,8 +351,12 @@ public class TeamMatchAutoModeFragment extends Fragment implements OnClickListen
                     break;
                 case DragEvent.ACTION_DROP:
                     // Dropped, reassign View to ViewGroup
-                    FTSUtilities.printToConsole("TeamMatchStartingPositionFragment::DragEvent::ACTION_DROP\n");
                     view = (View) event.getLocalState();
+
+                    message = "TeamMatchAutoModeFragment::DragEvent::ACTION_DROP\n";
+                    message += "View coordinates: X: " + view_x_cord + " Y: " + view_y_cord;
+                    message += "\nDragEvent Coordinates: X: " + event_x_cord + " Y: " + event_y_cord;
+                    FTSUtilities.printToConsole(message);
 
                     //String toastText = "onDrag Event X: " + event.getX() + " Y: " + event.getY();
                     //Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();
@@ -339,6 +373,10 @@ public class TeamMatchAutoModeFragment extends Fragment implements OnClickListen
                     view.setLayoutParams(params);
                     view.setVisibility(View.VISIBLE);
 
+                    message = "TeamMatchAutoModeFragment::DragEvent::ACTION_DROP\n";
+                    message += "View new coordinates: X: " + view.getX() + " Y: " + view.getY();
+                    FTSUtilities.printToConsole(message);
+
                     //ViewGroup owner = (ViewGroup) view.getParent();
                     //owner.removeView(view);
                     //LinearLayout container = (LinearLayout) v;
@@ -346,11 +384,14 @@ public class TeamMatchAutoModeFragment extends Fragment implements OnClickListen
                     //view.setVisibility(View.VISIBLE);
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
+                    //FTSUtilities.printToConsole("TeamMatchAutoModeFragment::DragEvent::ACTION_DRAG_ENDED\n");
                     //v.setBackgroundDrawable(normalShape);
                 case DragEvent.ACTION_DRAG_LOCATION:
+                    //FTSUtilities.printToConsole("TeamMatchAutoModeFragment::DragEvent::ACTION_DRAG_LOCATION\n");
                     v.setVisibility(View.VISIBLE);
                     break;
                 default:
+                    FTSUtilities.printToConsole("TeamMatchAutoModeFragment::DragEvent::default\n");
                     break;
             }
             return true;
