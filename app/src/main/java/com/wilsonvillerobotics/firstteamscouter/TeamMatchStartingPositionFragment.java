@@ -51,7 +51,7 @@ public class TeamMatchStartingPositionFragment extends Fragment implements OnCli
         this.helpHash = new Hashtable<STARTING_LOC, String>();
 
         rootView.findViewById(R.id.imgRobot).setOnTouchListener(new MyTouchListener());
-        rootView.findViewById(R.id.layoutRelative).setOnDragListener(new MyDragListener());
+        rootView.findViewById(R.id.StartingPosition_LayoutRelative).setOnDragListener(new MyDragListener());
 
 		return rootView;
 	}

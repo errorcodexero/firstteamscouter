@@ -2,11 +2,25 @@
 <items version="2" >
 
     <item
-        jar="D:\Program Files (x86)\Android\android-sdk\extras\android\m2repository\com\android\support\support-v4\18.0.0\support-v4-18.0.0.jar"
+        jar="C:\Users\Tom\AndroidStudioProjects\FirstTeamScouter\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\classes.jar"
         jumboMode="false"
         revision="21.1.2"
-        sha1="44ec51e9d395a47aab135e5e1b556c0007442156">
-        <dex dex="C:\Users\TomS\AndroidStudioProjects\fourteentwentyfive\firstteamscouter2015\app\build\intermediates\pre-dexed\debug\support-v4-18.0.0-badb87433f110e2ad7334502a7b39808e4b74cd8.jar" />
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="C:\Users\Tom\AndroidStudioProjects\FirstTeamScouter\app\build\intermediates\pre-dexed\debug\classes-23f6fa3c98eb3b755fe54d3508df3926495c6a47.jar" />
+    </item>
+    <item
+        jar="C:\Program Files (x86)\Android\android-sdk\extras\android\m2repository\com\android\support\support-annotations\21.0.3\support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="C:\Users\Tom\AndroidStudioProjects\FirstTeamScouter\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.3-ff2d7f5022b5a92fc988e7ecf40140c2621ade2e.jar" />
+    </item>
+    <item
+        jar="C:\Users\Tom\AndroidStudioProjects\FirstTeamScouter\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="C:\Users\Tom\AndroidStudioProjects\FirstTeamScouter\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.3-cb4c385b3f4a281c55be67794ea8bf9d1cb163e4.jar" />
     </item>
 
 </items>

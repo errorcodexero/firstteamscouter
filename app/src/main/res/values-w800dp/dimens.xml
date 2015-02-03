@@ -8,5 +8,8 @@
     <dimen name="data_field_container_height">400dp</dimen>
     <dimen name="note_container_width">400dp</dimen>
     <dimen name="note_container_height">400dp</dimen>
+    <dimen name="robot_height">50dp</dimen>
+    <dimen name="robot_width">50dp</dimen>
+
 
 </resources>
