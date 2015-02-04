@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/Users/TomS/AndroidStudioProjects/fourteentwentyfive/firstteamscouter2015/app/src/main/res/values-w800dp/dimens.xml -->
+    <!-- From: file:/C:/Users/Tom/AndroidStudioProjects/FirstTeamScouter/app/src/main/res/values-w800dp/dimens.xml -->
     <eat-comment/>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
@@ -9,4 +9,6 @@
     <dimen name="main_activity_text">64sp</dimen>
     <dimen name="note_container_height">400dp</dimen>
     <dimen name="note_container_width">400dp</dimen>
+    <dimen name="robot_height">50dp</dimen>
+    <dimen name="robot_width">50dp</dimen>
 </resources>

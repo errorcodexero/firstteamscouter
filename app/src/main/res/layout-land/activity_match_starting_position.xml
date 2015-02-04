@@ -6,7 +6,7 @@
     android:background="@drawable/starting_position_background_2015"
     android:orientation="horizontal"
     android:paddingTop="2dp"
-    android:id="@+id/layoutRelative">
+    android:id="@+id/StartingPosition_LayoutRelative">
 
     <ImageView
         android:layout_width="50dp"
