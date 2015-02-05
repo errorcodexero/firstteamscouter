@@ -3,3 +3,6 @@ bin
 /gen/com/wilsonvillerobotics/firstteamscouter/R.java
 app/build
 /.idea/dbnavigator.xml
+build
+.gradle
+.idea
