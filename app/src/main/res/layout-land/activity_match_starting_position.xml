@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_gravity="center_horizontal"
-        android:id="@+id/StartingPosition_RobotGutter_LinearLayout">
+        android:id="@+id/StartingPosition_RobotGutter_RelativeLayout">
 
         <ImageView
             android:layout_width="50dp"
@@ -41,6 +41,17 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/StartingPosition_ButtonGutter_LinearLayout">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:id="@+id/robotX_TextView"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:id="@+id/robotY_TextView"/>
 
         <Button
             android:layout_width="wrap_content"

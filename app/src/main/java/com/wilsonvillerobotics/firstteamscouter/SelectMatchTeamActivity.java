@@ -97,7 +97,9 @@ public class SelectMatchTeamActivity extends Activity {
 			private void btnSubmitOnClick(View v) {
 				FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate::btnSubmitOnClick : CLOSING DB\n");
 				tmDBAdapter.close();
-				startActivity(teamMatchIntent);
+                if(teamMatchIntent != null) {
+                    startActivity(teamMatchIntent);
+                }
 			}
 		});
 		
@@ -257,14 +259,17 @@ public class SelectMatchTeamActivity extends Activity {
 
                 if(arg1 != null) {
                     teamMatchIntent = new Intent(arg1.getContext(), MatchStartingPositionActivity.class);
-                    teamMatchIntent.putExtra("tablet_id", tabletID);
-                    teamMatchIntent.putExtra("field_orientation", fieldOrientationRedOnRight);
-                    teamMatchIntent.putExtra("match_number", matchNumber);
-                    teamMatchIntent.putExtra("position", arg3);
-                    teamMatchIntent.putExtra(TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID, teamID);
-                    teamMatchIntent.putExtra(TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID, matchID);
-                    teamMatchIntent.putExtra(TeamMatchDBAdapter._ID, String.valueOf(tmID));
+                } else {
+                    teamMatchIntent = new Intent(arg0.getContext(), MatchStartingPositionActivity.class);
                 }
+                teamMatchIntent.putExtra("tablet_id", tabletID);
+                teamMatchIntent.putExtra("field_orientation", fieldOrientationRedOnRight);
+                teamMatchIntent.putExtra("match_number", matchNumber);
+                teamMatchIntent.putExtra("position", arg3);
+                teamMatchIntent.putExtra("tmID", tmID);
+                teamMatchIntent.putExtra(TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID, teamID);
+                teamMatchIntent.putExtra(TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID, matchID);
+                teamMatchIntent.putExtra(TeamMatchDBAdapter._ID, String.valueOf(tmID));
             }
 
             public void onNothingSelected(AdapterView<?> arg0) {

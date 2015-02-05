@@ -60,7 +60,10 @@ public class TeamMatchDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_ROLE_CATCHER = "role_catcher";
     public static final String COLUMN_NAME_ROLE_GOALIE = "role_goalie";
     public static final String COLUMN_NAME_START_LOCATION = "starting_location";
-    
+    public static final String COLUMN_NAME_START_LOCATION_X = "starting_location_X";
+    public static final String COLUMN_NAME_START_LOCATION_Y = "starting_location_Y";
+    public static final String COLUMN_NAME_START_LOCATION_ON_FIELD = "starting_location_on_field";
+
     // These should be part of the robot data, not the match data
     public static final String COLUMN_NAME_BALL_CONTROL_GROUND_PICKUP = "ball_control_ground_pickup";
     public static final String COLUMN_NAME_BALL_CONTROL_HUMAN_LOAD = "ball_control_human_load";
@@ -71,7 +74,8 @@ public class TeamMatchDBAdapter implements BaseColumns {
     
     // This needs to be moved to the team_match_notes_data
     public static final String COLUMN_NAME_TEAM_MATCH_NOTES = "team_match_notes";
-	
+
+
     private String[] allColumnNames = new String[]{
     		_ID,
     		COLUMN_NAME_TEAM_MATCH_ID,
@@ -119,6 +123,9 @@ public class TeamMatchDBAdapter implements BaseColumns {
     	    COLUMN_NAME_ROLE_CATCHER,
     	    COLUMN_NAME_ROLE_GOALIE,
     	    COLUMN_NAME_START_LOCATION,
+            COLUMN_NAME_START_LOCATION_X,
+            COLUMN_NAME_START_LOCATION_Y,
+            COLUMN_NAME_START_LOCATION_ON_FIELD,
     	    COLUMN_NAME_BALL_CONTROL_GROUND_PICKUP,
     	    COLUMN_NAME_BALL_CONTROL_HUMAN_LOAD,
     	    COLUMN_NAME_BALL_CONTROL_HI_TO_LO,
@@ -231,11 +238,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
     /**
      * Update the entry.
      * 
-     * @param team_id
-     * @param team_number
-     * @param team_name
-     * @param team_location
-     * @param num_team_members
+     * @param team_id team ID
      * @return true if the entry was successfully updated, false otherwise
      */
     public boolean updateTeamMatch(long team_match_id, long team_id, long match_id, String tmNotes, Hashtable<String, Boolean> boolVals, Hashtable<String, Integer> intVals) {
@@ -384,7 +387,6 @@ public class TeamMatchDBAdapter implements BaseColumns {
 
     /**
      * Return a Cursor positioned at the entry that matches the given rowId
-     * @param rowId
      * @return Cursor positioned to matching entry, if found
      * @throws SQLException if entry could not be found/retrieved
      */
@@ -493,4 +495,28 @@ public class TeamMatchDBAdapter implements BaseColumns {
     	
 		return nums;
 	}
+
+    public Cursor getStartingPosition(long tmID) throws SQLException{
+        String columns[] = {COLUMN_NAME_START_LOCATION_X, COLUMN_NAME_START_LOCATION_Y, COLUMN_NAME_START_LOCATION_ON_FIELD};
+        Cursor mCursor = this.mDb.query(true, TABLE_NAME, columns,
+                _ID + "=" + tmID, null, null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+    public boolean setStartingPosition(long teamMatchID, int startingPositionX, int startingPositionY, boolean robotOnField) {
+        FTSUtilities.printToConsole("TeamMatchDBAdapter::setStartingPosition\n");
+        ContentValues args = new ContentValues();
+        args.put(_ID, teamMatchID);
+        args.put(COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_START_LOCATION_X, startingPositionX);
+        args.put(COLUMN_NAME_START_LOCATION_Y, startingPositionY);
+        args.put(COLUMN_NAME_START_LOCATION_ON_FIELD, String.valueOf(robotOnField));
+
+        String WHERE = TeamMatchDBAdapter._ID + "=" + teamMatchID;
+
+        return this.mDb.update(TABLE_NAME, args, WHERE, null) >0;
+    }
 }

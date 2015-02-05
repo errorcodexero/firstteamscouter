@@ -3,6 +3,7 @@ package com.wilsonvillerobotics.firstteamscouter;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.os.Bundle;
 import android.view.DragEvent;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
@@ -33,6 +35,9 @@ public class MatchStartingPositionActivity extends Activity {
 
     protected int robotX;
     protected int robotY;
+    protected boolean robotOnField;
+
+    TextView txtRobotX, txtRobotY;
 
     protected Boolean fieldOrientationRedOnRight;
 	
@@ -41,8 +46,10 @@ public class MatchStartingPositionActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_match_starting_position);
 
-        RelativeLayout startingPositionRobotGutterLayout = (RelativeLayout) findViewById(R.id.StartingPosition_RobotGutter_LinearLayout);
+        RelativeLayout startingPositionRobotGutterLayout = (RelativeLayout) findViewById(R.id.StartingPosition_RobotGutter_RelativeLayout);
         RelativeLayout startingPositionFieldLayout       = (RelativeLayout) findViewById(R.id.StartingPosition_Field_LayoutRelative);
+        txtRobotX                                        = (TextView)       findViewById(R.id.robotX_TextView);
+        txtRobotY                                        = (TextView)       findViewById(R.id.robotY_TextView);
 		
 		this.processIntent(getIntent());
         this.setBackground(startingPositionFieldLayout);
@@ -87,6 +94,26 @@ public class MatchStartingPositionActivity extends Activity {
         }
     }
 
+    private void loadData() {
+        if(this.tmDBAdapter != null) {
+            Cursor C = this.tmDBAdapter.getStartingPosition(this.teamMatchID);
+            if(C != null && C.getCount() > 0) {
+                this.robotX = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_START_LOCATION_X));
+                this.txtRobotX.setText(String.valueOf(this.robotX));
+                this.robotY = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_START_LOCATION_Y));
+                this.txtRobotY.setText(String.valueOf(this.robotY));
+                this.robotOnField = Boolean.parseBoolean(C.getString(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_START_LOCATION_ON_FIELD))); // Boolean.getBoolean(C.getString(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_START_LOCATION_ON_FIELD)));
+            }
+        }
+    }
+
+    private boolean saveData() {
+        if(this.tmDBAdapter != null) {
+            return this.tmDBAdapter.setStartingPosition(this.teamMatchID, this.robotX, this.robotY, this.robotOnField);
+        }
+        return false;
+    }
+
     private void configureSubmitButton() {
         btnSubmit = (Button) findViewById(R.id.btnSubmitStartingPosition);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -114,10 +141,23 @@ public class MatchStartingPositionActivity extends Activity {
 
     private void setRobotLayout() {
         RelativeLayout.LayoutParams robotLayoutParams = new RelativeLayout.LayoutParams((int)getResources().getDimension(R.dimen.robot_height), (int)getResources().getDimension(R.dimen.robot_width));
-        robotLayoutParams.leftMargin = this.robotX;
-        robotLayoutParams.topMargin = this.robotY;
+        robotLayoutParams.leftMargin = this.robotX - ((int)getResources().getDimension(R.dimen.robot_width) / 2);
+        robotLayoutParams.topMargin = this.robotY - ((int)getResources().getDimension(R.dimen.robot_height) / 2);
         robotLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        robotLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         imgRobot.setLayoutParams(robotLayoutParams);
+    }
+
+    private void placeRobotOnScreen() {
+        RelativeLayout relLayout;
+        if(this.robotOnField) {
+            relLayout = (RelativeLayout) findViewById(R.id.StartingPosition_Field_LayoutRelative);
+        } else {
+            relLayout = (RelativeLayout) findViewById(R.id.StartingPosition_RobotGutter_RelativeLayout);
+        }
+        ((ViewGroup)imgRobot.getParent()).removeView(imgRobot);
+        this.setRobotLayout();
+        relLayout.addView(imgRobot);
     }
 
     private final class MyRobotTouchListener implements View.OnTouchListener {
@@ -150,10 +190,7 @@ public class MatchStartingPositionActivity extends Activity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(tmDBAdapter == null) {
-        	tmDBAdapter = new TeamMatchDBAdapter(this.getBaseContext());
-        }
-        tmDBAdapter.open();
+        openDatabase();
     }
 
     @Override
@@ -164,7 +201,8 @@ public class MatchStartingPositionActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        this.setRobotLayout();
+        this.loadData();
+        this.placeRobotOnScreen();
     }
 
     @Override
@@ -175,6 +213,7 @@ public class MatchStartingPositionActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        this.saveData();
     }
 
     @Override
@@ -213,21 +252,28 @@ public class MatchStartingPositionActivity extends Activity {
                 case DragEvent.ACTION_DROP:
                     // Dropped, reassign View to ViewGroup
                     //FTSUtilities.printToConsole("TeamMatchStartingPositionFragment::DragEvent::ACTION_DROP\n");
+                    robotOnField = false;
                     View view = (View) event.getLocalState();
 
                     //String toastText = "onDrag Event X: " + event.getX() + " Y: " + event.getY();
                     //Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();
 
+                    /*
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                             (int)getResources().getDimension(R.dimen.robot_height),
                             (int)getResources().getDimension(R.dimen.robot_width)
                     );
                     params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                     params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    robotX = (int)event.getX() - ((int)((View) event.getLocalState()).getWidth() / 2);
-                    robotY = (int)event.getY() - ((int)((View) event.getLocalState()).getHeight() / 2);
-                    params.setMargins(robotX, robotY, 0, 0);
+                    int robotXMargin = (int)event.getX() - ((int)((View) event.getLocalState()).getWidth() / 2);
+                    int robotYMargin = (int)event.getY() - ((int)((View) event.getLocalState()).getHeight() / 2);
+
+                    params.setMargins(robotXMargin, robotYMargin, 0, 0);
                     view.setLayoutParams(params);
+                    */
+                    robotX = (int)event.getX();
+                    robotY = (int)event.getY();
+                    setRobotLayout();
                     view.setVisibility(View.VISIBLE);
 
 
@@ -236,7 +282,7 @@ public class MatchStartingPositionActivity extends Activity {
                 case DragEvent.ACTION_DRAG_ENDED:
                     //v.setBackgroundDrawable(normalShape);
                 case DragEvent.ACTION_DRAG_LOCATION:
-                    v.setVisibility(View.VISIBLE);
+                    //v.setVisibility(View.VISIBLE);
                     break;
                 default:
                     break;
@@ -246,12 +292,15 @@ public class MatchStartingPositionActivity extends Activity {
     }
 
     private class MyFieldDragListener implements View.OnDragListener {
+        boolean dragging = false;
         @Override
         public boolean onDrag(View v, DragEvent event) {
+
             int action = event.getAction();
             switch (action) {
                 case DragEvent.ACTION_DRAG_STARTED:
-                    // do nothing
+                    dragging = true;
+                    robotOnField = false;
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
                     //v.setBackgroundDrawable(enterShape);
@@ -262,6 +311,8 @@ public class MatchStartingPositionActivity extends Activity {
                 case DragEvent.ACTION_DROP:
                     // Dropped, reassign View to ViewGroup
                     //FTSUtilities.printToConsole("TeamMatchStartingPositionFragment::DragEvent::ACTION_DROP\n");
+                    dragging = false;
+                    robotOnField = true;
                     View view = (View) event.getLocalState();
 
                     ViewGroup owner = (ViewGroup) view.getParent();
@@ -272,25 +323,40 @@ public class MatchStartingPositionActivity extends Activity {
                     //String toastText = "onDrag Event X: " + event.getX() + " Y: " + event.getY();
                     //Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();
 
+                    /*
                     RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                             (int)getResources().getDimension(R.dimen.robot_height),
                             (int)getResources().getDimension(R.dimen.robot_width)
                     );
                     params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                     params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    robotX = (int)event.getX() - ((int)((View) event.getLocalState()).getWidth() / 2);
-                    robotY = (int)event.getY() - ((int)((View) event.getLocalState()).getHeight() / 2);
-                    params.setMargins(robotX, robotY, 0, 0);
+                    robotX = (int)event.getX();
+                    robotY = (int)event.getY();
+                    int robotXMargin = robotX - ((int)((View) event.getLocalState()).getWidth() / 2);
+                    int robotYMargin = robotY - ((int)((View) event.getLocalState()).getHeight() / 2);
+                    params.setMargins(robotXMargin, robotYMargin, 0, 0);
                     view.setLayoutParams(params);
+                    */
+                    robotX = (int)event.getX();
+                    robotY = (int)event.getY();
+                    setRobotLayout();
                     view.setVisibility(View.VISIBLE);
 
+                    txtRobotX.setText(String.valueOf(robotX));
+                    txtRobotY.setText(String.valueOf(robotY));
 
                     //view.setVisibility(View.VISIBLE);
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     //v.setBackgroundDrawable(normalShape);
                 case DragEvent.ACTION_DRAG_LOCATION:
-                    v.setVisibility(View.VISIBLE);
+                    if(dragging) {
+                        robotX = (int) event.getX();
+                        robotY = (int) event.getY();
+                        txtRobotX.setText(String.valueOf(robotX));
+                        txtRobotY.setText(String.valueOf(robotY));
+                    }
+                    //v.setVisibility(View.VISIBLE);
                     break;
                 default:
                     break;

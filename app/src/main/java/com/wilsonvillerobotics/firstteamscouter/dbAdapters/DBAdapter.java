@@ -11,7 +11,7 @@ public class DBAdapter {
 
     public static final String DATABASE_NAME = "FIRSTTeamScouter"; //$NON-NLS-1$
 
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 7;
     
     private static final int CREATE_TABLE_SQL = 0;
     private static final int DELETE_TABLE_SQL = 1;
@@ -281,6 +281,9 @@ public class DBAdapter {
     		TeamMatchDBAdapter.COLUMN_NAME_ROLE_CATCHER + BOOL_TYPE + COMMA_SEP +
     		TeamMatchDBAdapter.COLUMN_NAME_ROLE_GOALIE + BOOL_TYPE + COMMA_SEP +
     		TeamMatchDBAdapter.COLUMN_NAME_START_LOCATION + INT_TYPE + COMMA_SEP +
+            TeamMatchDBAdapter.COLUMN_NAME_START_LOCATION_X + INT_TYPE + COMMA_SEP +
+            TeamMatchDBAdapter.COLUMN_NAME_START_LOCATION_Y + INT_TYPE + COMMA_SEP +
+            TeamMatchDBAdapter.COLUMN_NAME_START_LOCATION_ON_FIELD + BOOL_TYPE + COMMA_SEP +
     		TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_GROUND_PICKUP + BOOL_TYPE + COMMA_SEP +
     		TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_HUMAN_LOAD + BOOL_TYPE + COMMA_SEP +
     		TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_HI_TO_LO + BOOL_TYPE + COMMA_SEP +
