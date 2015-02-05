@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
 import android.database.SQLException;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -41,14 +41,17 @@ public class MatchStartingPositionActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_match_starting_position);
 
-        RelativeLayout startingPositionParentLayout = (RelativeLayout) findViewById(R.id.StartingPosition_LayoutRelative);
+        RelativeLayout startingPositionRobotGutterLayout = (RelativeLayout) findViewById(R.id.StartingPosition_RobotGutter_LinearLayout);
+        RelativeLayout startingPositionFieldLayout       = (RelativeLayout) findViewById(R.id.StartingPosition_Field_LayoutRelative);
 		
 		this.processIntent(getIntent());
-        this.setBackground(startingPositionParentLayout);
-        startingPositionParentLayout.setOnDragListener(new MyDragListener());
+        this.setBackground(startingPositionFieldLayout);
+        startingPositionRobotGutterLayout.setOnDragListener(new MyDragListener());
+        startingPositionFieldLayout.setOnDragListener(new MyFieldDragListener());
 
         imgRobot = (ImageView) findViewById(R.id.imgRobot);
-        imgRobot.setOnTouchListener(new MyTouchListener());
+        imgRobot.setOnTouchListener(new MyRobotTouchListener());
+
         //this.setRobotLayout();
 
         teamID = -1;
@@ -113,11 +116,11 @@ public class MatchStartingPositionActivity extends Activity {
         RelativeLayout.LayoutParams robotLayoutParams = new RelativeLayout.LayoutParams((int)getResources().getDimension(R.dimen.robot_height), (int)getResources().getDimension(R.dimen.robot_width));
         robotLayoutParams.leftMargin = this.robotX;
         robotLayoutParams.topMargin = this.robotY;
-        robotLayoutParams.addRule(RelativeLayout.ALIGN_RIGHT);
+        robotLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         imgRobot.setLayoutParams(robotLayoutParams);
     }
 
-    private final class MyTouchListener implements View.OnTouchListener {
+    private final class MyRobotTouchListener implements View.OnTouchListener {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
             if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
@@ -138,6 +141,7 @@ public class MatchStartingPositionActivity extends Activity {
         }
     }
 
+    // Overridden Activity Methods Section
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -226,10 +230,61 @@ public class MatchStartingPositionActivity extends Activity {
                     view.setLayoutParams(params);
                     view.setVisibility(View.VISIBLE);
 
-                    //ViewGroup owner = (ViewGroup) view.getParent();
-                    //owner.removeView(view);
-                    //LinearLayout container = (LinearLayout) v;
-                    //container.addView(view);
+
+                    //view.setVisibility(View.VISIBLE);
+                    break;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    //v.setBackgroundDrawable(normalShape);
+                case DragEvent.ACTION_DRAG_LOCATION:
+                    v.setVisibility(View.VISIBLE);
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+    }
+
+    private class MyFieldDragListener implements View.OnDragListener {
+        @Override
+        public boolean onDrag(View v, DragEvent event) {
+            int action = event.getAction();
+            switch (action) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    // do nothing
+                    break;
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    //v.setBackgroundDrawable(enterShape);
+                    break;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    //v.setBackgroundDrawable(normalShape);
+                    break;
+                case DragEvent.ACTION_DROP:
+                    // Dropped, reassign View to ViewGroup
+                    //FTSUtilities.printToConsole("TeamMatchStartingPositionFragment::DragEvent::ACTION_DROP\n");
+                    View view = (View) event.getLocalState();
+
+                    ViewGroup owner = (ViewGroup) view.getParent();
+                    owner.removeView(view);
+                    RelativeLayout container = (RelativeLayout) v;
+                    container.addView(view);
+
+                    //String toastText = "onDrag Event X: " + event.getX() + " Y: " + event.getY();
+                    //Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();
+
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                            (int)getResources().getDimension(R.dimen.robot_height),
+                            (int)getResources().getDimension(R.dimen.robot_width)
+                    );
+                    params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                    params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                    robotX = (int)event.getX() - ((int)((View) event.getLocalState()).getWidth() / 2);
+                    robotY = (int)event.getY() - ((int)((View) event.getLocalState()).getHeight() / 2);
+                    params.setMargins(robotX, robotY, 0, 0);
+                    view.setLayoutParams(params);
+                    view.setVisibility(View.VISIBLE);
+
+
                     //view.setVisibility(View.VISIBLE);
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:

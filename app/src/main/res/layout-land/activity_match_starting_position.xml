@@ -1,31 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:background="@drawable/starting_position_background_2015"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="horizontal"
-    android:paddingTop="2dp"
-    android:id="@+id/StartingPosition_LayoutRelative">
+    android:id="@+id/StartingPosition_LayoutLinear">
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:id="@+id/imgRobot"
-        android:layout_gravity="right"
-        android:src="@drawable/robot_50x50"
-        android:contentDescription="Robot"
-        android:layout_marginTop="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="50dp" />
+    <RelativeLayout
+        android:layout_width="800dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/starting_position_background_2015"
+        android:orientation="horizontal"
+        android:id="@+id/StartingPosition_Field_LayoutRelative">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="To Auto"
-        android:id="@+id/btnSubmitStartingPosition"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true" />
+    </RelativeLayout>
 
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/StartingPosition_RobotGutter_LinearLayout">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/imgRobot"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/robot_50x50"
+            android:contentDescription="Robot"
+            android:layout_marginTop="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="25dp" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/StartingPosition_ButtonGutter_LinearLayout">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="To Auto"
+            android:id="@+id/btnSubmitStartingPosition"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true" />
+
+    </LinearLayout>
+
+</LinearLayout>
