@@ -6,11 +6,11 @@
     android:id="@+id/StartingPosition_LayoutLinear">
 
     <RelativeLayout
-        android:layout_width="550dp"
-        android:layout_height="550dp"
+        android:layout_width="500dp"
+        android:layout_height="500dp"
         android:layout_gravity="center_vertical"
-        android:background="@drawable/starting_position_background_2015"
         android:orientation="horizontal"
+        android:background="@drawable/starting_position_background_2015"
         android:id="@+id/StartingPosition_Field_LayoutRelative">
 
     </RelativeLayout>

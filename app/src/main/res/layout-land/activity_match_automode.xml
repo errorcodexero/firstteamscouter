@@ -1,111 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:alignmentMode="alignBounds"
-    android:columnCount="12"
     android:orientation="horizontal"
-    android:rowCount="18"
-    android:rowOrderPreserved="true"
-    android:id="@+id/Auto_LayoutRelative"
-    android:paddingRight="25dp">
-
-    <Switch
-        android:id="@+id/switchUndo"
-        android:layout_gravity="center_horizontal|top"
-        android:layout_marginTop="5dp"
-        android:text="@string/text_button_Undo"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_height="50dp"
-        android:layout_width="200dp" />
+    android:id="@+id/StartingPosition_LayoutLinear">
 
     <RelativeLayout
-        android:layout_width="700dp"
-        android:layout_height="fill_parent"
-        android:alignmentMode="alignBounds"
-        android:background="@drawable/automode_background_2015"
-        android:columnCount="12"
+        android:layout_width="500dp"
+        android:layout_height="500dp"
+        android:layout_gravity="center_vertical"
         android:orientation="horizontal"
-        android:rowCount="18"
-        android:rowOrderPreserved="true"
-        android:id="@+id/Auto_Field_LayoutRelative"
-        android:paddingRight="25dp">
+        android:background="@drawable/automode_background_2015"
+        android:id="@+id/AutoMode_Field_LayoutRelative" >
 
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="38dp"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
             android:id="@+id/imgYellowTote1"
             android:src="@drawable/yellow_tote_top_down_25x38"
             android:layout_gravity="left|top"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="548dp"
-            android:layout_marginTop="60dp" />
+            android:layout_marginLeft="412dp"
+            android:layout_marginTop="82dp" />
 
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="38dp"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
             android:id="@+id/imgYellowTote2"
             android:src="@drawable/yellow_tote_top_down_25x38"
             android:layout_gravity="left|top"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="548dp"
-            android:layout_marginTop="149dp" />
+            android:layout_marginLeft="412dp"
+            android:layout_marginTop="206dp" />
 
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="38dp"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
             android:id="@+id/imgYellowTote3"
             android:src="@drawable/yellow_tote_top_down_25x38"
             android:layout_gravity="left|top"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="538dp"
-            android:layout_marginTop="380dp" />
+            android:layout_marginLeft="412dp"
+            android:layout_marginTop="330dp" />
 
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:id="@+id/imgGreenCan1"
             android:src="@drawable/green_can_top_down_40x40"
             android:layout_gravity="left|top"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="540dp"
-            android:layout_marginTop="98dp" />
+            android:layout_marginLeft="405dp"
+            android:layout_marginTop="130dp" />
 
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:id="@+id/imgGreenCan2"
             android:src="@drawable/green_can_top_down_40x40"
             android:layout_gravity="left|top"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="540dp"
-            android:layout_marginTop="187dp" />
+            android:layout_marginLeft="405dp"
+            android:layout_marginTop="253dp" />
 
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:id="@+id/imgGreenCan3"
             android:src="@drawable/green_can_top_down_40x40"
             android:layout_gravity="left|top"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="530dp"
-            android:layout_marginTop="420dp" />
+            android:layout_marginLeft="405dp"
+            android:layout_marginTop="376dp" />
 
     </RelativeLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="To TeleOp"
-        android:id="@+id/btnSubmitMatchAuto"
-        android:layout_alignBottom="@+id/Auto_Field_LayoutRelative"
-        android:layout_alignRight="@+id/switchUndo" />
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/AutoMode_ButtonGutter_LinearLayout"
+        android:layout_gravity="center_horizontal">
 
-</RelativeLayout>
+        <Switch
+            android:id="@+id/switchUndo"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_marginTop="5dp"
+            android:text="@string/text_button_Undo"
+            android:layout_height="50dp"
+            android:layout_width="200dp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:id="@+id/robotX_TextView"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:id="@+id/robotY_TextView"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="To TeleOp"
+            android:id="@+id/btnSubmitMatchAuto"
+            android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
+
+</LinearLayout>

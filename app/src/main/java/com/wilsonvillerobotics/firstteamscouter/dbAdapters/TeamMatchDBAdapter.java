@@ -62,6 +62,8 @@ public class TeamMatchDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_START_LOCATION = "starting_location";
     public static final String COLUMN_NAME_START_LOCATION_X = "starting_location_X";
     public static final String COLUMN_NAME_START_LOCATION_Y = "starting_location_Y";
+    public static final String COLUMN_NAME_AUTO_FINAL_LOCATION_X = "automode_final_location_X";
+    public static final String COLUMN_NAME_AUTO_FINAL_LOCATION_Y = "automode_final_location_Y";
     public static final String COLUMN_NAME_START_LOCATION_ON_FIELD = "starting_location_on_field";
 
     // These should be part of the robot data, not the match data
@@ -125,6 +127,8 @@ public class TeamMatchDBAdapter implements BaseColumns {
     	    COLUMN_NAME_START_LOCATION,
             COLUMN_NAME_START_LOCATION_X,
             COLUMN_NAME_START_LOCATION_Y,
+            COLUMN_NAME_AUTO_FINAL_LOCATION_X,
+            COLUMN_NAME_AUTO_FINAL_LOCATION_Y,
             COLUMN_NAME_START_LOCATION_ON_FIELD,
     	    COLUMN_NAME_BALL_CONTROL_GROUND_PICKUP,
     	    COLUMN_NAME_BALL_CONTROL_HUMAN_LOAD,
@@ -514,6 +518,20 @@ public class TeamMatchDBAdapter implements BaseColumns {
         args.put(COLUMN_NAME_START_LOCATION_X, startingPositionX);
         args.put(COLUMN_NAME_START_LOCATION_Y, startingPositionY);
         args.put(COLUMN_NAME_START_LOCATION_ON_FIELD, String.valueOf(robotOnField));
+
+        String WHERE = TeamMatchDBAdapter._ID + "=" + teamMatchID;
+
+        return this.mDb.update(TABLE_NAME, args, WHERE, null) >0;
+    }
+
+    public boolean setAutoModeActions(long teamMatchID, int finalAutoModePositionX, int finalAutoModePositionY,
+                                      int totesStacked, int totesScored, int cansScored, int cansGrabbedFromStep) {
+        FTSUtilities.printToConsole("TeamMatchDBAdapter::setAutoModeActions\n");
+        ContentValues args = new ContentValues();
+        args.put(_ID, teamMatchID);
+        args.put(COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_AUTO_FINAL_LOCATION_X, finalAutoModePositionX);
+        args.put(COLUMN_NAME_AUTO_FINAL_LOCATION_Y, finalAutoModePositionY);
 
         String WHERE = TeamMatchDBAdapter._ID + "=" + teamMatchID;
 
