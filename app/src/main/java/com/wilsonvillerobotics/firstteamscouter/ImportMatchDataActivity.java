@@ -26,6 +26,7 @@ import android.database.SQLException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -41,6 +42,7 @@ public class ImportMatchDataActivity extends Activity {
 	private TeamMatchDBAdapter tmDBAdapter;
 	private TeamDataDBAdapter tDataDBAdapter;
 	private Button btnOK;
+    private Button btnDisplayMetrics;
 	private TextView txtStatus;
 	private TextView txtTestDataAlert;
 	protected ProgressBar mProgressBar;
@@ -118,7 +120,15 @@ public class ImportMatchDataActivity extends Activity {
 	    txtTestDataAlert.setText(testDataAlertMessage);
 	    
 	    mProgressBar = (ProgressBar)findViewById(R.id.progressBar1);
-	    
+
+        btnDisplayMetrics = (Button) findViewById(R.id.btnDisplayMetrics);
+        btnDisplayMetrics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayScreenMetrics();
+            }
+        });
+
 		btnOK = (Button) findViewById(R.id.btnImportMatchData);
 		btnOK.setOnClickListener(new View.OnClickListener() {
 			
@@ -511,8 +521,35 @@ public class ImportMatchDataActivity extends Activity {
 		getMenuInflater().inflate(R.menu.enter_data, menu);
 		return true;
 	}
-	
-	public class CSVFilenameFilter implements FilenameFilter {
+
+    private void displayScreenMetrics() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        String msg = "";
+        switch(metrics.densityDpi){
+            case DisplayMetrics.DENSITY_LOW:
+                msg = "Low density screen\n";
+                break;
+            case DisplayMetrics.DENSITY_MEDIUM:
+                msg = "Medium density screen\n";
+                break;
+            case DisplayMetrics.DENSITY_HIGH:
+                msg = "High density screen\n";
+                break;
+            case DisplayMetrics.DENSITY_XHIGH:
+                msg = "Extra High density screen\n";
+                break;
+            case DisplayMetrics.DENSITY_TV:
+                msg = "TV density screen\n";
+                break;
+        }
+        msg += "Width: " + metrics.widthPixels + " pix    Height: " + metrics.heightPixels + " pix\n";
+        msg += "X-DPI: " + metrics.xdpi + "Y-DPI: " + metrics.ydpi + "\n";
+        msg += "Density: " + metrics.density;
+        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
+    }
+
+    public class CSVFilenameFilter implements FilenameFilter {
 		String ext;
 		
 		public CSVFilenameFilter(String ext) {

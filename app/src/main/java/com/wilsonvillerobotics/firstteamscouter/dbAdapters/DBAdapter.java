@@ -11,7 +11,7 @@ public class DBAdapter {
 
     public static final String DATABASE_NAME = "FIRSTTeamScouter"; //$NON-NLS-1$
 
-    public static final int DATABASE_VERSION = 7;
+    public static final int DATABASE_VERSION = 8;
     
     private static final int CREATE_TABLE_SQL = 0;
     private static final int DELETE_TABLE_SQL = 1;
@@ -285,6 +285,12 @@ public class DBAdapter {
             TeamMatchDBAdapter.COLUMN_NAME_START_LOCATION_Y + INT_TYPE + COMMA_SEP +
             TeamMatchDBAdapter.COLUMN_NAME_AUTO_FINAL_LOCATION_X + INT_TYPE + COMMA_SEP +
             TeamMatchDBAdapter.COLUMN_NAME_AUTO_FINAL_LOCATION_Y + INT_TYPE + COMMA_SEP +
+            TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTES_PICKED_UP + INT_TYPE + COMMA_SEP +
+            TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTES_STACKED + INT_TYPE + COMMA_SEP +
+            TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTES_SCORED + INT_TYPE + COMMA_SEP +
+            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CANS_PICKED_UP + INT_TYPE + COMMA_SEP +
+            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CANS_SCORED + INT_TYPE + COMMA_SEP +
+            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP + INT_TYPE + COMMA_SEP +
             TeamMatchDBAdapter.COLUMN_NAME_START_LOCATION_ON_FIELD + BOOL_TYPE + COMMA_SEP +
     		TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_GROUND_PICKUP + BOOL_TYPE + COMMA_SEP +
     		TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_HUMAN_LOAD + BOOL_TYPE + COMMA_SEP +

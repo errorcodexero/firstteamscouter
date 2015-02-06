@@ -62,9 +62,16 @@ public class TeamMatchDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_START_LOCATION = "starting_location";
     public static final String COLUMN_NAME_START_LOCATION_X = "starting_location_X";
     public static final String COLUMN_NAME_START_LOCATION_Y = "starting_location_Y";
-    public static final String COLUMN_NAME_AUTO_FINAL_LOCATION_X = "automode_final_location_X";
-    public static final String COLUMN_NAME_AUTO_FINAL_LOCATION_Y = "automode_final_location_Y";
     public static final String COLUMN_NAME_START_LOCATION_ON_FIELD = "starting_location_on_field";
+    public static final String COLUMN_NAME_AUTO_TOTES_PICKED_UP = "auto_totes_picked_up";
+    public static final String COLUMN_NAME_AUTO_TOTES_STACKED = "auto_totes_stacked";
+    public static final String COLUMN_NAME_AUTO_TOTES_SCORED = "auto_totes_scored";
+    public static final String COLUMN_NAME_AUTO_CANS_PICKED_UP = "auto_cans_picked_up";
+    public static final String COLUMN_NAME_AUTO_CANS_SCORED = "auto_cans_scored";
+    public static final String COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP = "auto_cans_pulled_from_step";
+    public static final String COLUMN_NAME_AUTO_FINAL_LOCATION_X = "auto_final_location_X";
+    public static final String COLUMN_NAME_AUTO_FINAL_LOCATION_Y = "auto_final_location_Y";
+
 
     // These should be part of the robot data, not the match data
     public static final String COLUMN_NAME_BALL_CONTROL_GROUND_PICKUP = "ball_control_ground_pickup";
@@ -129,6 +136,12 @@ public class TeamMatchDBAdapter implements BaseColumns {
             COLUMN_NAME_START_LOCATION_Y,
             COLUMN_NAME_AUTO_FINAL_LOCATION_X,
             COLUMN_NAME_AUTO_FINAL_LOCATION_Y,
+            COLUMN_NAME_AUTO_TOTES_PICKED_UP,
+            COLUMN_NAME_AUTO_TOTES_STACKED,
+            COLUMN_NAME_AUTO_TOTES_SCORED,
+            COLUMN_NAME_AUTO_CANS_PICKED_UP,
+            COLUMN_NAME_AUTO_CANS_SCORED,
+            COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP,
             COLUMN_NAME_START_LOCATION_ON_FIELD,
     	    COLUMN_NAME_BALL_CONTROL_GROUND_PICKUP,
     	    COLUMN_NAME_BALL_CONTROL_HUMAN_LOAD,
@@ -525,13 +538,20 @@ public class TeamMatchDBAdapter implements BaseColumns {
     }
 
     public boolean setAutoModeActions(long teamMatchID, int finalAutoModePositionX, int finalAutoModePositionY,
-                                      int totesStacked, int totesScored, int cansScored, int cansGrabbedFromStep) {
+                                      int totesPickedUp, int cansPickedUp, int totesStacked, int totesScored,
+                                      int cansScored, int cansGrabbedFromStep) {
         FTSUtilities.printToConsole("TeamMatchDBAdapter::setAutoModeActions\n");
         ContentValues args = new ContentValues();
         args.put(_ID, teamMatchID);
         args.put(COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT, Boolean.TRUE.toString());
         args.put(COLUMN_NAME_AUTO_FINAL_LOCATION_X, finalAutoModePositionX);
         args.put(COLUMN_NAME_AUTO_FINAL_LOCATION_Y, finalAutoModePositionY);
+        args.put(COLUMN_NAME_AUTO_TOTES_PICKED_UP, totesPickedUp);
+        args.put(COLUMN_NAME_AUTO_CANS_PICKED_UP, cansPickedUp);
+        args.put(COLUMN_NAME_AUTO_TOTES_STACKED, totesStacked);
+        args.put(COLUMN_NAME_AUTO_TOTES_SCORED, totesScored);
+        args.put(COLUMN_NAME_AUTO_CANS_SCORED, cansScored);
+        args.put(COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP, cansGrabbedFromStep);
 
         String WHERE = TeamMatchDBAdapter._ID + "=" + teamMatchID;
 

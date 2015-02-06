@@ -4,7 +4,9 @@
     <PreferenceCategory
             android:title="Tablet Identity">
  
-    <ListPreference android:entryValues="@array/TabletIDs" android:entries="@array/TabletIDs" android:key="tablet_id_from_list" android:title="Select Tablet ID" /></PreferenceCategory>
+        <ListPreference android:entryValues="@array/TabletIDs" android:entries="@array/TabletIDs" android:key="tablet_id_from_list" android:title="Select Tablet ID" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="Field Orientation">
         <SwitchPreference android:switchTextOn="Red on Right" android:title="Field Orientation" android:selectable="true" android:summary="Select whether the Red Goal is on the right or left of the field from your position" android:enabled="true" android:switchTextOff="Red on Left" android:key="field_orientation"/>
     </PreferenceCategory>

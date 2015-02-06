@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.DragEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.MatchDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
@@ -154,11 +158,43 @@ public class MatchAutoModeActivity extends Activity {
     }
 
     private void setViewLayout(View v, int left, int top) {
+        int height = v.getHeight();
+        int width = v.getWidth();
         RelativeLayout.LayoutParams viewLayoutParams = new RelativeLayout.LayoutParams(
-                v.getHeight(),
-                v.getWidth()
+                width,
+                height
         );
-        viewLayoutParams.setMargins(left - viewLayoutParams.width/2, top - viewLayoutParams.height/2, 0, 0);
+        RelativeLayout parent = (RelativeLayout) v.getParent();
+        int maxLeft = parent.getWidth() - width/2;
+        int minLeft = width/2;
+        int maxTop = parent.getHeight() - height/2;
+        int minTop = height/2;
+        if(left > maxLeft) {
+            left = maxLeft;
+        }
+        if(left < minLeft) {
+            left = minLeft;
+        }
+        if(top > maxTop) {
+            top = maxTop;
+        }
+        if(top < minTop) {
+            top = minTop;
+        }
+
+        // Bottom Corner
+        // y = -0.846 x + 600
+        float bottomCorner = 709.1f - 1.182f*top;
+        float topCorner = 1.273f*top + 259.64f;
+        if(top >= 290 && left > bottomCorner) {
+            left = (int)bottomCorner;
+        }
+        if(top <= 75 && left > topCorner) {
+            left = (int)topCorner;
+        }
+
+
+        viewLayoutParams.setMargins(left - (width/2), top - (height/2), 0, 0);
         viewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         viewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         v.setLayoutParams(viewLayoutParams);
@@ -167,10 +203,13 @@ public class MatchAutoModeActivity extends Activity {
     private void configureTotesAndCans() {
         imgYellowTote1 = (ImageView) findViewById(R.id.imgYellowTote1);
         imgYellowTote1.setOnTouchListener(new MyViewTouchListener());
+        registerForContextMenu(imgYellowTote1);
         imgYellowTote2 = (ImageView) findViewById(R.id.imgYellowTote2);
         imgYellowTote2.setOnTouchListener(new MyViewTouchListener());
+        registerForContextMenu(imgYellowTote2);
         imgYellowTote3 = (ImageView) findViewById(R.id.imgYellowTote3);
         imgYellowTote3.setOnTouchListener(new MyViewTouchListener());
+        registerForContextMenu(imgYellowTote3);
 
         imgAllianceCan1 = (ImageView) findViewById(R.id.imgGreenCan1);
         imgAllianceCan1.setOnTouchListener(new MyViewTouchListener());
@@ -232,7 +271,10 @@ public class MatchAutoModeActivity extends Activity {
 
     private boolean saveData() {
         if(this.tmDBAdapter != null) {
-            return false; //this.tmDBAdapter.setStartingPosition(this.teamMatchID, this.robotX, this.robotY, this.robotOnField);
+            //teamMatchID, finalAutoModePositionX, finalAutoModePositionY,
+            //totesPickedUp, cansPickedUp, totesStacked, totesScored, cansScored, cansGrabbedFromStep
+            return this.tmDBAdapter.setAutoModeActions(this.teamMatchID, this.robotX, this.robotY,
+                    0, 0, 0, 0, 0, 0);
         }
         return false;
     }
@@ -284,6 +326,57 @@ public class MatchAutoModeActivity extends Activity {
         super.onDestroy();
     }
 
+    /*
+     * This method is called when a context menu for the view about to be shown.
+     */
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if(v.getId()==R.id.imgYellowTote1)
+        {
+            // to set the context menu's header icon
+            menu.setHeaderIcon(R.drawable.robot_50x50);
+
+            // to set the context menu's title
+            menu.setHeaderTitle("Yellow Tote 1");
+
+            // to add a new item to the menu
+            menu.add(0,0,0, "Stack Tote");
+            menu.add(0,1,0,"Drop Tote");
+        }
+
+    }
+
+     /*
+     * This method is called when an item in a context menu is selected.
+     *
+     */
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch(item.getItemId())
+        {
+            case 0:
+                stack(item.getItemId());
+                break;
+            case 1:
+                drop(item.getItemId());
+                break;
+        }
+        return true;
+    }
+
+    private void drop(int itemId) {
+        Toast.makeText(this, "You pressed Drop", Toast.LENGTH_LONG).show();
+
+    }
+
+    public void stack(int i)
+    {
+        Toast.makeText(this, "You pressed Stack", Toast.LENGTH_LONG).show();
+    }
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -299,7 +392,6 @@ public class MatchAutoModeActivity extends Activity {
             switch (action) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     dragging = true;
-                    //robotOnField = false;
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
                     //v.setBackgroundDrawable(enterShape);
@@ -310,7 +402,6 @@ public class MatchAutoModeActivity extends Activity {
                 case DragEvent.ACTION_DROP:
                     // Dropped, reassign View to ViewGroup
                     dragging = false;
-                    //robotOnField = true;
                     View view = (View) event.getLocalState();
 
                     ViewGroup owner = (ViewGroup) view.getParent();
@@ -326,6 +417,31 @@ public class MatchAutoModeActivity extends Activity {
                         setRobotLayout();
                     } else {
                         setViewLayout(view, left, top);
+                        boolean yellowTote1 = (view.getId() == R.id.imgYellowTote1);
+                        Rect viewRect = new Rect();
+                        viewRect.left = left;
+                        viewRect.top = top;
+                        viewRect.right = left + view.getWidth();
+                        viewRect.bottom = top + view.getHeight();
+
+                        Rect r1 = new Rect();
+                        Rect r2 = new Rect();
+                        Rect r3 = new Rect();
+
+                        imgYellowTote1.getHitRect(r1);
+                        imgYellowTote2.getHitRect(r2);
+                        imgYellowTote3.getHitRect(r3);
+
+                        if(Rect.intersects(viewRect, r1)) {
+                            Toast.makeText(getApplicationContext(), "On top of Yellow Tote 1", Toast.LENGTH_LONG).show();
+                            view.showContextMenu();
+                        } else if(Rect.intersects(viewRect, r2)) {
+                            Toast.makeText(getApplicationContext(), "On top of Yellow Tote 2", Toast.LENGTH_LONG).show();
+                            view.showContextMenu();
+                        } else if(Rect.intersects(viewRect, r3)) {
+                            Toast.makeText(getApplicationContext(), "On top of Yellow Tote 3", Toast.LENGTH_LONG).show();
+                            view.showContextMenu();
+                        }
                     }
                     view.setVisibility(View.VISIBLE);
 
