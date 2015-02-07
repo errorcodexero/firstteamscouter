@@ -60,19 +60,19 @@
             android:label="@string/title_activity_team_data_list"
             android:screenOrientation="landscape"  >
         </activity>
-        <activity android:name="TeamMatchDataListActivity"
+        <activity android:name="com.wilsonvillerobotics.firstteamscouter.TeamMatchDataListActivity"
             android:screenOrientation="landscape" ></activity>
-        <activity android:name="TeamMatchInformationActivity"
+        <activity android:name="com.wilsonvillerobotics.firstteamscouter.TeamMatchInformationActivity"
             android:screenOrientation="landscape" ></activity>
-        <activity android:name=".MatchAutoModeActivity"
+        <activity android:name="com.wilsonvillerobotics.firstteamscouter.MatchAutoModeActivity"
             android:screenOrientation="landscape" ></activity>
-        <activity android:name=".MatchTeleModeActivity"
+        <activity android:name="com.wilsonvillerobotics.firstteamscouter.MatchTeleModeActivity"
             android:screenOrientation="landscape" ></activity>
-        <activity android:name=".MatchStartingPositionActivity"
+        <activity android:name="com.wilsonvillerobotics.firstteamscouter.MatchStartingPositionActivity"
             android:screenOrientation="landscape" ></activity>
-        <activity android:name=".MatchNotesActivity"
+        <activity android:name="com.wilsonvillerobotics.firstteamscouter.MatchNotesActivity"
             android:screenOrientation="landscape" ></activity>
-        <activity android:name="SetPreferenceActivity"
+        <activity android:name="com.wilsonvillerobotics.firstteamscouter.SetPreferenceActivity"
             android:screenOrientation="landscape" ></activity>
         </application>
 

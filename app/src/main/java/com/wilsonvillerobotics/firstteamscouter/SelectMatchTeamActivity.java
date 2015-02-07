@@ -185,7 +185,11 @@ public class SelectMatchTeamActivity extends Activity {
 
         matchCA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinMatchNum.setAdapter(matchCA);
-        spinMatchNum.setSelection(matchNumber % matchCA.getCount());
+        int selection = 0;
+        if(matchCA.getCount() > 0) {
+            selection = matchNumber % matchCA.getCount();
+        }
+        spinMatchNum.setSelection(selection);
 
 		spinMatchNum.setOnItemSelectedListener(new OnItemSelectedListener() {
 
