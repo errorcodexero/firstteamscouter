@@ -5,7 +5,6 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -15,22 +14,13 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.SimpleCursorAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.MatchDataDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
-
-import java.util.Hashtable;
 
 public class MatchAutoModeActivity extends Activity {
 
@@ -59,8 +49,18 @@ public class MatchAutoModeActivity extends Activity {
     private ImageView imgRobot;
 
 	protected Boolean fieldOrientationRedOnRight;
-    protected int robotX;
-    protected int robotY;
+    protected int startingRobotX;
+    protected int startingRobotY;
+
+    public int totesPickedUp;
+    public int totesStacked;
+    public int totesScored;
+    public int cansPickedUp;
+    public int cansScored;
+    public int cansGrabbedFromStep;
+    public int finalLocationX;
+    public int finalLocationY;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,6 @@ public class MatchAutoModeActivity extends Activity {
         processIntent(getIntent());
         setBackground(automodeParentLayout);
         configureTotesAndCans();
-        createRobotImageView();
 
 		teamID = -1;
 		matchID = -1;
@@ -110,8 +109,8 @@ public class MatchAutoModeActivity extends Activity {
         this.fieldOrientationRedOnRight = intent.getBooleanExtra("field_orientation", false);
         this.matchNumber = intent.getIntExtra("match_number", 0);
         this.teamMatchID = intent.getLongExtra("tmID", -1);
-        this.robotX = intent.getIntExtra("robot_x", 0);
-        this.robotY = intent.getIntExtra("robot_y", 0);
+        this.startingRobotX = intent.getIntExtra("robot_x", 25);
+        this.startingRobotY = intent.getIntExtra("robot_y", 25);
     }
 
     private void buildIntent(Intent intent) {
@@ -119,8 +118,8 @@ public class MatchAutoModeActivity extends Activity {
         intent.putExtra("field_orientation", fieldOrientationRedOnRight);
         intent.putExtra("match_number", matchNumber);
         intent.putExtra("tmID", teamMatchID);
-        intent.putExtra("robot_x", robotX);
-        intent.putExtra("robot_y", robotY);
+        intent.putExtra("robot_x", startingRobotX);
+        intent.putExtra("robot_y", startingRobotY);
     }
 
     private void setBackground(RelativeLayout automodeParentLayout) {
@@ -140,34 +139,48 @@ public class MatchAutoModeActivity extends Activity {
         placeRobotOnScreen();
     }
 
-    private void setRobotLayout() {
-        RelativeLayout.LayoutParams robotLayoutParams = new RelativeLayout.LayoutParams(
-                getResources().getDimensionPixelSize(R.dimen.robot_height),
-                getResources().getDimensionPixelSize(R.dimen.robot_width)
-        );
-        robotLayoutParams.setMargins(this.robotX - robotLayoutParams.width/2, this.robotY - robotLayoutParams.height/2, 0, 0);
-        robotLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-        robotLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        imgRobot.setLayoutParams(robotLayoutParams);
-    }
-
     private void placeRobotOnScreen() {
         RelativeLayout relLayout = (RelativeLayout) findViewById(R.id.AutoMode_Field_LayoutRelative);
-        this.setRobotLayout();
         relLayout.addView(imgRobot);
+        this.setRobotLayout();
+    }
+
+    private void setRobotLayout() {
+        int width = getResources().getDimensionPixelSize(R.dimen.robot_width);
+        int height = getResources().getDimensionPixelSize(R.dimen.robot_height);
+        int left = this.startingRobotX;
+        int top  = this.startingRobotY;
+
+        if(imgRobot == null) {
+            imgRobot = (ImageView) findViewById(R.id.imgRobot);
+        }
+        setViewLayout(imgRobot, width, height, left, top);
     }
 
     private void setViewLayout(View v, int left, int top) {
         int height = v.getHeight();
         int width = v.getWidth();
+        setViewLayout(v, width, height, left, top);
+    }
+
+    private void setViewLayout(View v, int width, int height, int left, int top) {
         RelativeLayout.LayoutParams viewLayoutParams = new RelativeLayout.LayoutParams(
                 width,
                 height
         );
         RelativeLayout parent = (RelativeLayout) v.getParent();
-        int maxLeft = parent.getWidth() - width/2;
+        int parentWidth = 0, parentHeight = 0;
+        if(parent.getId() == R.id.AutoMode_Field_LayoutRelative) {
+            parentWidth = getResources().getDimensionPixelSize(R.dimen.field_width);
+            parentHeight = getResources().getDimensionPixelSize(R.dimen.field_height);
+        } else if(parent != null) {
+            parentWidth = parent.getMeasuredWidth();
+            parentHeight = parent.getMeasuredHeight();
+        }
+
+        int maxLeft = parentWidth - width/2;
         int minLeft = width/2;
-        int maxTop = parent.getHeight() - height/2;
+        int maxTop = parentHeight - height/2;
         int minTop = height/2;
         if(left > maxLeft) {
             left = maxLeft;
@@ -261,10 +274,10 @@ public class MatchAutoModeActivity extends Activity {
         if(this.tmDBAdapter != null) {
             Cursor C = this.tmDBAdapter.getStartingPosition(this.teamMatchID);
             if(C != null && C.getCount() > 0) {
-                this.robotX = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_START_LOCATION_X));
-                //this.txtRobotX.setText(String.valueOf(this.robotX));
-                this.robotY = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_START_LOCATION_Y));
-                //this.txtRobotY.setText(String.valueOf(this.robotY));
+                this.startingRobotX = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_START_LOCATION_X));
+                //this.txtRobotX.setText(String.valueOf(this.startingRobotX));
+                this.startingRobotY = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_START_LOCATION_Y));
+                //this.txtRobotY.setText(String.valueOf(this.startingRobotY));
             }
         }
     }
@@ -273,7 +286,7 @@ public class MatchAutoModeActivity extends Activity {
         if(this.tmDBAdapter != null) {
             //teamMatchID, finalAutoModePositionX, finalAutoModePositionY,
             //totesPickedUp, cansPickedUp, totesStacked, totesScored, cansScored, cansGrabbedFromStep
-            return this.tmDBAdapter.setAutoModeActions(this.teamMatchID, this.robotX, this.robotY,
+            return this.tmDBAdapter.setAutoModeActions(this.teamMatchID, this.startingRobotX, this.startingRobotY,
                     0, 0, 0, 0, 0, 0);
         }
         return false;
@@ -301,7 +314,7 @@ public class MatchAutoModeActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        
+        createRobotImageView();
     }
 
     @Override
@@ -412,8 +425,8 @@ public class MatchAutoModeActivity extends Activity {
                     int left = (int) event.getX();
                     int top = (int) event.getY();
                     if(view.getId() == R.id.imgRobot) {
-                        robotX = left;
-                        robotY = top;
+                        startingRobotX = left;
+                        startingRobotY = top;
                         setRobotLayout();
                     } else {
                         setViewLayout(view, left, top);
@@ -445,17 +458,17 @@ public class MatchAutoModeActivity extends Activity {
                     }
                     view.setVisibility(View.VISIBLE);
 
-                    //txtRobotX.setText(String.valueOf(robotX));
-                    //txtRobotY.setText(String.valueOf(robotY));
+                    //txtRobotX.setText(String.valueOf(startingRobotX));
+                    //txtRobotY.setText(String.valueOf(startingRobotY));
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     //v.setBackgroundDrawable(normalShape);
                 case DragEvent.ACTION_DRAG_LOCATION:
                     if(dragging) {
-                        robotX = (int) event.getX();
-                        robotY = (int) event.getY();
-                        //txtRobotX.setText(String.valueOf(robotX));
-                        //txtRobotY.setText(String.valueOf(robotY));
+                        startingRobotX = (int) event.getX();
+                        startingRobotY = (int) event.getY();
+                        //txtRobotX.setText(String.valueOf(startingRobotX));
+                        //txtRobotY.setText(String.valueOf(startingRobotY));
                     }
                     break;
                 default:

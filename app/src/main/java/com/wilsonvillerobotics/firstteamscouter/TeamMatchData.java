@@ -100,10 +100,10 @@ public class TeamMatchData {
 	}
 	
 	public enum ZONE {
-		RED_ZONE (0, TeamMatchDBAdapter.COLUMN_NAME_DEFEND_RED, TeamMatchDBAdapter.COLUMN_NAME_ASSIST_RED),
-		WHITE_ZONE (1, TeamMatchDBAdapter.COLUMN_NAME_DEFEND_WHITE, TeamMatchDBAdapter.COLUMN_NAME_ASSIST_WHITE),
-		BLUE_ZONE (2, TeamMatchDBAdapter.COLUMN_NAME_DEFEND_BLUE, TeamMatchDBAdapter.COLUMN_NAME_ASSIST_BLUE),
-		GOAL_ZONE (3, TeamMatchDBAdapter.COLUMN_NAME_DEFEND_GOAL, "");
+		RED_ZONE (0, "", ""), //TeamMatchDBAdapter.COLUMN_NAME_DEFEND_RED, TeamMatchDBAdapter.COLUMN_NAME_ASSIST_RED),
+		WHITE_ZONE (1, "", ""),
+		BLUE_ZONE (2, "", ""),
+		GOAL_ZONE (3, "", "");
 		
 		private int id;
 		private String dbDefendColName;
@@ -319,72 +319,14 @@ public class TeamMatchData {
 	private Hashtable<String, Integer> getIntValueHash() {
 		Hashtable<String, Integer> htIntValues = new Hashtable<String, Integer>();
 		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_START_LOCATION, this.startingLocation.id);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_AUTO_SCORE, this.getAutoScore()); 
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_AUTO_HI_SCORE, this.autoHiScore);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_AUTO_HI_HOT, this.autoHiHot);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_AUTO_HI_MISS, this.autoHiMiss);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_AUTO_LO_SCORE, this.autoLoScore);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_AUTO_LO_HOT, this.autoLoHot);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_AUTO_LO_MISS, this.autoLoMiss);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_AUTO_COLLECT, this.autoCollect);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_AUTO_COLLECT, this.autoDefend);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_TELE_SCORE, this.getTeleScore());
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_TELE_HI_SCORE, this.teleHiScore);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_TELE_HI_MISS, this.teleHiMiss);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_TELE_LO_SCORE, this.teleLoScore);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_TELE_LO_MISS, this.teleLoMiss);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_ASSIST_RED, this.getZoneAssists(ZONE.RED_ZONE));
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_ASSIST_WHITE, this.getZoneAssists(ZONE.WHITE_ZONE));
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_ASSIST_BLUE, this.getZoneAssists(ZONE.BLUE_ZONE));
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_DEFEND_RED, this.getZoneDefends(ZONE.RED_ZONE));
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_DEFEND_WHITE, this.getZoneDefends(ZONE.WHITE_ZONE));
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_DEFEND_BLUE, this.getZoneDefends(ZONE.BLUE_ZONE));
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_DEFEND_GOAL, this.getZoneDefends(ZONE.GOAL_ZONE));
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_TRUSS_TOSS, this.trussToss);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_TRUSS_MISS, this.trussMiss);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_TOSS_CATCH, this.tossCatch);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_TOSS_MISS, this.tossMiss);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_SHORT_PASS_SUCCESS, this.shortPassSuccess);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_SHORT_PASS_MISS, this.shortPassMiss);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_LONG_PASS_SUCCESS, this.longPassSuccess);
-		htIntValues.put(TeamMatchDBAdapter.COLUMN_NAME_LONG_PASS_MISS, this.longPassMiss);
-		
+
 		return htIntValues;
 	}
 	
 	private String getIntCSVHeader() {
 		String retVal = "";
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_START_LOCATION + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_SCORE + COMMA; 
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_HI_SCORE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_HI_HOT + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_HI_MISS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_LO_SCORE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_LO_HOT + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_LO_MISS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_COLLECT + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_COLLECT + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TELE_SCORE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TELE_HI_SCORE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TELE_HI_MISS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TELE_LO_SCORE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TELE_LO_MISS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_ASSIST_RED + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_ASSIST_WHITE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_ASSIST_BLUE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_DEFEND_RED + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_DEFEND_WHITE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_DEFEND_BLUE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_DEFEND_GOAL + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TRUSS_TOSS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TRUSS_MISS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TOSS_CATCH + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TOSS_MISS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_SHORT_PASS_SUCCESS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_SHORT_PASS_MISS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_LONG_PASS_SUCCESS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_LONG_PASS_MISS;
-		
+
 		return retVal;
 	}
 	
@@ -428,7 +370,6 @@ public class TeamMatchData {
 		Hashtable<String, Boolean> htBoolValues = new Hashtable<String, Boolean>();
 		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA, this.tmDBHasSavedData);
 		//htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT, this.tmDBHasDataToExport);
-		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_AUTO_MOVE, this.autoMove);
 		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_BROKE_DOWN, this.brokeDown);
 		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_NO_MOVE, this.noMove);
 		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_LOST_CONNECTION, this.lostConnection);
@@ -437,13 +378,7 @@ public class TeamMatchData {
 		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_ROLE_PASSER, this.robotRole[ROBOT_ROLE.PASSER.id]);
 		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_ROLE_CATCHER, this.robotRole[ROBOT_ROLE.CATCHER.id]);
 		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_ROLE_GOALIE, this.robotRole[ROBOT_ROLE.GOALIE.id]);
-		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_GROUND_PICKUP, this.ballControl[BALL_CONTROL.GROUND_PICKUP.id]);
-		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_HUMAN_LOAD, this.ballControl[BALL_CONTROL.HUMAN_LOAD.id]);
-		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_HI_TO_LO, this.ballControl[BALL_CONTROL.HI_TO_LO.id]);
-		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_LO_TO_HI, this.ballControl[BALL_CONTROL.LO_TO_HI.id]);
-		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_HI_TO_HI, this.ballControl[BALL_CONTROL.HI_TO_HI.id]);
-		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_LO_TO_LO, this.ballControl[BALL_CONTROL.LO_TO_LO.id]);
-		
+
 		return htBoolValues;
 	}
 
@@ -451,7 +386,6 @@ public class TeamMatchData {
 		String retVal = "";
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA + COMMA;
 		//retVal += TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_MOVE + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_BROKE_DOWN + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_NO_MOVE + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_LOST_CONNECTION + COMMA;
@@ -459,14 +393,8 @@ public class TeamMatchData {
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_DEFENDER + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_PASSER + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_CATCHER + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_GOALIE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_GROUND_PICKUP + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_HUMAN_LOAD + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_HI_TO_LO + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_LO_TO_HI + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_HI_TO_HI + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_LO_TO_LO;
-		
+		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_GOALIE;
+
 		return retVal;
 	}
 
@@ -647,40 +575,12 @@ public class TeamMatchData {
 			
 			if(this.tmDBHasSavedData) {
 				FTSUtilities.printToConsole("TeamMatchData::loadTeamMatchData : Loading Saved Data\n");
-				this.autoHiScore = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_AUTO_HI_SCORE));
-				this.autoHiHot = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_AUTO_HI_HOT));
-				this.autoHiMiss = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_AUTO_HI_MISS));
-				
-				this.autoLoScore = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_AUTO_LO_SCORE));
-				this.autoLoHot = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_AUTO_LO_HOT));
-				this.autoLoMiss = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_AUTO_LO_MISS));
-				
-				this.autoCollect = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_AUTO_COLLECT));
-				this.autoDefend = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_AUTO_DEFEND));
-				this.autoMove = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_AUTO_MOVE)));
-				
-				this.teleHiScore = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_TELE_HI_SCORE));
-				this.teleHiMiss = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_TELE_HI_MISS));
-				
-				this.teleLoScore = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_TELE_LO_SCORE));
-				this.teleLoMiss = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_TELE_LO_MISS));
-				
+
 				for (ZONE z : ZONE.values()) {
 					this.zonePossessed[z.id] = (z.dbAssistColName != "") ? tmCursor.getInt(tmCursor.getColumnIndexOrThrow(z.dbAssistColName)) : -1;
 					this.zoneDefended[z.id] = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(z.dbDefendColName));
 				}
-				
-				this.trussToss = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_TRUSS_TOSS));
-				this.trussMiss = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_TRUSS_MISS));
-				
-				this.tossCatch = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_TOSS_CATCH));
-				this.tossMiss = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_TRUSS_MISS));
-				
-				this.shortPassSuccess = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_SHORT_PASS_SUCCESS));
-				this.shortPassMiss = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_SHORT_PASS_MISS));
-				this.longPassSuccess = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_LONG_PASS_SUCCESS));
-				this.longPassMiss = tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_LONG_PASS_MISS));
-				
+
 				this.brokeDown = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_BROKE_DOWN)));
 				this.noMove = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_NO_MOVE)));
 				this.lostConnection = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_LOST_CONNECTION)));
@@ -693,13 +593,6 @@ public class TeamMatchData {
 
 				this.startingLocation = STARTING_LOC.getLocForID(tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_START_LOCATION)));
 
-				this.ballControl[BALL_CONTROL.GROUND_PICKUP.id] = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_GROUND_PICKUP)));
-				this.ballControl[BALL_CONTROL.HUMAN_LOAD.id] = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_HUMAN_LOAD)));
-				this.ballControl[BALL_CONTROL.HI_TO_LO.id] = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_HI_TO_LO)));
-				this.ballControl[BALL_CONTROL.LO_TO_HI.id] = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_LO_TO_HI)));
-				this.ballControl[BALL_CONTROL.HI_TO_HI.id] = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_HI_TO_HI)));
-				this.ballControl[BALL_CONTROL.LO_TO_LO.id] = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_LO_TO_LO)));
-				
 				this.teamMatchNotes = tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_NOTES));
 				this.teamMatchNotes = (this.teamMatchNotes == null) ? "" : this.teamMatchNotes;
 

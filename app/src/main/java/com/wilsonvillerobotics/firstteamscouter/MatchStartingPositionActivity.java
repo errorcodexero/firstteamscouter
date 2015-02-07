@@ -129,14 +129,19 @@ public class MatchStartingPositionActivity extends Activity {
                 //tmDBAdapter.close();
 
                 Intent startingPositionIntent = new Intent(v.getContext(), MatchAutoModeActivity.class);
-                startingPositionIntent.putExtra("tablet_id", tabletID);
-                startingPositionIntent.putExtra("field_orientation", fieldOrientationRedOnRight);
-                startingPositionIntent.putExtra("match_number", matchNumber);
-                startingPositionIntent.putExtra("robot_x", robotX);
-                startingPositionIntent.putExtra("robot_y", robotY);
+                buildIntent(startingPositionIntent);
                 startActivity(startingPositionIntent);
             }
         });
+    }
+
+    private void buildIntent(Intent intent) {
+        intent.putExtra("tablet_id", tabletID);
+        intent.putExtra("field_orientation", fieldOrientationRedOnRight);
+        intent.putExtra("match_number", matchNumber);
+        intent.putExtra("tmID", teamMatchID);
+        intent.putExtra("robot_x", robotX);
+        intent.putExtra("robot_y", robotY);
     }
 
     private void setRobotLayout() {
@@ -330,10 +335,10 @@ public class MatchStartingPositionActivity extends Activity {
                     );
                     params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                     params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    robotX = (int)event.getX();
-                    robotY = (int)event.getY();
-                    int robotXMargin = robotX - ((int)((View) event.getLocalState()).getWidth() / 2);
-                    int robotYMargin = robotY - ((int)((View) event.getLocalState()).getHeight() / 2);
+                    startingRobotX = (int)event.getX();
+                    startingRobotY = (int)event.getY();
+                    int robotXMargin = startingRobotX - ((int)((View) event.getLocalState()).getWidth() / 2);
+                    int robotYMargin = startingRobotY - ((int)((View) event.getLocalState()).getHeight() / 2);
                     params.setMargins(robotXMargin, robotYMargin, 0, 0);
                     view.setLayoutParams(params);
                     */

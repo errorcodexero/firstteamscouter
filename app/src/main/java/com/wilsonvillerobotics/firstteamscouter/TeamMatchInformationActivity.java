@@ -121,38 +121,7 @@ public class TeamMatchInformationActivity extends Activity {
 				
 				teamNumber.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID)));
 				matchNumber.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID)));
-				autoScore.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_SCORE)));
-				teleScore.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_TELE_SCORE)));
-				autoHiHot.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_HI_HOT)));
-				autoHiCold.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_HI_SCORE)));
-				autoHiMiss.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_HI_MISS)));
-				autoLoHot.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_LO_HOT)));
-				autoLoCold.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_LO_SCORE)));
-				autoLoMiss.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_LO_MISS)));
-				
-				teleHiCold.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_TELE_HI_SCORE)));
-				teleHiMiss.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_TELE_HI_MISS)));
-				teleLoCold.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_TELE_LO_SCORE)));
-				teleLoMiss.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_TELE_LO_MISS)));
-	
-				autoMove.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_MOVE)));
-				autoCollect.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_COLLECT)));
-				autoDefend.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_DEFEND)));
-				
-				teleTrussToss.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_TRUSS_TOSS)));
-				teleTrussMiss.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_TRUSS_MISS)));
-				teleTossCatch.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_TOSS_CATCH)));
-				teleTossMiss.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_TOSS_MISS)));
-				
-				teleAssistRed.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_ASSIST_RED)));
-				teleAssistWhite.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_ASSIST_WHITE)));
-				teleAssistBlue.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_ASSIST_BLUE)));
-				
-				teleDefendRed.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_DEFEND_RED)));
-				teleDefendWhite.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_DEFEND_WHITE)));
-				teleDefendBlue.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_DEFEND_BLUE)));
-				teleDefendGoal.setText(cursor.getString(cursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_DEFEND_GOAL)));
-				
+
 			} catch (NumberFormatException e) {
 				//
 			} catch (Exception e) {

@@ -176,36 +176,7 @@ public class FTSUtilities {
 		String COMMA = ", ";
 		String retVal = "";
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_START_LOCATION + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_SCORE + COMMA; 
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_HI_SCORE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_HI_HOT + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_HI_MISS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_LO_SCORE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_LO_HOT + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_LO_MISS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_COLLECT + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_COLLECT + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TELE_SCORE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TELE_HI_SCORE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TELE_HI_MISS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TELE_LO_SCORE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TELE_LO_MISS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_ASSIST_RED + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_ASSIST_WHITE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_ASSIST_BLUE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_DEFEND_RED + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_DEFEND_WHITE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_DEFEND_BLUE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_DEFEND_GOAL + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TRUSS_TOSS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TRUSS_MISS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TOSS_CATCH + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TOSS_MISS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_SHORT_PASS_SUCCESS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_SHORT_PASS_MISS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_LONG_PASS_SUCCESS + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_LONG_PASS_MISS;
-		
+
 		return retVal;
 	}
 
@@ -214,7 +185,6 @@ public class FTSUtilities {
 		String retVal = "";
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA + COMMA;
 		//retVal += TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_AUTO_MOVE + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_BROKE_DOWN + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_NO_MOVE + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_LOST_CONNECTION + COMMA;
@@ -223,13 +193,7 @@ public class FTSUtilities {
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_PASSER + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_CATCHER + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_GOALIE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_GROUND_PICKUP + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_HUMAN_LOAD + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_HI_TO_LO + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_LO_TO_HI + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_HI_TO_HI + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_BALL_CONTROL_LO_TO_LO;
-		
+
 		return retVal;
 	}
 	
