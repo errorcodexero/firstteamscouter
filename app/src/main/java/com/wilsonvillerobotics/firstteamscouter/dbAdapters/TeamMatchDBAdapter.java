@@ -30,8 +30,8 @@ public class TeamMatchDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_ROLE_CATCHER = "role_catcher";
     public static final String COLUMN_NAME_ROLE_GOALIE = "role_goalie";
     public static final String COLUMN_NAME_START_LOCATION = "starting_location";
-    public static final String COLUMN_NAME_START_LOCATION_X = "starting_location_X";
-    public static final String COLUMN_NAME_START_LOCATION_Y = "starting_location_Y";
+    public static final String COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X = "starting_location_X";
+    public static final String COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y = "starting_location_Y";
     public static final String COLUMN_NAME_START_LOCATION_ON_FIELD = "starting_location_on_field";
     public static final String COLUMN_NAME_AUTO_TOTES_PICKED_UP = "auto_totes_picked_up";
     public static final String COLUMN_NAME_AUTO_TOTES_STACKED = "auto_totes_stacked";
@@ -39,12 +39,33 @@ public class TeamMatchDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_AUTO_CANS_PICKED_UP = "auto_cans_picked_up";
     public static final String COLUMN_NAME_AUTO_CANS_SCORED = "auto_cans_scored";
     public static final String COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP = "auto_cans_pulled_from_step";
-    public static final String COLUMN_NAME_AUTO_FINAL_LOCATION_X = "auto_final_location_X";
-    public static final String COLUMN_NAME_AUTO_FINAL_LOCATION_Y = "auto_final_location_Y";
-
+    public static final String COLUMN_NAME_AUTO_MODE_SAVED = "auto_mode_saved";
+    public static final String COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X = "auto_final_location_X";
+    public static final String COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y = "auto_final_location_Y";
+    public static final String COLUMN_NAME_AUTO_TOTE_1_LOCATION_X = "auto_tote_1_location_X";
+    public static final String COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y = "auto_tote_1_location_Y";
+    public static final String COLUMN_NAME_AUTO_TOTE_2_LOCATION_X = "auto_tote_2_location_X";
+    public static final String COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y = "auto_tote_2_location_Y";
+    public static final String COLUMN_NAME_AUTO_TOTE_3_LOCATION_X = "auto_tote_3_location_X";
+    public static final String COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y = "auto_tote_3_location_Y";
+    public static final String COLUMN_NAME_AUTO_CAN_1_LOCATION_X = "auto_can_1_location_X";
+    public static final String COLUMN_NAME_AUTO_CAN_1_LOCATION_Y = "auto_can_1_location_Y";
+    public static final String COLUMN_NAME_AUTO_CAN_2_LOCATION_X = "auto_can_2_location_X";
+    public static final String COLUMN_NAME_AUTO_CAN_2_LOCATION_Y = "auto_can_2_location_Y";
+    public static final String COLUMN_NAME_AUTO_CAN_3_LOCATION_X = "auto_can_3_location_X";
+    public static final String COLUMN_NAME_AUTO_CAN_3_LOCATION_Y = "auto_can_3_location_Y";
+    public static final String COLUMN_NAME_AUTO_CAN_4_LOCATION_X = "auto_can_4_location_X";
+    public static final String COLUMN_NAME_AUTO_CAN_4_LOCATION_Y = "auto_can_4_location_Y";
+    public static final String COLUMN_NAME_AUTO_CAN_5_LOCATION_X = "auto_can_5_location_X";
+    public static final String COLUMN_NAME_AUTO_CAN_5_LOCATION_Y = "auto_can_5_location_Y";
+    public static final String COLUMN_NAME_AUTO_CAN_6_LOCATION_X = "auto_can_6_location_X";
+    public static final String COLUMN_NAME_AUTO_CAN_6_LOCATION_Y = "auto_can_6_location_Y";
+    public static final String COLUMN_NAME_AUTO_CAN_7_LOCATION_X = "auto_can_7_location_X";
+    public static final String COLUMN_NAME_AUTO_CAN_7_LOCATION_Y = "auto_can_7_location_Y";
 
     // This needs to be moved to the team_match_notes_data
     public static final String COLUMN_NAME_TEAM_MATCH_NOTES = "team_match_notes";
+
 
 
     private String[] allColumnNames = new String[]{
@@ -64,10 +85,31 @@ public class TeamMatchDBAdapter implements BaseColumns {
     	    COLUMN_NAME_ROLE_CATCHER,
     	    COLUMN_NAME_ROLE_GOALIE,
     	    COLUMN_NAME_START_LOCATION,
-            COLUMN_NAME_START_LOCATION_X,
-            COLUMN_NAME_START_LOCATION_Y,
-            COLUMN_NAME_AUTO_FINAL_LOCATION_X,
-            COLUMN_NAME_AUTO_FINAL_LOCATION_Y,
+            COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X,
+            COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y,
+            COLUMN_NAME_AUTO_MODE_SAVED,
+            COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X,
+            COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y,
+            COLUMN_NAME_AUTO_TOTE_1_LOCATION_X,
+            COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y,
+            COLUMN_NAME_AUTO_TOTE_2_LOCATION_X,
+            COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y,
+            COLUMN_NAME_AUTO_TOTE_3_LOCATION_X,
+            COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y,
+            COLUMN_NAME_AUTO_CAN_1_LOCATION_X,
+            COLUMN_NAME_AUTO_CAN_1_LOCATION_Y,
+            COLUMN_NAME_AUTO_CAN_2_LOCATION_X,
+            COLUMN_NAME_AUTO_CAN_2_LOCATION_Y,
+            COLUMN_NAME_AUTO_CAN_3_LOCATION_X,
+            COLUMN_NAME_AUTO_CAN_3_LOCATION_Y,
+            COLUMN_NAME_AUTO_CAN_4_LOCATION_X,
+            COLUMN_NAME_AUTO_CAN_4_LOCATION_Y,
+            COLUMN_NAME_AUTO_CAN_5_LOCATION_X,
+            COLUMN_NAME_AUTO_CAN_5_LOCATION_Y,
+            COLUMN_NAME_AUTO_CAN_6_LOCATION_X,
+            COLUMN_NAME_AUTO_CAN_6_LOCATION_Y,
+            COLUMN_NAME_AUTO_CAN_7_LOCATION_X,
+            COLUMN_NAME_AUTO_CAN_7_LOCATION_Y,
             COLUMN_NAME_AUTO_TOTES_PICKED_UP,
             COLUMN_NAME_AUTO_TOTES_STACKED,
             COLUMN_NAME_AUTO_TOTES_SCORED,
@@ -175,6 +217,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
         args.put(COLUMN_NAME_TEAM_ID, team_id);
         args.put(COLUMN_NAME_MATCH_ID, String.valueOf(match_id));
         args.put(COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_AUTO_MODE_SAVED, Boolean.FALSE.toString());
         return this.mDb.insert(TABLE_NAME, null, args);
     }
 
@@ -439,8 +482,8 @@ public class TeamMatchDBAdapter implements BaseColumns {
 		return nums;
 	}
 
-    public Cursor getStartingPosition(long tmID) throws SQLException{
-        String columns[] = {COLUMN_NAME_START_LOCATION_X, COLUMN_NAME_START_LOCATION_Y, COLUMN_NAME_START_LOCATION_ON_FIELD};
+    public Cursor getStartingPositionData(long tmID) throws SQLException{
+        String columns[] = {COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X, COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y, COLUMN_NAME_START_LOCATION_ON_FIELD};
         Cursor mCursor = this.mDb.query(true, TABLE_NAME, columns,
                 _ID + "=" + tmID, null, null, null, null, null);
         if (mCursor != null) {
@@ -449,13 +492,34 @@ public class TeamMatchDBAdapter implements BaseColumns {
         return mCursor;
     }
 
+    public Cursor getAutoModeData(long tmID) throws SQLException{
+        String columns[] = {COLUMN_NAME_AUTO_MODE_SAVED, COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X, COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y,
+                COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y,
+                COLUMN_NAME_AUTO_TOTE_1_LOCATION_X, COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y,
+                COLUMN_NAME_AUTO_TOTE_2_LOCATION_X, COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y,
+                COLUMN_NAME_AUTO_TOTE_3_LOCATION_X, COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y,
+                COLUMN_NAME_AUTO_CAN_1_LOCATION_X, COLUMN_NAME_AUTO_CAN_1_LOCATION_Y,
+                COLUMN_NAME_AUTO_CAN_2_LOCATION_X, COLUMN_NAME_AUTO_CAN_2_LOCATION_Y,
+                COLUMN_NAME_AUTO_CAN_3_LOCATION_X, COLUMN_NAME_AUTO_CAN_3_LOCATION_Y,
+                COLUMN_NAME_AUTO_CAN_4_LOCATION_X, COLUMN_NAME_AUTO_CAN_4_LOCATION_Y,
+                COLUMN_NAME_AUTO_CAN_5_LOCATION_X, COLUMN_NAME_AUTO_CAN_5_LOCATION_Y,
+                COLUMN_NAME_AUTO_CAN_6_LOCATION_X, COLUMN_NAME_AUTO_CAN_6_LOCATION_Y,
+                COLUMN_NAME_AUTO_CAN_7_LOCATION_X, COLUMN_NAME_AUTO_CAN_7_LOCATION_Y,
+                COLUMN_NAME_AUTO_TOTES_PICKED_UP, COLUMN_NAME_AUTO_TOTES_STACKED, COLUMN_NAME_AUTO_TOTES_SCORED,
+                COLUMN_NAME_AUTO_CANS_PICKED_UP, COLUMN_NAME_AUTO_CANS_SCORED, COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP};
+        Cursor mCursor = this.mDb.query(true, TABLE_NAME, columns,
+                _ID + "=" + tmID, null, null, null, null, null);
+
+        return mCursor;
+    }
+
     public boolean setStartingPosition(long teamMatchID, int startingPositionX, int startingPositionY, boolean robotOnField) {
         FTSUtilities.printToConsole("TeamMatchDBAdapter::setStartingPosition\n");
         ContentValues args = new ContentValues();
         args.put(_ID, teamMatchID);
         args.put(COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT, Boolean.TRUE.toString());
-        args.put(COLUMN_NAME_START_LOCATION_X, startingPositionX);
-        args.put(COLUMN_NAME_START_LOCATION_Y, startingPositionY);
+        args.put(COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X, startingPositionX);
+        args.put(COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y, startingPositionY);
         args.put(COLUMN_NAME_START_LOCATION_ON_FIELD, String.valueOf(robotOnField));
 
         String WHERE = TeamMatchDBAdapter._ID + "=" + teamMatchID;
@@ -463,15 +527,54 @@ public class TeamMatchDBAdapter implements BaseColumns {
         return this.mDb.update(TABLE_NAME, args, WHERE, null) >0;
     }
 
+    /*
+    this.teamMatchID, robotFinalLocation.x, robotFinalLocation.y,
+                    tote1FinalLocation.x, tote1FinalLocation.y,
+                    tote2FinalLocation.x, tote2FinalLocation.y,
+                    tote3FinalLocation.x, tote3FinalLocation.y,
+                    can1FinalLocation.x, can1FinalLocation.y,
+                    can2FinalLocation.x, can2FinalLocation.y,
+                    can3FinalLocation.x, can3FinalLocation.y,
+                    can4FinalLocation.x, can4FinalLocation.y,
+                    can5FinalLocation.x, can5FinalLocation.y,
+                    can6FinalLocation.x, can6FinalLocation.y,
+                    can7FinalLocation.x, can7FinalLocation.y,
+                    this.totesPickedUp, this.totesStacked, this.totesScored,
+                    this.cansPickedUp, cansScored, cansGrabbedFromStep);
+     */
     public boolean setAutoModeActions(long teamMatchID, int finalAutoModePositionX, int finalAutoModePositionY,
-                                      int totesPickedUp, int cansPickedUp, int totesStacked, int totesScored,
-                                      int cansScored, int cansGrabbedFromStep) {
+                                      int tote1X, int tote1Y, int tote2X, int tote2Y, int tote3X, int tote3Y,
+                                      int can1X, int can1Y, int can2X, int can2Y, int can3X, int can3Y,
+                                      int can4X, int can4Y, int can5X, int can5Y, int can6X, long can6Y, int can7X, int can7Y,
+                                      int totesPickedUp, int totesStacked, int totesScored,
+                                      int cansPickedUp, int cansScored, int cansGrabbedFromStep) {
         FTSUtilities.printToConsole("TeamMatchDBAdapter::setAutoModeActions\n");
         ContentValues args = new ContentValues();
         args.put(_ID, teamMatchID);
         args.put(COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT, Boolean.TRUE.toString());
-        args.put(COLUMN_NAME_AUTO_FINAL_LOCATION_X, finalAutoModePositionX);
-        args.put(COLUMN_NAME_AUTO_FINAL_LOCATION_Y, finalAutoModePositionY);
+        args.put(COLUMN_NAME_AUTO_MODE_SAVED, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, finalAutoModePositionX);
+        args.put(COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y, finalAutoModePositionY);
+        args.put(COLUMN_NAME_AUTO_TOTE_1_LOCATION_X, tote1X);
+        args.put(COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y, tote1Y);
+        args.put(COLUMN_NAME_AUTO_TOTE_2_LOCATION_X, tote2X);
+        args.put(COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y, tote2Y);
+        args.put(COLUMN_NAME_AUTO_TOTE_3_LOCATION_X, tote3X);
+        args.put(COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y, tote3Y);
+        args.put(COLUMN_NAME_AUTO_CAN_1_LOCATION_X, can1X);
+        args.put(COLUMN_NAME_AUTO_CAN_1_LOCATION_Y, can1Y);
+        args.put(COLUMN_NAME_AUTO_CAN_2_LOCATION_X, can2X);
+        args.put(COLUMN_NAME_AUTO_CAN_2_LOCATION_Y, can2Y);
+        args.put(COLUMN_NAME_AUTO_CAN_3_LOCATION_X, can3X);
+        args.put(COLUMN_NAME_AUTO_CAN_3_LOCATION_Y, can3Y);
+        args.put(COLUMN_NAME_AUTO_CAN_4_LOCATION_X, can4X);
+        args.put(COLUMN_NAME_AUTO_CAN_4_LOCATION_Y, can4Y);
+        args.put(COLUMN_NAME_AUTO_CAN_5_LOCATION_X, can5X);
+        args.put(COLUMN_NAME_AUTO_CAN_5_LOCATION_Y, can5Y);
+        args.put(COLUMN_NAME_AUTO_CAN_6_LOCATION_X, can6X);
+        args.put(COLUMN_NAME_AUTO_CAN_6_LOCATION_Y, can6Y);
+        args.put(COLUMN_NAME_AUTO_CAN_7_LOCATION_X, can7X);
+        args.put(COLUMN_NAME_AUTO_CAN_7_LOCATION_Y, can7Y);
         args.put(COLUMN_NAME_AUTO_TOTES_PICKED_UP, totesPickedUp);
         args.put(COLUMN_NAME_AUTO_CANS_PICKED_UP, cansPickedUp);
         args.put(COLUMN_NAME_AUTO_TOTES_STACKED, totesStacked);

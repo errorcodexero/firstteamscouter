@@ -11,73 +11,118 @@
         android:layout_gravity="center_vertical"
         android:orientation="horizontal"
         android:background="@drawable/automode_background_2015"
-        android:id="@+id/AutoMode_Field_LayoutRelative" >
+        android:id="@+id/AutoMode_Field_LayoutRelative"
+        android:layout_marginLeft="100dp">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/tote_width"
+            android:layout_height="@dimen/tote_height"
             android:id="@+id/imgYellowTote1"
             android:src="@drawable/yellow_tote_top_down_25x38"
             android:layout_gravity="left|top"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="412dp"
-            android:layout_marginTop="82dp" />
+            android:layout_marginLeft="@dimen/tote_left"
+            android:layout_marginTop="@dimen/tote_1_top" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/tote_width"
+            android:layout_height="@dimen/tote_height"
             android:id="@+id/imgYellowTote2"
             android:src="@drawable/yellow_tote_top_down_25x38"
             android:layout_gravity="left|top"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="412dp"
-            android:layout_marginTop="206dp" />
+            android:layout_marginLeft="@dimen/tote_left"
+            android:layout_marginTop="@dimen/tote_2_top" />
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/tote_width"
+            android:layout_height="@dimen/tote_height"
             android:id="@+id/imgYellowTote3"
             android:src="@drawable/yellow_tote_top_down_25x38"
             android:layout_gravity="left|top"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="412dp"
-            android:layout_marginTop="330dp" />
+            android:layout_marginLeft="@dimen/tote_left"
+            android:layout_marginTop="@dimen/tote_3_top" />
 
         <ImageView
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="@dimen/can_width"
+            android:layout_height="@dimen/can_height"
             android:id="@+id/imgGreenCan1"
             android:src="@drawable/green_can_top_down_40x40"
             android:layout_gravity="left|top"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="405dp"
-            android:layout_marginTop="130dp" />
+            android:layout_marginLeft="@dimen/can_left"
+            android:layout_marginTop="@dimen/can_1_top" />
 
         <ImageView
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="@dimen/can_width"
+            android:layout_height="@dimen/can_height"
             android:id="@+id/imgGreenCan2"
             android:src="@drawable/green_can_top_down_40x40"
             android:layout_gravity="left|top"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="405dp"
-            android:layout_marginTop="253dp" />
+            android:layout_marginLeft="@dimen/can_left"
+            android:layout_marginTop="@dimen/can_2_top" />
 
         <ImageView
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="@dimen/can_width"
+            android:layout_height="@dimen/can_height"
             android:id="@+id/imgGreenCan3"
             android:src="@drawable/green_can_top_down_40x40"
             android:layout_gravity="left|top"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="405dp"
-            android:layout_marginTop="376dp" />
+            android:layout_marginLeft="@dimen/can_left"
+            android:layout_marginTop="@dimen/can_3_top" />
+
+        <ImageView
+            android:layout_width="@dimen/can_width"
+            android:layout_height="@dimen/can_height"
+            android:id="@+id/imgGreenCan4"
+            android:src="@drawable/green_can_top_down_40x40"
+            android:layout_gravity="left|top"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/step_can_left"
+            android:layout_marginTop="@dimen/can_4_top" />
+
+        <ImageView
+            android:layout_width="@dimen/can_width"
+            android:layout_height="@dimen/can_height"
+            android:id="@+id/imgGreenCan5"
+            android:src="@drawable/green_can_top_down_40x40"
+            android:layout_gravity="left|top"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/step_can_left"
+            android:layout_marginTop="@dimen/can_5_top" />
+
+        <ImageView
+            android:layout_width="@dimen/can_width"
+            android:layout_height="@dimen/can_height"
+            android:id="@+id/imgGreenCan6"
+            android:src="@drawable/green_can_top_down_40x40"
+            android:layout_gravity="left|top"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/step_can_left"
+            android:layout_marginTop="@dimen/can_6_top" />
+
+        <ImageView
+            android:layout_width="@dimen/can_width"
+            android:layout_height="@dimen/can_height"
+            android:id="@+id/imgGreenCan7"
+            android:src="@drawable/green_can_top_down_40x40"
+            android:layout_gravity="left|top"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/step_can_left"
+            android:layout_marginTop="@dimen/can_7_top" />
 
     </RelativeLayout>
 
@@ -86,7 +131,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/AutoMode_ButtonGutter_LinearLayout"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="50dp">
 
         <Switch
             android:id="@+id/switchUndo"
@@ -112,7 +158,8 @@
             android:layout_height="wrap_content"
             android:text="To TeleOp"
             android:id="@+id/btnSubmitMatchAuto"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="60dp" />
 
     </LinearLayout>
 

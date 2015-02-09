@@ -86,7 +86,7 @@ public class MatchStartingPositionActivity extends Activity {
 
     private void openDatabase() {
         try {
-            FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate : OPENING DB\n");
+            FTSUtilities.printToConsole("MatchStartingPositionActivity::onCreate : OPENING DB\n");
             tmDBAdapter = new TeamMatchDBAdapter(this.getBaseContext()).open();
         } catch(SQLException e) {
             e.printStackTrace();
@@ -96,11 +96,11 @@ public class MatchStartingPositionActivity extends Activity {
 
     private void loadData() {
         if(this.tmDBAdapter != null) {
-            Cursor C = this.tmDBAdapter.getStartingPosition(this.teamMatchID);
+            Cursor C = this.tmDBAdapter.getStartingPositionData(this.teamMatchID);
             if(C != null && C.getCount() > 0) {
-                this.robotX = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_START_LOCATION_X));
+                this.robotX = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X));
                 this.txtRobotX.setText(String.valueOf(this.robotX));
-                this.robotY = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_START_LOCATION_Y));
+                this.robotY = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y));
                 this.txtRobotY.setText(String.valueOf(this.robotY));
                 this.robotOnField = Boolean.parseBoolean(C.getString(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_START_LOCATION_ON_FIELD))); // Boolean.getBoolean(C.getString(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_START_LOCATION_ON_FIELD)));
             }
@@ -145,9 +145,59 @@ public class MatchStartingPositionActivity extends Activity {
     }
 
     private void setRobotLayout() {
-        RelativeLayout.LayoutParams robotLayoutParams = new RelativeLayout.LayoutParams((int)getResources().getDimension(R.dimen.robot_height), (int)getResources().getDimension(R.dimen.robot_width));
-        robotLayoutParams.leftMargin = this.robotX - ((int)getResources().getDimension(R.dimen.robot_width) / 2);
-        robotLayoutParams.topMargin = this.robotY - ((int)getResources().getDimension(R.dimen.robot_height) / 2);
+        int width = getResources().getDimensionPixelSize(R.dimen.robot_width);
+        int height = getResources().getDimensionPixelSize(R.dimen.robot_height);
+        RelativeLayout.LayoutParams robotLayoutParams = new RelativeLayout.LayoutParams(
+                width,
+                height
+        );
+
+        int left = this.robotX;
+        int top =  this.robotY;
+
+        RelativeLayout parent = (RelativeLayout) imgRobot.getParent();
+        int parentWidth = 0, parentHeight = 0;
+        if(parent == null) {
+            parent = (RelativeLayout)findViewById(R.id.StartingPosition_RobotGutter_RelativeLayout);
+            parent.addView(imgRobot);
+        }
+        if(parent.getId() == R.id.StartingPosition_Field_LayoutRelative) {
+            parentWidth = getResources().getDimensionPixelSize(R.dimen.field_width);
+            parentHeight = getResources().getDimensionPixelSize(R.dimen.field_height);
+        } else if(parent != null) {
+            parentWidth = parent.getMeasuredWidth();
+            parentHeight = parent.getMeasuredHeight();
+        }
+
+        int maxLeft = parentWidth - width/2;
+        int minLeft = width/2;
+        int maxTop = parentHeight - height/2;
+        int minTop = height/2;
+        if(left > maxLeft) {
+            left = maxLeft;
+        }
+        if(left < minLeft) {
+            left = minLeft;
+        }
+        if(top > maxTop) {
+            top = maxTop;
+        }
+        if(top < minTop) {
+            top = minTop;
+        }
+
+        // Bottom Corner
+        // y = -0.846 x + 600
+        float bottomCorner = 709.1f - 1.182f*top;
+        float topCorner = 1.273f*top + 259.64f;
+        if(top >= 290 && left > bottomCorner) {
+            left = (int)bottomCorner;
+        }
+        if(top <= 75 && left > topCorner) {
+            left = (int)topCorner;
+        }
+
+        robotLayoutParams.setMargins(left - (width/2), top - (height/2), 0, 0);
         robotLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         robotLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         imgRobot.setLayoutParams(robotLayoutParams);
@@ -161,8 +211,8 @@ public class MatchStartingPositionActivity extends Activity {
             relLayout = (RelativeLayout) findViewById(R.id.StartingPosition_RobotGutter_RelativeLayout);
         }
         ((ViewGroup)imgRobot.getParent()).removeView(imgRobot);
-        this.setRobotLayout();
         relLayout.addView(imgRobot);
+        this.setRobotLayout();
     }
 
     private final class MyRobotTouchListener implements View.OnTouchListener {
