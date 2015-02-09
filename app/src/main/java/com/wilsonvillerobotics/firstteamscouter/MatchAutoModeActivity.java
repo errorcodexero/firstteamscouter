@@ -37,7 +37,7 @@ public class MatchAutoModeActivity extends Activity {
     private int matchNumber;
 
     protected enum FieldObject {
-        Robot(R.id.imgRobot, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y),
+        Robot(R.id.imgRobot, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y),
         YellowTote1(R.id.imgYellowTote1, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y),
         YellowTote2(R.id.imgYellowTote2, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y),
         YellowTote3(R.id.imgYellowTote3, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y),
@@ -57,33 +57,16 @@ public class MatchAutoModeActivity extends Activity {
             this.dbColumnX = colX;
             this.dbColumnY = colY;
         }
-    };
+    }
 
-    private HashMap<Integer, ImageView> autoFieldObjectImageViews;
-
-	//private ImageView imgYellowTote1;
-    //private ImageView imgYellowTote2;
-    //private ImageView imgYellowTote3;
-
-    //private ImageView imgAllianceCan1;
-    //private ImageView imgAllianceCan2;
-    //private ImageView imgAllianceCan3;
-
-    //private ImageView imgStepCan1;
-    //private ImageView imgStepCan2;
-    //private ImageView imgStepCan3;
-    //private ImageView imgStepCan4;
-
-    private ImageView imgRobot;
+    //private ImageView imgRobot;
 
 	protected Boolean fieldOrientationRedOnRight;
     protected Point autoRobotStartingLocation;
-    //protected Point autoRobotFinalLocation;
-    protected HashMap<Integer, Point> autoFieldObjectPositions;
-    //protected int startingRobotX;
-    //protected int startingRobotY;
 
-    protected Point p;
+    protected HashMap<Integer, GameElement> autoFieldObjects;
+    //protected HashMap<Integer, Point> autoFieldObjectPositions;
+    //private HashMap<Integer, ImageView> autoFieldObjectImageViews;
 
     public int totesPickedUp;
     public int totesStacked;
@@ -91,8 +74,6 @@ public class MatchAutoModeActivity extends Activity {
     public int cansPickedUp;
     public int cansScored;
     public int cansGrabbedFromStep;
-    //public int finalRobotX;
-    //public int finalRobotY;
 
     protected boolean autoModeSaved;
 
@@ -109,18 +90,25 @@ public class MatchAutoModeActivity extends Activity {
 
         this.autoRobotStartingLocation = new Point();
         //this.autoRobotFinalLocation = new Point();
-        this.autoFieldObjectPositions = new HashMap<Integer, Point>();
-        this.autoFieldObjectImageViews = new HashMap<Integer, ImageView>();
+        this.autoFieldObjects = new HashMap<Integer, GameElement>();
+        //this.autoFieldObjectPositions = new HashMap<Integer, Point>();
+        //this.autoFieldObjectImageViews = new HashMap<Integer, ImageView>();
 
         for(FieldObject fo : FieldObject.values()) {
-            this.autoFieldObjectPositions.put(fo.id, new Point());
+            GameElement ge = new GameElement();
+            ge.setId(fo.id);
+            ge.setLocation(new Point());
+
+            //this.autoFieldObjectPositions.put(fo.id, new Point());
 
             ImageView iv = (ImageView)findViewById(fo.id);
             if(iv == null) {
                 iv = new ImageView(getBaseContext());
                 iv.setId(fo.id);
             }
-            this.autoFieldObjectImageViews.put(fo.id, iv);
+            //this.autoFieldObjectImageViews.put(fo.id, iv);
+            ge.setImageView(iv);
+            this.autoFieldObjects.put(fo.id, ge);
         }
 
         processIntent(getIntent());
@@ -191,9 +179,14 @@ public class MatchAutoModeActivity extends Activity {
     }
 
     private void createRobotImageView() {
+        ImageView imgRobot = this.autoFieldObjects.get(FieldObject.Robot.id).getImageView();
         if(imgRobot == null) {
             imgRobot = new ImageView(getBaseContext());
-            imgRobot.setId(R.id.imgRobot);
+            imgRobot.setId(FieldObject.Robot.id);
+            imgRobot.setImageDrawable(getResources().getDrawable(R.drawable.robot_50x50));
+            imgRobot.setOnTouchListener(new MyViewTouchListener());
+            this.autoFieldObjects.get(FieldObject.Robot.id).setImageView(imgRobot);
+        } else if(imgRobot.getDrawable() == null) {
             imgRobot.setImageDrawable(getResources().getDrawable(R.drawable.robot_50x50));
             imgRobot.setOnTouchListener(new MyViewTouchListener());
         }
@@ -202,6 +195,7 @@ public class MatchAutoModeActivity extends Activity {
     }
 
     private void placeRobotOnScreen() {
+        ImageView imgRobot = this.autoFieldObjects.get(FieldObject.Robot.id).getImageView();
         ViewGroup parent = (ViewGroup)imgRobot.getParent();
         if(parent == null) {
             RelativeLayout relLayout = (RelativeLayout) findViewById(R.id.AutoMode_Field_LayoutRelative);
@@ -219,9 +213,12 @@ public class MatchAutoModeActivity extends Activity {
         int width = getResources().getDimensionPixelSize(R.dimen.robot_width);
         int height = getResources().getDimensionPixelSize(R.dimen.robot_height);
 
-        Point robotFinalLocation = this.autoFieldObjectPositions.get(R.id.imgRobot);
+        //Point robotFinalLocation = this.autoFieldObjectPositions.get(R.id.imgRobot);
+        Point robotFinalLocation = this.autoFieldObjects.get(FieldObject.Robot.id).getLocation();
         int left = (robotFinalLocation.x == -1) ? this.autoRobotStartingLocation.x : robotFinalLocation.x;
         int top  = (robotFinalLocation.y == -1) ? this.autoRobotStartingLocation.y : robotFinalLocation.y;
+
+        ImageView imgRobot = this.autoFieldObjects.get(FieldObject.Robot.id).getImageView();
 
         if(imgRobot == null) {
             imgRobot = (ImageView) findViewById(R.id.imgRobot);
@@ -241,7 +238,7 @@ public class MatchAutoModeActivity extends Activity {
                 height
         );
         RelativeLayout parent = (RelativeLayout) v.getParent();
-        int parentWidth = 0, parentHeight = 0;
+        int parentWidth, parentHeight = 0;
         if(parent.getId() == R.id.AutoMode_Field_LayoutRelative) {
             parentWidth = getResources().getDimensionPixelSize(R.dimen.field_width);
             parentHeight = getResources().getDimensionPixelSize(R.dimen.field_height);
@@ -292,8 +289,9 @@ public class MatchAutoModeActivity extends Activity {
     private void configureTotesAndCans() {
         ImageView iv;
         for(FieldObject fo : FieldObject.values()) {
-            if(fo.id != R.id.imgRobot) {
-                iv = this.autoFieldObjectImageViews.get(fo.id);
+            if(fo.id != FieldObject.Robot.id) {
+                //iv = this.autoFieldObjectImageViews.get(fo.id);
+                iv = this.autoFieldObjects.get(fo.id).getImageView();
                 iv.setOnTouchListener(new MyViewTouchListener());
                 registerForContextMenu(iv);
             }
@@ -335,27 +333,29 @@ public class MatchAutoModeActivity extends Activity {
         if(this.tmDBAdapter != null) {
             Cursor C = this.tmDBAdapter.getAutoModeData(this.teamMatchID);
             if(C.moveToFirst()) {
-                this.autoModeSaved = Boolean.parseBoolean(C.getString(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_AUTO_MODE_SAVED)));
+                this.autoModeSaved = Boolean.parseBoolean(C.getString(C.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_MODE_SAVED)));
                 if (this.autoModeSaved) {
-                    this.autoRobotStartingLocation.x = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X));
-                    this.autoRobotStartingLocation.y = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y));
+                    this.autoRobotStartingLocation.x = C.getInt(C.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X));
+                    this.autoRobotStartingLocation.y = C.getInt(C.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y));
                     //robotFinalLocation.x = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X));
                     //robotFinalLocation.y = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y));
 
                     for(FieldObject fo : FieldObject.values()) {
-                        Point loc = this.autoFieldObjectPositions.get(fo.id);
+                        //Point loc = this.autoFieldObjectPositions.get(fo.id);
+                        Point loc = this.autoFieldObjects.get(fo.id).getLocation();
                         loc.x     = C.getInt(C.getColumnIndex(fo.dbColumnX));
                         loc.y     = C.getInt(C.getColumnIndex(fo.dbColumnY));
                     }
 
-                    this.totesPickedUp = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_AUTO_TOTES_PICKED_UP));
-                    this.cansPickedUp = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_AUTO_CANS_PICKED_UP));
-                    this.totesStacked = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_AUTO_TOTES_STACKED));
-                    this.totesScored = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_AUTO_TOTES_SCORED));
-                    this.cansScored = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_AUTO_CANS_SCORED));
-                    this.cansGrabbedFromStep = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP));
+                    this.totesPickedUp = C.getInt(C.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTES_PICKED_UP));
+                    this.cansPickedUp = C.getInt(C.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_CANS_PICKED_UP));
+                    this.totesStacked = C.getInt(C.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTES_STACKED));
+                    this.totesScored = C.getInt(C.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTES_SCORED));
+                    this.cansScored = C.getInt(C.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_CANS_SCORED));
+                    this.cansGrabbedFromStep = C.getInt(C.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP));
                 } else {
-                    Point robotFinalLocation = this.autoFieldObjectPositions.get(R.id.imgRobot);
+                    //Point robotFinalLocation = this.autoFieldObjectPositions.get(R.id.imgRobot);
+                    Point robotFinalLocation = this.autoFieldObjects.get(FieldObject.Robot.id).getLocation();
                     robotFinalLocation.x = -1;
                     robotFinalLocation.y = -1;
 
@@ -371,34 +371,34 @@ public class MatchAutoModeActivity extends Activity {
     }
 
     private boolean saveData() {
-        Point robotFinalLocation = this.autoFieldObjectPositions.get(R.id.imgRobot);
-        Point tote1FinalLocation = this.autoFieldObjectPositions.get(FieldObject.YellowTote1.id);
-        Point tote2FinalLocation = this.autoFieldObjectPositions.get(FieldObject.YellowTote2.id);
-        Point tote3FinalLocation = this.autoFieldObjectPositions.get(FieldObject.YellowTote3.id);
-        Point can1FinalLocation = this.autoFieldObjectPositions.get(FieldObject.GreenCan1.id);
-        Point can2FinalLocation = this.autoFieldObjectPositions.get(FieldObject.GreenCan2.id);
-        Point can3FinalLocation = this.autoFieldObjectPositions.get(FieldObject.GreenCan3.id);
-        Point can4FinalLocation = this.autoFieldObjectPositions.get(FieldObject.GreenCan4.id);
-        Point can5FinalLocation = this.autoFieldObjectPositions.get(FieldObject.GreenCan5.id);
-        Point can6FinalLocation = this.autoFieldObjectPositions.get(FieldObject.GreenCan6.id);
-        Point can7FinalLocation = this.autoFieldObjectPositions.get(FieldObject.GreenCan7.id);
-        if(this.tmDBAdapter != null) {
-            return this.tmDBAdapter.setAutoModeActions(
-                    this.teamMatchID, robotFinalLocation.x, robotFinalLocation.y,
-                    tote1FinalLocation.x, tote1FinalLocation.y,
-                    tote2FinalLocation.x, tote2FinalLocation.y,
-                    tote3FinalLocation.x, tote3FinalLocation.y,
-                    can1FinalLocation.x, can1FinalLocation.y,
-                    can2FinalLocation.x, can2FinalLocation.y,
-                    can3FinalLocation.x, can3FinalLocation.y,
-                    can4FinalLocation.x, can4FinalLocation.y,
-                    can5FinalLocation.x, can5FinalLocation.y,
-                    can6FinalLocation.x, can6FinalLocation.y,
-                    can7FinalLocation.x, can7FinalLocation.y,
-                    this.totesPickedUp, this.totesStacked, this.totesScored,
-                    this.cansPickedUp, cansScored, cansGrabbedFromStep);
-        }
-        return false;
+        Point robotFinalLocation = this.autoFieldObjects.get(R.id.imgRobot).getLocation();
+        Point tote1FinalLocation = this.autoFieldObjects.get(FieldObject.YellowTote1.id).getLocation();
+        Point tote2FinalLocation = this.autoFieldObjects.get(FieldObject.YellowTote2.id).getLocation();
+        Point tote3FinalLocation = this.autoFieldObjects.get(FieldObject.YellowTote3.id).getLocation();
+        Point can1FinalLocation = this.autoFieldObjects.get(FieldObject.GreenCan1.id).getLocation();
+        Point can2FinalLocation = this.autoFieldObjects.get(FieldObject.GreenCan2.id).getLocation();
+        Point can3FinalLocation = this.autoFieldObjects.get(FieldObject.GreenCan3.id).getLocation();
+        Point can4FinalLocation = this.autoFieldObjects.get(FieldObject.GreenCan4.id).getLocation();
+        Point can5FinalLocation = this.autoFieldObjects.get(FieldObject.GreenCan5.id).getLocation();
+        Point can6FinalLocation = this.autoFieldObjects.get(FieldObject.GreenCan6.id).getLocation();
+        Point can7FinalLocation = this.autoFieldObjects.get(FieldObject.GreenCan7.id).getLocation();
+
+        return this.tmDBAdapter != null &&
+                this.tmDBAdapter.setAutoModeActions(
+                this.teamMatchID, robotFinalLocation.x, robotFinalLocation.y,
+                tote1FinalLocation.x, tote1FinalLocation.y,
+                tote2FinalLocation.x, tote2FinalLocation.y,
+                tote3FinalLocation.x, tote3FinalLocation.y,
+                can1FinalLocation.x, can1FinalLocation.y,
+                can2FinalLocation.x, can2FinalLocation.y,
+                can3FinalLocation.x, can3FinalLocation.y,
+                can4FinalLocation.x, can4FinalLocation.y,
+                can5FinalLocation.x, can5FinalLocation.y,
+                can6FinalLocation.x, can6FinalLocation.y,
+                can7FinalLocation.x, can7FinalLocation.y,
+                this.totesPickedUp, this.totesStacked, this.totesScored,
+                this.cansPickedUp, cansScored, cansGrabbedFromStep
+                );
     }
 
     @Override
@@ -432,9 +432,9 @@ public class MatchAutoModeActivity extends Activity {
         if(autoModeSaved) {
             for(FieldObject fo : FieldObject.values()) {
                 if(fo.id != FieldObject.Robot.id) {
-                    int left = autoFieldObjectPositions.get(fo.id).x;
-                    int top = autoFieldObjectPositions.get(fo.id).y;
-                    ImageView iv = autoFieldObjectImageViews.get(fo.id);
+                    int left = autoFieldObjects.get(fo.id).getLocation().x;
+                    int top = autoFieldObjects.get(fo.id).getLocation().y;
+                    ImageView iv = autoFieldObjects.get(fo.id).getImageView();
                     int width = 0, height = 0;
 
                     switch(fo) {
@@ -470,8 +470,10 @@ public class MatchAutoModeActivity extends Activity {
         } else {
             for(FieldObject fo : FieldObject.values()) {
                 if (fo.id != FieldObject.Robot.id) {
-                    RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) autoFieldObjectImageViews.get(fo.id).getLayoutParams();
-                    autoFieldObjectPositions.get(fo.id).set(lp.leftMargin + lp.width/2, lp.topMargin + lp.height/2); // need to translate back to center point, since we're grabbing margins from the LP
+                    //RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) autoFieldObjectImageViews.get(fo.id).getLayoutParams();
+                    RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) autoFieldObjects.get(fo.id).getImageView().getLayoutParams();
+                    autoFieldObjects.get(fo.id).setLocation(lp.leftMargin + lp.width/2, lp.topMargin + lp.height/2);
+                    //autoFieldObjectPositions.get(fo.id).set(lp.leftMargin + lp.width/2, lp.topMargin + lp.height/2); // need to translate back to center point, since we're grabbing margins from the LP
                 }
             }
         }
@@ -586,7 +588,8 @@ public class MatchAutoModeActivity extends Activity {
 
                     int left = (int) event.getX();
                     int top = (int) event.getY();
-                    autoFieldObjectPositions.get(view.getId()).set(left, top);
+                    //autoFieldObjectPositions.get(view.getId()).set(left, top);
+                    autoFieldObjects.get(view.getId()).getLocation().set(left, top);
 
                     if(view.getId() == FieldObject.Robot.id) {
                         //Point robotFinalLocation = autoFieldObjectPositions.get(R.id.imgRobot);
@@ -609,9 +612,12 @@ public class MatchAutoModeActivity extends Activity {
                         Rect r2 = new Rect();
                         Rect r3 = new Rect();
 
-                        autoFieldObjectImageViews.get(R.id.imgYellowTote1).getHitRect(r1);
-                        autoFieldObjectImageViews.get(R.id.imgYellowTote2).getHitRect(r2);
-                        autoFieldObjectImageViews.get(R.id.imgYellowTote3).getHitRect(r3);
+                        //autoFieldObjectImageViews.get(R.id.imgYellowTote1).getHitRect(r1);
+                        //autoFieldObjectImageViews.get(R.id.imgYellowTote2).getHitRect(r2);
+                        //autoFieldObjectImageViews.get(R.id.imgYellowTote3).getHitRect(r3);
+                        autoFieldObjects.get(R.id.imgYellowTote1).getImageView().getHitRect(r1);
+                        autoFieldObjects.get(R.id.imgYellowTote2).getImageView().getHitRect(r2);
+                        autoFieldObjects.get(R.id.imgYellowTote3).getImageView().getHitRect(r3);
                         //imgYellowTote1.getHitRect(r1);
                         //imgYellowTote2.getHitRect(r2);
                         //imgYellowTote3.getHitRect(r3);
@@ -637,7 +643,8 @@ public class MatchAutoModeActivity extends Activity {
                 case DragEvent.ACTION_DRAG_LOCATION:
                     if(dragging) {
                         if(view.getId() == FieldObject.Robot.id) {
-                            Point robotFinalLocation = autoFieldObjectPositions.get(R.id.imgRobot);
+                            //Point robotFinalLocation = autoFieldObjectPositions.get(R.id.imgRobot);
+                            Point robotFinalLocation = autoFieldObjects.get(R.id.imgRobot).getLocation();
                             robotFinalLocation.set((int) event.getX(), (int) event.getY());
                             //txtRobotX.setText(String.valueOf(startingRobotX));
                             //txtRobotY.setText(String.valueOf(startingRobotY));
