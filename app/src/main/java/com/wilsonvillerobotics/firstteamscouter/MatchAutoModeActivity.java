@@ -37,25 +37,27 @@ public class MatchAutoModeActivity extends Activity {
     private int matchNumber;
 
     protected enum FieldObject {
-        Robot(R.id.imgRobot, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y),
-        YellowTote1(R.id.imgYellowTote1, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y),
-        YellowTote2(R.id.imgYellowTote2, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y),
-        YellowTote3(R.id.imgYellowTote3, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y),
-        GreenCan1(R.id.imgGreenCan1, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_Y),
-        GreenCan2(R.id.imgGreenCan2, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_Y),
-        GreenCan3(R.id.imgGreenCan3, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_Y),
-        GreenCan4(R.id.imgGreenCan4, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_Y),
-        GreenCan5(R.id.imgGreenCan5, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_5_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_5_LOCATION_Y),
-        GreenCan6(R.id.imgGreenCan6, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_6_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_6_LOCATION_Y),
-        GreenCan7(R.id.imgGreenCan7, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_7_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_7_LOCATION_Y);
+        Robot(R.id.imgRobot, GameElement.ElementType.ROBOT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y),
+        YellowTote1(R.id.imgYellowTote1, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y),
+        YellowTote2(R.id.imgYellowTote2, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y),
+        YellowTote3(R.id.imgYellowTote3, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y),
+        GreenCan1(R.id.imgGreenCan1, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_Y),
+        GreenCan2(R.id.imgGreenCan2, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_Y),
+        GreenCan3(R.id.imgGreenCan3, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_Y),
+        GreenCan4(R.id.imgGreenCan4, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_Y),
+        GreenCan5(R.id.imgGreenCan5, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_5_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_5_LOCATION_Y),
+        GreenCan6(R.id.imgGreenCan6, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_6_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_6_LOCATION_Y),
+        GreenCan7(R.id.imgGreenCan7, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_7_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_7_LOCATION_Y);
 
         private int id;
         private String dbColumnX, dbColumnY;
+        private GameElement.ElementType type;
 
-        FieldObject(int id, String colX, String colY) {
+        FieldObject(int id, GameElement.ElementType et, String colX, String colY) {
             this.id = id;
             this.dbColumnX = colX;
             this.dbColumnY = colY;
+            this.type = et;
         }
     }
 
@@ -98,6 +100,7 @@ public class MatchAutoModeActivity extends Activity {
             GameElement ge = new GameElement();
             ge.setId(fo.id);
             ge.setLocation(new Point());
+            ge.setElementType(fo.type);
 
             //this.autoFieldObjectPositions.put(fo.id, new Point());
 
@@ -185,10 +188,12 @@ public class MatchAutoModeActivity extends Activity {
             imgRobot.setId(FieldObject.Robot.id);
             imgRobot.setImageDrawable(getResources().getDrawable(R.drawable.robot_50x50));
             imgRobot.setOnTouchListener(new MyViewTouchListener());
+            registerForContextMenu(imgRobot);
             this.autoFieldObjects.get(FieldObject.Robot.id).setImageView(imgRobot);
         } else if(imgRobot.getDrawable() == null) {
             imgRobot.setImageDrawable(getResources().getDrawable(R.drawable.robot_50x50));
             imgRobot.setOnTouchListener(new MyViewTouchListener());
+            registerForContextMenu(imgRobot);
         }
 
         placeRobotOnScreen();
@@ -470,13 +475,31 @@ public class MatchAutoModeActivity extends Activity {
         } else {
             for(FieldObject fo : FieldObject.values()) {
                 if (fo.id != FieldObject.Robot.id) {
-                    //RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) autoFieldObjectImageViews.get(fo.id).getLayoutParams();
                     RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) autoFieldObjects.get(fo.id).getImageView().getLayoutParams();
                     autoFieldObjects.get(fo.id).setLocation(lp.leftMargin + lp.width/2, lp.topMargin + lp.height/2);
-                    //autoFieldObjectPositions.get(fo.id).set(lp.leftMargin + lp.width/2, lp.topMargin + lp.height/2); // need to translate back to center point, since we're grabbing margins from the LP
                 }
             }
         }
+    }
+
+    private GameElement findCollidingElement(View v) {
+        Rect viewRect = new Rect();
+        viewRect.left = v.getLeft();
+        viewRect.top = v.getTop();
+        viewRect.right = viewRect.left + v.getWidth();
+        viewRect.bottom = viewRect.top + v.getHeight();
+
+        Rect r1 = new Rect();
+        for(FieldObject fo : FieldObject.values()) {
+            if(fo.id != v.getId()) {
+                GameElement ge = autoFieldObjects.get(fo.id);
+                ge.getImageView().getHitRect(r1);
+                if (Rect.intersects(viewRect, r1)) {
+                    return ge;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
@@ -511,19 +534,66 @@ public class MatchAutoModeActivity extends Activity {
                                     ContextMenu.ContextMenuInfo menuInfo) {
 
         super.onCreateContextMenu(menu, v, menuInfo);
-        if(v.getId()==R.id.imgYellowTote1)
-        {
-            // to set the context menu's header icon
+        GameElement el = autoFieldObjects.get(v.getId());
+        if(v.getId()== FieldObject.Robot.id) {
             menu.setHeaderIcon(R.drawable.robot_50x50);
+            menu.setHeaderTitle("Robot");
 
-            // to set the context menu's title
+            GameElement hitMe = findCollidingElement(v);
+            if(hitMe != null) {
+                switch (hitMe.getElementType()) {
+                    case TOTE:
+                        menu.add(0, 0, 0, "Knock Tote Over");
+                        menu.add(0, 1, 0, "Pick Up Tote");
+                        if (el.getStackSize() > 1) {
+                            menu.add(0, 2, 0, "Stack Tote");
+                        }
+                        break;
+                    case CAN:
+                        menu.add(0, 3, 0, "Knock Can Over");
+                        menu.add(0, 4, 0, "Pick Up Can");
+                        break;
+                    case TRASH:
+                        break;
+                    case ROBOT:
+                        break;
+                    default:
+                        Toast.makeText(getBaseContext(), "What was that? A piece of paper?", Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }
+        } else if(v.getId()== FieldObject.YellowTote1.id) {
+            menu.setHeaderIcon(R.drawable.yellow_tote_top_down_25x38);
             menu.setHeaderTitle("Yellow Tote 1");
 
-            // to add a new item to the menu
-            menu.add(0,0,0, "Stack Tote");
-            menu.add(0,1,0,"Drop Tote");
-        }
+            menu.add(1,0,0, "Knock Tote Over");
+            menu.add(1,1,0, "Drop Tote");
+            menu.add(1,1,0, "Pick Up Tote");
+            menu.add(1,3,0, "Stack Tote");
+        } else if(v.getId()== FieldObject.YellowTote2.id) {
+            menu.setHeaderIcon(R.drawable.yellow_tote_top_down_25x38);
+            menu.setHeaderTitle("Yellow Tote 2");
 
+            menu.add(1,0,0, "Knock Tote Over");
+            menu.add(1,1,0, "Drop Tote");
+            menu.add(1,2,0, "Pick Up Tote");
+            menu.add(1,3,0, "Stack Tote");
+        } else if(v.getId()== FieldObject.YellowTote3.id) {
+            menu.setHeaderIcon(R.drawable.yellow_tote_top_down_25x38);
+            menu.setHeaderTitle("Yellow Tote 3");
+
+            menu.add(1,0,0, "Knock Tote Over");
+            menu.add(1,1,0, "Drop Tote");
+            menu.add(1,2,0, "Pick Up Tote");
+            menu.add(1,3,0, "Stack Tote");
+        } else if(v.getId()== FieldObject.GreenCan1.id) {
+            menu.setHeaderIcon(R.drawable.green_can_top_down_25x25);
+            menu.setHeaderTitle("Green Can 1");
+
+            menu.add(2,0,0, "Knock Can Over");
+            menu.add(2,1,0, "Drop Can");
+            menu.add(2,2,0, "Pick Up Can");
+        }
     }
 
      /*
@@ -532,26 +602,95 @@ public class MatchAutoModeActivity extends Activity {
      */
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        switch(item.getItemId())
-        {
-            case 0:
-                stack(item.getItemId());
+        switch(item.getGroupId()) {
+            case 0: // Robot actions
+                switch (item.getItemId()) {
+                    case 0:
+                        knockToteOver(item.getItemId());
+                        break;
+                    case 1:
+                        pickToteUp(item.getItemId());
+                        break;
+                    case 2:
+                        stackTote(item.getItemId());
+                        break;
+                    case 3:
+                        dropTote(item.getItemId());
+                        break;
+                    case 4:
+                        knockCanOver(item.getItemId());
+                        break;
+                    case 5:
+                        pickCanUp(item.getItemId());
+                        break;
+                    case 6:
+                        dropCan(item.getItemId());
+                }
                 break;
-            case 1:
-                drop(item.getItemId());
+            case 1: // Tote actions
+                switch (item.getItemId()) {
+                    case 0:
+                        knockToteOver(item.getItemId());
+                        break;
+                    case 1:
+                        dropTote(item.getItemId());
+                        break;
+                    case 2:
+                        pickToteUp(item.getItemId());
+                        break;
+                    case 3:
+                        stackTote(item.getItemId());
+                        break;
+                }
+                break;
+            case 2: // Can actions
+                switch (item.getItemId()) {
+                    case 0:
+                        knockCanOver(item.getItemId());
+                        break;
+                    case 1:
+                        dropCan(item.getItemId());
+                        break;
+                    case 2:
+                        pickCanUp(item.getItemId());
+                        break;
+                }
                 break;
         }
         return true;
     }
 
-    private void drop(int itemId) {
-        Toast.makeText(this, "You pressed Drop", Toast.LENGTH_LONG).show();
+    private void dropCan(int itemId) {
 
     }
 
-    public void stack(int i)
+    private void pickCanUp(int itemId) {
+
+    }
+
+    private void knockCanOver(int itemId) {
+
+    }
+
+    private void stackTote(int itemId) {
+
+    }
+
+    private void pickToteUp(int itemId) {
+
+    }
+
+    private void knockToteOver(int itemId) {
+    }
+
+    private void drop(int itemId) {
+        //Toast.makeText(this, "You pressed Drop", Toast.LENGTH_LONG).show();
+
+    }
+
+    public void dropTote(int i)
     {
-        Toast.makeText(this, "You pressed Stack", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "You pressed Stack", Toast.LENGTH_LONG).show();
     }
 
 	@Override
@@ -588,51 +727,29 @@ public class MatchAutoModeActivity extends Activity {
 
                     int left = (int) event.getX();
                     int top = (int) event.getY();
-                    //autoFieldObjectPositions.get(view.getId()).set(left, top);
                     autoFieldObjects.get(view.getId()).getLocation().set(left, top);
 
                     if(view.getId() == FieldObject.Robot.id) {
-                        //Point robotFinalLocation = autoFieldObjectPositions.get(R.id.imgRobot);
-                        //robotFinalLocation.set(left, top);
-                        Toast.makeText(getBaseContext(), "view ID: " + view.getId() + "  imgRobot: " + R.id.imgRobot, Toast.LENGTH_LONG).show();
-                        //startingRobotX = left;
-                        //startingRobotY = top;
                         setRobotLayout();
                     } else {
                         setViewLayout(view, left, top);
-                        boolean yellowTote1 = (view.getId() == R.id.imgYellowTote1);
-                        //Toast.makeText(getBaseContext(), "view ID: " + view.getId() + "  imgRobot: " + R.id.imgRobot, Toast.LENGTH_LONG).show();
-                        Rect viewRect = new Rect();
-                        viewRect.left = left;
-                        viewRect.top = top;
-                        viewRect.right = left + view.getWidth();
-                        viewRect.bottom = top + view.getHeight();
+                    }
 
-                        Rect r1 = new Rect();
-                        Rect r2 = new Rect();
-                        Rect r3 = new Rect();
+                    Rect viewRect = new Rect();
+                    viewRect.left = left;
+                    viewRect.top = top;
+                    viewRect.right = left + view.getWidth();
+                    viewRect.bottom = top + view.getHeight();
 
-                        //autoFieldObjectImageViews.get(R.id.imgYellowTote1).getHitRect(r1);
-                        //autoFieldObjectImageViews.get(R.id.imgYellowTote2).getHitRect(r2);
-                        //autoFieldObjectImageViews.get(R.id.imgYellowTote3).getHitRect(r3);
-                        autoFieldObjects.get(R.id.imgYellowTote1).getImageView().getHitRect(r1);
-                        autoFieldObjects.get(R.id.imgYellowTote2).getImageView().getHitRect(r2);
-                        autoFieldObjects.get(R.id.imgYellowTote3).getImageView().getHitRect(r3);
-                        //imgYellowTote1.getHitRect(r1);
-                        //imgYellowTote2.getHitRect(r2);
-                        //imgYellowTote3.getHitRect(r3);
-
+                    Rect r1 = new Rect();
+                    for(FieldObject fo : FieldObject.values()) {
+                        autoFieldObjects.get(fo.id).getImageView().getHitRect(r1);
                         if(Rect.intersects(viewRect, r1)) {
-                            Toast.makeText(getApplicationContext(), "On top of Yellow Tote 1", Toast.LENGTH_LONG).show();
                             view.showContextMenu();
-                        } else if(Rect.intersects(viewRect, r2)) {
-                            Toast.makeText(getApplicationContext(), "On top of Yellow Tote 2", Toast.LENGTH_LONG).show();
-                            view.showContextMenu();
-                        } else if(Rect.intersects(viewRect, r3)) {
-                            Toast.makeText(getApplicationContext(), "On top of Yellow Tote 3", Toast.LENGTH_LONG).show();
-                            view.showContextMenu();
+                            break;
                         }
                     }
+
                     view.setVisibility(View.VISIBLE);
 
                     //txtRobotX.setText(String.valueOf(startingRobotX));
