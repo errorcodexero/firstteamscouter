@@ -35,6 +35,7 @@ public class MatchAutoModeActivity extends Activity {
 	protected Button btnSubmit;
 	private String tabletID;
     private int matchNumber;
+    private View lastViewTouched;
 
     protected enum FieldObject {
         Robot(R.id.imgRobot, GameElement.ElementType.ROBOT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y),
@@ -91,10 +92,7 @@ public class MatchAutoModeActivity extends Activity {
         automodeParentLayout.setOnDragListener(new MyViewDragListener());
 
         this.autoRobotStartingLocation = new Point();
-        //this.autoRobotFinalLocation = new Point();
         this.autoFieldObjects = new HashMap<Integer, GameElement>();
-        //this.autoFieldObjectPositions = new HashMap<Integer, Point>();
-        //this.autoFieldObjectImageViews = new HashMap<Integer, ImageView>();
 
         for(FieldObject fo : FieldObject.values()) {
             GameElement ge = new GameElement();
@@ -102,14 +100,11 @@ public class MatchAutoModeActivity extends Activity {
             ge.setLocation(new Point());
             ge.setElementType(fo.type);
 
-            //this.autoFieldObjectPositions.put(fo.id, new Point());
-
             ImageView iv = (ImageView)findViewById(fo.id);
             if(iv == null) {
                 iv = new ImageView(getBaseContext());
                 iv.setId(fo.id);
             }
-            //this.autoFieldObjectImageViews.put(fo.id, iv);
             ge.setImageView(iv);
             this.autoFieldObjects.put(fo.id, ge);
         }
@@ -118,7 +113,7 @@ public class MatchAutoModeActivity extends Activity {
         setBackground(automodeParentLayout);
         configureTotesAndCans();
 
-
+        lastViewTouched = null;
 		teamID = -1;
 		matchID = -1;
 		
@@ -156,8 +151,6 @@ public class MatchAutoModeActivity extends Activity {
         this.teamMatchID = intent.getLongExtra("tmID", -1);
         this.autoRobotStartingLocation.x = intent.getIntExtra("robot_x", 25);
         this.autoRobotStartingLocation.y = intent.getIntExtra("robot_y", 25);
-        //this.startingRobotX = intent.getIntExtra("robot_x", 25);
-        //this.startingRobotY = intent.getIntExtra("robot_y", 25);
     }
 
     private void buildIntent(Intent intent) {
@@ -167,8 +160,6 @@ public class MatchAutoModeActivity extends Activity {
         intent.putExtra("tmID", teamMatchID);
         intent.putExtra("robot_x", autoRobotStartingLocation.x);
         intent.putExtra("robot_y", autoRobotStartingLocation.y);
-        //intent.putExtra("robot_x", startingRobotX);
-        //intent.putExtra("robot_y", startingRobotY);
     }
 
     private void setBackground(RelativeLayout automodeParentLayout) {
@@ -211,10 +202,10 @@ public class MatchAutoModeActivity extends Activity {
             }
         }
 
-        this.setRobotLayout();
+        this.setInitialRobotLayout();
     }
 
-    private void setRobotLayout() {
+    private void setInitialRobotLayout() {
         int width = getResources().getDimensionPixelSize(R.dimen.robot_width);
         int height = getResources().getDimensionPixelSize(R.dimen.robot_height);
 
@@ -283,7 +274,6 @@ public class MatchAutoModeActivity extends Activity {
         if(top <= 75 && left > topCorner) {
             left = (int)topCorner;
         }
-
 
         viewLayoutParams.setMargins(left - (width/2), top - (height/2), 0, 0);
         viewLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -681,6 +671,10 @@ public class MatchAutoModeActivity extends Activity {
     }
 
     private void knockToteOver(int itemId) {
+        if(lastViewTouched != null) {
+            Toast.makeText(getBaseContext(), "View ID: " + lastViewTouched.getId(), Toast.LENGTH_LONG).show();
+            lastViewTouched = null;
+        }
     }
 
     private void drop(int itemId) {
@@ -717,24 +711,35 @@ public class MatchAutoModeActivity extends Activity {
                     //v.setBackgroundDrawable(normalShape);
                     break;
                 case DragEvent.ACTION_DROP:
-                    // Dropped, reassign View to ViewGroup
+                    lastViewTouched = view;
                     dragging = false;
 
+                    if(view.getId() == FieldObject.Robot.id) {
+                        Point robotFinalLocation = autoFieldObjects.get(R.id.imgRobot).getLocation();
+                        robotFinalLocation.set((int) event.getX(), (int) event.getY());
+                    }
+
                     ViewGroup owner = (ViewGroup) view.getParent();
-                    owner.removeView(view);
                     RelativeLayout container = (RelativeLayout) v;
-                    container.addView(view);
+                    if(owner.getId() != container.getId()) {
+                        owner.removeView(view);
+                        container.addView(view);
+                    }
 
                     int left = (int) event.getX();
                     int top = (int) event.getY();
                     autoFieldObjects.get(view.getId()).getLocation().set(left, top);
 
+                    /*
                     if(view.getId() == FieldObject.Robot.id) {
-                        setRobotLayout();
+                        setInitialRobotLayout();
                     } else {
                         setViewLayout(view, left, top);
                     }
+                    */
+                    setViewLayout(view, left, top);
 
+                    /*
                     Rect viewRect = new Rect();
                     viewRect.left = left;
                     viewRect.top = top;
@@ -749,24 +754,21 @@ public class MatchAutoModeActivity extends Activity {
                             break;
                         }
                     }
+                    */
+                    if(findCollidingElement(view) != null) {
+                        view.showContextMenu();
+                    }
 
                     view.setVisibility(View.VISIBLE);
-
-                    //txtRobotX.setText(String.valueOf(startingRobotX));
-                    //txtRobotY.setText(String.valueOf(startingRobotY));
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     //v.setBackgroundDrawable(normalShape);
                 case DragEvent.ACTION_DRAG_LOCATION:
                     if(dragging) {
                         if(view.getId() == FieldObject.Robot.id) {
-                            //Point robotFinalLocation = autoFieldObjectPositions.get(R.id.imgRobot);
                             Point robotFinalLocation = autoFieldObjects.get(R.id.imgRobot).getLocation();
                             robotFinalLocation.set((int) event.getX(), (int) event.getY());
-                            //txtRobotX.setText(String.valueOf(startingRobotX));
-                            //txtRobotY.setText(String.valueOf(startingRobotY));
                         }
-
                     }
                     break;
                 default:
