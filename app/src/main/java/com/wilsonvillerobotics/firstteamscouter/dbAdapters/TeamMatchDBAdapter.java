@@ -62,10 +62,20 @@ public class TeamMatchDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_AUTO_CAN_6_LOCATION_Y = "auto_can_6_location_Y";
     public static final String COLUMN_NAME_AUTO_CAN_7_LOCATION_X = "auto_can_7_location_X";
     public static final String COLUMN_NAME_AUTO_CAN_7_LOCATION_Y = "auto_can_7_location_Y";
+    public static final String COLUMN_NAME_AUTO_ROBOT_VISIBLE = "auto_robot_visible";
+    public static final String COLUMN_NAME_AUTO_TOTE1_VISIBLE = "auto_tote1_visible";
+    public static final String COLUMN_NAME_AUTO_TOTE2_VISIBLE = "auto_tote2_visible";
+    public static final String COLUMN_NAME_AUTO_TOTE3_VISIBLE = "auto_tote3_visible";
+    public static final String COLUMN_NAME_AUTO_CAN1_VISIBLE = "auto_can1_visible";
+    public static final String COLUMN_NAME_AUTO_CAN2_VISIBLE = "auto_can2_visible";
+    public static final String COLUMN_NAME_AUTO_CAN3_VISIBLE = "auto_can3_visible";
+    public static final String COLUMN_NAME_AUTO_CAN4_VISIBLE = "auto_can4_visible";
+    public static final String COLUMN_NAME_AUTO_CAN5_VISIBLE = "auto_can5_visible";
+    public static final String COLUMN_NAME_AUTO_CAN6_VISIBLE = "auto_can6_visible";
+    public static final String COLUMN_NAME_AUTO_CAN7_VISIBLE = "auto_can7_visible";
 
     // This needs to be moved to the team_match_notes_data
     public static final String COLUMN_NAME_TEAM_MATCH_NOTES = "team_match_notes";
-
 
 
     private String[] allColumnNames = new String[]{
@@ -110,6 +120,17 @@ public class TeamMatchDBAdapter implements BaseColumns {
             COLUMN_NAME_AUTO_CAN_6_LOCATION_Y,
             COLUMN_NAME_AUTO_CAN_7_LOCATION_X,
             COLUMN_NAME_AUTO_CAN_7_LOCATION_Y,
+            COLUMN_NAME_AUTO_ROBOT_VISIBLE,
+            COLUMN_NAME_AUTO_TOTE1_VISIBLE,
+            COLUMN_NAME_AUTO_TOTE2_VISIBLE,
+            COLUMN_NAME_AUTO_TOTE3_VISIBLE,
+            COLUMN_NAME_AUTO_CAN1_VISIBLE,
+            COLUMN_NAME_AUTO_CAN2_VISIBLE,
+            COLUMN_NAME_AUTO_CAN3_VISIBLE,
+            COLUMN_NAME_AUTO_CAN4_VISIBLE,
+            COLUMN_NAME_AUTO_CAN5_VISIBLE,
+            COLUMN_NAME_AUTO_CAN6_VISIBLE,
+            COLUMN_NAME_AUTO_CAN7_VISIBLE,
             COLUMN_NAME_AUTO_TOTES_PICKED_UP,
             COLUMN_NAME_AUTO_TOTES_STACKED,
             COLUMN_NAME_AUTO_TOTES_SCORED,
@@ -505,6 +526,11 @@ public class TeamMatchDBAdapter implements BaseColumns {
                 COLUMN_NAME_AUTO_CAN_5_LOCATION_X, COLUMN_NAME_AUTO_CAN_5_LOCATION_Y,
                 COLUMN_NAME_AUTO_CAN_6_LOCATION_X, COLUMN_NAME_AUTO_CAN_6_LOCATION_Y,
                 COLUMN_NAME_AUTO_CAN_7_LOCATION_X, COLUMN_NAME_AUTO_CAN_7_LOCATION_Y,
+                COLUMN_NAME_AUTO_ROBOT_VISIBLE, COLUMN_NAME_AUTO_TOTE1_VISIBLE,
+                COLUMN_NAME_AUTO_TOTE2_VISIBLE, COLUMN_NAME_AUTO_TOTE3_VISIBLE,
+                COLUMN_NAME_AUTO_CAN1_VISIBLE, COLUMN_NAME_AUTO_CAN2_VISIBLE,
+                COLUMN_NAME_AUTO_CAN3_VISIBLE, COLUMN_NAME_AUTO_CAN4_VISIBLE,
+                COLUMN_NAME_AUTO_CAN5_VISIBLE, COLUMN_NAME_AUTO_CAN6_VISIBLE, COLUMN_NAME_AUTO_CAN7_VISIBLE,
                 COLUMN_NAME_AUTO_TOTES_PICKED_UP, COLUMN_NAME_AUTO_TOTES_STACKED, COLUMN_NAME_AUTO_TOTES_SCORED,
                 COLUMN_NAME_AUTO_CANS_PICKED_UP, COLUMN_NAME_AUTO_CANS_SCORED, COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP};
         Cursor mCursor = this.mDb.query(true, TABLE_NAME, columns,
@@ -546,6 +572,9 @@ public class TeamMatchDBAdapter implements BaseColumns {
                                       int tote1X, int tote1Y, int tote2X, int tote2Y, int tote3X, int tote3Y,
                                       int can1X, int can1Y, int can2X, int can2Y, int can3X, int can3Y,
                                       int can4X, int can4Y, int can5X, int can5Y, int can6X, long can6Y, int can7X, int can7Y,
+                                      boolean robotVis, boolean tote1Vis, boolean tote2Vis, boolean tote3Vis,
+                                      boolean can1Vis, boolean can2Vis, boolean can3Vis, boolean can4Vis,
+                                      boolean can5Vis, boolean can6Vis, boolean can7Vis,
                                       int totesPickedUp, int totesStacked, int totesScored,
                                       int cansPickedUp, int cansScored, int cansGrabbedFromStep) {
         FTSUtilities.printToConsole("TeamMatchDBAdapter::setAutoModeActions\n");
@@ -575,6 +604,17 @@ public class TeamMatchDBAdapter implements BaseColumns {
         args.put(COLUMN_NAME_AUTO_CAN_6_LOCATION_Y, can6Y);
         args.put(COLUMN_NAME_AUTO_CAN_7_LOCATION_X, can7X);
         args.put(COLUMN_NAME_AUTO_CAN_7_LOCATION_Y, can7Y);
+        args.put(COLUMN_NAME_AUTO_ROBOT_VISIBLE, String.valueOf(robotVis));
+        args.put(COLUMN_NAME_AUTO_TOTE1_VISIBLE, String.valueOf(tote1Vis));
+        args.put(COLUMN_NAME_AUTO_TOTE2_VISIBLE, String.valueOf(tote2Vis));
+        args.put(COLUMN_NAME_AUTO_TOTE3_VISIBLE, String.valueOf(tote3Vis));
+        args.put(COLUMN_NAME_AUTO_CAN1_VISIBLE, String.valueOf(can1Vis));
+        args.put(COLUMN_NAME_AUTO_CAN2_VISIBLE, String.valueOf(can2Vis));
+        args.put(COLUMN_NAME_AUTO_CAN3_VISIBLE, String.valueOf(can3Vis));
+        args.put(COLUMN_NAME_AUTO_CAN4_VISIBLE, String.valueOf(can4Vis));
+        args.put(COLUMN_NAME_AUTO_CAN5_VISIBLE, String.valueOf(can5Vis));
+        args.put(COLUMN_NAME_AUTO_CAN6_VISIBLE, String.valueOf(can6Vis));
+        args.put(COLUMN_NAME_AUTO_CAN7_VISIBLE, String.valueOf(can7Vis));
         args.put(COLUMN_NAME_AUTO_TOTES_PICKED_UP, totesPickedUp);
         args.put(COLUMN_NAME_AUTO_CANS_PICKED_UP, cansPickedUp);
         args.put(COLUMN_NAME_AUTO_TOTES_STACKED, totesStacked);
@@ -587,3 +627,4 @@ public class TeamMatchDBAdapter implements BaseColumns {
         return this.mDb.update(TABLE_NAME, args, WHERE, null) >0;
     }
 }
+

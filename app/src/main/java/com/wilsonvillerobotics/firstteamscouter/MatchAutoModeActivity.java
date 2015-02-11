@@ -39,26 +39,27 @@ public class MatchAutoModeActivity extends Activity {
     private GameElement lastElementCollided;
 
     protected enum FieldObject {
-        Robot(R.id.imgRobot, GameElement.ElementType.ROBOT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y),
-        YellowTote1(R.id.imgYellowTote1, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y),
-        YellowTote2(R.id.imgYellowTote2, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y),
-        YellowTote3(R.id.imgYellowTote3, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y),
-        GreenCan1(R.id.imgGreenCan1, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_Y),
-        GreenCan2(R.id.imgGreenCan2, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_Y),
-        GreenCan3(R.id.imgGreenCan3, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_Y),
-        GreenCan4(R.id.imgGreenCan4, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_Y),
-        GreenCan5(R.id.imgGreenCan5, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_5_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_5_LOCATION_Y),
-        GreenCan6(R.id.imgGreenCan6, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_6_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_6_LOCATION_Y),
-        GreenCan7(R.id.imgGreenCan7, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_7_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_7_LOCATION_Y);
+        Robot(R.id.imgRobot, GameElement.ElementType.ROBOT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_VISIBLE),
+        YellowTote1(R.id.imgYellowTote1, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE1_VISIBLE),
+        YellowTote2(R.id.imgYellowTote2, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE2_VISIBLE),
+        YellowTote3(R.id.imgYellowTote3, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE3_VISIBLE),
+        GreenCan1(R.id.imgGreenCan1, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN1_VISIBLE),
+        GreenCan2(R.id.imgGreenCan2, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN2_VISIBLE),
+        GreenCan3(R.id.imgGreenCan3, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN3_VISIBLE),
+        GreenCan4(R.id.imgGreenCan4, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN4_VISIBLE),
+        GreenCan5(R.id.imgGreenCan5, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_5_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_5_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN5_VISIBLE),
+        GreenCan6(R.id.imgGreenCan6, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_6_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_6_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN6_VISIBLE),
+        GreenCan7(R.id.imgGreenCan7, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_7_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_7_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN7_VISIBLE);
 
         private int id;
-        private String dbColumnX, dbColumnY;
+        private String dbColumnX, dbColumnY, dbVisible;
         private GameElement.ElementType type;
 
-        FieldObject(int id, GameElement.ElementType et, String colX, String colY) {
+        FieldObject(int id, GameElement.ElementType et, String colX, String colY, String visible) {
             this.id = id;
             this.dbColumnX = colX;
             this.dbColumnY = colY;
+            this.dbVisible = visible;
             this.type = et;
         }
     }
@@ -103,6 +104,8 @@ public class MatchAutoModeActivity extends Activity {
                 iv.setId(fo.id);
             }
             ge.setImageView(iv);
+            ge.makeVisible();
+
             this.autoFieldObjects.put(fo.id, ge);
         }
 
@@ -283,8 +286,9 @@ public class MatchAutoModeActivity extends Activity {
         ImageView iv;
         for(FieldObject fo : FieldObject.values()) {
             if(fo.id != FieldObject.Robot.id) {
-                //iv = this.autoFieldObjectImageViews.get(fo.id);
                 iv = this.autoFieldObjects.get(fo.id).getImageView();
+                int visibility = (this.autoFieldObjects.get(fo.id).isVisible()) ? View.VISIBLE : View.INVISIBLE;
+                iv.setVisibility(visibility);
                 iv.setOnTouchListener(new MyViewTouchListener());
                 registerForContextMenu(iv);
             }
@@ -322,7 +326,6 @@ public class MatchAutoModeActivity extends Activity {
 
     private void loadData() {
         openDatabase();
-        //Point robotFinalLocation = this.autoFieldObjectPositions.get(R.id.imgRobot);
         if(this.tmDBAdapter != null) {
             Cursor C = this.tmDBAdapter.getAutoModeData(this.teamMatchID);
             if(C.moveToFirst()) {
@@ -330,14 +333,13 @@ public class MatchAutoModeActivity extends Activity {
                 if (this.autoModeSaved) {
                     this.autoRobotStartingLocation.x = C.getInt(C.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X));
                     this.autoRobotStartingLocation.y = C.getInt(C.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y));
-                    //robotFinalLocation.x = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X));
-                    //robotFinalLocation.y = C.getInt(C.getColumnIndex(tmDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y));
 
                     for(FieldObject fo : FieldObject.values()) {
-                        //Point loc = this.autoFieldObjectPositions.get(fo.id);
-                        Point loc = this.autoFieldObjects.get(fo.id).getLocation();
+                        GameElement ge = this.autoFieldObjects.get(fo.id);
+                        Point loc = ge.getLocation();
                         loc.x     = C.getInt(C.getColumnIndex(fo.dbColumnX));
                         loc.y     = C.getInt(C.getColumnIndex(fo.dbColumnY));
+                        ge.setVisibility(Boolean.parseBoolean(C.getString(C.getColumnIndex(fo.dbVisible))));
                     }
 
                     this.totesPickedUp = C.getInt(C.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTES_PICKED_UP));
@@ -347,10 +349,14 @@ public class MatchAutoModeActivity extends Activity {
                     this.cansScored = C.getInt(C.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_CANS_SCORED));
                     this.cansGrabbedFromStep = C.getInt(C.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP));
                 } else {
-                    //Point robotFinalLocation = this.autoFieldObjectPositions.get(R.id.imgRobot);
                     Point robotFinalLocation = this.autoFieldObjects.get(FieldObject.Robot.id).getLocation();
                     robotFinalLocation.x = -1;
                     robotFinalLocation.y = -1;
+
+                    for(FieldObject fo : FieldObject.values()) {
+                        GameElement ge = this.autoFieldObjects.get(fo.id);
+                        ge.setVisibility(true);
+                    }
 
                     this.totesPickedUp = 0;
                     this.cansPickedUp = 0;
@@ -375,6 +381,17 @@ public class MatchAutoModeActivity extends Activity {
         Point can5FinalLocation = this.autoFieldObjects.get(FieldObject.GreenCan5.id).getLocation();
         Point can6FinalLocation = this.autoFieldObjects.get(FieldObject.GreenCan6.id).getLocation();
         Point can7FinalLocation = this.autoFieldObjects.get(FieldObject.GreenCan7.id).getLocation();
+        boolean robotVisibility = this.autoFieldObjects.get(FieldObject.Robot.id).isVisible();
+        boolean tote1Visibility = this.autoFieldObjects.get(FieldObject.YellowTote1.id).isVisible();
+        boolean tote2Visibility = this.autoFieldObjects.get(FieldObject.YellowTote2.id).isVisible();
+        boolean tote3Visibility = this.autoFieldObjects.get(FieldObject.YellowTote3.id).isVisible();
+        boolean can1Visibility = this.autoFieldObjects.get(FieldObject.GreenCan1.id).isVisible();
+        boolean can2Visibility = this.autoFieldObjects.get(FieldObject.GreenCan2.id).isVisible();
+        boolean can3Visibility = this.autoFieldObjects.get(FieldObject.GreenCan3.id).isVisible();
+        boolean can4Visibility = this.autoFieldObjects.get(FieldObject.GreenCan4.id).isVisible();
+        boolean can5Visibility = this.autoFieldObjects.get(FieldObject.GreenCan5.id).isVisible();
+        boolean can6Visibility = this.autoFieldObjects.get(FieldObject.GreenCan6.id).isVisible();
+        boolean can7Visibility = this.autoFieldObjects.get(FieldObject.GreenCan7.id).isVisible();
 
         return this.tmDBAdapter != null &&
                 this.tmDBAdapter.setAutoModeActions(
@@ -389,6 +406,9 @@ public class MatchAutoModeActivity extends Activity {
                 can5FinalLocation.x, can5FinalLocation.y,
                 can6FinalLocation.x, can6FinalLocation.y,
                 can7FinalLocation.x, can7FinalLocation.y,
+                robotVisibility, tote1Visibility, tote2Visibility, tote3Visibility,
+                can1Visibility, can2Visibility, can3Visibility, can4Visibility,
+                can5Visibility, can6Visibility, can7Visibility,
                 this.totesPickedUp, this.totesStacked, this.totesScored,
                 this.cansPickedUp, cansScored, cansGrabbedFromStep
                 );
@@ -425,9 +445,12 @@ public class MatchAutoModeActivity extends Activity {
         if(autoModeSaved) {
             for(FieldObject fo : FieldObject.values()) {
                 if(fo.id != FieldObject.Robot.id) {
-                    int left = autoFieldObjects.get(fo.id).getLocation().x;
-                    int top = autoFieldObjects.get(fo.id).getLocation().y;
-                    ImageView iv = autoFieldObjects.get(fo.id).getImageView();
+                    GameElement ge = autoFieldObjects.get(fo.id);
+                    int left = ge.getLocation().x;
+                    int top = ge.getLocation().y;
+                    ImageView iv = ge.getImageView();
+                    int visibility = (ge.isVisible()) ? View.VISIBLE : View.INVISIBLE;
+                    iv.setVisibility(visibility);
                     int width = 0, height = 0;
 
                     switch(fo) {
@@ -483,9 +506,11 @@ public class MatchAutoModeActivity extends Activity {
         for(FieldObject fo : FieldObject.values()) {
             if(fo.id != v.getId()) {
                 GameElement ge = autoFieldObjects.get(fo.id);
-                ge.getImageView().getHitRect(r1);
-                if (Rect.intersects(viewRect, r1)) {
-                    return ge;
+                if(ge.isVisible()) {
+                    ge.getImageView().getHitRect(r1);
+                    if (Rect.intersects(viewRect, r1)) {
+                        return ge;
+                    }
                 }
             }
         }
@@ -583,8 +608,6 @@ public class MatchAutoModeActivity extends Activity {
             menu.add(2,1,0, "Drop Can");
             menu.add(2,2,0, "Pick Up Can");
         }
-
-        lastElementCollided = null;
     }
 
      /*
@@ -668,7 +691,23 @@ public class MatchAutoModeActivity extends Activity {
     }
 
     private void pickToteUp(int itemId) {
+        GameElement robot;
+        GameElement object;
+        if(lastViewTouched != null) {
+            if(lastViewTouched.getId() == FieldObject.Robot.id) {
+                robot = autoFieldObjects.get(FieldObject.Robot.id);
+                object = lastElementCollided;
+            } else {
+                robot = lastElementCollided;
+                object = autoFieldObjects.get(lastViewTouched.getId());
+            }
 
+            object.makeInvisible();
+            robot.pushToStack(object);
+
+            Toast.makeText(getBaseContext(), "View ID: " + lastViewTouched.getId(), Toast.LENGTH_LONG).show();
+            lastViewTouched = null;
+        }
     }
 
     private void knockToteOver(int itemId) {
@@ -676,11 +715,6 @@ public class MatchAutoModeActivity extends Activity {
             Toast.makeText(getBaseContext(), "View ID: " + lastViewTouched.getId(), Toast.LENGTH_LONG).show();
             lastViewTouched = null;
         }
-    }
-
-    private void drop(int itemId) {
-        //Toast.makeText(this, "You pressed Drop", Toast.LENGTH_LONG).show();
-
     }
 
     public void dropTote(int i)

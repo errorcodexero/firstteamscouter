@@ -1,6 +1,7 @@
 package com.wilsonvillerobotics.firstteamscouter;
 
 import android.graphics.Point;
+import android.view.View;
 import android.widget.ImageView;
 
 /**
@@ -101,12 +102,18 @@ public class GameElement {
         return this.elementVisible;
     }
 
+    public void setVisibility(boolean visibility) {
+        this.elementVisible = visibility;
+    }
+
     public void makeVisible() {
         this.elementVisible = true;
+        this.elementImageView.setVisibility(View.VISIBLE);
     }
 
     public void makeInvisible() {
         this.elementVisible = false;
+        this.elementImageView.setVisibility(View.INVISIBLE);
     }
 
     public ImageView getImageView() {
