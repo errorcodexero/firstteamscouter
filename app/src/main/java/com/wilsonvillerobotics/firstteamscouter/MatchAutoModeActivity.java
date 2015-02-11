@@ -36,6 +36,7 @@ public class MatchAutoModeActivity extends Activity {
 	private String tabletID;
     private int matchNumber;
     private View lastViewTouched;
+    private GameElement lastElementCollided;
 
     protected enum FieldObject {
         Robot(R.id.imgRobot, GameElement.ElementType.ROBOT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y),
@@ -62,14 +63,10 @@ public class MatchAutoModeActivity extends Activity {
         }
     }
 
-    //private ImageView imgRobot;
-
 	protected Boolean fieldOrientationRedOnRight;
     protected Point autoRobotStartingLocation;
 
     protected HashMap<Integer, GameElement> autoFieldObjects;
-    //protected HashMap<Integer, Point> autoFieldObjectPositions;
-    //private HashMap<Integer, ImageView> autoFieldObjectImageViews;
 
     public int totesPickedUp;
     public int totesStacked;
@@ -114,6 +111,7 @@ public class MatchAutoModeActivity extends Activity {
         configureTotesAndCans();
 
         lastViewTouched = null;
+        lastElementCollided = null;
 		teamID = -1;
 		matchID = -1;
 		
@@ -472,12 +470,14 @@ public class MatchAutoModeActivity extends Activity {
         }
     }
 
-    private GameElement findCollidingElement(View v) {
-        Rect viewRect = new Rect();
-        viewRect.left = v.getLeft();
-        viewRect.top = v.getTop();
-        viewRect.right = viewRect.left + v.getWidth();
-        viewRect.bottom = viewRect.top + v.getHeight();
+    private GameElement findCollidingElement(View v, int x, int y) {
+        Rect viewRect   = new Rect();
+        int quarterHeight  = v.getHeight()/4;
+        int quarterWidth   = v.getWidth()/4;
+        viewRect.left   = x - quarterWidth;
+        viewRect.top    = y - quarterHeight;
+        viewRect.right  = x + quarterWidth;
+        viewRect.bottom = y + quarterHeight;
 
         Rect r1 = new Rect();
         for(FieldObject fo : FieldObject.values()) {
@@ -529,9 +529,8 @@ public class MatchAutoModeActivity extends Activity {
             menu.setHeaderIcon(R.drawable.robot_50x50);
             menu.setHeaderTitle("Robot");
 
-            GameElement hitMe = findCollidingElement(v);
-            if(hitMe != null) {
-                switch (hitMe.getElementType()) {
+            if(lastElementCollided != null) {
+                switch (lastElementCollided.getElementType()) {
                     case TOTE:
                         menu.add(0, 0, 0, "Knock Tote Over");
                         menu.add(0, 1, 0, "Pick Up Tote");
@@ -584,6 +583,8 @@ public class MatchAutoModeActivity extends Activity {
             menu.add(2,1,0, "Drop Can");
             menu.add(2,2,0, "Pick Up Can");
         }
+
+        lastElementCollided = null;
     }
 
      /*
@@ -739,23 +740,9 @@ public class MatchAutoModeActivity extends Activity {
                     */
                     setViewLayout(view, left, top);
 
-                    /*
-                    Rect viewRect = new Rect();
-                    viewRect.left = left;
-                    viewRect.top = top;
-                    viewRect.right = left + view.getWidth();
-                    viewRect.bottom = top + view.getHeight();
+                    lastElementCollided = findCollidingElement(view, left, top);
 
-                    Rect r1 = new Rect();
-                    for(FieldObject fo : FieldObject.values()) {
-                        autoFieldObjects.get(fo.id).getImageView().getHitRect(r1);
-                        if(Rect.intersects(viewRect, r1)) {
-                            view.showContextMenu();
-                            break;
-                        }
-                    }
-                    */
-                    if(findCollidingElement(view) != null) {
+                    if(lastElementCollided != null) {
                         view.showContextMenu();
                     }
 
