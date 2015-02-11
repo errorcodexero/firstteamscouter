@@ -34,7 +34,7 @@
         <ImageView
             android:layout_width="25dp"
             android:layout_height="38dp"
-            android:id="@+id/imgGroundUpTote"
+            android:id="@+id/imgGroundToteUp"
             android:src="@drawable/yellow_tote_top_down_25x38"
             android:layout_gravity="left|top"
             android:layout_marginLeft="61dp"
@@ -49,8 +49,8 @@
             android:src="@drawable/yellow_tote_top_down_25x38"
             android:layout_gravity="left|top"
             android:layout_marginLeft="56dp"
-            android:layout_alignTop="@+id/imgGroundUpTote"
-            android:layout_toRightOf="@+id/imgGroundUpTote" />
+            android:layout_alignTop="@+id/imgGroundToteUp"
+            android:layout_toRightOf="@+id/imgGroundToteUp" />
 
         <ImageView
             android:layout_width="25dp"
@@ -65,7 +65,7 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:id="@+id/imgGroundDownTote"
+            android:id="@+id/imgGroundToteDown"
             android:src="@drawable/yellow_tote_top_down_25x38"
             android:layout_gravity="left|top"
             android:layout_alignBottom="@+id/imgStepTote"
@@ -77,9 +77,9 @@
             android:id="@+id/imgCanUp"
             android:src="@drawable/green_can_top_down_40x40"
             android:layout_gravity="left|top"
-            android:layout_marginLeft="53dp"
-            android:layout_alignTop="@+id/imgGroundDownTote"
-            android:layout_toRightOf="@+id/imgGroundDownTote" />
+            android:layout_marginLeft="50dp"
+            android:layout_alignTop="@+id/imgGroundToteDown"
+            android:layout_toRightOf="@+id/imgGroundToteDown" />
 
         <ImageView
             android:layout_width="40dp"
@@ -87,9 +87,19 @@
             android:id="@+id/imgCanSide"
             android:src="@drawable/green_can_top_down_40x40"
             android:layout_gravity="left|top"
-            android:layout_marginLeft="70dp"
+            android:layout_marginLeft="50dp"
             android:layout_alignTop="@+id/imgCanUp"
             android:layout_toRightOf="@+id/imgCanUp" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/imgCanDown"
+            android:src="@drawable/green_can_top_down_40x40"
+            android:layout_gravity="left|top"
+            android:layout_marginLeft="50dp"
+            android:layout_alignTop="@+id/imgCanSide"
+            android:layout_toRightOf="@+id/imgCanSide" />
 
         <TableLayout
             android:layout_width="150dp"
@@ -99,7 +109,7 @@
             android:layout_marginLeft="50dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="100dp"
-            android:id="@+id/Platform1_Guage_TableView"
+            android:id="@+id/Platform_Guage_TableView"
             android:showDividers="middle|beginning|end"
             android:orientation="vertical"
             android:background="#ffe4fdff">

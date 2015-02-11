@@ -20,7 +20,7 @@ public class GameElement {
     private boolean     elementVisible;
     private int         elementId;
     private GameElement elementLink;
-    public ElementType  elementType;
+    private ElementType  elementType;
 
     GameElement() {
         this.elementImageView = null;
@@ -60,15 +60,15 @@ public class GameElement {
         this.elementLink = el;
     }
 
-    public GameElement getNextElement() {
+    public GameElement nextElement() {
         return this.elementLink;
     }
 
     public void pushToStack(GameElement el) {
         el.makeInvisible();
         GameElement currElement = this;
-        while(currElement.getNextElement() != null) {
-            currElement = currElement.getNextElement();
+        while(currElement.nextElement() != null) {
+            currElement = currElement.nextElement();
         }
         currElement.setNextElement(el);
     }
@@ -76,9 +76,9 @@ public class GameElement {
     public GameElement popFromStack() {
         GameElement currElement = this;
         GameElement prevElement = null;
-        while(currElement.getNextElement() != null) {
+        while(currElement.nextElement() != null) {
             prevElement = currElement;
-            currElement = currElement.getNextElement();
+            currElement = currElement.nextElement();
         }
 
         if(prevElement == null) return null;
@@ -91,9 +91,9 @@ public class GameElement {
     public int getStackSize() {
         int count = 1;
         GameElement currElement = this;
-        while(currElement.getNextElement() != null) {
+        while(currElement.nextElement() != null) {
             count++;
-            currElement = currElement.getNextElement();
+            currElement = currElement.nextElement();
         }
         return count;
     }
@@ -134,5 +134,21 @@ public class GameElement {
 
     public void setLocation(int x, int y) {
         this.elementLocation = new Point(x, y);
+    }
+
+    public boolean isRobot() {
+        return this.elementType == ElementType.ROBOT;
+    }
+
+    public boolean isTote() {
+        return this.elementType == ElementType.TOTE;
+    }
+
+    public boolean isCan() {
+        return this.elementType == ElementType.CAN;
+    }
+
+    public boolean isTrash() {
+        return this.elementType == ElementType.TRASH;
     }
 }
