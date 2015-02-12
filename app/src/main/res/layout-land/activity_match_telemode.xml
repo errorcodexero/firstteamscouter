@@ -21,7 +21,7 @@
         android:layout_width="200dp" />
 
     <RelativeLayout
-        android:layout_width="700dp"
+        android:layout_width="750dp"
         android:layout_height="fill_parent"
         android:alignmentMode="alignBounds"
         android:columnCount="12"
@@ -31,85 +31,153 @@
         android:id="@+id/Tele_Guages_LayoutRelative"
         android:paddingRight="25dp">
 
+        <!-- imgGroundToteUp -->
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="38dp"
+            android:layout_width="106dp"
+            android:layout_height="50dp"
             android:id="@+id/imgGroundToteUp"
-            android:src="@drawable/yellow_tote_top_down_25x38"
+            android:src="@drawable/gray_tote_side_up_106x50"
             android:layout_gravity="left|top"
-            android:layout_marginLeft="61dp"
+            android:layout_marginLeft="14dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="35dp" />
+
+        <TextView
+            android:layout_width="106dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="14dp"
+            android:layout_marginBottom="0dp"
+            android:text="Ground"/>
+
+        <!-- imgGroundToteDown -->
+        <ImageView
+            android:layout_width="106dp"
+            android:layout_height="50dp"
+            android:id="@+id/imgGroundToteDown"
+            android:src="@drawable/gray_tote_side_down_106x50"
+            android:layout_gravity="left|top"
+            android:layout_marginLeft="134dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="35dp" />
+
+        <TextView
+            android:layout_width="106dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="134dp"
+            android:layout_marginBottom="0dp"
+            android:text="Ground"/>
+
+
+        <!-- imgHumanTote -->
+        <ImageView
+            android:layout_width="106dp"
+            android:layout_height="50dp"
+            android:id="@+id/imgHumanTote"
+            android:src="@drawable/gray_tote_side_up_106x50"
+            android:layout_gravity="left|top"
+            android:layout_marginLeft="254dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="35dp" />
+
+        <TextView
+            android:layout_width="106dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="254dp"
+            android:layout_marginBottom="0dp"
+            android:text="Human"/>
+
+        <!-- imgStepTote -->
+        <ImageView
+            android:layout_width="106dp"
+            android:layout_height="50dp"
+            android:id="@+id/imgStepTote"
+            android:src="@drawable/yellow_tote_side_up_106x50"
+            android:layout_gravity="left|top"
+            android:layout_marginLeft="374dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="35dp" />
+
+        <TextView
+            android:layout_width="106dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="374dp"
+            android:layout_marginBottom="0dp"
+            android:text="Step"/>
+
+        <!-- imgCanUp -->
+        <ImageView
+            android:layout_width="63dp"
+            android:layout_height="75dp"
+            android:id="@+id/imgCanUp"
+            android:src="@drawable/green_can_side_up_42x50"
+            android:layout_gravity="left|top"
+            android:layout_marginLeft="492dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="30dp" />
 
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="38dp"
-            android:id="@+id/imgHumanTote"
-            android:src="@drawable/yellow_tote_top_down_25x38"
-            android:layout_gravity="left|top"
-            android:layout_marginLeft="56dp"
-            android:layout_alignTop="@+id/imgGroundToteUp"
-            android:layout_toRightOf="@+id/imgGroundToteUp" />
+        <TextView
+            android:layout_width="219dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="492dp"
+            android:layout_marginBottom="0dp"
+            android:text="Can"/>
 
+        <!-- imgCanSide -->
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="38dp"
-            android:id="@+id/imgStepTote"
-            android:src="@drawable/yellow_tote_top_down_25x38"
-            android:layout_gravity="left|top"
-            android:layout_marginLeft="68dp"
-            android:layout_alignTop="@+id/imgHumanTote"
-            android:layout_toRightOf="@+id/imgHumanTote" />
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:id="@+id/imgGroundToteDown"
-            android:src="@drawable/yellow_tote_top_down_25x38"
-            android:layout_gravity="left|top"
-            android:layout_alignBottom="@+id/imgStepTote"
-            android:layout_centerHorizontal="true" />
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:id="@+id/imgCanUp"
-            android:src="@drawable/green_can_top_down_40x40"
-            android:layout_gravity="left|top"
-            android:layout_marginLeft="50dp"
-            android:layout_alignTop="@+id/imgGroundToteDown"
-            android:layout_toRightOf="@+id/imgGroundToteDown" />
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="75dp"
+            android:layout_height="63dp"
             android:id="@+id/imgCanSide"
-            android:src="@drawable/green_can_top_down_40x40"
+            android:src="@drawable/green_can_side_side_75x63"
             android:layout_gravity="left|top"
-            android:layout_marginLeft="50dp"
-            android:layout_alignTop="@+id/imgCanUp"
-            android:layout_toRightOf="@+id/imgCanUp" />
+            android:layout_marginLeft="565dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="30dp" />
 
+        <!-- imgCanDown -->
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="63dp"
+            android:layout_height="75dp"
             android:id="@+id/imgCanDown"
-            android:src="@drawable/green_can_top_down_40x40"
+            android:src="@drawable/green_can_side_down_63x75"
             android:layout_gravity="left|top"
-            android:layout_marginLeft="50dp"
-            android:layout_alignTop="@+id/imgCanSide"
-            android:layout_toRightOf="@+id/imgCanSide" />
+            android:layout_marginLeft="650dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="30dp" />
 
+
+
+        <!-- Robot_Gauge_TableView -->
         <TableLayout
-            android:layout_width="150dp"
+            android:layout_width="125dp"
             android:layout_height="300dp"
             android:layout_alignParentTop="false"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="50dp"
+            android:layout_marginLeft="25dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="100dp"
-            android:id="@+id/Platform_Guage_TableView"
+            android:layout_marginBottom="150dp"
+            android:id="@+id/Robot_Gauge_TableView"
             android:showDividers="middle|beginning|end"
             android:orientation="vertical"
             android:background="#ffe4fdff">
@@ -119,74 +187,330 @@
                 android:gravity="center"
                 android:showDividers="beginning|end"
                 android:visibility="visible">
-                <TextView
+                <ImageView
+                    android:layout_height="50dp"
+                    android:layout_width="fill_parent"
+                    android:gravity="center_horizontal"
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgRobotLvl6" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:showDividers="beginning|end"
+                android:visibility="visible">
+                <ImageView
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
-                    android:id="@+id/textView6"
-                    android:text="6"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgRobotLvl5" />
             </TableRow>
 
             <TableRow
+                android:layout_width="fill_parent"
                 android:gravity="center"
                 android:showDividers="beginning|end"
                 android:visibility="visible">
-                <TextView
+                <ImageView
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
-                    android:id="@+id/textView5"
-                    android:text="5"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgRobotLvl4" />
             </TableRow>
 
             <TableRow
+                android:layout_width="fill_parent"
                 android:gravity="center"
                 android:showDividers="beginning|end"
                 android:visibility="visible">
-                <TextView
+                <ImageView
                     android:layout_height="50dp"
+                    android:layout_width="fill_parent"
                     android:gravity="center"
-                    android:id="@+id/textView4"
-                    android:text="4"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgRobotLvl3" />
             </TableRow>
 
             <TableRow
+                android:layout_width="fill_parent"
                 android:gravity="center"
                 android:showDividers="beginning|end"
                 android:visibility="visible">
-                <TextView
+                <ImageView
                     android:layout_height="50dp"
+                    android:layout_width="fill_parent"
                     android:gravity="center"
-                    android:id="@+id/textView3"
-                    android:text="3"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgRobotLvl2" />
             </TableRow>
 
             <TableRow
+                android:layout_width="fill_parent"
                 android:gravity="center"
                 android:showDividers="beginning|end"
                 android:visibility="visible">
-                <TextView
+                <ImageView
                     android:layout_height="50dp"
+                    android:layout_width="fill_parent"
                     android:gravity="center"
-                    android:id="@+id/textView2"
-                    android:text="2"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgRobotLvl1" />
+            </TableRow>
+        </TableLayout>
+
+        <!-- Platform_Gauge_TableView -->
+        <TableLayout
+            android:layout_width="125dp"
+            android:layout_height="300dp"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="200dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="150dp"
+            android:id="@+id/Platform_Gauge_TableView"
+            android:showDividers="middle|beginning|end"
+            android:orientation="vertical"
+            android:background="#ffe4fdff">
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:showDividers="beginning|end"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_height="50dp"
+                    android:layout_width="fill_parent"
+                    android:gravity="center_horizontal"
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgPlatformLvl6" />
             </TableRow>
 
             <TableRow
+                android:layout_width="fill_parent"
                 android:gravity="center"
                 android:showDividers="beginning|end"
                 android:visibility="visible">
-                <TextView
+                <ImageView
                     android:layout_height="50dp"
+                    android:layout_width="fill_parent"
                     android:gravity="center"
-                    android:id="@+id/textView1"
-                    android:text="1"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgPlatformLvl5" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:showDividers="beginning|end"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_height="50dp"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgPlatformLvl4" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:showDividers="beginning|end"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_height="50dp"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgPlatformLvl3" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:showDividers="beginning|end"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_height="50dp"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgPlatformLvl2" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:showDividers="beginning|end"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_height="50dp"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgPlatformLvl1" />
+            </TableRow>
+        </TableLayout>
+
+        <!-- Floor_Gauge_TableView -->
+        <TableLayout
+            android:layout_width="125dp"
+            android:layout_height="300dp"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="375dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="150dp"
+            android:id="@+id/Floor_Gauge_TableView"
+            android:showDividers="middle|beginning|end"
+            android:orientation="vertical"
+            android:background="#ffe4fdff">
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:showDividers="beginning|end"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_height="50dp"
+                    android:layout_width="fill_parent"
+                    android:gravity="center_horizontal"
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgFloorLvl6" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:showDividers="beginning|end"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_height="50dp"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgFloorLvl5" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:showDividers="beginning|end"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_height="50dp"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgFloorLvl4" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:showDividers="beginning|end"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_height="50dp"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgFloorLvl3" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:showDividers="beginning|end"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_height="50dp"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgFloorLvl2" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:showDividers="beginning|end"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_height="50dp"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgFloorLvl1" />
+            </TableRow>
+        </TableLayout>
+
+        <!-- Step_Gauge_TableView -->
+        <TableLayout
+            android:layout_width="125dp"
+            android:layout_height="200dp"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="550dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="150dp"
+            android:id="@+id/Step_Gauge_TableView"
+            android:showDividers="middle|beginning|end"
+            android:orientation="vertical"
+            android:background="#ffe4fdff">
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:showDividers="beginning|end"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_height="50dp"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgStepLvl4" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:showDividers="beginning|end"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_height="50dp"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgStepLvl3" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:showDividers="beginning|end"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_height="50dp"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgStepLvl2" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:showDividers="beginning|end"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_height="50dp"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                    android:id="@+id/imgStepLvl1" />
             </TableRow>
         </TableLayout>
 

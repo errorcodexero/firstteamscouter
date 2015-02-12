@@ -98,21 +98,8 @@ public class MatchTeleModeActivity extends Activity {
 		
 		this.processIntent(getIntent());
 
-        TableLayout fieldGuage = (TableLayout) findViewById(R.id.Platform_Guage_TableView);
-        for(int i = 0; i < fieldGuage.getChildCount(); i++) {
-            fieldGuage.getChildAt(i).setOnDragListener(new MyViewDragListener());
-        }
-        //fieldGuage.setOnDragListener(new MyViewDragListener());
-
-        //imgGroundToteUp = (ImageView) findViewById(R.id.imgGroundToteUp);
-        //imgGroundToteDown = (ImageView) findViewById(R.id.imgGroundToteDown);
-        //imgHumanTote = (ImageView) findViewById(R.id.imgHumanTote);
-        //imgStepTote = (ImageView) findViewById(R.id.imgStepTote);
-
-        //imgCanUp = (ImageView) findViewById(R.id.imgCanUp);
-        //imgCanSide = (ImageView) findViewById(R.id.imgCanSide);
-
         this.initFieldObjects();
+        this.initGauges();
 
         teamID = -1;
 		matchID = -1;
@@ -175,6 +162,17 @@ public class MatchTeleModeActivity extends Activity {
             ge.makeVisible();
 
             this.teleFieldObjects.put(fo.getId(), ge);
+        }
+    }
+
+    private void initGauges() {
+        int[] IDs = {R.id.Platform_Gauge_TableView, R.id.Robot_Gauge_TableView, R.id.Step_Gauge_TableView, R.id.Floor_Gauge_TableView};
+
+        for(int id : IDs) {
+            TableLayout gauge = (TableLayout) findViewById(id);
+            for (int i = 0; i < gauge.getChildCount(); i++) {
+                gauge.getChildAt(i).setOnDragListener(new MyViewDragListener());
+            }
         }
     }
 
@@ -313,18 +311,18 @@ public class MatchTeleModeActivity extends Activity {
                     switch(teleFieldObjects.get(lastViewTouched.getId()).getElementType()) {
                         case TOTE:
                             iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_50x24));
-                            lp = new TableRow.LayoutParams(25, 12);
-                            lp.setMargins(25, 5, 25, 5);
+                            lp = new TableRow.LayoutParams(50, 24);
+                            lp.setMargins(0, 0, 0, 0);
                             break;
                         case CAN:
                             iv.setImageDrawable(getResources().getDrawable(R.drawable.green_can_side_up_50x59));
                             lp = new TableRow.LayoutParams(25, 29);
-                            lp.setMargins(25, 20, 25, 20);
+                            lp.setMargins(0, 0, 0, 0);
                             break;
                         default:
                             iv.setImageDrawable(getResources().getDrawable(R.drawable.robot_50x50));
                             lp = new TableRow.LayoutParams(50, 50);
-                            lp.setMargins(25, 30, 25, 30);
+                            lp.setMargins(0, 0, 0, 0);
                             break;
                     }
                     iv.setLayoutParams(lp);
