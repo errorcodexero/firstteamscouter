@@ -187,7 +187,7 @@ public class MatchTeleModeActivity extends Activity {
             }
 
             private void btnSubmitOnClick(View v) {
-                Intent autoIntent = new Intent(v.getContext(), MatchTeleModeActivity.class);
+                Intent autoIntent = new Intent(v.getContext(), MatchNotesActivity.class);
                 buildIntent(autoIntent);
                 startActivity(autoIntent);
             }
@@ -287,9 +287,21 @@ public class MatchTeleModeActivity extends Activity {
                     dragging = true;
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
+                    if(v.getClass() == TableRow.class) {
+                        ImageView iv = (ImageView)v.findViewWithTag("rowTag");
+                        if(iv != null) {
+                            iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_light_106x50));
+                        }
+                    }
                     //v.setBackgroundDrawable(enterShape);
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
+                    if(v.getClass() == TableRow.class) {
+                        ImageView iv = (ImageView)v.findViewWithTag("rowTag");
+                        if(iv != null) {
+                            iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
+                        }
+                    }
                     //v.setBackgroundDrawable(normalShape);
                     break;
                 case DragEvent.ACTION_DROP:
@@ -305,6 +317,15 @@ public class MatchTeleModeActivity extends Activity {
 
                     ViewGroup owner = (ViewGroup) view.getParent();
                     TableRow container = (TableRow) v;
+
+                    if(v.getClass() == TableRow.class) {
+                        ImageView iv = (ImageView)v.findViewWithTag("rowTag");
+                        if(iv != null) {
+                            iv.setImageDrawable(((ImageView)view).getDrawable());
+                        }
+                    }
+
+                    /*
                     GameElement ge = new GameElement();
                     ImageView iv = new ImageView(getBaseContext());
                     TableRow.LayoutParams lp = null;
@@ -327,6 +348,7 @@ public class MatchTeleModeActivity extends Activity {
                     }
                     iv.setLayoutParams(lp);
                     container.addView(iv);
+                    */
                     /*
                     if(owner.getId() != container.getId()) {
                         owner.removeView(view);

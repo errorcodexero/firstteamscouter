@@ -190,7 +190,8 @@
                 <ImageView
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
-                    android:gravity="center_horizontal"
+                    android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgRobotLvl6" />
             </TableRow>
@@ -204,6 +205,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgRobotLvl5" />
             </TableRow>
@@ -217,6 +219,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgRobotLvl4" />
             </TableRow>
@@ -230,6 +233,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgRobotLvl3" />
             </TableRow>
@@ -243,6 +247,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgRobotLvl2" />
             </TableRow>
@@ -256,6 +261,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgRobotLvl1" />
             </TableRow>
@@ -283,7 +289,8 @@
                 <ImageView
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
-                    android:gravity="center_horizontal"
+                    android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgPlatformLvl6" />
             </TableRow>
@@ -297,6 +304,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgPlatformLvl5" />
             </TableRow>
@@ -310,6 +318,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgPlatformLvl4" />
             </TableRow>
@@ -323,6 +332,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgPlatformLvl3" />
             </TableRow>
@@ -336,6 +346,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgPlatformLvl2" />
             </TableRow>
@@ -349,6 +360,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgPlatformLvl1" />
             </TableRow>
@@ -376,7 +388,8 @@
                 <ImageView
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
-                    android:gravity="center_horizontal"
+                    android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgFloorLvl6" />
             </TableRow>
@@ -390,6 +403,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgFloorLvl5" />
             </TableRow>
@@ -403,6 +417,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgFloorLvl4" />
             </TableRow>
@@ -416,6 +431,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgFloorLvl3" />
             </TableRow>
@@ -429,6 +445,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgFloorLvl2" />
             </TableRow>
@@ -442,6 +459,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgFloorLvl1" />
             </TableRow>
@@ -470,6 +488,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgStepLvl4" />
             </TableRow>
@@ -483,6 +502,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgStepLvl3" />
             </TableRow>
@@ -496,6 +516,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgStepLvl2" />
             </TableRow>
@@ -509,6 +530,7 @@
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
+                    android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
                     android:id="@+id/imgStepLvl1" />
             </TableRow>
