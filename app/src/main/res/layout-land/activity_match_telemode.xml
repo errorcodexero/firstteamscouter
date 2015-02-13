@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:rowCount="18"
     android:rowOrderPreserved="true"
-    android:id="@+id/Auto_LayoutRelative"
+    android:id="@+id/Tele_LayoutRelative"
     android:paddingRight="25dp">
 
     <Switch
@@ -21,7 +21,7 @@
         android:layout_width="200dp" />
 
     <RelativeLayout
-        android:layout_width="750dp"
+        android:layout_width="900dp"
         android:layout_height="fill_parent"
         android:alignmentMode="alignBounds"
         android:columnCount="12"
@@ -32,6 +32,16 @@
         android:paddingRight="25dp">
 
         <!-- imgGroundToteUp -->
+        <TextView
+            android:layout_width="346dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="14dp"
+            android:layout_marginBottom="0dp"
+            android:text="Ground"/>
+
         <ImageView
             android:layout_width="106dp"
             android:layout_height="50dp"
@@ -42,16 +52,6 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="35dp" />
-
-        <TextView
-            android:layout_width="106dp"
-            android:layout_height="30dp"
-            android:gravity="center"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="14dp"
-            android:layout_marginBottom="0dp"
-            android:text="Ground"/>
 
         <!-- imgGroundToteDown -->
         <ImageView
@@ -65,82 +65,85 @@
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="35dp" />
 
+        <!-- imgGroundToteYellow -->
+        <ImageView
+            android:layout_width="106dp"
+            android:layout_height="50dp"
+            android:id="@+id/imgGroundToteYellow"
+            android:src="@drawable/yellow_tote_side_up_106x50"
+            android:layout_gravity="left|top"
+            android:layout_marginLeft="254dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="35dp"
+            android:focusableInTouchMode="false" />
+
+
+        <!-- imgHumanTote -->
         <TextView
             android:layout_width="106dp"
             android:layout_height="30dp"
             android:gravity="center"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="134dp"
+            android:layout_marginLeft="374dp"
             android:layout_marginBottom="0dp"
-            android:text="Ground"/>
+            android:text="Human"/>
 
-
-        <!-- imgHumanTote -->
         <ImageView
             android:layout_width="106dp"
             android:layout_height="50dp"
             android:id="@+id/imgHumanTote"
             android:src="@drawable/gray_tote_side_up_106x50"
             android:layout_gravity="left|top"
-            android:layout_marginLeft="254dp"
+            android:layout_marginLeft="374dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="35dp" />
 
+        <!-- imgStepTote -->
         <TextView
             android:layout_width="106dp"
             android:layout_height="30dp"
             android:gravity="center"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="254dp"
+            android:layout_marginLeft="494dp"
             android:layout_marginBottom="0dp"
-            android:text="Human"/>
+            android:text="Step"/>
 
-        <!-- imgStepTote -->
         <ImageView
             android:layout_width="106dp"
             android:layout_height="50dp"
             android:id="@+id/imgStepTote"
             android:src="@drawable/yellow_tote_side_up_106x50"
             android:layout_gravity="left|top"
-            android:layout_marginLeft="374dp"
+            android:layout_marginLeft="494dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="35dp" />
 
-        <TextView
-            android:layout_width="106dp"
-            android:layout_height="30dp"
-            android:gravity="center"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="374dp"
-            android:layout_marginBottom="0dp"
-            android:text="Step"/>
-
         <!-- imgCanUp -->
-        <ImageView
-            android:layout_width="63dp"
-            android:layout_height="75dp"
-            android:id="@+id/imgCanUp"
-            android:src="@drawable/green_can_side_up_42x50"
-            android:layout_gravity="left|top"
-            android:layout_marginLeft="492dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="30dp" />
-
         <TextView
             android:layout_width="219dp"
             android:layout_height="30dp"
             android:gravity="center"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="492dp"
+            android:layout_marginLeft="612dp"
             android:layout_marginBottom="0dp"
             android:text="Can"/>
+
+        <ImageView
+            android:layout_width="63dp"
+            android:layout_height="75dp"
+            android:id="@+id/imgCanUp"
+            android:src="@drawable/green_can_side_up_42x50"
+            android:layout_gravity="left|top"
+            android:layout_marginLeft="612dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="30dp" />
 
         <!-- imgCanSide -->
         <ImageView
@@ -149,7 +152,7 @@
             android:id="@+id/imgCanSide"
             android:src="@drawable/green_can_side_side_75x63"
             android:layout_gravity="left|top"
-            android:layout_marginLeft="565dp"
+            android:layout_marginLeft="685dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="30dp" />
@@ -161,7 +164,7 @@
             android:id="@+id/imgCanDown"
             android:src="@drawable/green_can_side_down_63x75"
             android:layout_gravity="left|top"
-            android:layout_marginLeft="650dp"
+            android:layout_marginLeft="770dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="30dp" />
@@ -169,12 +172,25 @@
 
 
         <!-- Robot_Gauge_TableView -->
+        <TextView
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:text="Robot"
+            android:id="@+id/txtRobotGaugeLabel"
+            android:layout_marginLeft="160dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="75dp"
+            android:textStyle="bold"
+            android:textColor="#ff0000ff"
+            android:gravity="center" />
+
         <TableLayout
             android:layout_width="125dp"
             android:layout_height="300dp"
             android:layout_alignParentTop="false"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="25dp"
+            android:layout_marginLeft="160dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="150dp"
             android:id="@+id/Robot_Gauge_TableView"
@@ -268,12 +284,25 @@
         </TableLayout>
 
         <!-- Platform_Gauge_TableView -->
+        <TextView
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:text="Platform"
+            android:id="@+id/txtPlatformGaugeLabel"
+            android:layout_marginLeft="600dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="75dp"
+            android:textStyle="bold"
+            android:textColor="#ff0000ff"
+            android:gravity="center" />
+
         <TableLayout
             android:layout_width="125dp"
             android:layout_height="300dp"
             android:layout_alignParentTop="false"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="200dp"
+            android:layout_marginLeft="450dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="150dp"
             android:id="@+id/Platform_Gauge_TableView"
@@ -367,12 +396,25 @@
         </TableLayout>
 
         <!-- Floor_Gauge_TableView -->
+        <TextView
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:text="Floor"
+            android:id="@+id/txtFloorGaugeLabel"
+            android:layout_marginLeft="450dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="75dp"
+            android:textStyle="bold"
+            android:textColor="#ff0000ff"
+            android:gravity="center" />
+
         <TableLayout
             android:layout_width="125dp"
             android:layout_height="300dp"
             android:layout_alignParentTop="false"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="375dp"
+            android:layout_marginLeft="600dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="150dp"
             android:id="@+id/Floor_Gauge_TableView"
@@ -466,12 +508,25 @@
         </TableLayout>
 
         <!-- Step_Gauge_TableView -->
+        <TextView
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:text="Step"
+            android:id="@+id/txtStepGaugeLabel"
+            android:layout_marginLeft="750dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="75dp"
+            android:textStyle="bold"
+            android:textColor="#ff0000ff"
+            android:gravity="center" />
+
         <TableLayout
             android:layout_width="125dp"
             android:layout_height="200dp"
             android:layout_alignParentTop="false"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="550dp"
+            android:layout_marginLeft="750dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="150dp"
             android:id="@+id/Step_Gauge_TableView"
@@ -497,14 +552,16 @@
                 android:layout_width="fill_parent"
                 android:gravity="center"
                 android:showDividers="beginning|end"
-                android:visibility="visible">
+                android:visibility="visible"
+                android:layout_gravity="center">
                 <ImageView
                     android:layout_height="50dp"
                     android:layout_width="fill_parent"
                     android:gravity="center"
                     android:tag="rowTag"
                     android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgStepLvl3" />
+                    android:id="@+id/imgStepLvl3"
+                    android:layout_gravity="center" />
             </TableRow>
 
             <TableRow
@@ -539,13 +596,31 @@
     </RelativeLayout>
 
     <Button
+        android:layout_width="115dp"
+        android:layout_height="wrap_content"
+        android:text="Knock Over"
+        android:id="@+id/btnKnockOverElements"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="225dp"
+        android:layout_alignParentBottom="true" />
+
+    <Button
+        android:layout_width="115dp"
+        android:layout_height="wrap_content"
+        android:text="Drop Element(s)"
+        android:id="@+id/btnDropElements"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="150dp"
+        android:layout_alignParentBottom="true" />
+
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="To Notes"
         android:id="@+id/btnSubmitMatchTele"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/switchUndo"
-        android:layout_marginRight="26dp"
+        android:layout_marginRight="0dp"
         android:layout_marginBottom="40dp" />
 
 </RelativeLayout>

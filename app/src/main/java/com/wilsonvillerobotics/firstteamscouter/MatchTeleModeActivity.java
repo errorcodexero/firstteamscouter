@@ -11,8 +11,10 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -29,6 +31,7 @@ public class MatchTeleModeActivity extends Activity {
         Robot(R.id.imgRobot, GameElement.ElementType.ROBOT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_VISIBLE),
         GroundToteUp(R.id.imgGroundToteUp, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE1_VISIBLE),
         GroundToteDown(R.id.imgGroundToteDown, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE2_VISIBLE),
+        GroundToteYellow(R.id.imgGroundToteYellow, GameElement.ElementType.TOTE, "", "", ""),
         HumanTote(R.id.imgHumanTote, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE3_VISIBLE),
         StepTote(R.id.imgStepTote, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN1_VISIBLE),
         CanUp(R.id.imgCanUp, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN2_VISIBLE),
@@ -172,6 +175,8 @@ public class MatchTeleModeActivity extends Activity {
             TableLayout gauge = (TableLayout) findViewById(id);
             for (int i = 0; i < gauge.getChildCount(); i++) {
                 gauge.getChildAt(i).setOnDragListener(new MyViewDragListener());
+                //ImageView iv = (ImageView)gauge.getChildAt(i).findViewWithTag("rowTag");
+                //iv.setTag(R.drawable.gray_tote_side_up_silhouette_106x50);
             }
         }
     }
@@ -198,6 +203,43 @@ public class MatchTeleModeActivity extends Activity {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
             if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                if(view.getClass() == ImageView.class) {
+                    ViewParent parent = view.getParent();
+                    ViewParent grandparent = (parent != null) ? parent.getParent() : null;
+                    if(grandparent != null && grandparent.getClass() == TableLayout.class) {
+                        TableLayout tl = (TableLayout)grandparent;
+                        LinearLayout dragLayout = new LinearLayout(getBaseContext());
+                        dragLayout.setOrientation(LinearLayout.VERTICAL);
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(110, 50*tl.getChildCount());
+                        lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                        lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                        dragLayout.setLayoutParams(lp);
+                        for(int i = 0; i < tl.getChildCount(); i++) {
+                            View child = tl.getChildAt(i);
+                            if(child != null && child.getClass() == TableRow.class) {
+                                TableRow tr = (TableRow) child;
+                                ImageView iv = (ImageView)tr.findViewWithTag("rowTag");
+                                if(iv != null) {
+                                    iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
+                                    //iv.setTag(R.drawable.gray_tote_side_up_silhouette_106x50);
+                                    iv.setOnTouchListener(null);
+                                    unregisterForContextMenu(iv);
+                                }
+                                ImageView imgTote = new ImageView(getBaseContext());
+                                imgTote.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_106x50));
+                                imgTote.setOnDragListener(new MyViewDragListener());
+                                dragLayout.addView(imgTote);
+                                dragLayout.setVisibility(View.VISIBLE);
+                                //RelativeLayout rl = (RelativeLayout)findViewById(R.id.Tele_LayoutRelative);
+                                //rl.addView(dragLayout);
+                            }
+                        }
+                        ClipData data = ClipData.newPlainText("", "");
+                        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+                        view.startDrag(data, shadowBuilder, view, 0);
+                        return true;
+                    }
+                }
                 ClipData data = ClipData.newPlainText("", "");
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
                 view.startDrag(data, shadowBuilder, view, 0);
@@ -285,12 +327,14 @@ public class MatchTeleModeActivity extends Activity {
             switch (action) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     dragging = true;
+
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
                     if(v.getClass() == TableRow.class) {
                         ImageView iv = (ImageView)v.findViewWithTag("rowTag");
                         if(iv != null) {
                             iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_light_106x50));
+                            //iv.setTag(R.drawable.gray_tote_side_up_silhouette_light_106x50);
                         }
                     }
                     //v.setBackgroundDrawable(enterShape);
@@ -300,6 +344,9 @@ public class MatchTeleModeActivity extends Activity {
                         ImageView iv = (ImageView)v.findViewWithTag("rowTag");
                         if(iv != null) {
                             iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
+                            //iv.setTag(R.drawable.gray_tote_side_up_silhouette_106x50);
+                            iv.setOnTouchListener(null);
+                            unregisterForContextMenu(iv);
                         }
                     }
                     //v.setBackgroundDrawable(normalShape);
@@ -308,13 +355,6 @@ public class MatchTeleModeActivity extends Activity {
                     lastViewTouched = view;
                     dragging = false;
 
-                    /*
-                    if(view.getId() == AutoFieldObject.Robot.getId()) {
-                        //Point robotFinalLocation = autoFieldObjects.get(R.id.imgRobot).getLocation();
-                        //robotFinalLocation.set((int) event.getX(), (int) event.getY());
-                    }
-                    */
-
                     ViewGroup owner = (ViewGroup) view.getParent();
                     TableRow container = (TableRow) v;
 
@@ -322,6 +362,9 @@ public class MatchTeleModeActivity extends Activity {
                         ImageView iv = (ImageView)v.findViewWithTag("rowTag");
                         if(iv != null) {
                             iv.setImageDrawable(((ImageView)view).getDrawable());
+                            //iv.setTag(((ImageView)view).getTag());
+                            iv.setOnTouchListener(new MyViewTouchListener());
+                            registerForContextMenu(iv);
                         }
                     }
 

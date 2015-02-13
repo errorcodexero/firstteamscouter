@@ -104,7 +104,7 @@ public class TeamMatchAutoModeFragment extends Fragment implements OnClickListen
         rootView.findViewById(R.id.imgGreenCan1).setOnTouchListener(new MyTouchListener());
         rootView.findViewById(R.id.imgGreenCan2).setOnTouchListener(new MyTouchListener());
         rootView.findViewById(R.id.imgGreenCan3).setOnTouchListener(new MyTouchListener());
-        rootView.findViewById(R.id.Auto_LayoutRelative).setOnDragListener(new MyDragListener());
+        rootView.findViewById(R.id.Tele_LayoutRelative).setOnDragListener(new MyDragListener());
 
         return rootView;
     }
