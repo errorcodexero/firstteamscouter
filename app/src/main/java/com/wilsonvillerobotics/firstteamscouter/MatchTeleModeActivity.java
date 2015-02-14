@@ -2,11 +2,13 @@ package com.wilsonvillerobotics.firstteamscouter;
 
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.database.SQLException;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.DragEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,11 +17,11 @@ import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.Toast;
+//import android.widget.TableRow;
 
+import com.wilsonvillerobotics.firstteamscouter.GaugeRow;
+import com.wilsonvillerobotics.firstteamscouter.GaugeLayout;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
@@ -28,26 +30,28 @@ import java.util.HashMap;
 public class MatchTeleModeActivity extends Activity {
 
     public enum TeleFieldObject {
-        Robot(R.id.imgRobot, GameElement.ElementType.ROBOT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_VISIBLE),
-        GroundToteUp(R.id.imgGroundToteUp, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE1_VISIBLE),
-        GroundToteDown(R.id.imgGroundToteDown, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE2_VISIBLE),
-        GroundToteYellow(R.id.imgGroundToteYellow, GameElement.ElementType.TOTE, "", "", ""),
-        HumanTote(R.id.imgHumanTote, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE3_VISIBLE),
-        StepTote(R.id.imgStepTote, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN1_VISIBLE),
-        CanUp(R.id.imgCanUp, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN2_VISIBLE),
-        CanSide(R.id.imgCanSide, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN3_VISIBLE),
-        CanDown(R.id.imgCanDown, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN4_VISIBLE);
+        Robot(R.id.imgRobot, GameElement.GameElementType.ROBOT, GameElement.GameElementState.UPRIGHT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_VISIBLE),
+        GroundToteUp(R.id.imgGroundToteUp, GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE1_VISIBLE),
+        GroundToteDown(R.id.imgGroundToteDown, GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPSIDEDOWN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE2_VISIBLE),
+        GroundToteYellow(R.id.imgGroundToteYellow, GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, "", "", ""),
+        HumanTote(R.id.imgHumanTote, GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE3_VISIBLE),
+        StepTote(R.id.imgStepTote, GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN1_VISIBLE),
+        CanUp(R.id.imgCanUp, GameElement.GameElementType.CAN, GameElement.GameElementState.UPRIGHT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN2_VISIBLE),
+        CanSide(R.id.imgCanSide, GameElement.GameElementType.CAN, GameElement.GameElementState.ONSIDE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN3_VISIBLE),
+        CanDown(R.id.imgCanDown, GameElement.GameElementType.CAN, GameElement.GameElementState.UPSIDEDOWN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN4_VISIBLE);
 
         private int id;
         private String dbColumnX, dbColumnY, dbVisible;
-        private GameElement.ElementType type;
+        private GameElement.GameElementType type;
+        private GameElement.GameElementState state;
 
-        TeleFieldObject(int id, GameElement.ElementType et, String colX, String colY, String visible) {
+        TeleFieldObject(int id, GameElement.GameElementType et, GameElement.GameElementState state, String colX, String colY, String visible) {
             this.id = id;
             this.dbColumnX = colX;
             this.dbColumnY = colY;
             this.dbVisible = visible;
             this.type = et;
+            this.state = state;
         }
 
         public int getId() {
@@ -66,8 +70,12 @@ public class MatchTeleModeActivity extends Activity {
             return this.dbVisible;
         }
 
-        public GameElement.ElementType getType() {
+        public GameElement.GameElementType getType() {
             return this.type;
+        }
+
+        public GameElement.GameElementState getState() {
+            return this.state;
         }
     }
 
@@ -79,14 +87,6 @@ public class MatchTeleModeActivity extends Activity {
 	protected Button btnSubmit;
 	private String tabletID;
     private int matchNumber;
-
-	//private ImageView imgGroundToteUp;
-    //private ImageView imgGroundToteDown;
-    //private ImageView imgHumanTote;
-    //private ImageView imgStepTote;
-
-    //private ImageView imgCanUp;
-    //private ImageView imgCanSide;
 
     private View lastViewTouched;
 
@@ -109,26 +109,6 @@ public class MatchTeleModeActivity extends Activity {
 
         this.openDatabase();
         this.configureSubmitButton();
-        /*
-		btnSubmit = (Button) findViewById(R.id.btnSubmitMatchTele);
-		btnSubmit.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                btnSubmitOnClick(v);
-                //finish();
-            }
-
-            private void btnSubmitOnClick(View v) {
-                FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate::btnSubmitMatchAuto : CLOSING DB\n");
-                tmDBAdapter.close();
-
-                Intent teleIntent = new Intent(v.getContext(), MatchNotesActivity.class);
-                buildIntent(teleIntent);
-                startActivity(teleIntent);
-            }
-        });
-        */
 	}
 
     private void processIntent(Intent intent) {
@@ -149,20 +129,30 @@ public class MatchTeleModeActivity extends Activity {
         this.teleFieldObjects = new HashMap<Integer, GameElement>();
 
         for(TeleFieldObject fo : TeleFieldObject.values()) {
+            /*
             GameElement ge = new GameElement();
             ge.setId(fo.getId());
             ge.setLocation(new Point());
             ge.setElementType(fo.getType());
+            ge.setElementState(fo.getState());
+            */
 
             ImageView iv = (ImageView)findViewById(fo.getId());
             if(iv == null) {
                 iv = new ImageView(getBaseContext());
-                iv.setId(fo.getId());
             }
             iv.setOnTouchListener(new MyViewTouchListener());
             registerForContextMenu(iv);
-            ge.setImageView(iv);
-            ge.makeVisible();
+            //ge.setImageView(iv);
+            GameElement ge = new GameElement(
+                    fo.getId(),
+                    iv,
+                    new Point(),
+                    true,
+                    fo.getType(),
+                    fo.getState()
+            );
+            //ge.makeVisible();
 
             this.teleFieldObjects.put(fo.getId(), ge);
         }
@@ -206,38 +196,67 @@ public class MatchTeleModeActivity extends Activity {
                 if(view.getClass() == ImageView.class) {
                     ViewParent parent = view.getParent();
                     ViewParent grandparent = (parent != null) ? parent.getParent() : null;
-                    if(grandparent != null && grandparent.getClass() == TableLayout.class) {
+                    if(grandparent != null && (grandparent.getClass() == TableLayout.class || grandparent.getClass() == GaugeLayout.class)) {
                         TableLayout tl = (TableLayout)grandparent;
-                        LinearLayout dragLayout = new LinearLayout(getBaseContext());
-                        dragLayout.setOrientation(LinearLayout.VERTICAL);
-                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(110, 50*tl.getChildCount());
-                        lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                        lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                        dragLayout.setLayoutParams(lp);
+                        //LinearLayout dragLayout = new LinearLayout(view.getContext());
+                        //dragLayout.setOrientation(LinearLayout.VERTICAL);
+                        //RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(110, 50*tl.getChildCount());
+                        //lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                        //lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+                        //dragLayout.setLayoutParams(lp);
+                        //dragLayout.setTag("dragShadowLayout");
+
+                        LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService
+                                (Context.LAYOUT_INFLATER_SERVICE);
+                        ImageView imgTote = (ImageView)inflater.inflate(R.layout.layout_game_element,null);
+                        imgTote.setVisibility(View.VISIBLE);
+                        //RelativeLayout rl = (RelativeLayout)findViewById(R.id.Tele_LayoutRelative);
+                        tl.addView(imgTote);
+
                         for(int i = 0; i < tl.getChildCount(); i++) {
                             View child = tl.getChildAt(i);
-                            if(child != null && child.getClass() == TableRow.class) {
-                                TableRow tr = (TableRow) child;
-                                ImageView iv = (ImageView)tr.findViewWithTag("rowTag");
+                            if(child != null && child.getClass() == GaugeRow.class) {
+                                GaugeRow gr = (GaugeRow) child;
+                                ImageView iv = (ImageView)gr.findViewWithTag("rowTag");
+                                //if(tr.getId() == ((GaugeRow)parent).getId()) {
+                                if(gr == parent) {
+                                    imgTote.setImageDrawable(iv.getDrawable());
+                                }
                                 if(iv != null) {
                                     iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
                                     //iv.setTag(R.drawable.gray_tote_side_up_silhouette_106x50);
                                     iv.setOnTouchListener(null);
                                     unregisterForContextMenu(iv);
                                 }
-                                ImageView imgTote = new ImageView(getBaseContext());
-                                imgTote.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_106x50));
-                                imgTote.setOnDragListener(new MyViewDragListener());
-                                dragLayout.addView(imgTote);
-                                dragLayout.setVisibility(View.VISIBLE);
-                                //RelativeLayout rl = (RelativeLayout)findViewById(R.id.Tele_LayoutRelative);
-                                //rl.addView(dragLayout);
+                                //imgTote = (ImageView)inflater.inflate(R.layout.layout_game_element,null);
+                                //imgTote.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_106x50));
+                                //imgTote.setOnDragListener(new MyViewDragListener());
+                                //dragLayout.addView(imgTote);
+                                //dragLayout.setVisibility(View.VISIBLE);
                             }
                         }
                         ClipData data = ClipData.newPlainText("", "");
-                        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-                        view.startDrag(data, shadowBuilder, view, 0);
+                        imgTote.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+                        final int size=View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+                        imgTote.measure(size,size);
+                        imgTote.layout(0,0,imgTote.getMeasuredWidth(),imgTote.getMeasuredHeight());
+                        imgTote.invalidate();
+                        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(imgTote);
+                        imgTote.startDrag(data, shadowBuilder, imgTote, 0);
                         return true;
+                        /*
+                        http://www.programcreek.com/java-api-examples/index.php?api=android.view.View.DragShadowBuilder
+                        TextView shadowView=(TextView)View.inflate(mTextView.getContext(),com.android.internal.R.layout.text_drag_thumbnail,null);
+                          if (shadowView == null) {
+                            throw new IllegalArgumentException("Unable to inflate text drag thumbnail");
+                          }
+                          shadowView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+                          final int size=View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+                          shadowView.measure(size,size);
+                          shadowView.layout(0,0,shadowView.getMeasuredWidth(),shadowView.getMeasuredHeight());
+                          shadowView.invalidate();
+                          return new DragShadowBuilder(shadowView);
+                         */
                     }
                 }
                 ClipData data = ClipData.newPlainText("", "");
@@ -245,7 +264,7 @@ public class MatchTeleModeActivity extends Activity {
                 view.startDrag(data, shadowBuilder, view, 0);
                 return true;
             } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-                view.setVisibility(View.GONE);
+                //view.setVisibility(View.GONE);
                 return true;
             } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 return true;
@@ -330,7 +349,7 @@ public class MatchTeleModeActivity extends Activity {
 
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
-                    if(v.getClass() == TableRow.class) {
+                    if(v.getClass() == GaugeRow.class) {
                         ImageView iv = (ImageView)v.findViewWithTag("rowTag");
                         if(iv != null) {
                             iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_light_106x50));
@@ -340,7 +359,7 @@ public class MatchTeleModeActivity extends Activity {
                     //v.setBackgroundDrawable(enterShape);
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
-                    if(v.getClass() == TableRow.class) {
+                    if(v.getClass() == GaugeRow.class) {
                         ImageView iv = (ImageView)v.findViewWithTag("rowTag");
                         if(iv != null) {
                             iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
@@ -356,11 +375,11 @@ public class MatchTeleModeActivity extends Activity {
                     dragging = false;
 
                     ViewGroup owner = (ViewGroup) view.getParent();
-                    TableRow container = (TableRow) v;
+                    GaugeRow container = (GaugeRow) v;
 
-                    if(v.getClass() == TableRow.class) {
+                    if(v.getClass() == GaugeRow.class) {
                         ImageView iv = (ImageView)v.findViewWithTag("rowTag");
-                        if(iv != null) {
+                        if(iv != null && view.getClass() == ImageView.class) {
                             iv.setImageDrawable(((ImageView)view).getDrawable());
                             //iv.setTag(((ImageView)view).getTag());
                             iv.setOnTouchListener(new MyViewTouchListener());
@@ -371,21 +390,21 @@ public class MatchTeleModeActivity extends Activity {
                     /*
                     GameElement ge = new GameElement();
                     ImageView iv = new ImageView(getBaseContext());
-                    TableRow.LayoutParams lp = null;
+                    GaugeRow.LayoutParams lp = null;
                     switch(teleFieldObjects.get(lastViewTouched.getId()).getElementType()) {
-                        case TOTE:
+                        case GRAY_TOTE:
                             iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_50x24));
-                            lp = new TableRow.LayoutParams(50, 24);
+                            lp = new GaugeRow.LayoutParams(50, 24);
                             lp.setMargins(0, 0, 0, 0);
                             break;
                         case CAN:
                             iv.setImageDrawable(getResources().getDrawable(R.drawable.green_can_side_up_50x59));
-                            lp = new TableRow.LayoutParams(25, 29);
+                            lp = new GaugeRow.LayoutParams(25, 29);
                             lp.setMargins(0, 0, 0, 0);
                             break;
                         default:
                             iv.setImageDrawable(getResources().getDrawable(R.drawable.robot_50x50));
-                            lp = new TableRow.LayoutParams(50, 50);
+                            lp = new GaugeRow.LayoutParams(50, 50);
                             lp.setMargins(0, 0, 0, 0);
                             break;
                     }

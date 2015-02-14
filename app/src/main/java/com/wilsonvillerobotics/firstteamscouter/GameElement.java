@@ -8,19 +8,31 @@ import android.widget.ImageView;
  * Created by SommervilleT on 2/9/2015.
  */
 public class GameElement {
-    public enum ElementType {
+    public enum GameElementType {
         ROBOT,
-        TOTE,
+        GRAY_TOTE,
+        YELLOW_TOTE,
         CAN,
-        TRASH
+        TRASH,
+        UNKNOWN
     }
 
-    private ImageView   elementImageView;
-    private Point       elementLocation;
-    private boolean     elementVisible;
-    private int         elementId;
-    private GameElement elementLink;
-    private ElementType  elementType;
+    public enum GameElementState {
+        UPRIGHT,
+        ONSIDE,
+        UPSIDEDOWN,
+        ONEND,
+        UNKNOWN
+    }
+
+    private ImageView           elementImageView;
+    private Point               elementLocation;
+    private boolean             elementVisible;
+    private int                 elementId;
+    private GameElement         elementLink;
+    private GameElementType     elementType;
+    private GameElementState    elementState;
+    private boolean             elementActive;
 
     GameElement() {
         this.elementImageView = null;
@@ -28,7 +40,9 @@ public class GameElement {
         this.elementId = -1;
         this.elementVisible = false;
         this.elementLink = null;
-        this.elementType = null;
+        this.elementType = GameElementType.UNKNOWN;
+        this.elementState = GameElementState.UNKNOWN;
+        this.elementActive = false;
     }
 
     GameElement(int id, ImageView iv, Point loc, boolean vis) {
@@ -37,7 +51,20 @@ public class GameElement {
         this.elementLocation = loc;
         this.elementVisible = vis;
         this.elementLink = null;
-        this.elementType = null;
+        this.elementType = GameElementType.UNKNOWN;
+        this.elementState = GameElementState.UNKNOWN;
+        this.elementActive = vis;
+    }
+
+    GameElement(int id, ImageView iv, Point loc, boolean vis, GameElementType et, GameElementState ges) {
+        this.elementId = id;
+        this.elementImageView = iv;
+        this.elementLocation = loc;
+        this.elementVisible = vis;
+        this.elementLink = null;
+        this.elementType = et;
+        this.elementState = ges;
+        this.elementActive = vis;
     }
 
     public int getId() {
@@ -48,11 +75,11 @@ public class GameElement {
         this.elementId = id;
     }
 
-    public ElementType getElementType() {
+    public GameElementType getElementType() {
         return this.elementType;
     }
 
-    public void setElementType(ElementType et) {
+    public void setElementType(GameElementType et) {
         this.elementType = et;
     }
 
@@ -62,6 +89,14 @@ public class GameElement {
 
     public GameElement nextElement() {
         return this.elementLink;
+    }
+
+    public GameElementState getElementState() {
+        return this.elementState;
+    }
+
+    public void setElementState(GameElementState state) {
+        this.elementState = state;
     }
 
     public void pushToStack(GameElement el) {
@@ -102,6 +137,18 @@ public class GameElement {
         return this.elementVisible;
     }
 
+    public boolean isActive() {
+        return this.elementActive;
+    }
+
+    public void activate() {
+        this.elementActive = true;
+    }
+
+    public void deactivate() {
+        this.elementActive = false;
+    }
+
     public void setVisibility(boolean visibility) {
         this.elementVisible = visibility;
     }
@@ -124,6 +171,12 @@ public class GameElement {
         this.elementImageView = iv;
     }
 
+    public void setImageViewTag(Object tag) {
+        if(this.elementImageView != null) {
+            this.elementImageView.setTag(tag);
+        }
+    }
+
     public Point getLocation() {
         return this.elementLocation;
     }
@@ -137,18 +190,18 @@ public class GameElement {
     }
 
     public boolean isRobot() {
-        return this.elementType == ElementType.ROBOT;
+        return this.elementType == GameElementType.ROBOT;
     }
 
     public boolean isTote() {
-        return this.elementType == ElementType.TOTE;
+        return this.elementType == GameElementType.GRAY_TOTE;
     }
 
     public boolean isCan() {
-        return this.elementType == ElementType.CAN;
+        return this.elementType == GameElementType.CAN;
     }
 
     public boolean isTrash() {
-        return this.elementType == ElementType.TRASH;
+        return this.elementType == GameElementType.TRASH;
     }
 }

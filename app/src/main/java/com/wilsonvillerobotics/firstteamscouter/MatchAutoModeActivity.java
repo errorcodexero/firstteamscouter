@@ -28,23 +28,23 @@ import java.util.HashMap;
 public class MatchAutoModeActivity extends Activity {
 
     public enum AutoFieldObject {
-        Robot(R.id.imgRobot, GameElement.ElementType.ROBOT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_VISIBLE),
-        YellowTote1(R.id.imgYellowTote1, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE1_VISIBLE),
-        YellowTote2(R.id.imgYellowTote2, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE2_VISIBLE),
-        YellowTote3(R.id.imgYellowTote3, GameElement.ElementType.TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE3_VISIBLE),
-        GreenCan1(R.id.imgGreenCan1, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN1_VISIBLE),
-        GreenCan2(R.id.imgGreenCan2, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN2_VISIBLE),
-        GreenCan3(R.id.imgGreenCan3, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN3_VISIBLE),
-        GreenCan4(R.id.imgGreenCan4, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN4_VISIBLE),
-        GreenCan5(R.id.imgGreenCan5, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_5_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_5_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN5_VISIBLE),
-        GreenCan6(R.id.imgGreenCan6, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_6_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_6_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN6_VISIBLE),
-        GreenCan7(R.id.imgGreenCan7, GameElement.ElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_7_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_7_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN7_VISIBLE);
+        Robot(R.id.imgRobot, GameElement.GameElementType.ROBOT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_VISIBLE),
+        YellowTote1(R.id.imgYellowTote1, GameElement.GameElementType.YELLOW_TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE1_VISIBLE),
+        YellowTote2(R.id.imgYellowTote2, GameElement.GameElementType.YELLOW_TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE2_VISIBLE),
+        YellowTote3(R.id.imgYellowTote3, GameElement.GameElementType.YELLOW_TOTE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE3_VISIBLE),
+        GreenCan1(R.id.imgGreenCan1, GameElement.GameElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN1_VISIBLE),
+        GreenCan2(R.id.imgGreenCan2, GameElement.GameElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN2_VISIBLE),
+        GreenCan3(R.id.imgGreenCan3, GameElement.GameElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN3_VISIBLE),
+        GreenCan4(R.id.imgGreenCan4, GameElement.GameElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN4_VISIBLE),
+        GreenCan5(R.id.imgGreenCan5, GameElement.GameElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_5_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_5_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN5_VISIBLE),
+        GreenCan6(R.id.imgGreenCan6, GameElement.GameElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_6_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_6_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN6_VISIBLE),
+        GreenCan7(R.id.imgGreenCan7, GameElement.GameElementType.CAN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_7_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_7_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN7_VISIBLE);
 
         private int id;
         private String dbColumnX, dbColumnY, dbVisible;
-        private GameElement.ElementType type;
+        private GameElement.GameElementType type;
 
-        AutoFieldObject(int id, GameElement.ElementType et, String colX, String colY, String visible) {
+        AutoFieldObject(int id, GameElement.GameElementType et, String colX, String colY, String visible) {
             this.id = id;
             this.dbColumnX = colX;
             this.dbColumnY = colY;
@@ -68,7 +68,7 @@ public class MatchAutoModeActivity extends Activity {
             return this.dbVisible;
         }
 
-        public GameElement.ElementType getType() {
+        public GameElement.GameElementType getType() {
             return this.type;
         }
     }
@@ -584,7 +584,7 @@ public class MatchAutoModeActivity extends Activity {
 
             if (lastElementCollided != null) {
                 switch (lastElementCollided.getElementType()) {
-                    case TOTE:
+                    case YELLOW_TOTE:
                         menu.add(0, 0, 0, "Pick Up Tote");
                         if (el.getStackSize() > 1) {
                             menu.add(0, 1, 0, "Stack Tote");
@@ -613,14 +613,14 @@ public class MatchAutoModeActivity extends Activity {
                     }
                 }
             }
-        } else if(autoFieldObjects.get(v.getId()).getElementType() == GameElement.ElementType.TOTE) {
+        } else if(autoFieldObjects.get(v.getId()).getElementType() == GameElement.GameElementType.YELLOW_TOTE) {
             menu.setHeaderIcon(R.drawable.yellow_tote_top_down_25x38);
             menu.setHeaderTitle("Yellow Tote");
 
             menu.add(1,0,0, "Pick Up Tote");
             menu.add(1,1,0, "Stack Tote");
             menu.add(1,2,0, "Knock Tote Over");
-        } if(autoFieldObjects.get(v.getId()).getElementType() == GameElement.ElementType.CAN) {
+        } if(autoFieldObjects.get(v.getId()).getElementType() == GameElement.GameElementType.CAN) {
             menu.setHeaderIcon(R.drawable.green_can_top_down_25x25);
             menu.setHeaderTitle("Green Can");
 

@@ -42,22 +42,22 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         	tmtndFrag.setTeamMatchData(tmData);
         	return tmtndFrag;
         case 1:
-        	TeamMatchStartingPositionFragment tmspFrag = TeamMatchStartingPositionFragment.newInstance(this.teamMatchID);
-        	tmspFrag.setTeamMatchData(tmData);
-        	return tmspFrag;
+        	//TeamMatchStartingPositionFragment tmspFrag = TeamMatchStartingPositionFragment.newInstance(this.teamMatchID);
+        	//tmspFrag.setTeamMatchData(tmData);
+        	//return tmspFrag;
         case 2:
-            TeamMatchAutoModeFragment tmaFrag = TeamMatchAutoModeFragment.newInstance(this.teamMatchID);
-            tmaFrag.setTeamMatchData(tmData);
-            return tmaFrag;
+            //TeamMatchAutoModeFragment tmaFrag = TeamMatchAutoModeFragment.newInstance(this.teamMatchID);
+            //tmaFrag.setTeamMatchData(tmData);
+            //return tmaFrag;
         case 3:
-        	TeamMatchTeleModeFragment tmtFrag =  TeamMatchTeleModeFragment.newInstance(this.teamMatchID);
-        	tmtFrag.setFieldOrientation(fieldOrientationRedOnRight);
-        	tmtFrag.setTeamMatchData(tmData);
-        	return tmtFrag;
+        	//TeamMatchTeleModeFragment tmtFrag =  TeamMatchTeleModeFragment.newInstance(this.teamMatchID);
+        	//tmtFrag.setFieldOrientation(fieldOrientationRedOnRight);
+        	//tmtFrag.setTeamMatchData(tmData);
+        	//return tmtFrag;
         case 4:
-        	TeamMatchNotesFragment tmnFrag = TeamMatchNotesFragment.newInstance(this.teamMatchID, this.teamNumber, this.matchNumber);
-        	tmnFrag.setTeamMatchData(tmData);
-        	return tmnFrag;
+        	//TeamMatchNotesFragment tmnFrag = TeamMatchNotesFragment.newInstance(this.teamMatchID, this.teamNumber, this.matchNumber);
+        	//tmnFrag.setTeamMatchData(tmData);
+        	//return tmnFrag;
         }
  
         return null;
@@ -68,13 +68,13 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         case 0:
         	return TeamMatchTeamNumberDisplayFragment.myTitle;
         case 1:
-        	return TeamMatchStartingPositionFragment.myTitle;
+        	//return TeamMatchStartingPositionFragment.myTitle;
         case 2:
-            return TeamMatchAutoModeFragment.myTitle;
+            //return TeamMatchAutoModeFragment.myTitle;
         case 3:
-            return TeamMatchTeleModeFragment.myTitle;
+            //return TeamMatchTeleModeFragment.myTitle;
         case 4:
-            return TeamMatchNotesFragment.myTitle;
+            //return TeamMatchNotesFragment.myTitle;
         }
  
         return null;
