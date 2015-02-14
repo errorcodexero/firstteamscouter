@@ -9,12 +9,26 @@ import android.widget.ImageView;
  */
 public class GameElement {
     public enum GameElementType {
-        ROBOT,
-        GRAY_TOTE,
-        YELLOW_TOTE,
-        CAN,
-        TRASH,
-        UNKNOWN
+        ROBOT("ROBOT"),
+        GRAY_TOTE("GRAY_TOTE"),
+        YELLOW_TOTE("YELLOW_TOTE"),
+        CAN("CAN"),
+        TRASH("TRASH"),
+        UNKNOWN("UNKNOWN");
+
+        private String type;
+        GameElementType(String type) {
+            this.type = type;
+        }
+
+        static GameElementType getTypeByString(String type) {
+            for(GameElementType get : GameElementType.values()) {
+                if(get.type.equals(type)) {
+                    return get;
+                }
+            }
+            return UNKNOWN;
+        }
     }
 
     public enum GameElementState {
@@ -133,6 +147,18 @@ public class GameElement {
         return count;
     }
 
+    public String getStackList() {
+        String stackList = "";
+        GameElement currElement = this;
+        while(currElement != null) {
+            if(!currElement.isRobot()) {
+                stackList += currElement.getId() + " ";
+            }
+            currElement = currElement.nextElement();
+        }
+        return stackList;
+    }
+
     public boolean isVisible() {
         return this.elementVisible;
     }
@@ -194,7 +220,9 @@ public class GameElement {
     }
 
     public boolean isTote() {
-        return this.elementType == GameElementType.GRAY_TOTE;
+        boolean isATote = (this.elementType == GameElementType.GRAY_TOTE) ||
+                (this.elementType == GameElementType.YELLOW_TOTE);
+        return isATote;
     }
 
     public boolean isCan() {

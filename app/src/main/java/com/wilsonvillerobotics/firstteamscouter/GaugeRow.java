@@ -1,7 +1,9 @@
 package com.wilsonvillerobotics.firstteamscouter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.widget.ImageView;
 import android.widget.TableRow;
 
 /**
@@ -9,12 +11,24 @@ import android.widget.TableRow;
  */
 public class GaugeRow extends TableRow {
     private GameElement ge;
+    private ImageView iv;
     private boolean rowActive;
+    private int rowIndex;
 
     public GaugeRow(Context context) {
         super(context);
-        this.ge = new GameElement();
+        this.ge = null;
+        this.iv = null;
+        this.rowIndex = -1;
         this.rowActive = false;
+    }
+
+    public void setRowIndex(int ri) {
+        this.rowIndex = ri;
+    }
+
+    public int getRowIndex() {
+        return this.rowIndex;
     }
 
     public GaugeRow(Context context, AttributeSet attrs) {
@@ -27,4 +41,33 @@ public class GaugeRow extends TableRow {
         this.ge = ge;
     }
 
+    public GameElement getGameElement() {
+        return this.ge;
+    }
+
+    public void setImageView(ImageView iv) {
+        this.iv = iv;
+    }
+
+    public ImageView getImageView() {
+        return this.iv;
+    }
+
+    public boolean isActive() {
+        return this.rowActive;
+    }
+
+    public void activate(GameElement.GameElementType get, GameElement.GameElementState ges, Drawable d) {
+        this.iv.setImageDrawable(d);
+        this.ge.setElementType(get);
+        this.ge.setElementState(ges);
+        this.rowActive = true;
+    }
+
+    public void deactivate() {
+        this.iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
+        this.ge.setElementType(GameElement.GameElementType.UNKNOWN);
+        this.ge.setElementState(GameElement.GameElementState.UNKNOWN);
+        this.rowActive = false;
+    }
 }

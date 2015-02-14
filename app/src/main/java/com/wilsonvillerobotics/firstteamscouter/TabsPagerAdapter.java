@@ -38,9 +38,9 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
  
         switch (index) {
         case 0:
-        	TeamMatchTeamNumberDisplayFragment tmtndFrag = TeamMatchTeamNumberDisplayFragment.newInstance(this.teamMatchID);
-        	tmtndFrag.setTeamMatchData(tmData);
-        	return tmtndFrag;
+        	//MatchTeamNumberDisplayActivity tmtndFrag = MatchTeamNumberDisplayActivity.newInstance(this.teamMatchID);
+        	//tmtndFrag.setTeamMatchData(tmData);
+        	//return tmtndFrag;
         case 1:
         	//TeamMatchStartingPositionFragment tmspFrag = TeamMatchStartingPositionFragment.newInstance(this.teamMatchID);
         	//tmspFrag.setTeamMatchData(tmData);
@@ -66,7 +66,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     public String getTabText(int index) {
         switch (index) {
         case 0:
-        	return TeamMatchTeamNumberDisplayFragment.myTitle;
+        	return MatchTeamNumberDisplayActivity.myTitle;
         case 1:
         	//return TeamMatchStartingPositionFragment.myTitle;
         case 2:

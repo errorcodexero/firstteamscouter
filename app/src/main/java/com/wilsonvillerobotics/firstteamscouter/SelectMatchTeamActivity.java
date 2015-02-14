@@ -167,7 +167,7 @@ public class SelectMatchTeamActivity extends Activity {
     }
 
 	private void populateMatchNumberSpinner() {
-		if(tmDBAdapter == null) return;
+		if(tmDBAdapter == null || (this.tabletID.compareTo("Undefined Tablet ID") == 0)) return;
 		
 		final Cursor matchNumbers = tmDBAdapter.getAllMatchNumbers();
 		FTSUtilities.printToConsole("SelectMatchTeamActivity::populateMatchNumberSpinner : Number of Matches Returned: " + String.valueOf(matchNumbers.getCount()));
@@ -209,7 +209,7 @@ public class SelectMatchTeamActivity extends Activity {
             	Cursor teamIDs = mDBAdapter.getTeamIDsForMatchByAlliancePosition(matchID);
             	
             	Hashtable<String, String> teamsForMatch = new Hashtable<String, String>();
-            	
+
             	teamsForMatch.put("Red1", teamIDs.getString(teamIDs.getColumnIndexOrThrow(MatchDataDBAdapter.COLUMN_NAME_RED_TEAM_ONE_ID)));
             	teamsForMatch.put("Red2", teamIDs.getString(teamIDs.getColumnIndexOrThrow(MatchDataDBAdapter.COLUMN_NAME_RED_TEAM_TWO_ID)));
             	teamsForMatch.put("Red3", teamIDs.getString(teamIDs.getColumnIndexOrThrow(MatchDataDBAdapter.COLUMN_NAME_RED_TEAM_THREE_ID)));
@@ -218,8 +218,28 @@ public class SelectMatchTeamActivity extends Activity {
             	teamsForMatch.put("Blue3", teamIDs.getString(teamIDs.getColumnIndexOrThrow(MatchDataDBAdapter.COLUMN_NAME_BLUE_TEAM_THREE_ID)));
             	
             	mDBAdapter.close();
-            	
-            	TeamDataDBAdapter tDBAdapter = new TeamDataDBAdapter(getBaseContext()).open();
+
+                if(tabletID.compareTo("Red1") == 0) {
+                    lblRed1.setTextColor(Color.RED);
+                    txtRed1.setTextColor(Color.RED);
+                } else if(tabletID.compareTo("Red2") == 0) {
+                    lblRed2.setTextColor(Color.RED);
+                    txtRed2.setTextColor(Color.RED);
+                } else if(tabletID.compareTo("Red3") == 0) {
+                    lblRed3.setTextColor(Color.RED);
+                    txtRed3.setTextColor(Color.RED);
+                } else if(tabletID.compareTo("Blue1") == 0) {
+                    lblBlue1.setTextColor(Color.BLUE);
+                    txtBlue1.setTextColor(Color.BLUE);
+                } else if(tabletID.compareTo("Blue2") == 0) {
+                    lblBlue2.setTextColor(Color.BLUE);
+                    txtBlue2.setTextColor(Color.BLUE);
+                } else if(tabletID.compareTo("Blue3") == 0) {
+                    lblBlue3.setTextColor(Color.BLUE);
+                    txtBlue3.setTextColor(Color.BLUE);
+                }
+
+                TeamDataDBAdapter tDBAdapter = new TeamDataDBAdapter(getBaseContext()).open();
             	
             	txtRed1.setText(String.valueOf(tDBAdapter.getTeamNumberFromID(Long.valueOf(teamsForMatch.get("Red1")))));
             	txtRed2.setText(String.valueOf(tDBAdapter.getTeamNumberFromID(Long.valueOf(teamsForMatch.get("Red2")))));
@@ -227,28 +247,9 @@ public class SelectMatchTeamActivity extends Activity {
             	txtBlue1.setText(String.valueOf(tDBAdapter.getTeamNumberFromID(Long.valueOf(teamsForMatch.get("Blue1")))));
             	txtBlue2.setText(String.valueOf(tDBAdapter.getTeamNumberFromID(Long.valueOf(teamsForMatch.get("Blue2")))));
             	txtBlue3.setText(String.valueOf(tDBAdapter.getTeamNumberFromID(Long.valueOf(teamsForMatch.get("Blue3")))));
-            	
-            	tDBAdapter.close();
-            	
-            	if(tabletID.compareTo("Red1") == 0) {
-            		lblRed1.setTextColor(Color.RED);
-            		txtRed1.setTextColor(Color.RED);
-            	} else if(tabletID.compareTo("Red2") == 0) {
-            		lblRed2.setTextColor(Color.RED);
-            		txtRed2.setTextColor(Color.RED);
-            	} else if(tabletID.compareTo("Red3") == 0) {
-            		lblRed3.setTextColor(Color.RED);
-            		txtRed3.setTextColor(Color.RED);
-            	} else if(tabletID.compareTo("Blue1") == 0) {
-            		lblBlue1.setTextColor(Color.BLUE);
-            		txtBlue1.setTextColor(Color.BLUE);
-            	} else if(tabletID.compareTo("Blue2") == 0) {
-            		lblBlue2.setTextColor(Color.BLUE);
-            		txtBlue2.setTextColor(Color.BLUE);
-            	} else if(tabletID.compareTo("Blue3") == 0) {
-            		lblBlue3.setTextColor(Color.BLUE);
-            		txtBlue3.setTextColor(Color.BLUE);
-            	}
+
+                String teamNumber = String.valueOf(tDBAdapter.getTeamNumberFromID(Long.valueOf(teamsForMatch.get(tabletID))));
+                tDBAdapter.close();
 
                 String teamsForMatchID = teamsForMatch.get(tabletID);
                 if(teamsForMatchID == null) {
@@ -262,13 +263,14 @@ public class SelectMatchTeamActivity extends Activity {
             	FTSUtilities.printToConsole("SelectTeamMatchActivity::spinTeamNum.onItemSelected : teamID: " + String.valueOf(teamID) + "  tmID: " + String.valueOf(tmID));
 
                 if(arg1 != null) {
-                    teamMatchIntent = new Intent(arg1.getContext(), MatchStartingPositionActivity.class);
+                    teamMatchIntent = new Intent(arg1.getContext(), MatchTeamNumberDisplayActivity.class);
                 } else {
-                    teamMatchIntent = new Intent(arg0.getContext(), MatchStartingPositionActivity.class);
+                    teamMatchIntent = new Intent(arg0.getContext(), MatchTeamNumberDisplayActivity.class);
                 }
                 teamMatchIntent.putExtra("tablet_id", tabletID);
                 teamMatchIntent.putExtra("field_orientation", fieldOrientationRedOnRight);
                 teamMatchIntent.putExtra("match_number", matchNumber);
+                teamMatchIntent.putExtra("team_number", teamNumber);
                 teamMatchIntent.putExtra("position", arg3);
                 teamMatchIntent.putExtra("tmID", tmID);
                 teamMatchIntent.putExtra(TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID, teamID);
