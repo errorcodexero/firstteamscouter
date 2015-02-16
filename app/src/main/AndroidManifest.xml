@@ -71,6 +71,8 @@
             android:screenOrientation="landscape" ></activity>
         <activity android:name="com.wilsonvillerobotics.firstteamscouter.PitTeamListActivity"
             android:screenOrientation="landscape" ></activity>
+        <activity android:name="com.wilsonvillerobotics.firstteamscouter.PitPitPictureListActivity"
+            android:screenOrientation="landscape" ></activity>
         <activity android:name="com.wilsonvillerobotics.firstteamscouter.SetPreferenceActivity"
             android:screenOrientation="landscape" ></activity>
         </application>

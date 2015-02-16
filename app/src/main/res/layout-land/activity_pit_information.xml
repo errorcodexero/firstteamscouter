@@ -5,7 +5,7 @@
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="0dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="PIT INFO"
         android:id="@+id/txtPitInfo"
@@ -14,5 +14,35 @@
         android:textStyle="bold"
         android:typeface="monospace"
         android:textColor="#ffe71bff"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_weight="0.75" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.25">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:text="@string/pit_pictures"
+            android:id="@+id/btnPitPictureList"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.25"
+            android:layout_marginBottom="50dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="25dp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:text="@string/robot_pictures"
+            android:id="@+id/btnRobotPictures"
+            android:layout_weight="0.25"
+            android:layout_marginBottom="50dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="25dp" />
+    </LinearLayout>
+
 </LinearLayout>

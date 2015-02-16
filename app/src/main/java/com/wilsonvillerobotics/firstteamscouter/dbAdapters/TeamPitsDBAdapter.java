@@ -10,7 +10,6 @@ import android.provider.BaseColumns;
 
 public class TeamPitsDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "team_pits";
-    public static final String COLUMN_NAME_TEAM_PIT_ID = "team_pit_id";
     public static final String COLUMN_NAME_TEAM_ID = "team_id";
     public static final String COLUMN_NAME_PIT_ID = "pit_id";
 
@@ -77,14 +76,14 @@ public class TeamPitsDBAdapter implements BaseColumns {
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
      * 
-     * @param team_pit_id
+     * @param rowId
      * @param team_id
      * @param pit_id
      * @return rowId or -1 if failed
      */
-    public long createTeamPit(int team_pit_id, int team_id, int pit_id){
+    public long createTeamPit(int rowId, int team_id, int pit_id){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_TEAM_PIT_ID, team_pit_id);
+        args.put(_ID, rowId);
         args.put(COLUMN_NAME_TEAM_ID, team_id);
         args.put(COLUMN_NAME_PIT_ID, pit_id);
         return this.mDb.insert(TABLE_NAME, null, args);
@@ -96,17 +95,17 @@ public class TeamPitsDBAdapter implements BaseColumns {
     /**
      * Update the entry.
      * 
-     * @param team_pit_id
+     * @param rowId
      * @param team_id
      * @param pit_id
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updateTeamPit(int rowId, int team_pit_id, int team_id, int pit_id){
+    public boolean updateTeamPit(int rowId, int team_id, int pit_id){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_TEAM_PIT_ID, team_pit_id);
+        args.put(_ID, rowId);
         args.put(COLUMN_NAME_TEAM_ID, team_id);
         args.put(COLUMN_NAME_PIT_ID, pit_id);
-        return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 
+        return this.mDb.update(TABLE_NAME, args, COLUMN_NAME_PIT_ID + "=" + pit_id, null) >0;
     }
 
     /**
@@ -117,23 +116,22 @@ public class TeamPitsDBAdapter implements BaseColumns {
     public Cursor getAllTeamPits() {
 
         return this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_TEAM_PIT_ID, COLUMN_NAME_TEAM_ID, COLUMN_NAME_PIT_ID
+        		_ID, COLUMN_NAME_TEAM_ID, COLUMN_NAME_PIT_ID
         		}, null, null, null, null, null);
     }
 
     /**
      * Return a Cursor positioned at the entry that matches the given rowId
-     * @param rowId
+     * @param teamId
      * @return Cursor positioned to matching entry, if found
      * @throws SQLException if entry could not be found/retrieved
      */
-    public Cursor getTeamPit(long rowId) throws SQLException {
+    public Cursor getTeamPit(long teamId) throws SQLException {
 
         Cursor mCursor =
 
-        this.mDb.query(true, TABLE_NAME, new String[] { _ID, 
-        		COLUMN_NAME_TEAM_PIT_ID, COLUMN_NAME_TEAM_ID, COLUMN_NAME_PIT_ID
-        		}, _ID + "=" + rowId, null, null, null, null, null);
+        this.mDb.query(true, TABLE_NAME, new String[] { _ID, COLUMN_NAME_TEAM_ID, COLUMN_NAME_PIT_ID },
+                COLUMN_NAME_TEAM_ID + "=" + teamId, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }

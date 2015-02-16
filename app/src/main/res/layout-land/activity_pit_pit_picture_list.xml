@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f0f0f0"
+    android:orientation="vertical"
+    tools:context=".PitPitPictureListActivity" >
+
+    <GridView
+        android:id="@+id/gridImages"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.75"
+        android:layout_margin="5dp"
+        android:columnWidth="190dp"
+        android:gravity="center"
+        android:numColumns="4"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="5dp"
+        android:drawSelectorOnTop="true"
+        android:stretchMode="spacingWidth">
+    </GridView>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="0.25"
+        android:gravity="center">
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:text="@string/take_picture"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:id="@+id/btnTakePicture" />
+
+    </LinearLayout>
+
+</LinearLayout>

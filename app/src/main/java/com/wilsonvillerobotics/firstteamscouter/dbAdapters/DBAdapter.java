@@ -168,7 +168,6 @@ public class DBAdapter {
     		//PIT_PICTURES
     		"CREATE TABLE " + PitPicturesDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
-    		PitPicturesDBAdapter.COLUMN_NAME_PIT_ID + TEXT_TYPE + COMMA_SEP +
     		PitPicturesDBAdapter.COLUMN_NAME_PICTURE_ID + TEXT_TYPE +
     		");",
     		
@@ -319,7 +318,7 @@ public class DBAdapter {
     		//TEAM_PITS
     		"CREATE TABLE " + TeamPitsDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
-    		TeamPitsDBAdapter.COLUMN_NAME_TEAM_PIT_ID + INT_TYPE + COMMA_SEP +
+    		TeamPitsDBAdapter._ID + INT_TYPE + COMMA_SEP +
 			TeamPitsDBAdapter.COLUMN_NAME_TEAM_ID + TEXT_TYPE + COMMA_SEP +
 			TeamPitsDBAdapter.COLUMN_NAME_PIT_ID + TEXT_TYPE +
     		");",

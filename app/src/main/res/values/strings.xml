@@ -33,4 +33,7 @@
 	<string name="title_activity_import_match_data">Import Match Data</string>
 	<string name="title_activity_team_match_list">Select the Match &amp; Team</string>
 	<string name="text_button_delete_team">Delete Team</string>
+    <string name="pit_pictures">Pit Pictures</string>
+    <string name="robot_pictures">Robot Pictures</string>
+    <string name="take_picture">Take Picture</string>
 </resources>

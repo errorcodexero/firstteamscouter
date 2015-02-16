@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import java.util.ArrayList;
+
 public class PitPicturesDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "pit_pictures";
     public static final String COLUMN_NAME_PIT_ID = "pit_id";
@@ -112,11 +114,17 @@ public class PitPicturesDBAdapter implements BaseColumns {
         		}, null, null, null, null, null);
     }
 
-    public Cursor getAllPicturesForPit(long pitId) {
-        String WHERE = _ID + "=" + pitId;
-        return this.mDb.query(TABLE_NAME, new String[] { _ID,
+    public ArrayList<Long> getAllPictureIDsForPit(long pitId) {
+        ArrayList<Long> idArray = new ArrayList<Long>();
+        String WHERE = COLUMN_NAME_PIT_ID + "=" + pitId;
+        Cursor C = this.mDb.query(TABLE_NAME, new String[] { _ID,
                 _ID, COLUMN_NAME_PIT_ID, COLUMN_NAME_PICTURE_ID
         }, WHERE, null, null, null, null);
+
+        while(C.moveToNext()) {
+            idArray.add(C.getLong(C.getColumnIndexOrThrow(COLUMN_NAME_PICTURE_ID)));
+        }
+        return idArray;
     }
 
     /**

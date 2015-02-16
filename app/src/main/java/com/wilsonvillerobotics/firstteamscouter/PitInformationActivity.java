@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.SQLException;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
@@ -32,6 +34,8 @@ public class PitInformationActivity extends Activity {
     private PitNotesDBAdapter    pnDBAdapter;
     private PitPicturesDBAdapter ppDBAdapter;
 
+    private Button btnPitPictures, btnRobotPictures;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +55,26 @@ public class PitInformationActivity extends Activity {
         if(txtPitInfo != null) {
             txtPitInfo.setText("Pit Info for team:\n" + teamNumber);
         }
+
+        this.btnPitPictures = (Button)findViewById(R.id.btnPitPictureList);
+        this.btnPitPictures.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pitPicIntent = new Intent(v.getContext(), PitPitPictureListActivity.class);
+                pitPicIntent.putExtra("team_id", teamID);
+                pitPicIntent.putExtra("team_number", teamNumber);
+                startActivity(pitPicIntent);
+            }
+        });
+
+        this.btnRobotPictures = (Button)findViewById(R.id.btnRobotPictures);
+        this.btnRobotPictures.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pitPicIntent = new Intent(v.getContext(), PitPitPictureListActivity.class);
+                startActivity(pitPicIntent);
+            }
+        });
     }
 
     private void processIntent() {
