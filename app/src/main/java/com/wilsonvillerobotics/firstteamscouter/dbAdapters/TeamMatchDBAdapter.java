@@ -452,10 +452,10 @@ public class TeamMatchDBAdapter implements BaseColumns {
     	for(long matchID : matchIDs) {
     		FTSUtilities.printToConsole("TeamMatchDBAdapter::populateTestData : Creating matchID: " + matchID + "\n");
     		long tempTeamIDs[] = new long[6];
-	    	for(int i = 0; i < FTSUtilities.ALLIANCE_POSITION.NOT_SET.allianceID(); i++) {
+	    	for(int i = 0; i < FTSUtilities.ALLIANCE_POSITION.NOT_SET.allianceIndex(); i++) {
 	    		int teamIndex = (i + teamOffset) % teamIDs.length;
 	    		tempTeamIDs[i] = teamIDs[teamIndex];
-	    		result &= (this.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForID(i), teamIDs[teamIndex], matchID) >= 0);
+	    		result &= (this.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForIndex(i), teamIDs[teamIndex], matchID) >= 0);
 	    	}
 	    	if(++teamOffset >= teamIDs.length) {
 	    		teamOffset = 0;
@@ -507,8 +507,9 @@ public class TeamMatchDBAdapter implements BaseColumns {
 
     public Cursor getStartingPositionData(long tmID) throws SQLException{
         String columns[] = {COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X, COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y, COLUMN_NAME_START_LOCATION_ON_FIELD};
+        String WHERE = _ID + "=" + tmID;
         Cursor mCursor = this.mDb.query(true, TABLE_NAME, columns,
-                _ID + "=" + tmID, null, null, null, null, null);
+                WHERE, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
@@ -516,7 +517,8 @@ public class TeamMatchDBAdapter implements BaseColumns {
     }
 
     public Cursor getAutoModeData(long tmID) throws SQLException{
-        String columns[] = {COLUMN_NAME_AUTO_MODE_SAVED, COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X, COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y,
+        String columns[] = {
+                COLUMN_NAME_AUTO_MODE_SAVED, COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X, COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y,
                 COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y,
                 COLUMN_NAME_AUTO_TOTE_1_LOCATION_X, COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y,
                 COLUMN_NAME_AUTO_TOTE_2_LOCATION_X, COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y,
@@ -535,9 +537,12 @@ public class TeamMatchDBAdapter implements BaseColumns {
                 COLUMN_NAME_AUTO_CAN5_VISIBLE, COLUMN_NAME_AUTO_CAN6_VISIBLE, COLUMN_NAME_AUTO_CAN7_VISIBLE,
                 COLUMN_NAME_AUTO_TOTES_PICKED_UP, COLUMN_NAME_AUTO_TOTES_STACKED, COLUMN_NAME_AUTO_TOTES_SCORED,
                 COLUMN_NAME_AUTO_CANS_PICKED_UP, COLUMN_NAME_AUTO_CANS_SCORED, COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP,
-                COLUMN_NAME_AUTO_ROBOT_STACK_LIST};
+                COLUMN_NAME_AUTO_ROBOT_STACK_LIST
+        };
+
+        String WHERE = _ID + "=" + tmID;
         Cursor mCursor = this.mDb.query(true, TABLE_NAME, columns,
-                _ID + "=" + tmID, null, null, null, null, null);
+                WHERE, null, null, null, null, null);
 
         return mCursor;
     }
@@ -551,7 +556,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
         args.put(COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y, startingPositionY);
         args.put(COLUMN_NAME_START_LOCATION_ON_FIELD, String.valueOf(robotOnField));
 
-        String WHERE = TeamMatchDBAdapter._ID + "=" + teamMatchID;
+        String WHERE = _ID + "=" + teamMatchID;
 
         return this.mDb.update(TABLE_NAME, args, WHERE, null) >0;
     }
@@ -627,7 +632,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
         args.put(COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP, cansGrabbedFromStep);
         args.put(COLUMN_NAME_AUTO_ROBOT_STACK_LIST, stackList);
 
-        String WHERE = TeamMatchDBAdapter._ID + "=" + teamMatchID;
+        String WHERE = _ID + "=" + teamMatchID;
 
         return this.mDb.update(TABLE_NAME, args, WHERE, null) >0;
     }

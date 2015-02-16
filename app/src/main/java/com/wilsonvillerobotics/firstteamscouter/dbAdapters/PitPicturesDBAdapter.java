@@ -10,7 +10,6 @@ import android.provider.BaseColumns;
 
 public class PitPicturesDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "pit_pictures";
-    public static final String COLUMN_NAME_PIT_PICTURE_ID = "pit_picture_id";
     public static final String COLUMN_NAME_PIT_ID = "pit_id";
     public static final String COLUMN_NAME_PICTURE_ID = "picture_id";
 
@@ -82,9 +81,9 @@ public class PitPicturesDBAdapter implements BaseColumns {
      * @param picture_id
      * @return rowId or -1 if failed
      */
-    public long createPitNote(int pit_picture_id, int pit_id, int picture_id){
+    public long createPitPicture(int pit_picture_id, int pit_id, int picture_id){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(COLUMN_NAME_PIT_PICTURE_ID, pit_picture_id);
+        initialValues.put(_ID, pit_picture_id);
         initialValues.put(COLUMN_NAME_PIT_ID, pit_id);
         initialValues.put(COLUMN_NAME_PICTURE_ID, picture_id);
         return this.mDb.insert(TABLE_NAME, null, initialValues);
@@ -96,7 +95,7 @@ public class PitPicturesDBAdapter implements BaseColumns {
      * @param rowId
      * @return true if deleted, false otherwise
      */
-    public boolean deletePitNote(long rowId) {
+    public boolean deletePitPicture(long rowId) {
 
         return this.mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
     }
@@ -106,11 +105,18 @@ public class PitPicturesDBAdapter implements BaseColumns {
      * 
      * @return Cursor over all Match Data entries
      */
-    public Cursor getAllPitNotes() {
+    public Cursor getAllPitPictures() {
 
         return this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_PIT_PICTURE_ID, COLUMN_NAME_PIT_ID, COLUMN_NAME_PICTURE_ID
+        		_ID, COLUMN_NAME_PIT_ID, COLUMN_NAME_PICTURE_ID
         		}, null, null, null, null, null);
+    }
+
+    public Cursor getAllPicturesForPit(long pitId) {
+        String WHERE = _ID + "=" + pitId;
+        return this.mDb.query(TABLE_NAME, new String[] { _ID,
+                _ID, COLUMN_NAME_PIT_ID, COLUMN_NAME_PICTURE_ID
+        }, WHERE, null, null, null, null);
     }
 
     /**
@@ -119,12 +125,12 @@ public class PitPicturesDBAdapter implements BaseColumns {
      * @return Cursor positioned to matching entry, if found
      * @throws SQLException if entry could not be found/retrieved
      */
-    public Cursor getPitNote(long rowId) throws SQLException {
+    public Cursor getPitPicture(long rowId) throws SQLException {
 
         Cursor mCursor =
 
         this.mDb.query(true, TABLE_NAME, new String[] { _ID, 
-        		COLUMN_NAME_PIT_PICTURE_ID, COLUMN_NAME_PIT_ID, COLUMN_NAME_PICTURE_ID
+        		_ID, COLUMN_NAME_PIT_ID, COLUMN_NAME_PICTURE_ID
         		}, _ID + "=" + rowId, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -141,9 +147,9 @@ public class PitPicturesDBAdapter implements BaseColumns {
      * @param picture_id
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updatePitNote(int rowId, int pit_picture_id, int pit_id, int picture_id){
+    public boolean updatePitPicture(int rowId, int pit_picture_id, int pit_id, int picture_id){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_PIT_PICTURE_ID, pit_picture_id);
+        args.put(_ID, pit_picture_id);
         args.put(COLUMN_NAME_PIT_ID, pit_id);
         args.put(COLUMN_NAME_PICTURE_ID, picture_id);
         return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 

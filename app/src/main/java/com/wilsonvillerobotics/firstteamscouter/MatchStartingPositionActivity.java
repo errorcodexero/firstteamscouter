@@ -22,13 +22,11 @@ import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 public class MatchStartingPositionActivity extends Activity {
 
 	protected TeamMatchDBAdapter tmDBAdapter;
-    private TeamMatchData tmData;
     protected Long teamMatchID;
-	protected String[] teamNumberArray;
 	protected long teamID;
 	protected long matchID;
 	protected Button btnSubmit;
-	private String tabletID;
+    private FTSUtilities.ALLIANCE_POSITION tabletAlliancePosition;
     private int matchNumber;
 
     private ImageView imgRobot;
@@ -68,7 +66,7 @@ public class MatchStartingPositionActivity extends Activity {
 	}
 
     private void processIntent(Intent intent) {
-        this.tabletID = intent.getStringExtra("tablet_id");
+        this.tabletAlliancePosition = FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForString(intent.getStringExtra("tablet_id"));
         this.fieldOrientationRedOnRight = intent.getBooleanExtra("field_orientation", false);
         this.matchNumber = intent.getIntExtra("match_number", 0);
         this.teamMatchID = intent.getLongExtra("tmID", -1);
@@ -76,11 +74,29 @@ public class MatchStartingPositionActivity extends Activity {
 
     private void setBackground(RelativeLayout startingPositionParentLayout) {
         int backgroundResource = R.drawable.starting_position_background_2015;
+
+        switch(tabletAlliancePosition) {
+            case RED1:
+            case RED2:
+            case RED3:
+                backgroundResource = R.drawable.starting_position_red_field_500x500;
+                break;
+            case BLUE1:
+            case BLUE2:
+            case BLUE3:
+                backgroundResource = R.drawable.starting_position_blue_field_500x500;
+                break;
+            default:
+                backgroundResource = R.drawable.starting_position_background_2015;
+                break;
+        }
+        /*
         if(this.tabletID.startsWith("Red")) {
             backgroundResource = R.drawable.starting_position_background_2015; //starting_position_red_background;
         } else if(this.tabletID.startsWith("Blue")) {
             backgroundResource = R.drawable.starting_position_background_2015; //starting_position_blue_background;
         }
+        */
         startingPositionParentLayout.setBackgroundResource(backgroundResource);
     }
 
@@ -136,7 +152,8 @@ public class MatchStartingPositionActivity extends Activity {
     }
 
     private void buildIntent(Intent intent) {
-        intent.putExtra("tablet_id", tabletID);
+        intent.putExtra("tablet_id", tabletAlliancePosition.myAlliancePosition());
+        //intent.putExtra("tablet_id", tabletID);
         intent.putExtra("field_orientation", fieldOrientationRedOnRight);
         intent.putExtra("match_number", matchNumber);
         intent.putExtra("tmID", teamMatchID);

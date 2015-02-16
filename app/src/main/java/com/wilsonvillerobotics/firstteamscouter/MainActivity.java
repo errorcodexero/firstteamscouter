@@ -2,30 +2,30 @@ package com.wilsonvillerobotics.firstteamscouter;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.DBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
+import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities.ALLIANCE_POSITION;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.SwitchPreference;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
 	private Button btnViewTeamData;
 	private Button btnImportMatchData;
-	private Button btnSelectMatchTeam;
+	private Button btnMatchScouting;
+    private Button btnPitScouting;
 	private DBAdapter mDBAdapter;
 	private TextView txtTabletID;
-	private String tabletID;
+	//private String tabletID;
+    private FTSUtilities.ALLIANCE_POSITION tabletAlliancePosition;
 	public Boolean fieldOrientRedOnRight;
 	
     @Override
@@ -41,14 +41,15 @@ public class MainActivity extends Activity {
         
         btnViewTeamData = (Button) findViewById(R.id.btnViewTeamData);
         btnImportMatchData = (Button) findViewById(R.id.btnViewMatchData);
-        btnSelectMatchTeam = (Button) findViewById(R.id.btnSelectMatchTeam);
+        btnMatchScouting = (Button) findViewById(R.id.btnMatchScouting);
+        btnPitScouting = (Button) findViewById(R.id.btnPitScouting);
         
         btnViewTeamData.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(v.getContext(), TeamDataListActivity.class);
-				intent.putExtra("tablet_id", tabletID);
+				intent.putExtra("tablet_id", FTSUtilities.getTabletID(tabletAlliancePosition));
 				intent.putExtra("field_orientation", fieldOrientRedOnRight);
 				startActivity(intent);
 			}
@@ -59,24 +60,33 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(v.getContext(), ImportMatchDataActivity.class);
-				intent.putExtra("tablet_id", tabletID);
+				intent.putExtra("tablet_id", FTSUtilities.getTabletID(tabletAlliancePosition));
 				intent.putExtra("field_orientation", fieldOrientRedOnRight);
 				startActivity(intent);
 			}
 		});
 
-        btnSelectMatchTeam.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(v.getContext(), SelectMatchTeamActivity.class);
-				intent.putExtra("tablet_id", tabletID);
-				intent.putExtra("field_orientation", fieldOrientRedOnRight);
-				startActivity(intent);
-			}
-		});
+        btnMatchScouting.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), SelectMatchTeamActivity.class);
+                intent.putExtra("tablet_id", FTSUtilities.getTabletID(tabletAlliancePosition));
+                intent.putExtra("field_orientation", fieldOrientRedOnRight);
+                startActivity(intent);
+            }
+        });
+
+        btnPitScouting.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), PitTeamListActivity.class);
+                startActivity(intent);
+            }
+        });
     }
-    
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -155,8 +165,9 @@ public class MainActivity extends Activity {
 		SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		this.fieldOrientRedOnRight = mySharedPreferences.getBoolean("field_orientation", false);
-		this.tabletID = mySharedPreferences.getString("tablet_id_from_list", "Undefined Tablet ID");
-		this.txtTabletID.setText(this.tabletID);
+		String tabletID = mySharedPreferences.getString("tablet_id_from_list", "Undefined Tablet ID");
+        this.tabletAlliancePosition = ALLIANCE_POSITION.getAlliancePositionForString(tabletID);
+		this.txtTabletID.setText(tabletID);
   	}
 
     public static class PrefsFragment extends PreferenceFragment {

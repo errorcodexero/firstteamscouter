@@ -79,7 +79,8 @@ public class MatchAutoModeActivity extends Activity {
 	protected long teamID;
 	protected long matchID;
 	protected Button btnSubmit;
-	private String tabletID;
+	//private String tabletID;
+    private FTSUtilities.ALLIANCE_POSITION tabletAlliancePosition;
     private int matchNumber;
     private View lastViewTouched;
     private GameElement lastElementCollided;
@@ -163,7 +164,8 @@ public class MatchAutoModeActivity extends Activity {
 	}
 
     private void processIntent(Intent intent) {
-        this.tabletID = intent.getStringExtra("tablet_id");
+        this.tabletAlliancePosition = FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForString(intent.getStringExtra("tablet_id"));
+        //this.tabletID = intent.getStringExtra("tablet_id");
         this.fieldOrientationRedOnRight = intent.getBooleanExtra("field_orientation", false);
         this.matchNumber = intent.getIntExtra("match_number", 0);
         this.teamMatchID = intent.getLongExtra("tmID", -1);
@@ -172,7 +174,8 @@ public class MatchAutoModeActivity extends Activity {
     }
 
     private void buildIntent(Intent intent) {
-        intent.putExtra("tablet_id", tabletID);
+        //intent.putExtra("tablet_id", tabletID);
+        intent.putExtra("tablet_id", FTSUtilities.getTabletID(tabletAlliancePosition));
         intent.putExtra("field_orientation", fieldOrientationRedOnRight);
         intent.putExtra("match_number", matchNumber);
         intent.putExtra("tmID", teamMatchID);
@@ -198,11 +201,29 @@ public class MatchAutoModeActivity extends Activity {
 
     private void setBackground(RelativeLayout automodeParentLayout) {
         int backgroundResource = R.drawable.automode_background_2015;
+
+        switch(tabletAlliancePosition) {
+            case RED1:
+            case RED2:
+            case RED3:
+                backgroundResource = R.drawable.auto_mode_red_field_500x500;
+                break;
+            case BLUE1:
+            case BLUE2:
+            case BLUE3:
+                backgroundResource = R.drawable.auto_mode_blue_field_500x500;
+                break;
+            default:
+                backgroundResource = R.drawable.automode_background_2015;
+                break;
+        }
+        /*
         if(this.tabletID.startsWith("Red")) {
             backgroundResource = R.drawable.automode_background_2015;
         } else if(this.tabletID.startsWith("Blue")) {
             backgroundResource = R.drawable.automode_background_2015;
         }
+        */
         automodeParentLayout.setBackgroundResource(backgroundResource);
     }
 

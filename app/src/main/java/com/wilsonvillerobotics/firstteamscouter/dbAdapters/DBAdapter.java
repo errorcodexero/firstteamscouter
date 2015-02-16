@@ -11,7 +11,7 @@ public class DBAdapter {
 
     public static final String DATABASE_NAME = "FIRSTTeamScouter"; //$NON-NLS-1$
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     
     private static final int CREATE_TABLE_SQL = 0;
     private static final int DELETE_TABLE_SQL = 1;
@@ -168,7 +168,6 @@ public class DBAdapter {
     		//PIT_PICTURES
     		"CREATE TABLE " + PitPicturesDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
-    		PitPicturesDBAdapter.COLUMN_NAME_PIT_PICTURE_ID + INT_TYPE + COMMA_SEP +
     		PitPicturesDBAdapter.COLUMN_NAME_PIT_ID + TEXT_TYPE + COMMA_SEP +
     		PitPicturesDBAdapter.COLUMN_NAME_PICTURE_ID + TEXT_TYPE +
     		");",

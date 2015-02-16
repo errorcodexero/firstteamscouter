@@ -22,7 +22,7 @@ import android.widget.Button;
 public class FTSUtilities {
 
 	public static Boolean DEBUG = true;
-	public static Boolean POPULATE_TEST_DATA = false;
+	public static Boolean POPULATE_TEST_DATA = true;
 	public static String alliancePositions[] = {"Red1","Red2","Red3","Blue1","Blue2","Blue3",};
 	
 	public enum ALLIANCE_POSITION {
@@ -34,24 +34,45 @@ public class FTSUtilities {
 		BLUE3 (5, "Blue3"),
 		NOT_SET (6, "Not Set");
 		
-		private int id;
+		private final int index;
 		private String strAlliancePositionString;
-		ALLIANCE_POSITION(int id, String alliancePosition) {
-			this.id = id;
+		ALLIANCE_POSITION(int index, String alliancePosition) {
+			this.index = index;
 			this.strAlliancePositionString = alliancePosition;
 		}
+
+        public boolean positionIsSet() {
+            return this != NOT_SET;
+        }
+
+        public static ALLIANCE_POSITION[] validPositions() {
+            ALLIANCE_POSITION positions[] = {
+                RED1, RED2, RED3,
+                BLUE1, BLUE2, BLUE3
+            };
+            return positions;
+        }
+
+        public int getColorForAlliancePosition() {
+            if(this.strAlliancePositionString.contains("Red")) {
+                return Color.RED;
+            } else if(this.strAlliancePositionString.contains("Blue")) {
+                return Color.BLUE;
+            }
+            return Color.MAGENTA;
+        }
 		
-		public int allianceID() {
-			return this.id;
+		public int allianceIndex() {
+			return this.index;
 		}
 		
 		public String myAlliancePosition() {
 			return this.strAlliancePositionString;
 		}
 		
-		public static String getAlliancePositionForID(int id) {
-			switch(id) {
-			case 0: 
+		public static String getAlliancePositionForIndex(int index) {
+			switch(index) {
+			case 0:
 				return RED1.strAlliancePositionString;
 			case 1:
 				return RED2.strAlliancePositionString;
@@ -67,9 +88,23 @@ public class FTSUtilities {
 				return NOT_SET.strAlliancePositionString;
 			}
 		}
+
+        public static ALLIANCE_POSITION getAlliancePositionForString(String s) {
+            ALLIANCE_POSITION AP = NOT_SET;
+            for(ALLIANCE_POSITION ap : ALLIANCE_POSITION.values()) {
+                if(s.matches(ap.strAlliancePositionString)) {
+                    AP = ap;
+                }
+            }
+            return AP;
+        }
 	}
 
-	private static Hashtable<Integer, String> testTeamData = new Hashtable<Integer, String>(){
+    public static String getTabletID(ALLIANCE_POSITION ap) {
+        return ap.myAlliancePosition();
+    }
+
+    private static Hashtable<Integer, String> testTeamData = new Hashtable<Integer, String>(){
 		/**
 		 * 
 		 */

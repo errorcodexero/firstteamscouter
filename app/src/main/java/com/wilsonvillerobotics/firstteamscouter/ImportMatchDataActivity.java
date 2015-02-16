@@ -189,8 +189,8 @@ public class ImportMatchDataActivity extends Activity {
 						        		}
 						        		
 						        		long teamMatchID = -1;
-						        		for(int i = 0; i < FTSUtilities.ALLIANCE_POSITION.NOT_SET.allianceID(); i++) {
-						        			teamMatchID = tmDBAdapter.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForID(i) /*.alliancePositions[i]*/, teamIDs[i], matchID);
+						        		for(int i = 0; i < FTSUtilities.ALLIANCE_POSITION.NOT_SET.allianceIndex(); i++) {
+						        			teamMatchID = tmDBAdapter.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForIndex(i) /*.alliancePositions[i]*/, teamIDs[i], matchID);
 						        			if(teamMatchID >= 0) {
 						        				teamCount += 1;
 						        			}
