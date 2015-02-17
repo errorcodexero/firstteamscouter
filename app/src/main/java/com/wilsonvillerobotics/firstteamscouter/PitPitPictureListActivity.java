@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,10 +61,8 @@ public class PitPitPictureListActivity extends Activity implements OnClickListen
     final int CAMERA_CAPTURE = 1;
     private Uri picUri;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    //private GridView grid;
     private List<String> listOfImagesPath;
 
-    //public static final String pitPicturesImagePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/GridViewDemo/";
     public File filePath;
     public String pitPicturesImagePath;
 
@@ -72,8 +71,10 @@ public class PitPitPictureListActivity extends Activity implements OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pit_pit_picture_list);
 
+        this.processIntent();
+
         filePath = getExternalFilesDir(null);
-        pitPicturesImagePath = filePath.getAbsolutePath() + "/images/";
+        pitPicturesImagePath = filePath.getAbsolutePath() + "/images/pits";
 
         try {
             FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate : OPENING DB\n");
@@ -141,18 +142,20 @@ public class PitPitPictureListActivity extends Activity implements OnClickListen
             if(requestCode == CAMERA_CAPTURE){
                 Bundle extras = data.getExtras();
                 Bitmap thePic = extras.getParcelable("data");
-                String imgcurTime = dateFormat.format(new Date());
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd-HHmmss");
+                StringBuffer imgcurTime = new StringBuffer();
+                sdf.format(new Date(), imgcurTime, new FieldPosition(0));
 
                 File imageDirectory = new File(pitPicturesImagePath);
                 if(!imageDirectory.exists()) {
                     imageDirectory.mkdirs();
                 }
 
-                File[] imageFileList = imageDirectory.listFiles(new ImageFilenameFilter(".jpg"));
+                File[] imageFileList = imageDirectory.listFiles(new ImageFilenameFilter(this.teamNumber, ".jpg"));
                 int fileCount = imageFileList.length;
 
                 //String _path = "PitPicture" + imgcurTime + ".jpg";
-                String _path = teamNumber + "_PitPicture_" + fileCount + ".jpg";
+                String _path = teamNumber + "_PitPicture_" + imgcurTime + ".jpg";
                 File newImage = new File(imageDirectory, _path);
                 try {
                     newImage.createNewFile();
@@ -177,7 +180,7 @@ public class PitPitPictureListActivity extends Activity implements OnClickListen
         List<String> tFileList = new ArrayList<String>();
         File imageDirectory = new File(pitPicturesImagePath);
         if (imageDirectory.exists()) {
-            File[] imageFileList = imageDirectory.listFiles(new ImageFilenameFilter(".jpg"));
+            File[] imageFileList = imageDirectory.listFiles(new ImageFilenameFilter(this.teamNumber, ".jpg"));
             Arrays.sort(imageFileList);
 
             for(File f : imageFileList){
@@ -257,9 +260,11 @@ public class PitPitPictureListActivity extends Activity implements OnClickListen
     }
 
     public class ImageFilenameFilter implements FilenameFilter {
+        String teamNum;
         String ext;
 
-        public ImageFilenameFilter(String ext) {
+        public ImageFilenameFilter(String teamNum, String ext) {
+            this.teamNum = teamNum;
             this.ext = ext;
 
         }
@@ -268,7 +273,9 @@ public class PitPitPictureListActivity extends Activity implements OnClickListen
         @Override
         public boolean accept(File dir, String filename) {
             //If you want to perform a case-insensitive search
-            return filename.toLowerCase().endsWith(ext.toLowerCase());
+            boolean matches = filename.toLowerCase().startsWith(teamNum.toLowerCase());
+            matches &= filename.toLowerCase().endsWith(ext.toLowerCase());
+            return matches;
         }
     }
 }
