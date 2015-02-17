@@ -6,6 +6,7 @@ import android.database.SQLException;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
@@ -35,6 +36,8 @@ public class PitInformationActivity extends Activity {
     private PitPicturesDBAdapter ppDBAdapter;
 
     private Button btnPitPictures, btnRobotPictures;
+    private RelativeLayout pitInfoLayout;
+    private VerticalLabelView lblPitInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +54,19 @@ public class PitInformationActivity extends Activity {
             tpDBAdapter = null;
         }
 
-        TextView txtPitInfo = (TextView)findViewById(R.id.txtPitInfo);
-        if(txtPitInfo != null) {
-            txtPitInfo.setText("Pit Info for team:\n" + teamNumber);
+        this.pitInfoLayout = (RelativeLayout)findViewById(R.id.layoutPitInfoRelative);
+        this.lblPitInfo    =  (VerticalLabelView)findViewById(R.id.lblPitInfo);
+
+        TextView txtTeamNum = (TextView)findViewById(R.id.txtPitTeamNum);
+
+        //TextView txtPitInfo = (TextView)findViewById(R.id.txtPitInfo);
+        if(lblPitInfo != null) {
+            String teamPitInfo = getResources().getString(R.string.label_pit_info);
+            lblPitInfo.setText(teamPitInfo);
+        }
+
+        if(txtTeamNum != null) {
+            txtTeamNum.setText(teamNumber);
         }
 
         this.btnPitPictures = (Button)findViewById(R.id.btnPitPictureList);

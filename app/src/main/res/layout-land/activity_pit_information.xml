@@ -1,48 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
+    <com.wilsonvillerobotics.firstteamscouter.VerticalLabelView
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="PIT INFO"
-        android:id="@+id/txtPitInfo"
-        android:layout_gravity="center"
-        android:textSize="108sp"
+        android:text="@string/label_pit_info"
+        android:id="@+id/lblPitInfo"
+        android:textSize="36sp"
         android:textStyle="bold"
         android:typeface="monospace"
-        android:textColor="#ffe71bff"
-        android:gravity="center"
-        android:layout_weight="0.75" />
+        android:textColor="#ff0000ff"
+        android:gravity="bottom"
+        android:layout_weight="0.05"
+        android:layout_gravity="bottom"
+        app:textSize="36sp" />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.50"
+        android:id="@+id/layoutPitInfoRelative">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_team_number"
+            android:id="@+id/lblTeamNumber"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:textSize="20sp"
+            android:layout_marginTop="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/temp_data"
+            android:id="@+id/txtPitTeamNum"
+            android:layout_toRightOf="@+id/lblTeamNumber"
+            android:layout_marginLeft="10dp"
+            android:layout_alignBaseline="@+id/lblTeamNumber" />
+    </RelativeLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.25">
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.05">
 
         <Button
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:text="@string/pit_pictures"
-            android:id="@+id/btnPitPictureList"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="0.25"
-            android:layout_marginBottom="50dp"
-            android:layout_marginRight="25dp"
-            android:layout_marginLeft="25dp" />
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
             android:text="@string/robot_pictures"
             android:id="@+id/btnRobotPictures"
-            android:layout_weight="0.25"
-            android:layout_marginBottom="50dp"
-            android:layout_marginRight="25dp"
-            android:layout_marginLeft="25dp" />
+            android:layout_weight="0.25" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:text="@string/pit_pictures"
+            android:id="@+id/btnPitPictureList"
+            android:layout_weight="0.25" />
+
     </LinearLayout>
 
 </LinearLayout>
