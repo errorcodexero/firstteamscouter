@@ -17,7 +17,8 @@
     <string name="label_team_number">Team #: </string>
     <string name="label_team_name">Team Name: </string>
     <string name="label_team_location">Team Location: </string>
-    <string name="label_number_team_members">Number of Team Members: </string>
+    <string name="label_number_team_members"># Members: </string>
+    <string name="label_next_three_matches">Next Three Matches</string>
     <string name="label_match_number">Match #: </string>
     <string name="label_auto_mode">Auto Mode: </string>
     <string name="label_offense">Offense</string>
