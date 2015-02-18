@@ -13,11 +13,11 @@ import android.widget.SimpleCursorAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
-public class PitTeamListActivity extends ListActivity {
+public class TeamListActivity extends ListActivity {
 
 	private TeamDataDBAdapter teamDataDBAdapter;
 
-	public PitTeamListActivity() {
+	public TeamListActivity() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -31,7 +31,7 @@ public class PitTeamListActivity extends ListActivity {
         Cursor cursor = this.teamDataDBAdapter.getAllTeamDataEntries();
         startManagingCursor(cursor);
 
-        FTSUtilities.printToConsole("PitTeamListActivity::onCreate : Cursor Size: " + cursor.getCount() + "\n");
+        FTSUtilities.printToConsole("TeamListActivity::onCreate : Cursor Size: " + cursor.getCount() + "\n");
 
         // THE DESIRED COLUMNS TO BE BOUND
         String[] columns = new String[] { TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER, TeamDataDBAdapter.COLUMN_NAME_TEAM_NAME };
@@ -52,7 +52,7 @@ public class PitTeamListActivity extends ListActivity {
                  Cursor value = (Cursor)adapter.getItemAtPosition(position);
                  long teamID = value.getLong(value.getColumnIndex(TeamDataDBAdapter._ID));
                  String teamNum = value.getString(value.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER));
-                 Intent myIntent = new Intent(v.getContext(), PitInformationActivity.class);
+                 Intent myIntent = new Intent(v.getContext(), TeamInformationActivity.class);
                  myIntent.putExtra("position", position);
                  myIntent.putExtra("team_number", teamNum);
                  myIntent.putExtra(TeamDataDBAdapter._ID, teamID);

@@ -18,7 +18,7 @@
     <string name="label_team_name">Team Name: </string>
     <string name="label_team_location">Team Location: </string>
     <string name="label_number_team_members"># Members: </string>
-    <string name="label_next_three_matches">Next Three Matches</string>
+    <string name="label_match_list">Match List</string>
     <string name="label_match_number">Match #: </string>
     <string name="label_auto_mode">Auto Mode: </string>
     <string name="label_offense">Offense</string>
@@ -37,6 +37,7 @@
     <string name="pit_pictures">Pit Pictures</string>
     <string name="robot_pictures">Robot Pictures</string>
     <string name="take_picture">Take Picture</string>
-    <string name="label_pit_info">Pit Info   </string>
+    <string name="label_team_info">Team Info   </string>
+    <string name="label_robot_info">Robot Info   </string>
     <string name="temp_data">Temp Data</string>
 </resources>

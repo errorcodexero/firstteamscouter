@@ -1,209 +1,193 @@
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="fill_parent"
-    android:layout_gravity="fill_horizontal"
-    android:alignmentMode="alignBounds"
-    android:columnCount="2"
-    android:columnOrderPreserved="true"
-    android:orientation="horizontal"
-    android:rowCount="2"
-    android:visibility="visible"
-    tools:context=".TeamInformationActivity" >
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/lblTeamInfoTitle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_columnSpan="2"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="25dp"
-        android:layout_row="0"
-        android:layout_rowSpan="1"
-        android:gravity="center_horizontal"
-        android:text="@string/title_activity_team_informatrion"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold" />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.05"
+        android:orientation="vertical">
 
-    <GridLayout
-        android:layout_width="@dimen/data_field_container_width"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_gravity="fill_horizontal|fill_vertical"
-        android:layout_row="1"
-        android:alignmentMode="alignBounds"
-        android:columnCount="4"
-        android:orientation="horizontal"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp"
-        android:rowCount="7"
-        android:rowOrderPreserved="true" >
+        <com.wilsonvillerobotics.firstteamscouter.VerticalLabelView
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/label_team_info"
+            android:id="@+id/lblTeamInfo"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            android:textColor="#ff0000ff"
+            android:gravity="bottom"
+            android:layout_weight="0.5"
+            android:layout_gravity="bottom"
+            app:textSize="36sp" />
 
-        <TextView
-            android:id="@+id/lbl_TMInfo_TeamNum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_gravity="left"
-            android:layout_row="1"
-            android:layout_rowSpan="1"
-            android:text="@string/label_team_number"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:background="#ff000000" />
 
-        <EditText
-            android:id="@+id/txtTeamNum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_columnSpan="1"
-            android:layout_gravity="left"
-            android:layout_row="1"
-            android:layout_rowSpan="1"
-            android:ems="10"
-            android:inputType="text"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:visibility="visible" />
+        <com.wilsonvillerobotics.firstteamscouter.VerticalLabelView
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/label_team_info"
+            android:id="@+id/lblRobotInfo"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            android:textColor="#ff0000ff"
+            android:gravity="bottom"
+            android:layout_weight="0.5"
+            android:layout_gravity="bottom"
+            app:textSize="36sp" />
 
-        <TextView
-            android:id="@+id/lblMatchNum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_gravity="left"
-            android:layout_row="2"
-            android:layout_rowSpan="1"
-            android:text="@string/label_team_name"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <EditText
-            android:id="@+id/txtTeamName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_columnSpan="1"
-            android:layout_gravity="left"
-            android:layout_row="2"
-            android:layout_rowSpan="1"
-            android:ems="10"
-            android:inputType="text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/lblTeamLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_columnSpan="1"
-            android:layout_gravity="left"
-            android:layout_row="3"
-            android:layout_rowSpan="1"
-            android:text="@string/label_team_location"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <EditText
-            android:id="@+id/txtTeamLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_columnSpan="1"
-            android:layout_gravity="left"
-            android:layout_row="3"
-            android:layout_rowSpan="1"
-            android:ems="10"
-            android:inputType="text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/lblNumTeamMembers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_columnSpan="1"
-            android:layout_gravity="left"
-            android:layout_row="4"
-            android:layout_rowSpan="1"
-            android:paddingRight="5dp"
-            android:text="@string/label_number_team_members"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <EditText
-            android:id="@+id/txtNumTeamMembers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_columnSpan="1"
-            android:layout_gravity="left"
-            android:layout_row="4"
-            android:layout_rowSpan="1"
-            android:ems="10"
-            android:inputType="text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    </GridLayout>
+    </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/relativeLO_TeamNotes"
-        android:layout_width="@dimen/note_container_width"
-        android:layout_height="340dp"
-        android:layout_column="1"
-        android:layout_columnSpan="1"
-        android:layout_row="1"
-        android:gravity="center|top"
-        android:orientation="vertical"
-        android:paddingBottom="25dp"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp" >
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.50"
+        android:id="@+id/layoutPitInfoRelative">
 
         <TextView
-            android:id="@+id/lblTeamNotes"
-            android:layout_width="fill_parent"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:text="@string/label_team_number"
+            android:id="@+id/lblTeamNumber"
             android:layout_alignParentTop="true"
-            android:text="@string/label_team_notes"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <EditText
-            android:id="@+id/txtTeamNotes"
-            android:layout_width="fill_parent"
-            android:layout_height="225dp"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="false"
-            android:layout_below="@+id/lblTeamNotes"
-            android:background="@drawable/edittext_bg"
-            android:ems="10"
-            android:gravity="top|left|fill_horizontal"
-            android:inputType="textMultiLine"
-            android:minLines="12" />
+            android:textSize="20sp"
+            android:layout_marginTop="5dp"
+            android:gravity="end" />
 
-        <Button
-            android:id="@+id/btnTeamInfoSave"
-            android:layout_width="200dp"
-            android:layout_height="0dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="false"
-            android:layout_alignParentTop="false"
-            android:layout_below="@id/txtTeamNotes"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="false"
-            android:layout_marginTop="10dp"
-            android:maxHeight="60dp"
-            android:maxWidth="96dp"
-            android:onClick="btnSaveOnClick"
-            android:text="@string/label_save" />
-
-        <Button
-            android:id="@+id/btnDeleteTeam"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/btnTeamInfoSave"
-            android:layout_alignBottom="@+id/btnTeamInfoSave"
-            android:layout_alignParentRight="true"
-            android:text="@string/text_button_delete_team" />
+            android:text="@string/temp_data"
+            android:id="@+id/txtPitTeamNum"
+            android:layout_toRightOf="@+id/lblTeamNumber"
+            android:layout_marginLeft="10dp"
+            android:layout_alignBaseline="@+id/lblTeamNumber" />
 
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/label_team_name"
+            android:id="@+id/lblPitTeamName"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/lblTeamNumber"
+            android:layout_alignParentLeft="true"
+            android:gravity="end" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/temp_data"
+            android:id="@+id/txtPitTeamName"
+            android:layout_alignBottom="@+id/lblPitTeamName"
+            android:layout_toRightOf="@+id/lblPitTeamName"
+            android:layout_marginLeft="10dp" />
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/label_team_location"
+            android:id="@+id/lblTeamLocation"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/lblPitTeamName"
+            android:layout_alignParentLeft="true"
+            android:gravity="end" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/temp_data"
+            android:id="@+id/txtPitTeamLocation"
+            android:layout_toRightOf="@+id/lblTeamLocation"
+            android:layout_alignBaseline="@+id/lblTeamLocation"
+            android:layout_marginLeft="10dp" />
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/label_number_team_members"
+            android:id="@+id/lblPitNumMembers"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp"
+            android:gravity="end"
+            android:layout_below="@+id/lblTeamLocation"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/temp_data"
+            android:id="@+id/txtPitNumMembers"
+            android:layout_alignBaseline="@+id/lblPitNumMembers"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/lblPitNumMembers" />
+
+        <TableLayout
+            android:layout_width="300dp"
+            android:layout_height="fill_parent"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/lblPitMatchList"
+            android:id="@+id/tblPitMatchList"
+            android:background="#ffcadafa">
+
+        </TableLayout>
+
+        <TextView
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/label_match_list"
+            android:id="@+id/lblPitMatchList"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:background="#FFCADAFA" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="590dp"
+            android:layout_height="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:background="#ff000000"></LinearLayout>
     </RelativeLayout>
 
-</GridLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.05">
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:text="@string/robot_pictures"
+            android:id="@+id/btnRobotPictures"
+            android:layout_weight="0.25" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:text="@string/pit_pictures"
+            android:id="@+id/btnPitPictureList"
+            android:layout_weight="0.25" />
+
+    </LinearLayout>
+
+</LinearLayout>

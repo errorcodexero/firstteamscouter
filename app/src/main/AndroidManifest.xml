@@ -41,7 +41,7 @@
             android:label="@string/title_activity_team_match_list"
             android:screenOrientation="landscape" >
         </activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.TeamInformationActivity"
+        <activity android:name=".OldTeamInformationActivity"
             android:label="@string/title_activity_team_informatrion"
             android:screenOrientation="landscape" >
         </activity>
@@ -67,9 +67,9 @@
             android:screenOrientation="landscape" ></activity>
         <activity android:name="com.wilsonvillerobotics.firstteamscouter.MatchNotesActivity"
             android:screenOrientation="landscape" ></activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.PitInformationActivity"
+        <activity android:name=".TeamInformationActivity"
             android:screenOrientation="landscape" ></activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.PitTeamListActivity"
+        <activity android:name=".TeamListActivity"
             android:screenOrientation="landscape" ></activity>
         <activity android:name="com.wilsonvillerobotics.firstteamscouter.PictureListActivity"
             android:screenOrientation="landscape" ></activity>

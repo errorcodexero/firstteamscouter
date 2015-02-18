@@ -63,7 +63,7 @@ public class TeamMatchInformationActivity extends Activity {
 
     @Override
     protected void onStop() {
-    	FTSUtilities.printToConsole("Destroying TeamInformationActivity");
+    	FTSUtilities.printToConsole("Destroying OldTeamInformationActivity");
         super.onStop();
     }
 

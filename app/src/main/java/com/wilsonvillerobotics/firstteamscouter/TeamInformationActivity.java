@@ -1,69 +1,202 @@
 package com.wilsonvillerobotics.firstteamscouter;
 
-import com.wilsonvillerobotics.firstteamscouter.TeamInformation;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
-
-import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
-import android.view.Menu;
+import android.database.SQLException;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.MatchDataDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamPitsDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PitDataDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PitNotesDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PitPicturesDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+/**
+ * Created by TomS on 2/15/2015.
+ */
 public class TeamInformationActivity extends Activity {
 
-	protected TeamDataDBAdapter tDBAdapter;
-	protected TeamInformation tInfo;
-	protected Integer teamNumber;
-	private Button btnSave;
-	private Button btnDeleteTeam;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_team_information);
-		
-		teamNumber = getIntent().getIntExtra(TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER, -1);
-		
-		FTSUtilities.printToConsole("Creating TeamInformationActivity");
-		
-		//tDBAdapter = new TeamDataDBAdapter(this.getBaseContext()).open();
-		tDBAdapter = new TeamDataDBAdapter(this).open();
-		tInfo = new TeamInformation();
-		
-		this.loadTeamInfo(teamNumber);
-		
-		btnSave = (Button) findViewById(R.id.btnTeamInfoSave);
-		btnSave.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				btnSaveOnClick();
-				finish();
-			}
-		});
-		
-		btnDeleteTeam = (Button) findViewById(R.id.btnDeleteTeam);
-		btnDeleteTeam.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				btnDeleteTeamOnClick();
-				finish();
-			}
-		});
-	}
+    private int selectedPosition;
+    private long teamID;
+    private String teamNumber;
+
+    private TeamDataDBAdapter    tdDBAdapter;
+    private TeamMatchDBAdapter   tmdDBAdapter;
+    private MatchDataDBAdapter   mdDBAdapter;
+    private TeamPitsDBAdapter    tpDBAdapter;
+    private PitDataDBAdapter     pdDBAdapter;
+    private PitNotesDBAdapter    pnDBAdapter;
+    private PitPicturesDBAdapter ppDBAdapter;
+
+    private HashMap<Integer, TextView> hmTeamInfoTextViews;
+    private final int arrTextViewFieldIDs[] = {
+            R.id.txtPitTeamNum,
+            R.id.txtPitTeamName,
+            R.id.txtPitTeamLocation,
+            R.id.txtPitNumMembers
+    };
+
+    private TableLayout tblMatches;
+    private ArrayList<TableRow> alTeamMatchRows;
+
+    private Button btnPitPictures, btnRobotPictures;
+    private RelativeLayout pitInfoLayout;
+
+    private VerticalLabelView lblTeamInfo;
+    private VerticalLabelView lblRobotInfo;
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_team_information);
+
+        this.processIntent();
+
+        Cursor tdData = null;
+        Cursor tmdData = null;
+        Cursor mdData = null;
+        try {
+            FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate : OPENING DB\n");
+            tpDBAdapter = new TeamPitsDBAdapter(this).open();
+            tdDBAdapter = new TeamDataDBAdapter(this).open();
+            tmdDBAdapter = new TeamMatchDBAdapter(this).open();
+            mdDBAdapter = new MatchDataDBAdapter(this).open();
+            int tNum = Integer.parseInt(this.teamNumber);
+            tdData = tdDBAdapter.getTeamDataEntry(tNum);
+            tmdData = tmdDBAdapter.getMatchesForTeam(this.teamID);
+        } catch(SQLException e) {
+            e.printStackTrace();
+            tpDBAdapter = null;
+            tdDBAdapter = null;
+        }
+
+        this.pitInfoLayout = (RelativeLayout)findViewById(R.id.layoutPitInfoRelative);
+        this.lblTeamInfo =  (VerticalLabelView)findViewById(R.id.lblTeamInfo);
+        if(lblTeamInfo != null) {
+            String teamPitInfo = getResources().getString(R.string.label_team_info);
+            this.lblTeamInfo.setText(teamPitInfo);
+        }
+
+        this.lblRobotInfo = (VerticalLabelView)findViewById(R.id.lblRobotInfo);
+        if(this.lblRobotInfo != null) {
+            String teamRobotInfo = getResources().getString(R.string.label_robot_info);
+            this.lblRobotInfo.setText(teamRobotInfo);
+        }
+
+        this.hmTeamInfoTextViews = new HashMap<Integer, TextView>();
+        for(int id : this.arrTextViewFieldIDs) {
+            this.hmTeamInfoTextViews.put(id, (TextView) findViewById(id));
+        }
+
+        if(this.hmTeamInfoTextViews.get(R.id.txtPitTeamNum) != null) {
+            this.hmTeamInfoTextViews.get(R.id.txtPitTeamNum).setText(this.teamNumber);
+        }
+
+        if(tdData != null) {
+            if (this.hmTeamInfoTextViews.get(R.id.txtPitTeamName) != null) {
+                this.hmTeamInfoTextViews.get(R.id.txtPitTeamName).setText(
+                        tdData.getString(tdData.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_NAME)));
+            }
+
+            if (this.hmTeamInfoTextViews.get(R.id.txtPitTeamLocation) != null) {
+                this.hmTeamInfoTextViews.get(R.id.txtPitTeamLocation).setText(
+                        tdData.getString(tdData.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_LOCATION)));
+            }
+
+            if (this.hmTeamInfoTextViews.get(R.id.txtPitNumMembers) != null) {
+                this.hmTeamInfoTextViews.get(R.id.txtPitNumMembers).setText(
+                        tdData.getString(tdData.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_NUM_MEMBERS)));
+            }
+        }
+
+        this.tblMatches = (TableLayout)findViewById(R.id.tblPitMatchList);
+        if(tblMatches != null) {
+            this.alTeamMatchRows = new ArrayList<TableRow>();
+            if (tmdData != null && mdDBAdapter != null) {
+                int index = 0;
+                do {
+                    TableRow tr = new TableRow(this);
+                    int trId = FTSUtilities.generateViewId();
+                    tr.setId(trId);
+                    tr.setOrientation(LinearLayout.HORIZONTAL);
+                    tr.setGravity(Gravity.CENTER);
+                    alTeamMatchRows.add(tr);
+                    long matchId = tmdData.getLong(tmdData.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID));
+                    mdData = mdDBAdapter.getMatchDataEntry(matchId);
+                    TextView txtMatchNum = new TextView(this);
+                    if (mdData != null) {
+                        int matchNum = mdData.getInt(mdData.getColumnIndex(MatchDataDBAdapter.COLUMN_NAME_MATCH_NUMBER));
+                        txtMatchNum.setText("Match# " + matchNum);
+                        long tmId = tmdDBAdapter.getTeamMatchID(matchId, teamID);
+                        String alliance = tmdDBAdapter.getTeamAllianceForMatch(tmId);
+                        if(alliance.equals("Red")) {
+                            txtMatchNum.setTextColor(Color.RED);
+                        } else {
+                            txtMatchNum.setTextColor(Color.BLUE);
+                        }
+                        txtMatchNum.setGravity(Gravity.CENTER);
+                        txtMatchNum.setTextSize(20.0f);
+                    }
+                    tr.addView(txtMatchNum);
+                    this.tblMatches.addView(tr);
+                    index++;
+                } while (tmdData.moveToNext());
+            }
+        }
+
+        this.btnPitPictures = (Button)findViewById(R.id.btnPitPictureList);
+        this.btnPitPictures.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pitPicIntent = new Intent(v.getContext(), PictureListActivity.class);
+                pitPicIntent.putExtra("team_id", teamID);
+                pitPicIntent.putExtra("team_number", teamNumber);
+                pitPicIntent.putExtra("image_type", "Pit");
+                startActivity(pitPicIntent);
+            }
+        });
+
+        this.btnRobotPictures = (Button)findViewById(R.id.btnRobotPictures);
+        this.btnRobotPictures.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent robotPicIntent = new Intent(v.getContext(), PictureListActivity.class);
+                robotPicIntent.putExtra("team_id", teamID);
+                robotPicIntent.putExtra("team_number", teamNumber);
+                robotPicIntent.putExtra("image_type", "Robot");
+                startActivity(robotPicIntent);
+            }
+        });
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
+    private void processIntent() {
+        Intent intent = getIntent();
+
+        selectedPosition = intent.getIntExtra("position", -1);
+        teamID = intent.getLongExtra(TeamDataDBAdapter._ID, -1);
+        teamNumber = intent.getStringExtra("team_number");
+    }
+
+    private void loadData() {
+        if(teamID >= 0) {
+
+        }
     }
 
     @Override
@@ -72,13 +205,13 @@ public class TeamInformationActivity extends Activity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onRestart() {
+        super.onRestart();
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -88,79 +221,6 @@ public class TeamInformationActivity extends Activity {
 
     @Override
     protected void onStop() {
-    	FTSUtilities.printToConsole("Destroying TeamInformationActivity");
         super.onStop();
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.enter_data, menu);
-		return true;
-	}
-	
-	public void loadTeamInfo(int teamNum) {
-		Cursor cursor = tDBAdapter.getTeamDataEntry(teamNum);
-		EditText teamName, teamLocation, teamNumber, teamNumMembers;
-		
-		try{
-			teamName = (EditText) findViewById(R.id.txtTeamName);
-			teamNumber = (EditText) findViewById(R.id.txtTeamNum);
-			teamLocation = (EditText) findViewById(R.id.txtTeamLocation);
-			teamNumMembers = (EditText) findViewById(R.id.txtNumTeamMembers);
-			
-			teamName.setText(cursor.getString(cursor.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_NAME)));
-			teamNumber.setText(cursor.getString(cursor.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER)));
-			teamLocation.setText(cursor.getString(cursor.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_LOCATION)));
-			teamNumMembers.setText(cursor.getString(cursor.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_NUM_MEMBERS)));
-		} catch (NumberFormatException e) {
-			//
-		} catch (Exception e) {
-			//
-		}
-	}
-
-	public void btnSaveOnClick() {
-		// Gets the data repository in write mode
-		//SQLiteDatabase db = tDbHelper.getWritableDatabase();
-		int teamID = 0; /// UPDATE THIS TO WORK!!!
-		int teamNumber = -1;
-		int numTeamMembers = 0;
-		String teamName = "", teamLocation = "";
-		
-		try{
-			teamName = ((EditText) findViewById(R.id.txtTeamName)).getText().toString();
-			teamLocation = ((EditText) findViewById(R.id.txtTeamLocation)).getText().toString();
-			teamNumber = Integer.parseInt(((EditText) findViewById(R.id.txtTeamNum)).getText().toString());
-		} catch (NumberFormatException e) {
-			teamNumber = -1;
-		}
-		
-		try{
-			numTeamMembers = Integer.valueOf(((EditText) findViewById(R.id.txtNumTeamMembers)).getText().toString(), 10);
-		} catch (NumberFormatException e) {
-			numTeamMembers = 1;
-		}
-		
-		if(!tDBAdapter.updateTeamDataEntry(teamID, teamNumber, teamName, teamLocation, numTeamMembers)) {
-			tDBAdapter.createTeamDataEntry(teamNumber, teamName, teamLocation, numTeamMembers);
-		}
-	}
-	
-	public void btnDeleteTeamOnClick() {
-		int teamNumber = -1;
-		
-		try{
-			teamNumber = Integer.parseInt(((EditText) findViewById(R.id.txtTeamNum)).getText().toString());
-		} catch (NumberFormatException e) {
-			teamNumber = -1;
-		}
-		
-		tDBAdapter.deleteTeamDataEntry(teamNumber);
-	}
 }

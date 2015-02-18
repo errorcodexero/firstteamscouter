@@ -636,5 +636,28 @@ public class TeamMatchDBAdapter implements BaseColumns {
 
         return this.mDb.update(TABLE_NAME, args, WHERE, null) >0;
     }
+
+    public String getTeamAllianceForMatch(long teamMatchID) {
+        String columns[] = {
+                COLUMN_NAME_TEAM_ID,
+                COLUMN_NAME_MATCH_ID,
+                COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION
+        };
+        String WHERE = _ID + "=" + teamMatchID;
+
+        Cursor mCursor = this.mDb.query(true, TABLE_NAME, columns,
+                WHERE, null, null, null, null, null);
+
+        String matchAlliance = "";
+        while(mCursor.moveToNext()) {
+            String alliance = mCursor.getString(mCursor.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION));
+            if(alliance.contains("Red")) {
+                matchAlliance = "Red";
+            } else if(alliance.contains("Blue")) {
+                matchAlliance = "Blue";
+            }
+        }
+        return matchAlliance;
+    }
 }
 
