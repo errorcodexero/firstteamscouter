@@ -145,9 +145,10 @@ public class PitInformationActivity extends Activity {
         this.btnPitPictures.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent pitPicIntent = new Intent(v.getContext(), PitPitPictureListActivity.class);
+                Intent pitPicIntent = new Intent(v.getContext(), PictureListActivity.class);
                 pitPicIntent.putExtra("team_id", teamID);
                 pitPicIntent.putExtra("team_number", teamNumber);
+                pitPicIntent.putExtra("image_type", "Pit");
                 startActivity(pitPicIntent);
             }
         });
@@ -156,8 +157,11 @@ public class PitInformationActivity extends Activity {
         this.btnRobotPictures.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent pitPicIntent = new Intent(v.getContext(), PitPitPictureListActivity.class);
-                startActivity(pitPicIntent);
+                Intent robotPicIntent = new Intent(v.getContext(), PictureListActivity.class);
+                robotPicIntent.putExtra("team_id", teamID);
+                robotPicIntent.putExtra("team_number", teamNumber);
+                robotPicIntent.putExtra("image_type", "Robot");
+                startActivity(robotPicIntent);
             }
         });
     }

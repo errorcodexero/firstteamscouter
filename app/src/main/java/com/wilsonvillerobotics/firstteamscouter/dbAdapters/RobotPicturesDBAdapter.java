@@ -8,9 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import java.util.ArrayList;
+
 public class RobotPicturesDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "robot_pictures";
-    public static final String COLUMN_NAME_ROBOT_PICTURE_ID = "robot_picture_id";
     public static final String COLUMN_NAME_ROBOT_ID = "robot_id";
     public static final String COLUMN_NAME_PICTURE_ID = "picture_id";
 
@@ -77,14 +78,12 @@ public class RobotPicturesDBAdapter implements BaseColumns {
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
      * 
-     * @param robot_picture_id
      * @param robot_id
      * @param picture_id
      * @return rowId or -1 if failed
      */
-    public long createRobotPicture(int robot_picture_id, int robot_id, int picture_id){
+    public long createRobotPicture(int robot_id, int picture_id){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_ROBOT_PICTURE_ID, robot_picture_id);
         args.put(COLUMN_NAME_ROBOT_ID, robot_id);
         args.put(COLUMN_NAME_PICTURE_ID, picture_id);
         return this.mDb.insert(TABLE_NAME, null, args);
@@ -94,14 +93,12 @@ public class RobotPicturesDBAdapter implements BaseColumns {
      * Update the entry.
      * 
      * @param rowId
-     * @param robot_picture_id
      * @param robot_id
      * @param picture_id
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updateRobotPicture(int rowId, int robot_picture_id, int robot_id, int picture_id){
+    public boolean updateRobotPicture(int rowId, int robot_id, int picture_id){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_ROBOT_PICTURE_ID, robot_picture_id);
         args.put(COLUMN_NAME_ROBOT_ID, robot_id);
         args.put(COLUMN_NAME_PICTURE_ID, picture_id);
         return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 
@@ -126,7 +123,7 @@ public class RobotPicturesDBAdapter implements BaseColumns {
     public Cursor getAllRobotPictures() {
 
         return this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_ROBOT_PICTURE_ID, COLUMN_NAME_ROBOT_ID, COLUMN_NAME_PICTURE_ID
+        		COLUMN_NAME_ROBOT_ID, COLUMN_NAME_PICTURE_ID
         		}, null, null, null, null, null);
     }
 
@@ -141,11 +138,26 @@ public class RobotPicturesDBAdapter implements BaseColumns {
         Cursor mCursor =
 
         this.mDb.query(true, TABLE_NAME, new String[] { _ID, 
-        		COLUMN_NAME_ROBOT_PICTURE_ID, COLUMN_NAME_ROBOT_ID, COLUMN_NAME_PICTURE_ID
+        		COLUMN_NAME_ROBOT_ID, COLUMN_NAME_PICTURE_ID
         		}, _ID + "=" + rowId, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
         return mCursor;
     }
+
+    public ArrayList<Long> getAllPictureIDsForRobot(long robotId) {
+        ArrayList<Long> idArray = new ArrayList<Long>();
+        String WHERE = COLUMN_NAME_ROBOT_ID + "=" + robotId;
+        Cursor C = this.mDb.query(TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_ROBOT_ID, COLUMN_NAME_PICTURE_ID
+        }, WHERE, null, null, null, null);
+
+        while(C.moveToNext()) {
+            idArray.add(C.getLong(C.getColumnIndexOrThrow(COLUMN_NAME_PICTURE_ID)));
+        }
+        return idArray;
+    }
+
+
 }

@@ -78,14 +78,12 @@ public class PitPicturesDBAdapter implements BaseColumns {
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
      * 
-     * @param pit_picture_id
      * @param pit_id
      * @param picture_id
      * @return rowId or -1 if failed
      */
-    public long createPitPicture(int pit_picture_id, int pit_id, int picture_id){
+    public long createPitPicture(int pit_id, int picture_id){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(_ID, pit_picture_id);
         initialValues.put(COLUMN_NAME_PIT_ID, pit_id);
         initialValues.put(COLUMN_NAME_PICTURE_ID, picture_id);
         return this.mDb.insert(TABLE_NAME, null, initialValues);
@@ -110,14 +108,14 @@ public class PitPicturesDBAdapter implements BaseColumns {
     public Cursor getAllPitPictures() {
 
         return this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		_ID, COLUMN_NAME_PIT_ID, COLUMN_NAME_PICTURE_ID
+        		COLUMN_NAME_PIT_ID, COLUMN_NAME_PICTURE_ID
         		}, null, null, null, null, null);
     }
 
     public ArrayList<Long> getAllPictureIDsForPit(long pitId) {
         ArrayList<Long> idArray = new ArrayList<Long>();
         String WHERE = COLUMN_NAME_PIT_ID + "=" + pitId;
-        Cursor C = this.mDb.query(TABLE_NAME, new String[] { _ID,
+        Cursor C = this.mDb.query(TABLE_NAME, new String[] {
                 _ID, COLUMN_NAME_PIT_ID, COLUMN_NAME_PICTURE_ID
         }, WHERE, null, null, null, null);
 
@@ -137,7 +135,7 @@ public class PitPicturesDBAdapter implements BaseColumns {
 
         Cursor mCursor =
 
-        this.mDb.query(true, TABLE_NAME, new String[] { _ID, 
+        this.mDb.query(true, TABLE_NAME, new String[] {
         		_ID, COLUMN_NAME_PIT_ID, COLUMN_NAME_PICTURE_ID
         		}, _ID + "=" + rowId, null, null, null, null, null);
         if (mCursor != null) {
@@ -150,14 +148,12 @@ public class PitPicturesDBAdapter implements BaseColumns {
      * Update the entry.
      * 
      * @param rowId
-     * @param pit_picture_id
      * @param pit_id
      * @param picture_id
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updatePitPicture(int rowId, int pit_picture_id, int pit_id, int picture_id){
+    public boolean updatePitPicture(int rowId, int pit_id, int picture_id){
         ContentValues args = new ContentValues();
-        args.put(_ID, pit_picture_id);
         args.put(COLUMN_NAME_PIT_ID, pit_id);
         args.put(COLUMN_NAME_PICTURE_ID, picture_id);
         return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 

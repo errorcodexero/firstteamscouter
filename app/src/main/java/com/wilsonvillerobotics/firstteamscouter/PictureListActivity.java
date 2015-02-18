@@ -1,5 +1,31 @@
 package com.wilsonvillerobotics.firstteamscouter;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.database.SQLException;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PictureDataDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PitPicturesDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.RobotPicturesDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,78 +40,118 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import android.annotation.SuppressLint;
-import android.database.SQLException;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PictureDataDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PitPicturesDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
-
 
 /**
  * Created by TomS on 2/15/2015.
  * http://blog.andolasoft.com/2013/06/how-to-show-captured-images-dynamically-in-gridview-layout.html
  */
-public class PitPitPictureListActivity extends Activity implements OnClickListener {
+public class PictureListActivity extends Activity implements OnClickListener {
+    public enum ImageType {
+        ROBOT(0, "Robot"),
+        PIT(1, "Pit"),
+        TEAM(2, "Team"),
+        ALL(3, "All"),
+        NONE(4, "");
+
+        private String name;
+        private int id;
+        ImageType(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        static public ImageType getImageTypeByName(String name) {
+            ImageType retVal = NONE;
+            for(ImageType it : ImageType.values()) {
+                if(it.name.equals(name)) {
+                    retVal = it;
+                    break;
+                }
+            }
+            return retVal;
+        }
+
+        static public ImageType getImageTypeById(int id) {
+            ImageType retVal = NONE;
+            for(ImageType it : ImageType.values()) {
+                if(it.id == id) {
+                    retVal = it;
+                    break;
+                }
+            }
+            return retVal;
+        }
+    }
     private GridView gridView;
     private GridViewAdapter customGridAdapter;
 
-    private PitPicturesDBAdapter ppDBAdapter;
-    private PictureDataDBAdapter pdDBAdapter;
+    private RobotPicturesDBAdapter rpDBAdapter;
+    private PitPicturesDBAdapter   ppDBAdapter;
+    private PictureDataDBAdapter   pdDBAdapter;
 
-    private long ppID;
+    private long rpID;
     private long teamId;
     private String teamNumber;
-    private long pitId;
+    private long robotId;
 
     Button btnTakePicture = null;
     final int CAMERA_CAPTURE = 1;
     private Uri picUri;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private List<String> listOfImagesPath;
+    private String imageNamePrefix;
 
     public File filePath;
-    public String pitPicturesImagePath;
+    public String imagesPath;
+    private ImageType imageType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pit_pit_picture_list);
+        setContentView(R.layout.activity_picture_list);
 
         this.processIntent();
 
         filePath = getExternalFilesDir(null);
-        pitPicturesImagePath = filePath.getAbsolutePath() + "/images/pits";
+        imagesPath = filePath.getAbsolutePath() + "/images/";
+        if(imageType != ImageType.ALL && imageType != ImageType.NONE) {
+            imagesPath += imageType.name.toLowerCase() + "/";
+        }
+
+        this.imageNamePrefix = this.teamNumber + "_" + this.imageType.getName() + "_";
 
         try {
-            FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate : OPENING DB\n");
-            ppDBAdapter = new PitPicturesDBAdapter(this.getBaseContext()).open();
+            FTSUtilities.printToConsole("PictureListActivity::onCreate : OPENING DB\n");
+            switch(this.imageType) {
+                case ROBOT:
+                    rpDBAdapter = new RobotPicturesDBAdapter(this).open();
+                    ppDBAdapter = null;
+                    break;
+                case PIT:
+                    rpDBAdapter = null;
+                    ppDBAdapter = new PitPicturesDBAdapter(this).open();
+                    break;
+                case ALL:
+                    rpDBAdapter = new RobotPicturesDBAdapter(this).open();
+                    ppDBAdapter = new PitPicturesDBAdapter(this).open();
+                    break;
+                default:
+                case NONE:
+                    rpDBAdapter = null;
+                    ppDBAdapter = null;
+            }
         } catch(SQLException e) {
             e.printStackTrace();
+            rpDBAdapter = null;
             ppDBAdapter = null;
         }
 
         try {
-            FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate : OPENING DB\n");
+            FTSUtilities.printToConsole("PictureListActivity::onCreate : OPENING DB\n");
             pdDBAdapter = new PictureDataDBAdapter(this.getBaseContext()).open();
         } catch(SQLException e) {
             e.printStackTrace();
@@ -107,6 +173,7 @@ public class PitPitPictureListActivity extends Activity implements OnClickListen
         Intent intent = getIntent();
         this.teamId = intent.getLongExtra("team_id", -1);
         this.teamNumber = intent.getStringExtra("team_number");
+        this.imageType = ImageType.getImageTypeByName(intent.getStringExtra("image_type"));
     }
 
     @Override
@@ -143,19 +210,15 @@ public class PitPitPictureListActivity extends Activity implements OnClickListen
                 Bundle extras = data.getExtras();
                 Bitmap thePic = extras.getParcelable("data");
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd-HHmmss");
-                StringBuffer imgcurTime = new StringBuffer();
-                sdf.format(new Date(), imgcurTime, new FieldPosition(0));
+                StringBuffer imgCurTime = new StringBuffer();
+                sdf.format(new Date(), imgCurTime, new FieldPosition(0));
 
-                File imageDirectory = new File(pitPicturesImagePath);
+                File imageDirectory = new File(imagesPath);
                 if(!imageDirectory.exists()) {
                     imageDirectory.mkdirs();
                 }
 
-                File[] imageFileList = imageDirectory.listFiles(new ImageFilenameFilter(this.teamNumber, ".jpg"));
-                int fileCount = imageFileList.length;
-
-                //String _path = "PitPicture" + imgcurTime + ".jpg";
-                String _path = teamNumber + "_PitPicture_" + imgcurTime + ".jpg";
+                String _path = this.imageNamePrefix + imgCurTime + ".jpg";
                 File newImage = new File(imageDirectory, _path);
                 try {
                     newImage.createNewFile();
@@ -178,9 +241,9 @@ public class PitPitPictureListActivity extends Activity implements OnClickListen
 
     private List<String> RetrieveCapturedImagePath() {
         List<String> tFileList = new ArrayList<String>();
-        File imageDirectory = new File(pitPicturesImagePath);
+        File imageDirectory = new File(imagesPath);
         if (imageDirectory.exists()) {
-            File[] imageFileList = imageDirectory.listFiles(new ImageFilenameFilter(this.teamNumber, ".jpg"));
+            File[] imageFileList = imageDirectory.listFiles(new ImageFilenameFilter(this.imageNamePrefix, ".jpg"));
             Arrays.sort(imageFileList);
 
             for(File f : imageFileList){
@@ -260,11 +323,11 @@ public class PitPitPictureListActivity extends Activity implements OnClickListen
     }
 
     public class ImageFilenameFilter implements FilenameFilter {
-        String teamNum;
+        String filePrefix;
         String ext;
 
-        public ImageFilenameFilter(String teamNum, String ext) {
-            this.teamNum = teamNum;
+        public ImageFilenameFilter(String filePrefix, String ext) {
+            this.filePrefix = filePrefix;
             this.ext = ext;
 
         }
@@ -273,7 +336,7 @@ public class PitPitPictureListActivity extends Activity implements OnClickListen
         @Override
         public boolean accept(File dir, String filename) {
             //If you want to perform a case-insensitive search
-            boolean matches = filename.toLowerCase().startsWith(teamNum.toLowerCase());
+            boolean matches = filename.toLowerCase().startsWith(filePrefix.toLowerCase());
             matches &= filename.toLowerCase().endsWith(ext.toLowerCase());
             return matches;
         }
@@ -294,7 +357,7 @@ public class PitPitPictureListActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pit_pit_picture_list);
+        setContentView(R.layout.activity_picture_list);
 
         try {
             FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate : OPENING DB\n");
@@ -315,7 +378,7 @@ public class PitPitPictureListActivity extends Activity {
 
 
         gridView = (GridView) findViewById(R.id.gridView);
-        customGridAdapter = new GridViewAdapter(this, R.layout.activity_pit_pit_picture_list, getData());
+        customGridAdapter = new GridViewAdapter(this, R.layout.activity_picture_list, getData());
         gridView.setAdapter(customGridAdapter);
     }
 
