@@ -11,7 +11,7 @@
     <string name="text_button_submit_team_match">Submit</string>
     <string name="text_button_Undo">Undo</string>
     <string name="title_activity_enter_team_match_data">Enter Team Match Data</string>
-    <string name="title_activity_team_informatrion">Team Information</string>
+    <string name="title_activity_team_information">Team Information</string>
     <string name="title_activity_view_data">View Data</string>
     <string name="label_scouting_team">You Are Scouting Team #</string>
     <string name="label_team_number">Team #: </string>
@@ -40,4 +40,16 @@
     <string name="label_team_info">Team Info   </string>
     <string name="label_robot_info">Robot Info   </string>
     <string name="temp_data">Temp Data</string>
+    <string name="label_robot_notes">Robot Notes</string>
+    <string name="label_drive_team_data">Drive Team</string>
+    <string name="label_stacks_of_totes">Tote Stacks</string>
+    <string name="zero">0</string>
+    <string name="label_drive_train">Drive Train</string>
+    <string name="label_number_wheels"># Wheels</string>
+    <string name="label_wheel_type">Wheels</string>
+    <string name="label_can_get_step_cans">Can Get Step Can(s)</string>
+    <string name="label_can_put_totes_on_step">Can Put Tote(s) on Step</string>
+    <string name="label_number_totes"># Totes</string>
+    <string name="label_number_cans"># Cans</string>
+    <string name="label_year_team_created">Team Created:</string>
 </resources>

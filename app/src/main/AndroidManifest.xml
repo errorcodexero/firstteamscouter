@@ -42,7 +42,7 @@
             android:screenOrientation="landscape" >
         </activity>
         <activity android:name=".OldTeamInformationActivity"
-            android:label="@string/title_activity_team_informatrion"
+            android:label="@string/title_activity_team_information"
             android:screenOrientation="landscape" >
         </activity>
         <activity android:name="com.wilsonvillerobotics.firstteamscouter.ViewDataActivity"

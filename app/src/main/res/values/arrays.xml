@@ -26,4 +26,21 @@
         <item name="Blue3">Blue3</item>
     </string-array>
 
+    <string-array name="DriveTrains">
+        <item name="Tank">Tank</item>
+        <item name="Swerve">Swerve</item>
+        <item name="Slide">Slide</item>
+        <item name="Holonomic">Holonomic</item>
+        <item name="Mecanum">Mecanum</item>
+        <item name="Other">Other</item>
+    </string-array>
+
+    <string-array name="Wheels">
+        <item name="Traction">Traction</item>
+        <item name="Tread">Tread</item>
+        <item name="Omni">Omni</item>
+        <item name="Mecanum">Mecanum</item>
+        <item name="Other">Other</item>
+    </string-array>
+
 </resources>

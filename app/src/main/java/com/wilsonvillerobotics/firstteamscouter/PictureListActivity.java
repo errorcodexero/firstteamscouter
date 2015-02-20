@@ -46,7 +46,7 @@ import java.util.List;
  * http://blog.andolasoft.com/2013/06/how-to-show-captured-images-dynamically-in-gridview-layout.html
  */
 public class PictureListActivity extends Activity implements OnClickListener {
-    public enum ImageType {
+    public enum ItemType {
         ROBOT(0, "Robot"),
         PIT(1, "Pit"),
         TEAM(2, "Team"),
@@ -55,7 +55,7 @@ public class PictureListActivity extends Activity implements OnClickListener {
 
         private String name;
         private int id;
-        ImageType(int id, String name) {
+        ItemType(int id, String name) {
             this.id = id;
             this.name = name;
         }
@@ -64,9 +64,9 @@ public class PictureListActivity extends Activity implements OnClickListener {
             return this.name;
         }
 
-        static public ImageType getImageTypeByName(String name) {
-            ImageType retVal = NONE;
-            for(ImageType it : ImageType.values()) {
+        static public ItemType getItemTypeByName(String name) {
+            ItemType retVal = NONE;
+            for(ItemType it : ItemType.values()) {
                 if(it.name.equals(name)) {
                     retVal = it;
                     break;
@@ -75,9 +75,9 @@ public class PictureListActivity extends Activity implements OnClickListener {
             return retVal;
         }
 
-        static public ImageType getImageTypeById(int id) {
-            ImageType retVal = NONE;
-            for(ImageType it : ImageType.values()) {
+        static public ItemType getItemTypeById(int id) {
+            ItemType retVal = NONE;
+            for(ItemType it : ItemType.values()) {
                 if(it.id == id) {
                     retVal = it;
                     break;
@@ -107,7 +107,7 @@ public class PictureListActivity extends Activity implements OnClickListener {
 
     public File filePath;
     public String imagesPath;
-    private ImageType imageType;
+    private ItemType itemType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,15 +118,15 @@ public class PictureListActivity extends Activity implements OnClickListener {
 
         filePath = getExternalFilesDir(null);
         imagesPath = filePath.getAbsolutePath() + "/images/";
-        if(imageType != ImageType.ALL && imageType != ImageType.NONE) {
-            imagesPath += imageType.name.toLowerCase() + "/";
+        if(itemType != ItemType.ALL && itemType != ItemType.NONE) {
+            imagesPath += itemType.name.toLowerCase() + "/";
         }
 
-        this.imageNamePrefix = this.teamNumber + "_" + this.imageType.getName() + "_";
+        this.imageNamePrefix = this.teamNumber + "_" + this.itemType.getName() + "_";
 
         try {
             FTSUtilities.printToConsole("PictureListActivity::onCreate : OPENING DB\n");
-            switch(this.imageType) {
+            switch(this.itemType) {
                 case ROBOT:
                     rpDBAdapter = new RobotPicturesDBAdapter(this).open();
                     ppDBAdapter = null;
@@ -152,7 +152,7 @@ public class PictureListActivity extends Activity implements OnClickListener {
 
         try {
             FTSUtilities.printToConsole("PictureListActivity::onCreate : OPENING DB\n");
-            pdDBAdapter = new PictureDataDBAdapter(this.getBaseContext()).open();
+            pdDBAdapter = new PictureDataDBAdapter(this).open();
         } catch(SQLException e) {
             e.printStackTrace();
             pdDBAdapter = null;
@@ -173,7 +173,7 @@ public class PictureListActivity extends Activity implements OnClickListener {
         Intent intent = getIntent();
         this.teamId = intent.getLongExtra("team_id", -1);
         this.teamNumber = intent.getStringExtra("team_number");
-        this.imageType = ImageType.getImageTypeByName(intent.getStringExtra("image_type"));
+        this.itemType = ItemType.getItemTypeByName(intent.getStringExtra("item_type"));
     }
 
     @Override
@@ -242,7 +242,7 @@ public class PictureListActivity extends Activity implements OnClickListener {
     private List<String> RetrieveCapturedImagePath() {
         List<String> tFileList = new ArrayList<String>();
         File imageDirectory = new File(imagesPath);
-        if (imageDirectory.exists()) {
+        if (imageDirectory.exists() || imageDirectory.mkdirs()) {
             File[] imageFileList = imageDirectory.listFiles(new ImageFilenameFilter(this.imageNamePrefix, ".jpg"));
             Arrays.sort(imageFileList);
 
