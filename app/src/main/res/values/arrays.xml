@@ -27,6 +27,7 @@
     </string-array>
 
     <string-array name="DriveTrains">
+        <item name="Default">Select</item>
         <item name="Tank">Tank</item>
         <item name="Swerve">Swerve</item>
         <item name="Slide">Slide</item>
@@ -36,6 +37,7 @@
     </string-array>
 
     <string-array name="Wheels">
+        <item name="Default">Select</item>
         <item name="Traction">Traction</item>
         <item name="Tread">Tread</item>
         <item name="Omni">Omni</item>

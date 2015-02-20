@@ -135,7 +135,7 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
         this.sbNumWheels     = (SeekBar)findViewById(R.id.sbNumWheels);
         this.sbNumTotes      = (SeekBar)findViewById(R.id.sbNumTotes);
         this.sbNumCans       = (SeekBar)findViewById(R.id.sbNumCans);
-        final EditText etNumToteStacks = (EditText)findViewById(R.id.txtNumToteStacks);
+        final EditText etNumToteStacks = (EditText)findViewById(R.id.etNumToteStacks);
         final EditText etNumWheels     = (EditText)findViewById(R.id.etNumWheels);
         final EditText etNumTotes      = (EditText)findViewById(R.id.etNumTotes);
         final EditText etNumCans       = (EditText)findViewById(R.id.etNumCans);

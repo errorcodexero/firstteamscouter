@@ -222,14 +222,15 @@
                 <EditText
                     android:layout_width="35dp"
                     android:layout_height="35dp"
-                    android:id="@+id/txtNumToteStacks"
-                    android:layout_alignTop="@+id/sbNumToteStacks"
-                    android:layout_toRightOf="@+id/sbNumToteStacks"
-                    android:layout_marginLeft="20dp"
+                    android:id="@+id/etNumToteStacks"
                     android:textSize="14sp"
                     android:text="@string/zero"
                     android:gravity="center"
-                    android:editable="false" />
+                    android:editable="false"
+                    android:layout_alignParentLeft="false"
+                    android:layout_marginLeft="20dp"
+                    android:layout_alignTop="@+id/sbNumToteStacks"
+                    android:layout_toRightOf="@+id/sbNumToteStacks" />
 
                 <TextView
                     android:layout_width="100dp"
