@@ -80,7 +80,7 @@ public class TeamRobotsDBAdapter implements BaseColumns {
      * @param robot_id
      * @return rowId or -1 if failed
      */
-    public long createTeamRobot(int team_id, int robot_id){
+    public long createTeamRobot(long team_id, long robot_id){
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_TEAM_ID, team_id);
         args.put(COLUMN_NAME_ROBOT_ID, robot_id);
@@ -120,17 +120,15 @@ public class TeamRobotsDBAdapter implements BaseColumns {
      * @return Cursor positioned to matching entry, if found
      * @throws SQLException if entry could not be found/retrieved
      */
-    public Cursor getTeamRobot(long rowId) throws SQLException {
-
-        Cursor mCursor =
-
-        this.mDb.query(true, TABLE_NAME, new String[] {
+    public long getRobotForTeam(long teamId) throws SQLException {
+        long retVal = -1;
+        Cursor mCursor = this.mDb.query(true, TABLE_NAME, new String[] {
                 _ID, COLUMN_NAME_TEAM_ID, COLUMN_NAME_ROBOT_ID
-        		}, _ID + "=" + rowId, null, null, null, null, null);
-        if (mCursor != null) {
-            mCursor.moveToFirst();
+        		}, COLUMN_NAME_TEAM_ID + "=" + teamId, null, null, null, null, null);
+        if (mCursor.moveToFirst()) {
+            retVal = Long.parseLong(mCursor.getString(mCursor.getColumnIndex(COLUMN_NAME_TEAM_ID)));
         }
-        return mCursor;
+        return retVal;
     }
 
     /**

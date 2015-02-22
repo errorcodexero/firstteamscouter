@@ -173,8 +173,14 @@ public class DBAdapter {
     		//ROBOT_DATA
     		"CREATE TABLE " + RobotDataDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
-    		RobotDataDBAdapter.COLUMN_NAME_ROBOT_ID + TEXT_TYPE + COMMA_SEP +
-    		RobotDataDBAdapter.COLUMN_NAME_DRIVE_TRAIN_TYPE + TEXT_TYPE +
+    		RobotDataDBAdapter.COLUMN_NAME_DRIVE_TRAIN_TYPE + TEXT_TYPE + COMMA_SEP +
+            RobotDataDBAdapter.COLUMN_NAME_WHEEL_TYPE + TEXT_TYPE + COMMA_SEP +
+            RobotDataDBAdapter.COLUMN_NAME_NUMBER_WHEELS + INT_TYPE + COMMA_SEP +
+            RobotDataDBAdapter.COLUMN_NAME_NUMBER_TOTE_STACKS + INT_TYPE + COMMA_SEP +
+            RobotDataDBAdapter.COLUMN_NAME_NUMBER_TOTES_PER_STACK + INT_TYPE + COMMA_SEP +
+            RobotDataDBAdapter.COLUMN_NAME_NUMBER_CANS_AT_ONCE + INT_TYPE + COMMA_SEP +
+            RobotDataDBAdapter.COLUMN_NAME_GET_STEP_CANS + BOOL_TYPE + COMMA_SEP +
+            RobotDataDBAdapter.COLUMN_NAME_PUT_TOTES_ON_STEP + BOOL_TYPE +
     		");",
     		
     		"DROP TABLE IF EXISTS " + RobotDataDBAdapter.TABLE_NAME

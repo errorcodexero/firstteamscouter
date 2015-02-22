@@ -10,23 +10,24 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.MatchDataDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.RobotDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamPitsDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PitDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PitNotesDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PitPicturesDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamRobotsDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
 import java.util.ArrayList;
@@ -38,10 +39,12 @@ import java.util.HashMap;
 public class TeamInformationActivity extends Activity implements View.OnClickListener {
 
     private int selectedPosition;
-    private long teamID;
+    private long teamID, robotID;
     private String teamNumber;
 
     private TeamDataDBAdapter    tdDBAdapter;
+    private RobotDataDBAdapter   rdDBAdapter;
+    private TeamRobotsDBAdapter  trDBAdapter;
     private TeamMatchDBAdapter   tmdDBAdapter;
     private MatchDataDBAdapter   mdDBAdapter;
     private TeamPitsDBAdapter    tpDBAdapter;
@@ -61,12 +64,25 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
             R.id.txtTeamNumMembers
     };
 
+    private HashMap<String, String> hmRobotData;
+    private final String arrDBColumns[] = {
+            RobotDataDBAdapter.COLUMN_NAME_DRIVE_TRAIN_TYPE,
+            RobotDataDBAdapter.COLUMN_NAME_WHEEL_TYPE,
+            RobotDataDBAdapter.COLUMN_NAME_NUMBER_WHEELS,
+            RobotDataDBAdapter.COLUMN_NAME_NUMBER_TOTE_STACKS,
+            RobotDataDBAdapter.COLUMN_NAME_NUMBER_TOTES_PER_STACK,
+            RobotDataDBAdapter.COLUMN_NAME_NUMBER_CANS_AT_ONCE,
+            RobotDataDBAdapter.COLUMN_NAME_GET_STEP_CANS,
+            RobotDataDBAdapter.COLUMN_NAME_PUT_TOTES_ON_STEP
+    };
+
     private ArrayList<TextView> alTeamMatchTextViews;
 
     private Button btnPitPictures, btnRobotPictures, btnRobotNotes, btnDriveTeamData;
     private EditText etOtherDriveTrain, etOtherWheels;
     private SeekBar sbNumToteStacks, sbNumWheels, sbNumTotes, sbNumCans;
     private Spinner spinDriveTrain, spinWheelType;
+    private CheckBox cbGetStepCans, cbPutStepTotes;
     private RelativeLayout teamDataLayout;
     private LinearLayout llMatches;
     private ScrollView svMatches;
@@ -87,6 +103,39 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
         this.configButtons();
         this.configSeekBars();
         this.configSpinners();
+        this.conigCheckBoxes();
+        this.initRobotDataHashMap();
+    }
+
+    private void setSpinnerValue(Spinner spin, int index, EditText etOther, String values[], String colName) {
+        if(spin != null) {
+            String strOther = (index == values.length - 1) ? hmRobotData.get(colName) : "";
+            spin.setSelection(index);
+            if(etOther != null) etOther.setText(strOther);
+        }
+    }
+
+    private int getIndexForString(String values[], String colName) {
+        int retVal = values.length - 1;
+        for(int i = 0; i < values.length; i++) {
+            if(values[i].matches(hmRobotData.get(colName))) {
+                retVal = i;
+                break;
+            }
+        }
+        return retVal;
+    }
+
+    private void initRobotDataHashMap() {
+        this.hmRobotData = new HashMap<String, String>();
+        //for(String k : arrDBColumns) {
+        //    this.hmRobotData.put(k, "");
+        //}
+    }
+
+    private void conigCheckBoxes() {
+        this.cbGetStepCans = (CheckBox)findViewById(R.id.cbGetStepCans);
+        this.cbPutStepTotes = (CheckBox)findViewById(R.id.cbPutStepTotes);
     }
 
     private void configSpinners() {
@@ -337,6 +386,8 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
             tdDBAdapter = new TeamDataDBAdapter(this).open();
             tmdDBAdapter = new TeamMatchDBAdapter(this).open();
             mdDBAdapter = new MatchDataDBAdapter(this).open();
+            rdDBAdapter = new RobotDataDBAdapter(this).open();
+            trDBAdapter = new TeamRobotsDBAdapter(this).open();
             int tNum = Integer.parseInt(this.teamNumber);
             tdData = tdDBAdapter.getTeamDataEntry(tNum);
             tmdData = tmdDBAdapter.getMatchesForTeam(this.teamID);
@@ -346,6 +397,8 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
             tdDBAdapter = null;
             tmdDBAdapter = null;
             mdDBAdapter = null;
+            rdDBAdapter = null;
+            trDBAdapter = null;
         }
     }
 
@@ -357,9 +410,74 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
         teamNumber = intent.getStringExtra("team_number");
     }
 
-    private void loadData() {
-        if(teamID >= 0) {
+    private void loadRobotData() {
+        if(teamID >= 0 && trDBAdapter != null) {
+            this.robotID = trDBAdapter.getRobotForTeam(teamID);
+        }
+        if(this.robotID >= 0 && rdDBAdapter != null) {
+            HashMap<String, String> v = rdDBAdapter.getRobotDataEntry(robotID);
+            if(v != null && v.size() > 0) this.hmRobotData = v;
+        }
 
+        if(this.hmRobotData.size() > 0) {
+            String strDriveTrainArray[] = getResources().getStringArray(R.array.DriveTrains);
+            String strWheelArray[] = getResources().getStringArray(R.array.Wheels);
+            int index = 0;
+
+            int numStacks = Integer.parseInt(hmRobotData.get(RobotDataDBAdapter.COLUMN_NAME_NUMBER_TOTE_STACKS));
+            if(sbNumToteStacks != null) sbNumToteStacks.setProgress(Integer.parseInt(hmRobotData.get(RobotDataDBAdapter.COLUMN_NAME_NUMBER_TOTE_STACKS)));
+            if(sbNumWheels != null) sbNumWheels.setProgress(Integer.parseInt(hmRobotData.get(RobotDataDBAdapter.COLUMN_NAME_NUMBER_WHEELS)));
+            if(sbNumTotes != null) sbNumTotes.setProgress(Integer.parseInt(hmRobotData.get(RobotDataDBAdapter.COLUMN_NAME_NUMBER_TOTES_PER_STACK)));
+            if(sbNumCans != null) sbNumCans.setProgress(Integer.parseInt(hmRobotData.get(RobotDataDBAdapter.COLUMN_NAME_NUMBER_CANS_AT_ONCE)));
+
+            index = getIndexForString(strDriveTrainArray, RobotDataDBAdapter.COLUMN_NAME_DRIVE_TRAIN_TYPE);
+            setSpinnerValue(spinDriveTrain, index, etOtherDriveTrain, strDriveTrainArray, RobotDataDBAdapter.COLUMN_NAME_DRIVE_TRAIN_TYPE);
+
+            index = getIndexForString(strWheelArray, RobotDataDBAdapter.COLUMN_NAME_WHEEL_TYPE);
+            setSpinnerValue(spinWheelType, index, etOtherWheels, strWheelArray, RobotDataDBAdapter.COLUMN_NAME_WHEEL_TYPE);
+
+            if(cbGetStepCans != null) cbGetStepCans.setChecked(Boolean.parseBoolean(hmRobotData.get(RobotDataDBAdapter.COLUMN_NAME_GET_STEP_CANS)));
+            if(cbPutStepTotes != null) cbPutStepTotes.setChecked(Boolean.parseBoolean(hmRobotData.get(RobotDataDBAdapter.COLUMN_NAME_PUT_TOTES_ON_STEP)));
+        }
+    }
+
+    private void saveRobotData() {
+        if(this.hmRobotData != null) {
+            String strDriveTrainArray[] = getResources().getStringArray(R.array.DriveTrains);
+            String strWheelArray[] = getResources().getStringArray(R.array.Wheels);
+
+            if(sbNumToteStacks != null) hmRobotData.put(RobotDataDBAdapter.COLUMN_NAME_NUMBER_TOTE_STACKS, String.valueOf(sbNumToteStacks.getProgress()));
+            if(sbNumWheels != null) hmRobotData.put(RobotDataDBAdapter.COLUMN_NAME_NUMBER_WHEELS, String.valueOf(sbNumWheels.getProgress()));
+            if(sbNumTotes != null) hmRobotData.put(RobotDataDBAdapter.COLUMN_NAME_NUMBER_TOTES_PER_STACK, String.valueOf(sbNumTotes.getProgress()));
+            if(sbNumCans != null) hmRobotData.put(RobotDataDBAdapter.COLUMN_NAME_NUMBER_CANS_AT_ONCE, String.valueOf(sbNumCans.getProgress()));
+
+            if(spinDriveTrain != null) {
+                if(spinDriveTrain.getSelectedItemPosition() == strDriveTrainArray.length - 1 && this.etOtherDriveTrain != null) {
+                    hmRobotData.put(RobotDataDBAdapter.COLUMN_NAME_DRIVE_TRAIN_TYPE, etOtherDriveTrain.getText().toString());
+                } else {
+                    hmRobotData.put(RobotDataDBAdapter.COLUMN_NAME_DRIVE_TRAIN_TYPE, spinDriveTrain.getSelectedItem().toString());
+                }
+            }
+
+            if(spinWheelType != null) {
+                if(spinWheelType.getSelectedItemPosition() == strWheelArray.length - 1 && this.etOtherWheels != null) {
+                    hmRobotData.put(RobotDataDBAdapter.COLUMN_NAME_WHEEL_TYPE, etOtherWheels.getText().toString());
+                } else {
+                    hmRobotData.put(RobotDataDBAdapter.COLUMN_NAME_WHEEL_TYPE, spinWheelType.getSelectedItem().toString());
+                }
+            }
+
+            if(cbGetStepCans != null) hmRobotData.put(RobotDataDBAdapter.COLUMN_NAME_GET_STEP_CANS, String.valueOf(cbGetStepCans.isChecked()));
+            if(cbPutStepTotes != null) hmRobotData.put(RobotDataDBAdapter.COLUMN_NAME_PUT_TOTES_ON_STEP, String.valueOf(cbPutStepTotes.isChecked()));
+
+            if(this.robotID >= 0) {
+                rdDBAdapter.updateRobotDataEntry(robotID, hmRobotData);
+            } else {
+                this.robotID = rdDBAdapter.createRobotDataEntry(hmRobotData);
+                if(trDBAdapter != null) {
+                    trDBAdapter.createTeamRobot(teamID, robotID);
+                }
+            }
         }
     }
 
@@ -376,11 +494,13 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
+        this.loadRobotData();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        this.saveRobotData();
     }
 
     @Override
@@ -392,6 +512,7 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
     public void onClick(View v) {
         Class c = null;
         String itemType = "";
+
         switch(v.getId()) {
             case R.id.btnPitPictures:
                 c = PictureListActivity.class;
