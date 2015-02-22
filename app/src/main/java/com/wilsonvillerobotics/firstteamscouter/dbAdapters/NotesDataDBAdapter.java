@@ -10,7 +10,6 @@ import android.provider.BaseColumns;
 
 public class NotesDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "notes_data";
-    public static final String COLUMN_NAME_NOTE_ID = "note_id";
     public static final String COLUMN_NAME_NOTE_TYPE = "note_type"; // robot, team, pit, etc.
     public static final String COLUMN_NAME_NOTE_TEXT = "note_text";
 
@@ -77,14 +76,12 @@ public class NotesDataDBAdapter implements BaseColumns {
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
      * 
-     * @param match note id
-     * @param match id
-     * @param note id
+     * @param note_type id
+     * @param note_text id
      * @return rowId or -1 if failed
      */
-    public long createNotesDataEntry(int match_note_id, String note_type, String note_text){
+    public long createNotesDataEntry(String note_type, String note_text){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(COLUMN_NAME_NOTE_ID, match_note_id);
         initialValues.put(COLUMN_NAME_NOTE_TYPE, note_type);
         initialValues.put(COLUMN_NAME_NOTE_TEXT, note_text);
         return this.mDb.insert(TABLE_NAME, null, initialValues);
@@ -108,8 +105,8 @@ public class NotesDataDBAdapter implements BaseColumns {
      */
     public Cursor getAllNotesDataEntries() {
 
-        return this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_NOTE_ID, COLUMN_NAME_NOTE_TYPE, COLUMN_NAME_NOTE_TEXT
+        return this.mDb.query(TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_NOTE_TYPE, COLUMN_NAME_NOTE_TEXT
         		}, null, null, null, null, null);
     }
 
@@ -119,31 +116,30 @@ public class NotesDataDBAdapter implements BaseColumns {
      * @return Cursor positioned to matching entry, if found
      * @throws SQLException if entry could not be found/retrieved
      */
-    public Cursor getNotesDataEntry(long rowId) throws SQLException {
-
+    public String getNotesDataEntry(long rowId) throws SQLException {
+        String note = "";
         Cursor mCursor =
 
-        this.mDb.query(true, TABLE_NAME, new String[] { _ID, 
-        		COLUMN_NAME_NOTE_ID, COLUMN_NAME_NOTE_TYPE, COLUMN_NAME_NOTE_TEXT 
+        this.mDb.query(true, TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_NOTE_TYPE, COLUMN_NAME_NOTE_TEXT
         		}, _ID + "=" + rowId, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
+            note = mCursor.getString(mCursor.getColumnIndex(COLUMN_NAME_NOTE_TEXT));
         }
-        return mCursor;
+        return note;
     }
 
     /**
      * Update the entry.
      * 
      * @param rowId
-     * @param match_note_id
-     * @param match_id
-     * @param note_id
+     * @param note_type
+     * @param note_text
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updateNotesDataEntry(int rowId, int match_note_id, String note_type, String note_text){
+    public boolean updateNotesDataEntry(int rowId, String note_type, String note_text){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_NOTE_ID, match_note_id);
         args.put(COLUMN_NAME_NOTE_TYPE, note_type);
         args.put(COLUMN_NAME_NOTE_TEXT, note_text);
         return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 

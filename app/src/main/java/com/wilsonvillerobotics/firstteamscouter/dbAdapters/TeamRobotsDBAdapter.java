@@ -10,7 +10,6 @@ import android.provider.BaseColumns;
 
 public class TeamRobotsDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "team_robots";
-    public static final String COLUMN_NAME_TEAM_ROBOTS_ID = "team_robots_id";
     public static final String COLUMN_NAME_TEAM_ID = "team_id";
     public static final String COLUMN_NAME_ROBOT_ID = "robot_id";
 
@@ -77,14 +76,12 @@ public class TeamRobotsDBAdapter implements BaseColumns {
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
      * 
-     * @param team_robots_id
      * @param team_id
      * @param robot_id
      * @return rowId or -1 if failed
      */
-    public long createTeamRobot(int team_robots_id, int team_id, int robot_id){
+    public long createTeamRobot(int team_id, int robot_id){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_TEAM_ROBOTS_ID, team_robots_id);
         args.put(COLUMN_NAME_TEAM_ID, team_id);
         args.put(COLUMN_NAME_ROBOT_ID, robot_id);
         return this.mDb.insert(TABLE_NAME, null, args);
@@ -93,14 +90,13 @@ public class TeamRobotsDBAdapter implements BaseColumns {
     /**
      * Update the entry.
      * 
-     * @param team_robots_id
+     * @param rowId
      * @param team_id
      * @param robot_id
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updateTeamRobot(int rowId, int team_robots_id, int team_id, int robot_id){
+    public boolean updateTeamRobot(int rowId, int team_id, int robot_id){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_TEAM_ROBOTS_ID, team_robots_id);
         args.put(COLUMN_NAME_TEAM_ID, team_id);
         args.put(COLUMN_NAME_ROBOT_ID, robot_id);
         return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 
@@ -113,8 +109,8 @@ public class TeamRobotsDBAdapter implements BaseColumns {
      */
     public Cursor getAllTeamRobots() {
 
-        return this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_TEAM_ROBOTS_ID, COLUMN_NAME_TEAM_ID, COLUMN_NAME_ROBOT_ID
+        return this.mDb.query(TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_TEAM_ID, COLUMN_NAME_ROBOT_ID
         		}, null, null, null, null, null);
     }
 
@@ -128,8 +124,8 @@ public class TeamRobotsDBAdapter implements BaseColumns {
 
         Cursor mCursor =
 
-        this.mDb.query(true, TABLE_NAME, new String[] { _ID, 
-        		COLUMN_NAME_TEAM_ROBOTS_ID, COLUMN_NAME_TEAM_ID, COLUMN_NAME_ROBOT_ID
+        this.mDb.query(true, TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_TEAM_ID, COLUMN_NAME_ROBOT_ID
         		}, _ID + "=" + rowId, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();

@@ -8,9 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import java.util.ArrayList;
+
 public class RobotNotesDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "robot_notes";
-    public static final String COLUMN_NAME_ROBOT_NOTE_ID = "robot_note_id";
     public static final String COLUMN_NAME_ROBOT_ID = "robot_id";
     public static final String COLUMN_NAME_NOTE_ID = "note_id";
 
@@ -77,14 +78,12 @@ public class RobotNotesDBAdapter implements BaseColumns {
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
      * 
-     * @param robot_note_id
      * @param robot_id
      * @param note_id
      * @return rowId or -1 if failed
      */
-    public long createRobotNote(int robot_note_id, int robot_id, int note_id){
+    public long createRobotNote(long robot_id, long note_id){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_ROBOT_NOTE_ID, robot_note_id);
         args.put(COLUMN_NAME_ROBOT_ID, robot_id);
         args.put(COLUMN_NAME_NOTE_ID, note_id);
         return this.mDb.insert(TABLE_NAME, null, args);
@@ -94,14 +93,12 @@ public class RobotNotesDBAdapter implements BaseColumns {
      * Update the entry.
      * 
      * @param rowId
-     * @param robot_note_id
      * @param robot_id
      * @param note_id
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updateRobotNote(int rowId, int robot_note_id, int robot_id, int note_id){
+    public boolean updateRobotNote(int rowId, long robot_id, long note_id){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_ROBOT_NOTE_ID, robot_note_id);
         args.put(COLUMN_NAME_ROBOT_ID, robot_id);
         args.put(COLUMN_NAME_NOTE_ID, note_id);
         return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 
@@ -125,9 +122,26 @@ public class RobotNotesDBAdapter implements BaseColumns {
      */
     public Cursor getAllRobotNotes() {
 
-        return this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_ROBOT_NOTE_ID, COLUMN_NAME_ROBOT_ID, COLUMN_NAME_NOTE_ID
+        return this.mDb.query(TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_ROBOT_ID, COLUMN_NAME_NOTE_ID
         		}, null, null, null, null, null);
+    }
+
+    /**
+     * Return a Cursor over the list of all entries for a robot
+     *
+     * @return Cursor over all Robot Note ID entries
+     */
+    public ArrayList<Long> getAllRobotNoteIdsForRobotId(long robotId) {
+        String WHERE = COLUMN_NAME_ROBOT_ID + "=" + robotId;
+        Cursor c = this.mDb.query(TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_ROBOT_ID, COLUMN_NAME_NOTE_ID
+        }, WHERE, null, null, null, null);
+        ArrayList<Long> noteIdList = new ArrayList<Long>();
+        while(c.moveToNext()) {
+            noteIdList.add(c.getLong(c.getColumnIndex(COLUMN_NAME_NOTE_ID)));
+        }
+        return noteIdList;
     }
 
     /**
@@ -140,8 +154,8 @@ public class RobotNotesDBAdapter implements BaseColumns {
 
         Cursor mCursor =
 
-        this.mDb.query(true, TABLE_NAME, new String[] { _ID, 
-        		COLUMN_NAME_ROBOT_NOTE_ID, COLUMN_NAME_ROBOT_ID, COLUMN_NAME_NOTE_ID
+        this.mDb.query(true, TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_ROBOT_ID, COLUMN_NAME_NOTE_ID
         		}, _ID + "=" + rowId, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();

@@ -15,7 +15,6 @@ import android.provider.BaseColumns;
 
 public class TeamMatchDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "team_match";
-    public static final String COLUMN_NAME_TEAM_MATCH_ID = "team_match_id";
     public static final String COLUMN_NAME_TEAM_ID = "team_id";
     public static final String COLUMN_NAME_MATCH_ID = "match_id";
     public static final String COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION = "alliance_position";
@@ -81,7 +80,6 @@ public class TeamMatchDBAdapter implements BaseColumns {
 
     private String[] allColumnNames = new String[]{
     		_ID,
-    		COLUMN_NAME_TEAM_MATCH_ID,
     	    COLUMN_NAME_TEAM_ID,
     	    COLUMN_NAME_MATCH_ID,
     	    COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION,
@@ -588,7 +586,6 @@ public class TeamMatchDBAdapter implements BaseColumns {
         FTSUtilities.printToConsole("TeamMatchDBAdapter::setAutoModeActions\n");
         ContentValues args = new ContentValues();
         args.put(_ID, teamMatchID);
-        args.put(COLUMN_NAME_TEAM_MATCH_ID, teamMatchID);
         args.put(COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT, Boolean.TRUE.toString());
         args.put(COLUMN_NAME_AUTO_MODE_SAVED, Boolean.TRUE.toString());
         args.put(COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, finalAutoModePositionX);

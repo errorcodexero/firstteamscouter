@@ -56,12 +56,12 @@ public class TeamMatchDataListActivity extends ListActivity {
                    long arg3) 
              {
                    Cursor value = (Cursor)adapter.getItemAtPosition(position);
-                   int tmID = value.getInt(value.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_ID));
+                   int tmID = value.getInt(value.getColumnIndex(TeamMatchDBAdapter._ID));
                    // assuming string and if you want to get the value on click of list item
                    // do what you intend to do on click of listview row
                    Intent myIntent = new Intent(v.getContext(), TeamMatchInformationActivity.class);
                    myIntent.putExtra("position", position);
-                   myIntent.putExtra(TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_ID, tmID);
+                   myIntent.putExtra(TeamMatchDBAdapter._ID, tmID);
                    startActivityForResult(myIntent, 0);
              }
           });

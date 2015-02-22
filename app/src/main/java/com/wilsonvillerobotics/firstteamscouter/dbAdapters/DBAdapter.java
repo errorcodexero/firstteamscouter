@@ -11,7 +11,7 @@ public class DBAdapter {
 
     public static final String DATABASE_NAME = "FIRSTTeamScouter"; //$NON-NLS-1$
 
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
     
     private static final int CREATE_TABLE_SQL = 0;
     private static final int DELETE_TABLE_SQL = 1;
@@ -57,7 +57,6 @@ public class DBAdapter {
     		//COMPETITION_DATA
 	    	"CREATE TABLE " + CompetitionDataDBAdapter.TABLE_NAME + " (" +
 	    	AUTO_INC_ID + 
-	        CompetitionDataDBAdapter.COLUMN_NAME_COMPETITION_ID + INT_TYPE + COMMA_SEP +
 	        CompetitionDataDBAdapter.COLUMN_NAME_COMPETITION_NAME + TEXT_TYPE + COMMA_SEP +
 	        CompetitionDataDBAdapter.COLUMN_NAME_COMPETITION_LOCATION + TEXT_TYPE + 
 	   	    ");",
@@ -70,7 +69,6 @@ public class DBAdapter {
     		//COMPETITION_MATCHES
     		"CREATE TABLE " + CompetitionMatchesDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
-    		CompetitionMatchesDBAdapter.COLUMN_NAME_COMPETITION_MATCHES_ID + INT_TYPE + COMMA_SEP +
     		CompetitionMatchesDBAdapter.COLUMN_NAME_COMPETITION_ID + TEXT_TYPE + COMMA_SEP +
     		CompetitionMatchesDBAdapter.COLUMN_NAME_MATCH_ID + TEXT_TYPE +
 			");",
@@ -83,7 +81,6 @@ public class DBAdapter {
     		//MATCH_DATA
 			"CREATE TABLE " + MatchDataDBAdapter.TABLE_NAME + " (" +
 			AUTO_INC_ID + 
-	        MatchDataDBAdapter.COLUMN_NAME_MATCH_DATA_ID + INT_TYPE + COMMA_SEP +
 	        MatchDataDBAdapter.COLUMN_NAME_MATCH_TIME + TEXT_TYPE + COMMA_SEP +
 	        MatchDataDBAdapter.COLUMN_NAME_MATCH_TYPE + TEXT_TYPE + COMMA_SEP +
 	        MatchDataDBAdapter.COLUMN_NAME_MATCH_NUMBER + INT_TYPE + COMMA_SEP +
@@ -105,7 +102,6 @@ public class DBAdapter {
     		//MATCH_NOTES
     		"CREATE TABLE " + MatchNotesDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
-    		MatchNotesDBAdapter.COLUMN_NAME_MATCH_NOTE_ID + INT_TYPE + COMMA_SEP +
     		MatchNotesDBAdapter.COLUMN_NAME_MATCH_ID + TEXT_TYPE + COMMA_SEP +
     		MatchNotesDBAdapter.COLUMN_NAME_NOTE_ID + TEXT_TYPE + 
     		");",
@@ -118,7 +114,6 @@ public class DBAdapter {
     		//NOTES_DATA
     		"CREATE TABLE " + NotesDataDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
-			NotesDataDBAdapter.COLUMN_NAME_NOTE_ID + INT_TYPE + COMMA_SEP +
 			NotesDataDBAdapter.COLUMN_NAME_NOTE_TYPE + TEXT_TYPE + COMMA_SEP +
 			NotesDataDBAdapter.COLUMN_NAME_NOTE_TEXT + TEXT_TYPE +
     		");",
@@ -131,7 +126,6 @@ public class DBAdapter {
     		//PICTURE_DATA
     		"CREATE TABLE " + PictureDataDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
-    		PictureDataDBAdapter.COLUMN_NAME_PICTURE_ID + INT_TYPE + COMMA_SEP +
     		PictureDataDBAdapter.COLUMN_NAME_PICTURE_TYPE + TEXT_TYPE + COMMA_SEP +
     		PictureDataDBAdapter.COLUMN_NAME_PICTURE_URI + TEXT_TYPE +
     		");",
@@ -144,7 +138,7 @@ public class DBAdapter {
     		//PIT_DATA
     		"CREATE TABLE " + PitDataDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
-    		PitDataDBAdapter.COLUMN_NAME_PIT_ID + INT_TYPE +
+    		PitDataDBAdapter.COLUMN_NAME_PIT_INFO + INT_TYPE +
     		");",
     		
     		"DROP TABLE IF EXISTS " + PitDataDBAdapter.TABLE_NAME
@@ -155,7 +149,6 @@ public class DBAdapter {
     		//PIT_NOTES
     		"CREATE TABLE " + PitNotesDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
-    		PitNotesDBAdapter.COLUMN_NAME_PIT_NOTE_ID + INT_TYPE + COMMA_SEP +
     		PitNotesDBAdapter.COLUMN_NAME_PIT_ID + TEXT_TYPE + COMMA_SEP +
     		PitNotesDBAdapter.COLUMN_NAME_NOTE_ID + TEXT_TYPE +
     		");",
@@ -180,7 +173,6 @@ public class DBAdapter {
     		//ROBOT_DATA
     		"CREATE TABLE " + RobotDataDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
-    		RobotDataDBAdapter.COLUMN_NAME_ROBOT_DATA_ID + INT_TYPE + COMMA_SEP +
     		RobotDataDBAdapter.COLUMN_NAME_ROBOT_ID + TEXT_TYPE + COMMA_SEP +
     		RobotDataDBAdapter.COLUMN_NAME_DRIVE_TRAIN_TYPE + TEXT_TYPE +
     		");",
@@ -193,7 +185,6 @@ public class DBAdapter {
     		//ROBOT_NOTES
     		"CREATE TABLE " + RobotNotesDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
-    		RobotNotesDBAdapter.COLUMN_NAME_ROBOT_NOTE_ID + INT_TYPE + COMMA_SEP +
     		RobotNotesDBAdapter.COLUMN_NAME_ROBOT_ID + TEXT_TYPE + COMMA_SEP +
     		RobotNotesDBAdapter.COLUMN_NAME_NOTE_ID + TEXT_TYPE +
     		");",
@@ -218,11 +209,11 @@ public class DBAdapter {
     		//TEAM_DATA
     		"CREATE TABLE " + TeamDataDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
-    		//TeamDataDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER + INT_TYPE + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_NAME + TEXT_TYPE + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_LOCATION + TEXT_TYPE + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_NUM_MEMBERS + TEXT_TYPE + COMMA_SEP +
+            TeamDataDBAdapter.COLUMN_NAME_TEAM_YEAR_CREATED + TEXT_TYPE + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_DATA_UPDATED + BOOL_TYPE +
     		");",
     		
@@ -234,7 +225,6 @@ public class DBAdapter {
     		//TEAM_MATCH_DATA
     		"CREATE TABLE " + TeamMatchDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
-    		TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_ID + INT_TYPE + COMMA_SEP +
     		TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
     		TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID + INT_TYPE + COMMA_SEP +
     		TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION + TEXT_TYPE + COMMA_SEP +
@@ -304,7 +294,6 @@ public class DBAdapter {
     		//TEAM_MATCH_NOTES
     		"CREATE TABLE " + TeamMatchNotesDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
-    		TeamMatchNotesDBAdapter.COLUMN_NAME_TEAM_MATCH_NOTE_ID + INT_TYPE + COMMA_SEP +
     		TeamMatchNotesDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
     		TeamMatchNotesDBAdapter.COLUMN_NAME_MATCH_ID + INT_TYPE + COMMA_SEP +
     		TeamMatchNotesDBAdapter.COLUMN_NAME_NOTE_ID + INT_TYPE +
@@ -330,7 +319,6 @@ public class DBAdapter {
     		//TEAM_ROBOTS
     		"CREATE TABLE " + TeamRobotsDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
-    		TeamRobotsDBAdapter.COLUMN_NAME_TEAM_ROBOTS_ID + INT_TYPE + COMMA_SEP +
 			TeamRobotsDBAdapter.COLUMN_NAME_TEAM_ID + TEXT_TYPE + COMMA_SEP +
 			TeamRobotsDBAdapter.COLUMN_NAME_ROBOT_ID + TEXT_TYPE +
     		");",

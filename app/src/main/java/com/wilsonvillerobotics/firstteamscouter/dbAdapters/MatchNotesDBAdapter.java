@@ -10,7 +10,6 @@ import android.provider.BaseColumns;
 
 public class MatchNotesDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "match_notes";
-    public static final String COLUMN_NAME_MATCH_NOTE_ID = "match_note_id";
     public static final String COLUMN_NAME_MATCH_ID = "match_id";
     public static final String COLUMN_NAME_NOTE_ID = "note_id";
 
@@ -77,14 +76,13 @@ public class MatchNotesDBAdapter implements BaseColumns {
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
      * 
-     * @param match note id
-     * @param match id
-     * @param note id
+     * @param match_note_id
+     * @param match_id
+     * @param note_id
      * @return rowId or -1 if failed
      */
     public long createMatchNote(int match_note_id, int match_id, int note_id){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(COLUMN_NAME_MATCH_NOTE_ID, match_note_id);
         initialValues.put(COLUMN_NAME_MATCH_ID, match_id);
         initialValues.put(COLUMN_NAME_NOTE_ID, note_id);
         return this.mDb.insert(TABLE_NAME, null, initialValues);
@@ -108,8 +106,8 @@ public class MatchNotesDBAdapter implements BaseColumns {
      */
     public Cursor getAllMatchNotes() {
 
-        return this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_MATCH_NOTE_ID, COLUMN_NAME_MATCH_ID, COLUMN_NAME_NOTE_ID
+        return this.mDb.query(TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_MATCH_ID, COLUMN_NAME_NOTE_ID
         		}, null, null, null, null, null);
     }
 
@@ -123,8 +121,8 @@ public class MatchNotesDBAdapter implements BaseColumns {
 
         Cursor mCursor =
 
-        this.mDb.query(true, TABLE_NAME, new String[] { _ID, 
-        		COLUMN_NAME_MATCH_NOTE_ID, COLUMN_NAME_MATCH_ID, COLUMN_NAME_NOTE_ID 
+        this.mDb.query(true, TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_MATCH_ID, COLUMN_NAME_NOTE_ID
         		}, _ID + "=" + rowId, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -136,14 +134,12 @@ public class MatchNotesDBAdapter implements BaseColumns {
      * Update the entry.
      * 
      * @param rowId
-     * @param match_note_id
      * @param match_id
      * @param note_id
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updateMatchNote(int rowId, int match_note_id, int match_id, int note_id){
+    public boolean updateMatchNote(int rowId, int match_id, int note_id){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_MATCH_NOTE_ID, match_note_id);
         args.put(COLUMN_NAME_MATCH_ID, match_id);
         args.put(COLUMN_NAME_NOTE_ID, note_id);
         return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 

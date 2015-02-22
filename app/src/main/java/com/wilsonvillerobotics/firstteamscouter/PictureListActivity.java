@@ -25,6 +25,7 @@ import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PictureDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PitPicturesDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.RobotPicturesDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
+import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities.ItemType;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,46 +47,6 @@ import java.util.List;
  * http://blog.andolasoft.com/2013/06/how-to-show-captured-images-dynamically-in-gridview-layout.html
  */
 public class PictureListActivity extends Activity implements OnClickListener {
-    public enum ItemType {
-        ROBOT(0, "Robot"),
-        PIT(1, "Pit"),
-        TEAM(2, "Team"),
-        ALL(3, "All"),
-        NONE(4, "");
-
-        private String name;
-        private int id;
-        ItemType(int id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
-        static public ItemType getItemTypeByName(String name) {
-            ItemType retVal = NONE;
-            for(ItemType it : ItemType.values()) {
-                if(it.name.equals(name)) {
-                    retVal = it;
-                    break;
-                }
-            }
-            return retVal;
-        }
-
-        static public ItemType getItemTypeById(int id) {
-            ItemType retVal = NONE;
-            for(ItemType it : ItemType.values()) {
-                if(it.id == id) {
-                    retVal = it;
-                    break;
-                }
-            }
-            return retVal;
-        }
-    }
     private GridView gridView;
     private GridViewAdapter customGridAdapter;
 
@@ -101,7 +62,7 @@ public class PictureListActivity extends Activity implements OnClickListener {
     Button btnTakePicture = null;
     final int CAMERA_CAPTURE = 1;
     private Uri picUri;
-    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
     private List<String> listOfImagesPath;
     private String imageNamePrefix;
 
@@ -119,7 +80,7 @@ public class PictureListActivity extends Activity implements OnClickListener {
         filePath = getExternalFilesDir(null);
         imagesPath = filePath.getAbsolutePath() + "/images/";
         if(itemType != ItemType.ALL && itemType != ItemType.NONE) {
-            imagesPath += itemType.name.toLowerCase() + "/";
+            imagesPath += itemType.getName().toLowerCase() + "/";
         }
 
         this.imageNamePrefix = this.teamNumber + "_" + this.itemType.getName() + "_";
@@ -209,9 +170,8 @@ public class PictureListActivity extends Activity implements OnClickListener {
             if(requestCode == CAMERA_CAPTURE){
                 Bundle extras = data.getExtras();
                 Bitmap thePic = extras.getParcelable("data");
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd-HHmmss");
                 StringBuffer imgCurTime = new StringBuffer();
-                sdf.format(new Date(), imgCurTime, new FieldPosition(0));
+                dateFormat.format(new Date(), imgCurTime, new FieldPosition(0));
 
                 File imageDirectory = new File(imagesPath);
                 if(!imageDirectory.exists()) {

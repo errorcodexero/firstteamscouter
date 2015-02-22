@@ -14,13 +14,13 @@ import android.provider.BaseColumns;
 
 public class TeamDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "team_data";
-    //public static final String COLUMN_NAME_TEAM_ID = "team_id";
     public static final String COLUMN_NAME_TEAM_NUMBER = "team_number";
     public static final String COLUMN_NAME_TEAM_NAME = "team_name";
     public static final String COLUMN_NAME_TEAM_LOCATION = "team_location";
     public static final String COLUMN_NAME_TEAM_NUM_MEMBERS = "num_team_members";
     public static final String COLUMN_NAME_TEAM_DATA_UPDATED = "team_data_updated";
-    
+    public static final String COLUMN_NAME_TEAM_YEAR_CREATED = "team_creation_year";
+
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
 
@@ -148,7 +148,7 @@ public class TeamDataDBAdapter implements BaseColumns {
     /**
      * Delete the entry with the given rowId
      * 
-     * @param rowId
+     * @param teamNumber
      * @return true if deleted, false otherwise
      */
     public boolean deleteTeamDataEntry(int teamNumber) {
@@ -189,7 +189,7 @@ public class TeamDataDBAdapter implements BaseColumns {
 
     /**
      * Return a Cursor positioned at the entry that matches the given rowId
-     * @param rowId
+     * @param teamNumber
      * @return Cursor positioned to matching entry, if found
      * @throws SQLException if entry could not be found/retrieved
      */
@@ -207,7 +207,7 @@ public class TeamDataDBAdapter implements BaseColumns {
     
     /**
      * Return a Cursor positioned at the entry that matches the given rowId
-     * @param rowId
+     * @param teamID
      * @return Cursor positioned to matching entry, if found
      * @throws SQLException if entry could not be found/retrieved
      */

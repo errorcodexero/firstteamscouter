@@ -47,9 +47,18 @@
     <string name="label_drive_train">Drive Train</string>
     <string name="label_number_wheels"># Wheels</string>
     <string name="label_wheel_type">Wheels</string>
-    <string name="label_can_get_step_cans">Can Get Step Can(s)</string>
-    <string name="label_can_put_totes_on_step">Can Put Tote(s) on Step</string>
+    <string name="label_can_get_step_cans">Get Step Can(s)</string>
+    <string name="label_can_put_totes_on_step">Put Tote(s) on Step</string>
     <string name="label_number_totes"># Totes</string>
     <string name="label_number_cans"># Cans</string>
     <string name="label_year_team_created">Team Created:</string>
+    <string name="hint_number_cans_manipulate">Number of cans that the robot can manipulate at the same time</string>
+    <string name="hint_number_totes_in_one_stack">Number of totes that the robot can put in pne stack</string>
+    <string name="hint_number_tote_stacks_in_robot">Number of tote stacks that the robot can manipulate at once</string>
+    <string name="hint_number_wheels">Number of Wheels</string>
+    <string name="hint_other_wheel_description">Other Wheels</string>
+    <string name="hint_other_drive_base_description">Other DT</string>
+    <string name="label_add_note">Add Notes</string>
+    <string name="label_add_note_for_team">Add Note For Team:</string>
+    <string name="hint_new_note">New note</string>
 </resources>

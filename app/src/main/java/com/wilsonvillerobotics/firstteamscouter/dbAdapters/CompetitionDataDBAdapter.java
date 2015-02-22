@@ -19,7 +19,6 @@ import android.provider.BaseColumns;
 
 public class CompetitionDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "competition_data";
-    public static final String COLUMN_NAME_COMPETITION_ID = "competition_id";
     public static final String COLUMN_NAME_COMPETITION_NAME = "competition_name";
     public static final String COLUMN_NAME_COMPETITION_LOCATION = "competition_location";
 
@@ -101,7 +100,6 @@ public class CompetitionDataDBAdapter implements BaseColumns {
      */
     public long createCompetitionDataEntry(int id, String name, String location){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(COLUMN_NAME_COMPETITION_ID, id);
         initialValues.put(COLUMN_NAME_COMPETITION_NAME, name);
         initialValues.put(COLUMN_NAME_COMPETITION_LOCATION, location);
         return this.mDb.insert(TABLE_NAME, null, initialValues);
@@ -125,8 +123,8 @@ public class CompetitionDataDBAdapter implements BaseColumns {
      */
     public Cursor getAllCompetitionDataEntries() {
 
-        return this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_COMPETITION_ID, COLUMN_NAME_COMPETITION_NAME, COLUMN_NAME_COMPETITION_LOCATION }, null, null, null, null, null);
+        return this.mDb.query(TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_COMPETITION_NAME, COLUMN_NAME_COMPETITION_LOCATION }, null, null, null, null, null);
     }
 
     /**
@@ -139,8 +137,8 @@ public class CompetitionDataDBAdapter implements BaseColumns {
 
         Cursor mCursor =
 
-        this.mDb.query(true, TABLE_NAME, new String[] { _ID, COLUMN_NAME_COMPETITION_ID,
-        		COLUMN_NAME_COMPETITION_NAME, COLUMN_NAME_COMPETITION_LOCATION}, _ID + "=" + rowId, null, null, null, null, null);
+        this.mDb.query(true, TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_COMPETITION_NAME, COLUMN_NAME_COMPETITION_LOCATION}, _ID + "=" + rowId, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
@@ -159,7 +157,6 @@ public class CompetitionDataDBAdapter implements BaseColumns {
     public boolean updateCompetitionDataEntry(long rowId, int id, String name,
             String location){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_COMPETITION_ID, id);
         args.put(COLUMN_NAME_COMPETITION_NAME, name);
         args.put(COLUMN_NAME_COMPETITION_LOCATION, location);
 

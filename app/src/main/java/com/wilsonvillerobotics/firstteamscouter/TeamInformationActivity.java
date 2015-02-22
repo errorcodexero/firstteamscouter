@@ -13,12 +13,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.MatchDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
@@ -61,14 +61,15 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
             R.id.txtTeamNumMembers
     };
 
-    private TableLayout tblMatches;
-    private ArrayList<TableRow> alTeamMatchRows;
+    private ArrayList<TextView> alTeamMatchTextViews;
 
     private Button btnPitPictures, btnRobotPictures, btnRobotNotes, btnDriveTeamData;
     private EditText etOtherDriveTrain, etOtherWheels;
     private SeekBar sbNumToteStacks, sbNumWheels, sbNumTotes, sbNumCans;
     private Spinner spinDriveTrain, spinWheelType;
     private RelativeLayout teamDataLayout;
+    private LinearLayout llMatches;
+    private ScrollView svMatches;
 
     private VerticalLabelView lblTeamInfo;
     private VerticalLabelView lblRobotInfo;
@@ -82,7 +83,7 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
         this.initCursors();
         this.configVerticalLabels();
         this.initTeamInfoTextViews();
-        this.configMatchTable();
+        this.configMatchList();
         this.configButtons();
         this.configSeekBars();
         this.configSpinners();
@@ -104,7 +105,11 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String strDriveTrainArray[] = getResources().getStringArray(R.array.DriveTrains);
 
-                etOtherDriveTrain.setEnabled(strDriveTrainArray[position].compareTo("Other") == 0);
+                boolean enable = strDriveTrainArray[position].compareTo("Other") == 0;
+                etOtherDriveTrain.setEnabled(enable);
+                etOtherDriveTrain.setFocusable(enable);
+                etOtherDriveTrain.setFocusableInTouchMode(enable);
+                if(!enable) etOtherDriveTrain.setText("");
                 //Toast.makeText(getBaseContext(), "Selected pos: " + position + "  val: " + strDriveTrainArray[position], Toast.LENGTH_LONG).show();
             }
 
@@ -119,7 +124,11 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String strWheelTypeArray[] = getResources().getStringArray(R.array.Wheels);
                 //Toast.makeText(getBaseContext(), "Selected pos: " + position + "  val: " + strWheelTypeArray[position], Toast.LENGTH_LONG).show();
-                etOtherWheels.setEnabled(strWheelTypeArray[position].compareTo("Other") == 0);
+                Boolean enable = strWheelTypeArray[position].compareTo("Other") == 0;
+                etOtherWheels.setEnabled(enable);
+                etOtherWheels.setFocusable(enable);
+                etOtherWheels.setFocusableInTouchMode(enable);
+                if(!enable) etOtherWheels.setText("");
             }
 
             @Override
@@ -242,22 +251,18 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
         this.btnDriveTeamData.setOnClickListener(this);
     }
 
-    private void configMatchTable() {
-        this.tblMatches = (TableLayout)findViewById(R.id.tblPitMatchList);
-        if(tblMatches != null) {
-            this.alTeamMatchRows = new ArrayList<TableRow>();
+    private void configMatchList() {
+        this.svMatches = (ScrollView)findViewById(R.id.svMatches);
+        this.llMatches = (LinearLayout)findViewById(R.id.llMatches);
+        if(svMatches != null && llMatches != null) {
+            this.alTeamMatchTextViews = new ArrayList<TextView>();
             if (tmdData != null && mdDBAdapter != null) {
                 int index = 0;
                 do {
-                    TableRow tr = new TableRow(this);
-                    int trId = FTSUtilities.generateViewId();
-                    tr.setId(trId);
-                    tr.setOrientation(LinearLayout.HORIZONTAL);
-                    tr.setGravity(Gravity.CENTER);
-                    alTeamMatchRows.add(tr);
                     long matchId = tmdData.getLong(tmdData.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID));
                     mdData = mdDBAdapter.getMatchDataEntry(matchId);
                     TextView txtMatchNum = new TextView(this);
+                    txtMatchNum.setMinimumHeight(100);
                     if (mdData != null) {
                         int matchNum = mdData.getInt(mdData.getColumnIndex(MatchDataDBAdapter.COLUMN_NAME_MATCH_NUMBER));
                         txtMatchNum.setText("Match# " + matchNum);
@@ -271,8 +276,8 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
                         txtMatchNum.setGravity(Gravity.CENTER);
                         txtMatchNum.setTextSize(20.0f);
                     }
-                    tr.addView(txtMatchNum);
-                    this.tblMatches.addView(tr);
+                    alTeamMatchTextViews.add(index, txtMatchNum);
+                    llMatches.addView(txtMatchNum);
                     index++;
                 } while (tmdData.moveToNext());
             }
@@ -397,7 +402,8 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
                 itemType = "Robot";
                 break;
             case R.id.btnRobotNotes:
-                c = PictureListActivity.class;
+                c = NoteListActivity.class;
+                itemType = "Robot";
                 break;
             case R.id.btnDriveTeamData:
                 c = PictureListActivity.class;

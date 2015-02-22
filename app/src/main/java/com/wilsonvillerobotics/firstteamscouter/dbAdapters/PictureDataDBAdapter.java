@@ -10,7 +10,6 @@ import android.provider.BaseColumns;
 
 public class PictureDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "picture_data";
-    public static final String COLUMN_NAME_PICTURE_ID = "picture_id";
     public static final String COLUMN_NAME_PICTURE_TYPE = "picture_type"; // robot, team, pit, etc.
     public static final String COLUMN_NAME_PICTURE_URI = "picture_uri";
 
@@ -77,14 +76,12 @@ public class PictureDataDBAdapter implements BaseColumns {
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
      * 
-     * @param match note id
-     * @param match id
-     * @param note id
+     * @param picture_type
+     * @param picture_uri
      * @return rowId or -1 if failed
      */
-    public long createPictureDataEntry(int picture_id, String picture_type, String picture_uri){
+    public long createPictureDataEntry(String picture_type, String picture_uri){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(COLUMN_NAME_PICTURE_ID, picture_id);
         initialValues.put(COLUMN_NAME_PICTURE_TYPE, picture_type);
         initialValues.put(COLUMN_NAME_PICTURE_URI, picture_uri);
         return this.mDb.insert(TABLE_NAME, null, initialValues);
@@ -108,8 +105,8 @@ public class PictureDataDBAdapter implements BaseColumns {
      */
     public Cursor getAllPictureDataEntries() {
 
-        return this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_PICTURE_ID, COLUMN_NAME_PICTURE_TYPE, COLUMN_NAME_PICTURE_URI
+        return this.mDb.query(TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_PICTURE_TYPE, COLUMN_NAME_PICTURE_URI
         		}, null, null, null, null, null);
     }
 
@@ -123,8 +120,8 @@ public class PictureDataDBAdapter implements BaseColumns {
 
         Cursor mCursor =
 
-        this.mDb.query(true, TABLE_NAME, new String[] { _ID, 
-        		COLUMN_NAME_PICTURE_ID, COLUMN_NAME_PICTURE_TYPE, COLUMN_NAME_PICTURE_URI 
+        this.mDb.query(true, TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_PICTURE_TYPE, COLUMN_NAME_PICTURE_URI
         		}, _ID + "=" + rowId, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -136,14 +133,13 @@ public class PictureDataDBAdapter implements BaseColumns {
      * Update the entry.
      * 
      * @param rowId
-     * @param match_note_id
-     * @param match_id
-     * @param note_id
+     * @param picture_id
+     * @param picture_type
+     * @param picture_uri
      * @return true if the entry was successfully updated, false otherwise
      */
     public boolean updatePictureDataEntry(int rowId, int picture_id, String picture_type, String picture_uri){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_PICTURE_ID, picture_id);
         args.put(COLUMN_NAME_PICTURE_TYPE, picture_type);
         args.put(COLUMN_NAME_PICTURE_URI, picture_uri);
         return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 

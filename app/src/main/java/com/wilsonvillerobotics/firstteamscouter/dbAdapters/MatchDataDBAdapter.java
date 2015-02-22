@@ -12,7 +12,6 @@ import android.provider.BaseColumns;
 
 public class MatchDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "match_data";
-    public static final String COLUMN_NAME_MATCH_DATA_ID              = "match_id";
     public static final String COLUMN_NAME_MATCH_TIME 				  = "match_time";
     public static final String COLUMN_NAME_MATCH_TYPE				  = "match_type";
     public static final String COLUMN_NAME_MATCH_NUMBER               = "match_number";
@@ -90,8 +89,15 @@ public class MatchDataDBAdapter implements BaseColumns {
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
      * 
-     * @param name
-     * @param location
+     * @param match_time
+     * @param match_type
+     * @param match_num
+     * @param red_one_id
+     * @param red_two_id
+     * @param red_three_id
+     * @param blue_one_id
+     * @param blue_two_id
+     * @param blue_three_id
      * @return rowId or -1 if failed
      */
     public long createMatchData(String match_time, String match_type, String match_num, long red_one_id, long red_two_id, long red_three_id,
@@ -193,15 +199,20 @@ public class MatchDataDBAdapter implements BaseColumns {
      * Update the entry.
      * 
      * @param rowId
-     * @param competition_match_id
-     * @param competition_id
-     * @param match_id
+     * @param match_time
+     * @param match_type
+     * @param match_num
+     * @param red_one_id
+     * @param red_two_id
+     * @param red_three_id
+     * @param blue_one_id
+     * @param blue_two_id
+     * @param blue_three_id
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updateMatchDataEntry(int id, String match_time, String match_type, int match_num, int red_one_id, int red_two_id, int red_three_id,
+    public boolean updateMatchDataEntry(long rowId, String match_time, String match_type, int match_num, int red_one_id, int red_two_id, int red_three_id,
     		int blue_one_id, int blue_two_id, int blue_three_id){
         ContentValues args = new ContentValues();
-    	args.put(_ID, id);
     	args.put(COLUMN_NAME_MATCH_TIME, match_time);
     	args.put(COLUMN_NAME_MATCH_TYPE, match_type);
     	args.put(COLUMN_NAME_MATCH_NUMBER, match_num);
@@ -212,7 +223,7 @@ public class MatchDataDBAdapter implements BaseColumns {
     	args.put(COLUMN_NAME_BLUE_TEAM_TWO_ID, blue_two_id);
     	args.put(COLUMN_NAME_BLUE_TEAM_THREE_ID, blue_three_id);
     	args.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
-        return this.mDb.update(TABLE_NAME, args, _ID + "=" + id, null) >0; 
+        return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0;
     }
     
     public Cursor getTeamIDsForMatchByAlliancePosition(long matchID) {

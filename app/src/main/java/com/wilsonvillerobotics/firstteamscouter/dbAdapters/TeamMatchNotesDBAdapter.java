@@ -10,7 +10,6 @@ import android.provider.BaseColumns;
 
 public class TeamMatchNotesDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "team_match_notes";
-    public static final String COLUMN_NAME_TEAM_MATCH_NOTE_ID = "team_match_note_id";
     public static final String COLUMN_NAME_TEAM_ID = "team_id";
     public static final String COLUMN_NAME_MATCH_ID = "match_id";
     public static final String COLUMN_NAME_NOTE_ID = "note_id";
@@ -78,15 +77,13 @@ public class TeamMatchNotesDBAdapter implements BaseColumns {
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
      * 
-     * @param team_match_note_id
      * @param team_id
      * @param match_id
      * @param note_id
      * @return rowId or -1 if failed
      */
-    public long createTeamMatchNote(int team_match_note_id, int team_id, int match_id, int note_id){
+    public long createTeamMatchNote(int team_id, int match_id, int note_id){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_TEAM_MATCH_NOTE_ID, team_match_note_id);
         args.put(COLUMN_NAME_TEAM_ID, team_id);
         args.put(COLUMN_NAME_MATCH_ID, match_id);
         args.put(COLUMN_NAME_NOTE_ID, note_id);
@@ -106,7 +103,6 @@ public class TeamMatchNotesDBAdapter implements BaseColumns {
      */
     public boolean updateTeamMatchNote(int rowId, int team_match_note_id, int team_id, int match_id, int note_id){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_TEAM_MATCH_NOTE_ID, team_match_note_id);
         args.put(COLUMN_NAME_TEAM_ID, team_id);
         args.put(COLUMN_NAME_MATCH_ID, match_id);
         args.put(COLUMN_NAME_NOTE_ID, note_id);
@@ -120,8 +116,8 @@ public class TeamMatchNotesDBAdapter implements BaseColumns {
      */
     public Cursor getAllTeamMatchNotes() {
 
-        return this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_TEAM_MATCH_NOTE_ID, COLUMN_NAME_TEAM_ID, COLUMN_NAME_MATCH_ID, COLUMN_NAME_NOTE_ID
+        return this.mDb.query(TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_TEAM_ID, COLUMN_NAME_MATCH_ID, COLUMN_NAME_NOTE_ID
         		}, null, null, null, null, null);
     }
 
@@ -135,8 +131,8 @@ public class TeamMatchNotesDBAdapter implements BaseColumns {
 
         Cursor mCursor =
 
-        this.mDb.query(true, TABLE_NAME, new String[] { _ID, 
-        		COLUMN_NAME_TEAM_MATCH_NOTE_ID, COLUMN_NAME_TEAM_ID, COLUMN_NAME_MATCH_ID, COLUMN_NAME_NOTE_ID
+        this.mDb.query(true, TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_TEAM_ID, COLUMN_NAME_MATCH_ID, COLUMN_NAME_NOTE_ID
         		}, _ID + "=" + rowId, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();

@@ -45,7 +45,7 @@
                     android:id="@+id/lblTeamNumber"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:layout_marginTop="5dp"
                     android:gravity="end" />
 
@@ -57,14 +57,14 @@
                     android:layout_toRightOf="@+id/lblTeamNumber"
                     android:layout_marginLeft="10dp"
                     android:layout_alignBaseline="@+id/lblTeamNumber"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="@string/label_team_name"
                     android:id="@+id/lblPitTeamName"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:layout_marginTop="10dp"
                     android:layout_below="@+id/lblTeamNumber"
                     android:layout_alignParentLeft="true"
@@ -78,14 +78,14 @@
                     android:layout_alignBottom="@+id/lblPitTeamName"
                     android:layout_toRightOf="@+id/lblPitTeamName"
                     android:layout_marginLeft="10dp"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="@string/label_team_location"
                     android:id="@+id/lblTeamLocation"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:layout_marginTop="10dp"
                     android:layout_below="@+id/lblPitTeamName"
                     android:layout_alignParentLeft="true"
@@ -99,14 +99,14 @@
                     android:layout_toRightOf="@+id/lblTeamLocation"
                     android:layout_alignBaseline="@+id/lblTeamLocation"
                     android:layout_marginLeft="10dp"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:text="@string/label_number_team_members"
                     android:id="@+id/lblTeamNumMembers"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:layout_marginTop="10dp"
                     android:gravity="end"
                     android:layout_below="@+id/lblTeamYear"
@@ -120,7 +120,7 @@
                     android:layout_alignBaseline="@+id/lblTeamNumMembers"
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@+id/lblTeamNumMembers"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
 
                 <Button
                     android:layout_width="wrap_content"
@@ -135,7 +135,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/label_year_team_created"
                     android:id="@+id/lblTeamYear"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:gravity="end"
                     android:layout_below="@+id/lblTeamLocation"
                     android:layout_alignParentLeft="true"
@@ -146,7 +146,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/temp_data"
                     android:id="@+id/txtTeamYear"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:layout_alignParentLeft="false"
                     android:layout_alignBaseline="@+id/lblTeamYear"
                     android:layout_toRightOf="@+id/lblTeamYear"
@@ -192,7 +192,7 @@
 
                 <Button
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="90dp"
                     android:text="@string/label_robot_notes"
                     android:id="@+id/btnRobotNotes"
                     android:layout_alignParentTop="true"
@@ -208,11 +208,11 @@
                     android:layout_toRightOf="@+id/lblNumToteStacks" />
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="110dp"
                     android:layout_height="35dp"
                     android:text="@string/label_stacks_of_totes"
                     android:id="@+id/lblNumToteStacks"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:layout_marginTop="16dp"
                     android:layout_below="@+id/sbNumWheels"
                     android:layout_alignParentLeft="true"
@@ -223,21 +223,26 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:id="@+id/etNumToteStacks"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:enabled="false"
                     android:textSize="14sp"
                     android:text="@string/zero"
                     android:gravity="center"
-                    android:editable="false"
                     android:layout_alignParentLeft="false"
                     android:layout_marginLeft="20dp"
                     android:layout_alignTop="@+id/sbNumToteStacks"
-                    android:layout_toRightOf="@+id/sbNumToteStacks" />
+                    android:layout_toRightOf="@+id/sbNumToteStacks"
+                    android:textStyle="bold"
+                    android:inputType="none"
+                    android:hint="@string/hint_number_tote_stacks_in_robot" />
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="110dp"
                     android:layout_height="40dp"
                     android:text="@string/label_drive_train"
                     android:id="@+id/lblDriveTrain"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:layout_alignParentLeft="true"
                     android:gravity="right"
                     android:layout_marginRight="20dp"
@@ -255,11 +260,11 @@
                     android:entries= "@array/DriveTrains"/>
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="110dp"
                     android:layout_height="35dp"
                     android:text="@string/label_number_wheels"
                     android:id="@+id/lblNumWheels"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:layout_below="@+id/spinWheelType"
                     android:layout_alignParentLeft="true"
                     android:layout_marginTop="8dp"
@@ -279,21 +284,26 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:id="@+id/etNumWheels"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:enabled="false"
+                    android:inputType="none"
+                    android:hint="@string/hint_number_wheels"
                     android:textSize="14sp"
                     android:text="@string/zero"
                     android:gravity="center"
-                    android:editable="false"
                     android:layout_alignParentLeft="false"
                     android:layout_marginLeft="20dp"
                     android:layout_toRightOf="@+id/sbNumWheels"
-                    android:layout_alignTop="@+id/sbNumWheels" />
+                    android:layout_alignTop="@+id/sbNumWheels"
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="110dp"
                     android:layout_height="40dp"
                     android:text="@string/label_wheel_type"
                     android:id="@+id/lblWheelType"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:layout_alignParentLeft="true"
                     android:gravity="right"
                     android:layout_marginRight="20dp"
@@ -314,14 +324,16 @@
                     android:layout_width="175dp"
                     android:layout_height="40dp"
                     android:id="@+id/etOtherDriveTrain"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:enabled="false"
+                    android:hint="@string/hint_other_drive_base_description"
                     android:textSize="18sp"
                     android:inputType="text"
                     android:text="@string/temp_data"
-                    android:editable="false"
                     android:layout_marginLeft="20dp"
                     android:layout_toRightOf="@+id/spinDriveTrain"
                     android:layout_alignParentTop="false"
-                    android:enabled="true"
                     android:gravity="left|bottom"
                     android:lines="1"
                     android:layout_alignTop="@+id/spinDriveTrain" />
@@ -330,11 +342,14 @@
                     android:layout_width="175dp"
                     android:layout_height="40dp"
                     android:id="@+id/etOtherWheels"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:enabled="false"
+                    android:hint="@string/hint_other_wheel_description"
                     android:textSize="18sp"
                     android:inputType="text"
                     android:text="@string/temp_data"
                     android:editable="false"
-                    android:enabled="true"
                     android:gravity="left|bottom"
                     android:lines="1"
                     android:layout_toRightOf="@+id/spinWheelType"
@@ -348,25 +363,25 @@
                     android:id="@+id/cbGetStepCans"
                     android:layout_alignParentLeft="false"
                     android:layout_toRightOf="@+id/etNumWheels"
-                    android:layout_marginLeft="50dp"
-                    android:layout_alignTop="@+id/etNumWheels" />
+                    android:layout_marginLeft="40dp"
+                    android:layout_alignTop="@+id/etNumWheels"
+                    android:textSize="16sp" />
 
                 <CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:text="@string/label_can_put_totes_on_step"
                     android:id="@+id/cbPutStepTotes"
-                    android:layout_alignParentLeft="false"
-                    android:layout_alignTop="@+id/txtNumToteStacks"
-                    android:layout_toRightOf="@+id/txtNumToteStacks"
-                    android:layout_marginLeft="50dp" />
+                    android:layout_alignLeft="@+id/cbGetStepCans"
+                    android:layout_below="@+id/cbGetStepCans"
+                    android:textSize="16sp" />
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="110dp"
                     android:layout_height="35dp"
                     android:text="@string/label_number_totes"
                     android:id="@+id/lblNumTotes"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:gravity="right"
                     android:layout_below="@+id/sbNumToteStacks"
                     android:layout_alignParentLeft="true"
@@ -386,21 +401,26 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:id="@+id/etNumTotes"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:enabled="false"
                     android:textSize="14sp"
                     android:text="@string/zero"
                     android:gravity="center"
-                    android:editable="false"
                     android:layout_alignParentLeft="false"
                     android:layout_marginLeft="20dp"
                     android:layout_alignTop="@+id/sbNumTotes"
-                    android:layout_toRightOf="@+id/sbNumTotes" />
+                    android:layout_toRightOf="@+id/sbNumTotes"
+                    android:textStyle="bold"
+                    android:inputType="none"
+                    android:hint="@string/hint_number_totes_in_one_stack" />
 
                 <TextView
-                    android:layout_width="100dp"
+                    android:layout_width="110dp"
                     android:layout_height="35dp"
                     android:text="@string/label_number_cans"
                     android:id="@+id/lblNumCans"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:gravity="right"
                     android:layout_below="@+id/sbNumTotes"
                     android:layout_alignParentLeft="true"
@@ -420,14 +440,19 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:id="@+id/etNumCans"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:enabled="false"
                     android:textSize="14sp"
                     android:text="@string/zero"
                     android:gravity="center"
-                    android:editable="false"
                     android:layout_alignParentLeft="false"
                     android:layout_alignTop="@+id/sbNumCans"
                     android:layout_toRightOf="@+id/sbNumCans"
-                    android:layout_marginLeft="20dp" />
+                    android:layout_marginLeft="20dp"
+                    android:textStyle="bold"
+                    android:inputType="none"
+                    android:hint="@string/hint_number_cans_manipulate" />
 
             </RelativeLayout>
 
@@ -449,14 +474,21 @@
             android:gravity="center"
             android:background="#FFCADAFA" />
 
-        <TableLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/tblPitMatchList"
-            android:background="#ffcadafa"
-            android:clickable="false">
+            android:layout_height="match_parent"
+            android:id="@+id/svMatches"
+            android:layout_column="0"
+            android:background="#FFCADAFA">
 
-        </TableLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/llMatches">
+
+            </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
 

@@ -10,7 +10,6 @@ import android.provider.BaseColumns;
 
 public class RobotDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "robot_data";
-    public static final String COLUMN_NAME_ROBOT_DATA_ID = "robot_data_id";
     public static final String COLUMN_NAME_ROBOT_ID = "robot_id";
     public static final String COLUMN_NAME_DRIVE_TRAIN_TYPE = "drive_train_type";
 
@@ -77,14 +76,12 @@ public class RobotDataDBAdapter implements BaseColumns {
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
      * 
-     * @param robot_data_id
      * @param robot_id
      * @param drive_train_type
      * @return rowId or -1 if failed
      */
-    public long createRobotDataEntry(int robot_data_id, int robot_id, int drive_train_type){
+    public long createRobotDataEntry(int robot_id, int drive_train_type){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(COLUMN_NAME_ROBOT_DATA_ID, robot_data_id);
         initialValues.put(COLUMN_NAME_ROBOT_ID, robot_id);
         initialValues.put(COLUMN_NAME_DRIVE_TRAIN_TYPE, drive_train_type);
         return this.mDb.insert(TABLE_NAME, null, initialValues);
@@ -108,8 +105,8 @@ public class RobotDataDBAdapter implements BaseColumns {
      */
     public Cursor getAllRobotDataEntries() {
 
-        return this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_ROBOT_DATA_ID, COLUMN_NAME_ROBOT_ID, COLUMN_NAME_DRIVE_TRAIN_TYPE
+        return this.mDb.query(TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_ROBOT_ID, COLUMN_NAME_DRIVE_TRAIN_TYPE
         		}, null, null, null, null, null);
     }
 
@@ -123,8 +120,8 @@ public class RobotDataDBAdapter implements BaseColumns {
 
         Cursor mCursor =
 
-        this.mDb.query(true, TABLE_NAME, new String[] { _ID, 
-        		COLUMN_NAME_ROBOT_DATA_ID, COLUMN_NAME_ROBOT_ID, COLUMN_NAME_DRIVE_TRAIN_TYPE
+        this.mDb.query(true, TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_ROBOT_ID, COLUMN_NAME_DRIVE_TRAIN_TYPE
         		}, _ID + "=" + rowId, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -136,14 +133,13 @@ public class RobotDataDBAdapter implements BaseColumns {
      * Update the entry.
      * 
      * @param rowId
-     * @param pit_picture_id
-     * @param pit_id
-     * @param picture_id
+     * @param robot_data_id
+     * @param robot_id
+     * @param drive_train_type
      * @return true if the entry was successfully updated, false otherwise
      */
     public boolean updateRobotDataEntry(int rowId, int robot_data_id, int robot_id, int drive_train_type){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_ROBOT_DATA_ID, robot_data_id);
         args.put(COLUMN_NAME_ROBOT_ID, robot_id);
         args.put(COLUMN_NAME_DRIVE_TRAIN_TYPE, drive_train_type);
         return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 

@@ -10,7 +10,8 @@ import android.provider.BaseColumns;
 
 public class PitDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "pit_data";
-    public static final String COLUMN_NAME_PIT_ID = "pit_data_id";
+    public static final String COLUMN_NAME_PIT_INFO = "pit_info";
+    //public static final String COLUMN_NAME_PIT_ID = "pit_data_id";
 
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -75,14 +76,11 @@ public class PitDataDBAdapter implements BaseColumns {
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
      * 
-     * @param match note id
-     * @param match id
-     * @param note id
      * @return rowId or -1 if failed
      */
-    public long createPitDataEntry(int pit_id){
+    public long createPitDataEntry(){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(COLUMN_NAME_PIT_ID, pit_id);
+        //initialValues.put(COLUMN_NAME_PIT_ID, pit_id);
         return this.mDb.insert(TABLE_NAME, null, initialValues);
     }
 
@@ -104,8 +102,8 @@ public class PitDataDBAdapter implements BaseColumns {
      */
     public Cursor getAllPitDataEntries() {
 
-        return this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_PIT_ID
+        return this.mDb.query(TABLE_NAME, new String[] {
+                _ID, //COLUMN_NAME_PIT_ID
         		}, null, null, null, null, null);
     }
 
@@ -119,8 +117,8 @@ public class PitDataDBAdapter implements BaseColumns {
 
         Cursor mCursor =
 
-        this.mDb.query(true, TABLE_NAME, new String[] { _ID, 
-        		COLUMN_NAME_PIT_ID 
+        this.mDb.query(true, TABLE_NAME, new String[] {
+                _ID, //COLUMN_NAME_PIT_ID
         		}, _ID + "=" + rowId, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -131,15 +129,11 @@ public class PitDataDBAdapter implements BaseColumns {
     /**
      * Update the entry.
      * 
-     * @param rowId
-     * @param match_note_id
-     * @param match_id
-     * @param note_id
      * @return true if the entry was successfully updated, false otherwise
      */
     public boolean updatePitDataEntry(int rowId, int pit_id){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_PIT_ID, pit_id);
+        //args.put(COLUMN_NAME_PIT_ID, pit_id);
         return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 
     }
 

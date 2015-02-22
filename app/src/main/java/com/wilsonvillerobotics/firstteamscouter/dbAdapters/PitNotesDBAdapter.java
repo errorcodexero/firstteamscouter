@@ -10,7 +10,6 @@ import android.provider.BaseColumns;
 
 public class PitNotesDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "pit_notes";
-    public static final String COLUMN_NAME_PIT_NOTE_ID = "pit_note_id";
     public static final String COLUMN_NAME_PIT_ID = "pit_id";
     public static final String COLUMN_NAME_NOTE_ID = "note_id";
 
@@ -77,14 +76,12 @@ public class PitNotesDBAdapter implements BaseColumns {
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
      * 
-     * @param pit_note_id
      * @param pit_id
      * @param note_id
      * @return rowId or -1 if failed
      */
-    public long createPitNote(int pit_note_id, int pit_id, int note_id){
+    public long createPitNote(int pit_id, int note_id){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(COLUMN_NAME_PIT_NOTE_ID, pit_note_id);
         initialValues.put(COLUMN_NAME_PIT_ID, pit_id);
         initialValues.put(COLUMN_NAME_NOTE_ID, note_id);
         return this.mDb.insert(TABLE_NAME, null, initialValues);
@@ -108,8 +105,8 @@ public class PitNotesDBAdapter implements BaseColumns {
      */
     public Cursor getAllPitNotes() {
 
-        return this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_PIT_NOTE_ID, COLUMN_NAME_PIT_ID, COLUMN_NAME_NOTE_ID
+        return this.mDb.query(TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_PIT_ID, COLUMN_NAME_NOTE_ID
         		}, null, null, null, null, null);
     }
 
@@ -123,8 +120,8 @@ public class PitNotesDBAdapter implements BaseColumns {
 
         Cursor mCursor =
 
-        this.mDb.query(true, TABLE_NAME, new String[] { _ID, 
-        		COLUMN_NAME_PIT_NOTE_ID, COLUMN_NAME_PIT_ID, COLUMN_NAME_NOTE_ID 
+        this.mDb.query(true, TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_PIT_ID, COLUMN_NAME_NOTE_ID
         		}, _ID + "=" + rowId, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -136,14 +133,12 @@ public class PitNotesDBAdapter implements BaseColumns {
      * Update the entry.
      * 
      * @param rowId
-     * @param pit_note_id
      * @param pit_id
      * @param note_id
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updatePitNote(int rowId, int pit_note_id, int pit_id, int note_id){
+    public boolean updatePitNote(int rowId, int pit_id, int note_id){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_PIT_NOTE_ID, pit_note_id);
         args.put(COLUMN_NAME_PIT_ID, pit_id);
         args.put(COLUMN_NAME_NOTE_ID, note_id);
         return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 

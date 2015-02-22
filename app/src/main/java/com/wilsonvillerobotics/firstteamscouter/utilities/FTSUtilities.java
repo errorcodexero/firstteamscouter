@@ -25,7 +25,48 @@ public class FTSUtilities {
 	public static Boolean DEBUG = true;
 	public static Boolean POPULATE_TEST_DATA = true;
 	public static String alliancePositions[] = {"Red1","Red2","Red3","Blue1","Blue2","Blue3",};
-	
+
+    public enum ItemType {
+        ROBOT(0, "Robot"),
+        PIT(1, "Pit"),
+        TEAM(2, "Team"),
+        ALL(3, "All"),
+        NONE(4, "");
+
+        private String name;
+        private int id;
+        ItemType(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        static public ItemType getItemTypeByName(String name) {
+            ItemType retVal = NONE;
+            for(ItemType it : ItemType.values()) {
+                if(it.name.equals(name)) {
+                    retVal = it;
+                    break;
+                }
+            }
+            return retVal;
+        }
+
+        static public ItemType getItemTypeById(int id) {
+            ItemType retVal = NONE;
+            for(ItemType it : ItemType.values()) {
+                if(it.id == id) {
+                    retVal = it;
+                    break;
+                }
+            }
+            return retVal;
+        }
+    }
+
 	public enum ALLIANCE_POSITION {
 		RED1 (0, "Red1"),
 		RED2 (1, "Red2"),

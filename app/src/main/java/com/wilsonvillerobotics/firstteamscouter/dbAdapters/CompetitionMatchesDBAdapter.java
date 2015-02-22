@@ -19,7 +19,6 @@ import android.provider.BaseColumns;
 
 public class CompetitionMatchesDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "competition_matches";
-    public static final String COLUMN_NAME_COMPETITION_MATCHES_ID = "competition_match_id";
     public static final String COLUMN_NAME_COMPETITION_ID = "competition_id";
     public static final String COLUMN_NAME_MATCH_ID = "match_id";
 
@@ -86,14 +85,12 @@ public class CompetitionMatchesDBAdapter implements BaseColumns {
      * Create a new Competition Match entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
      * 
-     * @param id
-     * @param name
-     * @param location
+     * @param match_id
+     * @param competition_id
      * @return rowId or -1 if failed
      */
-    public long createCompetitionMatch(int id, int competition_id, int match_id){
+    public long createCompetitionMatch(int competition_id, int match_id){
         ContentValues initialValues = new ContentValues();
-        initialValues.put(COLUMN_NAME_COMPETITION_MATCHES_ID, id);
         initialValues.put(COLUMN_NAME_COMPETITION_ID, competition_id);
         initialValues.put(COLUMN_NAME_MATCH_ID, match_id);
         return this.mDb.insert(TABLE_NAME, null, initialValues);
@@ -117,8 +114,8 @@ public class CompetitionMatchesDBAdapter implements BaseColumns {
      */
     public Cursor getAllCompetitionMatches() {
 
-        return this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_COMPETITION_MATCHES_ID, COLUMN_NAME_COMPETITION_ID, COLUMN_NAME_MATCH_ID }, null, null, null, null, null);
+        return this.mDb.query(TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_COMPETITION_ID, COLUMN_NAME_MATCH_ID }, null, null, null, null, null);
     }
 
     /**
@@ -131,8 +128,8 @@ public class CompetitionMatchesDBAdapter implements BaseColumns {
 
         Cursor mCursor =
 
-        this.mDb.query(true, TABLE_NAME, new String[] { _ID, COLUMN_NAME_COMPETITION_MATCHES_ID,
-        		COLUMN_NAME_COMPETITION_ID, COLUMN_NAME_MATCH_ID}, _ID + "=" + rowId, null, null, null, null, null);
+        this.mDb.query(true, TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_COMPETITION_ID, COLUMN_NAME_MATCH_ID}, _ID + "=" + rowId, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
@@ -151,7 +148,6 @@ public class CompetitionMatchesDBAdapter implements BaseColumns {
     public boolean updateCompetitionMatchEntry(long rowId, int competition_match_id, int competition_id,
             int match_id){
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_COMPETITION_MATCHES_ID, competition_match_id);
         args.put(COLUMN_NAME_COMPETITION_ID, competition_id);
         args.put(COLUMN_NAME_MATCH_ID, match_id);
 
