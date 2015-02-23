@@ -3,8 +3,10 @@ package com.wilsonvillerobotics.firstteamscouter.dbAdapters;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import com.wilsonvillerobotics.firstteamscouter.ImportMatchDataActivity;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,6 +14,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.widget.ProgressBar;
 
 public class TeamMatchDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "team_match";
@@ -439,7 +442,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
     {
         mDb.delete(TABLE_NAME, null, null);
     }
-    
+
     public boolean populateTestData(long[] matchIDs, long[] teamIDs) {
     	FTSUtilities.printToConsole("TeamMatchDBAdapter::populateTestData\n");
     	deleteAllData();
@@ -447,8 +450,10 @@ public class TeamMatchDBAdapter implements BaseColumns {
     	//Set<Integer> teamNums = FTSUtilities.getTestTeamNumbers(); // {1425, 1520, 2929, 1114, 500, 600, 700, 800, 900, 1000};
     	int teamOffset = 0;
     	boolean result = true;
+        int lineCount = 0;
     	for(long matchID : matchIDs) {
-    		FTSUtilities.printToConsole("TeamMatchDBAdapter::populateTestData : Creating matchID: " + matchID + "\n");
+            lineCount++;
+            FTSUtilities.printToConsole("TeamMatchDBAdapter::populateTestData : Creating matchID: " + matchID + "\n");
     		long tempTeamIDs[] = new long[6];
 	    	for(int i = 0; i < FTSUtilities.ALLIANCE_POSITION.NOT_SET.allianceIndex(); i++) {
 	    		int teamIndex = (i + teamOffset) % teamIDs.length;

@@ -13,6 +13,7 @@ import java.nio.channels.FileChannel;
 import java.util.Hashtable;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.MatchDataDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.RobotDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 //import com.wilsonvillerobotics.firstteamscouter.BluetoothSetupActivity;
@@ -38,9 +39,11 @@ public class ImportMatchDataActivity extends Activity {
 
 	protected static final int TIMER_RUNTIME = 10000; // in ms --> 10s
 	
-	private MatchDataDBAdapter mDataDBAdapter;
-	private TeamMatchDBAdapter tmDBAdapter;
-	private TeamDataDBAdapter tDataDBAdapter;
+	private MatchDataDBAdapter matchDataDBAdapter;
+	private TeamMatchDBAdapter teamMatchDBAdapter;
+	private TeamDataDBAdapter teamDataDBAdapter;
+    private RobotDataDBAdapter robotDataDBAdapter;
+
 	private Button btnOK;
     private Button btnDisplayMetrics;
 	private TextView txtStatus;
@@ -49,8 +52,14 @@ public class ImportMatchDataActivity extends Activity {
 	protected boolean mbActive;
 	protected String tabletID;
 	
-	private String exportFileNamePrefix;
-	private String tempFileName;
+	private String exportTeamMatchDataFileNamePrefix;
+    private String exportTeamDataFileNamePrefix;
+    private String exportRobotDataFileNamePrefix;
+
+    private String tempFileNameTeamMatchData;
+    private String tempFileNameTeamData;
+    private String tempFileNameRobotData;
+
 	private String csvExt;
 	
 	private int BLUETOOTH_SEND = 32665;
@@ -60,8 +69,12 @@ public class ImportMatchDataActivity extends Activity {
 	//private Intent bluetoothIntent;
 	
 	private File filePath;
-	private File myExportFile;
-	private File myTempFile;
+	private File myTeamMatchDataExportFile;
+    private File myTeamDataExportFile;
+    private File myRobotDataExportFile;
+	private File myTeamMatchDataTempFile;
+    private File myTeamDataTempFile;
+    private File myRobotDataTempFile;
 	private File saveDir;
 	private File exportDir;
 
@@ -82,26 +95,35 @@ public class ImportMatchDataActivity extends Activity {
 		this.tabletID = (this.tabletID != null) ? this.tabletID : "Unknown Tablet ID";
 		
 		this.csvExt = ".csv";
-		this.exportFileNamePrefix = tabletID + "_match_data_export";
-		this.tempFileName = exportFileNamePrefix + this.csvExt;
+		this.exportTeamMatchDataFileNamePrefix = tabletID + "_team_match_data_export";
+        this.exportTeamDataFileNamePrefix = tabletID + "_team_data_export";
+        exportRobotDataFileNamePrefix = tabletID + "_robot_data_export";
+		this.tempFileNameTeamMatchData = exportTeamMatchDataFileNamePrefix + this.csvExt;
+        this.tempFileNameTeamData = exportTeamDataFileNamePrefix + this.csvExt;
+        this.tempFileNameRobotData = exportRobotDataFileNamePrefix + this.csvExt;
 		
 		
 		this.filePath = getExternalFilesDir(null);
-		this.myExportFile = null; //new File(filePath, exportFileNamePrefix);
-		this.myTempFile = new File(filePath, tempFileName);
+		this.myTeamMatchDataExportFile = null;
+        this.myTeamDataExportFile = null;
+		this.myTeamMatchDataTempFile = new File(filePath, tempFileNameTeamMatchData);
+        this.myTeamDataExportFile = new File(filePath, tempFileNameTeamMatchData);
+        this.myRobotDataExportFile = new File(filePath, tempFileNameTeamMatchData);
 		this.saveDir = new File(filePath.getAbsolutePath() + "/sent");
 		this.exportDir = new File(filePath.getAbsolutePath() + "/exported");
 		
 		try {
 			FTSUtilities.printToConsole("ImportMatchDataActivity::onCreate : OPENING DB\n");
-			mDataDBAdapter = new MatchDataDBAdapter(this.getBaseContext()).open();
-			tmDBAdapter = new TeamMatchDBAdapter(this.getBaseContext()).open();
-			tDataDBAdapter = new TeamDataDBAdapter(this.getBaseContext()).open();
+			matchDataDBAdapter = new MatchDataDBAdapter(this).open();
+			teamMatchDBAdapter = new TeamMatchDBAdapter(this).open();
+			teamDataDBAdapter = new TeamDataDBAdapter(this).open();
+            robotDataDBAdapter = new RobotDataDBAdapter(this).open();
 		} catch(SQLException e) {
 			e.printStackTrace();
-			mDataDBAdapter = null;
-			tmDBAdapter = null;
-			tDataDBAdapter = null;
+			matchDataDBAdapter = null;
+			teamMatchDBAdapter = null;
+			teamDataDBAdapter = null;
+            robotDataDBAdapter = null;
 		}
 		
 		String statusMessage = "";
@@ -137,20 +159,22 @@ public class ImportMatchDataActivity extends Activity {
 				String importStatusMessage = "";
 				try {
 					if(FTSUtilities.POPULATE_TEST_DATA) {
-						tmDBAdapter.populateTestData(mDataDBAdapter.populateTestData(numTestMatches), tDataDBAdapter.populateTestData());
+						teamMatchDBAdapter.populateTestData(matchDataDBAdapter.populateTestData(numTestMatches), teamDataDBAdapter.populateTestData());
 						importStatusMessage = "Test data import complete";
 					} else {
 					    String storageState = Environment.getExternalStorageState();
 					    if (storageState.equals(Environment.MEDIA_MOUNTED)) {
 					    	FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : getting file\n");
 					        File file = new File(getExternalFilesDir(null), "match_list_data.csv");
-					        FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : file " + ((file == null) ? "IS NULL" : "IS VALID") + "\n");
-					        
+					        FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : file " + ((file == null) ? "IS NULL" : (file.exists()) ? "EXISTS" : "IS MISSING") + "\n");
+
 					        if(file.exists() && file.isFile()) {
 					        	txtStatus.setText("File Found, Import Commencing\n");
-					        	tDataDBAdapter.deleteAllData();
-					        	mDataDBAdapter.deleteAllData();
-					        	tmDBAdapter.deleteAllData();
+                                teamDataDBAdapter.deleteAllData();
+                                matchDataDBAdapter.deleteAllData();
+                                teamMatchDBAdapter.deleteAllData();
+                                robotDataDBAdapter.getAllRobotDataEntries();
+
 						        BufferedReader inputReader = new BufferedReader(
 						                new InputStreamReader(new FileInputStream(file)));
 						        String line = "";
@@ -163,34 +187,34 @@ public class ImportMatchDataActivity extends Activity {
 						        lineArray = line.split(",");
 						        //String headerArray[] = {"Time", "Type", "#", FTSUtilities.alliancePositions[0], FTSUtilities.alliancePositions[1], FTSUtilities.alliancePositions[2],
 						        //		FTSUtilities.alliancePositions[3], FTSUtilities.alliancePositions[4], FTSUtilities.alliancePositions[5]};
-						        
+
 						        if(lineArray[1].startsWith("Type")) {
 						        	FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : Header Row Detected");
 						        } else {
 						        	FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : NO Heasder Row Detected");
 						        	inputReader.reset();
 						        }
-						        
+
 						        while((line = inputReader.readLine()) != null) {
 						        	lineCount += 1;
 						        	lineArray = line.split(",");
-						        	
+
 						        	if(lineArray.length > 8) {
 						        		//FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : " + lineArray[0] + ":" + lineArray[1] + ":" + lineArray[2] + ":" + lineArray[3] + ":" + lineArray[4] + ":" + lineArray[5] + ":" + lineArray[6] + ":" + lineArray[7]);
 						        		//Time : Type : MatchNum : Red1 : Red2 : Red3 : Blue1 : Blue2 : Blue3
 						        		long teamIDs[] = {-1, -1, -1, -1, -1, -1};
 						        		for(int i = 0; i < 6; i++) {
-						        			teamIDs[i] = tDataDBAdapter.createTeamDataEntry(Integer.parseInt(lineArray[i+3]));
+						        			teamIDs[i] = teamDataDBAdapter.createTeamDataEntry(Integer.parseInt(lineArray[i+3]));
 						        		}
-	
-						        		long matchID = mDataDBAdapter.createMatchData(lineArray[0], lineArray[1], lineArray[2], teamIDs[0], teamIDs[1], teamIDs[2], teamIDs[3], teamIDs[4], teamIDs[5]);
+
+						        		long matchID = matchDataDBAdapter.createMatchData(lineArray[0], lineArray[1], lineArray[2], teamIDs[0], teamIDs[1], teamIDs[2], teamIDs[3], teamIDs[4], teamIDs[5]);
 						        		if(matchID >= 0) {
 						        			matchCount += 1;
 						        		}
-						        		
+
 						        		long teamMatchID = -1;
 						        		for(int i = 0; i < FTSUtilities.ALLIANCE_POSITION.NOT_SET.allianceIndex(); i++) {
-						        			teamMatchID = tmDBAdapter.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForIndex(i) /*.alliancePositions[i]*/, teamIDs[i], matchID);
+						        			teamMatchID = teamMatchDBAdapter.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForIndex(i) /*.alliancePositions[i]*/, teamIDs[i], matchID);
 						        			if(teamMatchID >= 0) {
 						        				teamCount += 1;
 						        			}
@@ -200,14 +224,14 @@ public class ImportMatchDataActivity extends Activity {
 						        	}
 						        }
 						        inputReader.close();
-	
+
 						        importStatusMessage = txtStatus.getText() + "\nLines Parsed: " + lineCount + "\nMatches Created: " + matchCount + "\nTeamMatch Records Created: " + teamCount;
 					        } else {
 					        	importStatusMessage = "ERROR: could not find file:\n" + file.toString();
 					        }
-					        
-					        
-					        
+
+
+
 					        file.renameTo(new File(file.getAbsolutePath() + ".bak"));
 					    }
 					}
@@ -229,7 +253,7 @@ public class ImportMatchDataActivity extends Activity {
 					File[] exportedFileList = exportDir.listFiles(new CSVFilenameFilter(".csv"));
 					int fileCount = exportedFileList.length;
 					
-					File myReExportFile = new File(exportDir, exportFileNamePrefix + "_" + fileCount + csvExt);
+					File myReExportFile = new File(exportDir, exportTeamMatchDataFileNamePrefix + "_" + fileCount + csvExt);
 					if(myReExportFile.exists() && myReExportFile.isFile()) {
 						FTSUtilities.printToConsole("ImportMatchDataActivity::btnRepeatExport.onClick : Exporting: " + myReExportFile.getName());
 						Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
@@ -250,11 +274,11 @@ public class ImportMatchDataActivity extends Activity {
 			public void onClick(View v) {
 				//File filePath = getExternalFilesDir(null);
 				//File myFile = new File(filePath, exportFileName);
-				//File myTempFile = new File(filePath, tempFileName);
+				//File myTeamMatchDataTempFile = new File(filePath, tempFileNameTeamMatchData);
 				
-//				if(!myTempFile.exists()) {
+//				if(!myTeamMatchDataTempFile.exists()) {
 //					try {
-//						myTempFile.createNewFile();
+//						myTeamMatchDataTempFile.createNewFile();
 //					} catch (IOException e1) {
 //						e1.printStackTrace();
 //					}
@@ -303,10 +327,10 @@ public class ImportMatchDataActivity extends Activity {
 				}
 				
 				if(!lines.isEmpty() && (exportDir.mkdir() || exportDir.isDirectory())) {
-					if(myExportFile != null && myExportFile.exists()) myExportFile.delete();
+					if(myTeamMatchDataExportFile != null && myTeamMatchDataExportFile.exists()) myTeamMatchDataExportFile.delete();
 						
 						//try {
-						//	copy(myExportFile, myTempFile);
+						//	copy(myTeamMatchDataExportFile, myTeamMatchDataTempFile);
 						//} catch (IOException e) {
 						//	e.printStackTrace();
 						//}
@@ -317,10 +341,10 @@ public class ImportMatchDataActivity extends Activity {
 						File[] exportedFileList = exportDir.listFiles(new CSVFilenameFilter(".csv"));
 						int fileCount = exportedFileList.length + 1;
 						
-						myExportFile = new File(filePath.getAbsolutePath() + "/" + exportFileNamePrefix + "_" + fileCount + csvExt);
-						myExportFile.createNewFile();
+						myTeamMatchDataExportFile = new File(filePath.getAbsolutePath() + "/" + exportTeamMatchDataFileNamePrefix + "_" + fileCount + csvExt);
+						myTeamMatchDataExportFile.createNewFile();
 						String header = FTSUtilities.getCSVHeaderString();
-						fo = new FileOutputStream(myExportFile, append);
+						fo = new FileOutputStream(myTeamMatchDataExportFile, append);
 						
 						fo.write(header.getBytes());
 						fo.close();
@@ -330,9 +354,9 @@ public class ImportMatchDataActivity extends Activity {
 					
 					
 						
-					if(myExportFile.exists()) {
+					if(myTeamMatchDataExportFile.exists()) {
 						try {
-							fo = new FileOutputStream(myExportFile, append);
+							fo = new FileOutputStream(myTeamMatchDataExportFile, append);
 							for(String line : lines.values()) {
 								if(line != null) {
 									line += "\n";
@@ -341,9 +365,9 @@ public class ImportMatchDataActivity extends Activity {
 							}
 							fo.close();
 							
-							String exportedFileName = myExportFile.getName();
+							String exportedFileName = myTeamMatchDataExportFile.getName();
 							File exportFile = new File(exportDir, exportedFileName);
-							myExportFile.renameTo(exportFile);
+							myTeamMatchDataExportFile.renameTo(exportFile);
 
 							Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
 							sharingIntent.setType("text/plain");
@@ -377,14 +401,14 @@ public class ImportMatchDataActivity extends Activity {
 //							Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
 //							sharingIntent.setType("text/plain");
 //							sharingIntent.setComponent(new ComponentName("com.android.bluetooth", "com.android.bluetooth.opp.BluetoothOppLauncherActivity"));
-//							sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(myExportFile));
+//							sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(myTeamMatchDataExportFile));
 //							startActivityForResult(sharingIntent, BLUETOOTH_SEND);
 //							FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : Sharing Activity Started");
 //							
-							//myExportFile.delete();
+							//myTeamMatchDataExportFile.delete();
 						}
 					} else {
-						String message = "File not found: " + myExportFile.getName();
+						String message = "File not found: " + myTeamMatchDataExportFile.getName();
 						Toast.makeText(getBaseContext(), message , Toast.LENGTH_SHORT).show();
 					}
 				}
@@ -425,8 +449,8 @@ public class ImportMatchDataActivity extends Activity {
 //				int numFiles = (saveDir.list(new CSVFilenameFilter(".csv")).length) + 1;
 //				String saveFileName = exportFileName + "_" + numFiles + ".csv";
 //				File saveFile = new File(saveDir, saveFileName);
-//				if(myExportFile.exists()) {
-//					myExportFile.renameTo(saveFile);
+//				if(myTeamMatchDataExportFile.exists()) {
+//					myTeamMatchDataExportFile.renameTo(saveFile);
 //					Toast.makeText(this, "File Saved", 3).show();
 //				}
 //			}
@@ -463,20 +487,20 @@ public class ImportMatchDataActivity extends Activity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(mDataDBAdapter == null) {
-        	mDataDBAdapter = new MatchDataDBAdapter(this.getBaseContext());
+        if(matchDataDBAdapter == null) {
+        	matchDataDBAdapter = new MatchDataDBAdapter(this.getBaseContext());
         }
-        mDataDBAdapter.open();
+        matchDataDBAdapter.open();
         
-        if(tmDBAdapter == null) {
-        	tmDBAdapter = new TeamMatchDBAdapter(this.getBaseContext());
+        if(teamMatchDBAdapter == null) {
+        	teamMatchDBAdapter = new TeamMatchDBAdapter(this.getBaseContext());
         }
-        tmDBAdapter.open();
+        teamMatchDBAdapter.open();
 
-        if(tDataDBAdapter == null) {
-        	tDataDBAdapter = new TeamDataDBAdapter(this.getBaseContext());
+        if(teamDataDBAdapter == null) {
+        	teamDataDBAdapter = new TeamDataDBAdapter(this.getBaseContext());
         }
-        tDataDBAdapter.open();
+        teamDataDBAdapter.open();
     }
 
     @Override
@@ -503,11 +527,11 @@ public class ImportMatchDataActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        if(myTempFile.exists()) myTempFile.delete();
+        if(myTeamMatchDataTempFile.exists()) myTeamMatchDataTempFile.delete();
         FTSUtilities.printToConsole("ImportMatchDataActivity::onStop : CLOSING DB\n");
-        mDataDBAdapter.close();
-        tmDBAdapter.close();
-        tDataDBAdapter.close();
+        matchDataDBAdapter.close();
+        teamMatchDBAdapter.close();
+        teamDataDBAdapter.close();
     }
 
     @Override

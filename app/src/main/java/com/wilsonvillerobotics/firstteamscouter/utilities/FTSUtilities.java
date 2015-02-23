@@ -1,6 +1,9 @@
 package com.wilsonvillerobotics.firstteamscouter.utilities;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,7 +26,7 @@ import android.widget.Button;
 public class FTSUtilities {
 
 	public static Boolean DEBUG = true;
-	public static Boolean POPULATE_TEST_DATA = true;
+	public static Boolean POPULATE_TEST_DATA = false;
 	public static String alliancePositions[] = {"Red1","Red2","Red3","Blue1","Blue2","Blue3",};
 
     public enum ItemType {
@@ -284,6 +287,21 @@ public class FTSUtilities {
         headerOut += TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_NOTES + "\n";
         return headerOut;
 	}
+
+    /*  http://stackoverflow.com/questions/1277880/how-can-i-get-the-count-of-line-in-a-file-in-an-efficient-way  */
+    public static int countLines(File aFile) throws IOException {
+        LineNumberReader reader = null;
+        try {
+            reader = new LineNumberReader(new FileReader(aFile));
+            while ((reader.readLine()) != null);
+            return reader.getLineNumber();
+        } catch (Exception ex) {
+            return -1;
+        } finally {
+            if(reader != null)
+                reader.close();
+        }
+    }
 
     /* http://stackoverflow.com/questions/1714297/android-view-setidint-id-programmatically-how-to-avoid-id-conflicts */
     private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);

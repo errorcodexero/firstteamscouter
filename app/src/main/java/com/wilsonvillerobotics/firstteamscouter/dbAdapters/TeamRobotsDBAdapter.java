@@ -126,7 +126,7 @@ public class TeamRobotsDBAdapter implements BaseColumns {
                 _ID, COLUMN_NAME_TEAM_ID, COLUMN_NAME_ROBOT_ID
         		}, COLUMN_NAME_TEAM_ID + "=" + teamId, null, null, null, null, null);
         if (mCursor.moveToFirst()) {
-            retVal = Long.parseLong(mCursor.getString(mCursor.getColumnIndex(COLUMN_NAME_TEAM_ID)));
+            retVal = Long.parseLong(mCursor.getString(mCursor.getColumnIndex(COLUMN_NAME_ROBOT_ID)));
         }
         return retVal;
     }

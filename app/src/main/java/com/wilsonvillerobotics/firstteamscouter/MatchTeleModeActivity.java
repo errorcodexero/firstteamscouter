@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.database.SQLException;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.v4.view.MotionEventCompat;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -195,54 +196,78 @@ public class MatchTeleModeActivity extends Activity {
     private final class MyViewTouchListener implements View.OnTouchListener {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                if(view.getClass() == ImageView.class) {
-                    ViewParent parent = view.getParent();
-                    ViewParent grandparent = (parent != null) ? parent.getParent() : null;
-                    if(grandparent != null && grandparent.getClass() == GaugeLayout.class) {
-                        GaugeLayout gl = (GaugeLayout)grandparent;
+            int action = MotionEventCompat.getActionMasked(motionEvent);
+            switch(action) {
+                case MotionEvent.ACTION_POINTER_DOWN:
+                    return true;
+                case MotionEvent.ACTION_UP:
+                    return true;
+                case MotionEvent.ACTION_POINTER_UP:
+                    return true;
+                case MotionEvent.ACTION_MOVE:
+                    //view.setVisibility(View.GONE);
+                    return true;
+                case MotionEvent.ACTION_OUTSIDE:
+                    return true;
+                case MotionEvent.ACTION_CANCEL:
+                    return true;
+                case MotionEvent.ACTION_DOWN:
+                    /*
+                     * If it's a Gauge, need to determine which gauge and which row (hit detection)
+                     * If a single touch event, move that row only
+                     * If part of a multi-touch event, find second touch, find row (hit detection)
+                     *    and remove a stack equal to the number of rows spanned. If not enough
+                     *    totes are on the stack, remove as many as are between the two rows, inclusive
+                     *
+                     * Come up with a touch/multi-touch state machine for this
+                     */
+                    if(view.getClass() == ImageView.class) {
+                        ViewParent parent = view.getParent();
+                        ViewParent grandparent = (parent != null) ? parent.getParent() : null;
+                        if(grandparent != null && grandparent.getClass() == GaugeLayout.class) {
+                            GaugeLayout gl = (GaugeLayout)grandparent;
 
-                        LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService
-                                (Context.LAYOUT_INFLATER_SERVICE);
-                        LinearLayout llTote = (LinearLayout)inflater.inflate(R.layout.layout_single_tote, null);
-                        llTote.setVisibility(View.VISIBLE);
-                        gl.addView(llTote);
+                            LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService
+                                    (Context.LAYOUT_INFLATER_SERVICE);
+                            LinearLayout llTote = (LinearLayout)inflater.inflate(R.layout.layout_single_tote, null);
+                            llTote.setVisibility(View.VISIBLE);
+                            gl.addView(llTote);
 
-                        int numElements = 1;
-                        for(int i = 0; i < gl.getChildCount(); i++) {
-                            View child = gl.getChildAt(i);
-                            if(child != null && child.getClass() == GaugeRow.class) {
-                                GaugeRow gr = (GaugeRow) child;
-                                ImageView iv = gr.getImageView();
-                                if(gr == parent) {
-                                    ((ImageView)llTote.findViewById(R.id.imgTote1)).setImageDrawable(iv.getDrawable());
-                                    numElements = gl.getInActiveRowsBelowCount(gr);
-                                }
-                                if(iv != null) {
-                                    iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
-                                    iv.setOnTouchListener(null);
-                                    unregisterForContextMenu(iv);
+                            int numElements = 1;
+                            for(int i = 0; i < gl.getChildCount(); i++) {
+                                View child = gl.getChildAt(i);
+                                if(child != null && child.getClass() == GaugeRow.class) {
+                                    GaugeRow gr = (GaugeRow) child;
+                                    ImageView iv = gr.getImageView();
+                                    if(gr == parent) {
+                                        ((ImageView)llTote.findViewById(R.id.imgTote1)).setImageDrawable(iv.getDrawable());
+                                        numElements = gl.getInActiveRowsBelowCount(gr);
+                                    }
+                                    if(iv != null) {
+                                        iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
+                                        iv.setOnTouchListener(null);
+                                        unregisterForContextMenu(iv);
+                                    }
                                 }
                             }
-                        }
 
-                        for(int i = 0; i < numElements; i++) {
-                            ImageView imgTote = (ImageView)inflater.inflate(R.layout.layout_game_element, null);
-                            llTote.addView(imgTote);
-                        }
+                            for(int i = 0; i < numElements; i++) {
+                                ImageView imgTote = (ImageView)inflater.inflate(R.layout.layout_game_element, null);
+                                llTote.addView(imgTote);
+                            }
 
-                        ClipData.Item item = new ClipData.Item(String.valueOf(numElements));
-                        String[] mimeType  = {"text/plain"};
-                        ClipData clipData  = new ClipData(String.valueOf(numElements),mimeType,item);
+                            ClipData.Item item = new ClipData.Item(String.valueOf(numElements));
+                            String[] mimeType  = {"text/plain"};
+                            ClipData clipData  = new ClipData(String.valueOf(numElements),mimeType,item);
 
-                        llTote.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                        final int size=View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
-                        llTote.measure(size, size);
-                        llTote.layout(0, 0, llTote.getMeasuredWidth(), llTote.getMeasuredHeight());
-                        llTote.invalidate();
-                        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(llTote);
-                        llTote.startDrag(clipData, shadowBuilder, llTote, 0);
-                        return true;
+                            llTote.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            final int size=View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+                            llTote.measure(size, size);
+                            llTote.layout(0, 0, llTote.getMeasuredWidth(), llTote.getMeasuredHeight());
+                            llTote.invalidate();
+                            View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(llTote);
+                            llTote.startDrag(clipData, shadowBuilder, llTote, 0);
+                            return true;
                         /*
                         http://www.programcreek.com/java-api-examples/index.php?api=android.view.View.DragShadowBuilder
                         TextView shadowView=(TextView)View.inflate(mTextView.getContext(),com.android.internal.R.layout.text_drag_thumbnail,null);
@@ -256,17 +281,12 @@ public class MatchTeleModeActivity extends Activity {
                           shadowView.invalidate();
                           return new DragShadowBuilder(shadowView);
                          */
+                        }
                     }
-                }
-                ClipData data = ClipData.newPlainText("", "");
-                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-                view.startDrag(data, shadowBuilder, view, 0);
-                return true;
-            } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-                //view.setVisibility(View.GONE);
-                return true;
-            } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                return true;
+                    ClipData data = ClipData.newPlainText("", "");
+                    View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+                    view.startDrag(data, shadowBuilder, view, 0);
+                    return true;
             }
             return false;
         }
