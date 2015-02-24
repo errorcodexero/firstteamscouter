@@ -23,6 +23,8 @@ import android.widget.LinearLayout;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MatchTeleModeActivity extends Activity {
@@ -92,6 +94,8 @@ public class MatchTeleModeActivity extends Activity {
 
     protected HashMap<Integer, GameElement> teleFieldObjects;
     protected HashMap<Integer, GaugeLayout> teleGauges;
+
+    protected HashMap<Integer, String> teleGaugeNames;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -158,12 +162,18 @@ public class MatchTeleModeActivity extends Activity {
     }
 
     private void initGauges() {
-        int[] IDs = {R.id.Platform_Gauge_TableView, R.id.Robot_Gauge_TableView, R.id.Step_Gauge_TableView, R.id.Floor_Gauge_TableView};
+        teleGaugeNames = new HashMap<Integer, String>();
+        teleGaugeNames.put(R.id.Platform_Gauge_TableView, "Platform");
+        teleGaugeNames.put(R.id.Robot_Gauge_TableView, "Robot");
+        teleGaugeNames.put(R.id.Step_Gauge_TableView, "Step");
+        teleGaugeNames.put(R.id.Floor_Gauge_TableView, "Floor");
+
         teleGauges = new HashMap<Integer, GaugeLayout>();
 
-        for(int id : IDs) {
+        for(int id : teleGaugeNames.keySet()) {
             GaugeLayout gauge = (GaugeLayout) findViewById(id);
             gauge.init(new MyViewDragListener());
+            gauge.setGaugeName(teleGaugeNames.get(id));
             teleGauges.put(id, gauge);
         }
     }
@@ -222,18 +232,45 @@ public class MatchTeleModeActivity extends Activity {
                         ViewParent grandparent = (parent != null) ? parent.getParent() : null;
                         if(grandparent != null && grandparent.getClass() == GaugeLayout.class) {
                             GaugeLayout gl = (GaugeLayout)grandparent;
+                            GaugeRow gr    = (GaugeRow)parent;
+                            int rowNum = gr.getRowIndex();
 
                             LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService
                                     (Context.LAYOUT_INFLATER_SERVICE);
-                            LinearLayout llTote = (LinearLayout)inflater.inflate(R.layout.layout_single_tote, null);
+                            LinearLayout llTote = new LinearLayout(gl.getContext()); // (LinearLayout)inflater.inflate(R.layout.layout_single_tote, null);
                             llTote.setVisibility(View.VISIBLE);
+                            llTote.setOrientation(LinearLayout.VERTICAL);
                             gl.addView(llTote);
 
-                            int numElements = 1;
+                            int numElements = 0;
+                            ArrayList<GaugeRow> activeRowsAbove = gl.getActiveRowsAbove(gr);
+                            String log = "Active Row Above Count: " + activeRowsAbove.size() + "\n";
+                            for(int i = activeRowsAbove.size() - 1; i >= 0; i--) {
+                            //for(GaugeRow gRow : activeRowsAbove) {
+                                GaugeRow gRow = activeRowsAbove.get(i);
+                                log += "Received row at index " + gRow.getRowIndex() + "\n";
+                                ImageView ivElement = new ImageView(gl.getContext());
+                                ivElement.setImageDrawable(gRow.getImageView().getDrawable());
+                                gRow.deactivate(new MyViewDragListener());
+                                llTote.addView(ivElement);
+                            }
+                            FTSUtilities.printToConsole(log);
+                            /*
+                            for(int i = 0; i <= numInactiveAbove; i++) {
+                                GaugeRow curGr = gl.getRowAtIndex(rowNum + i);
+                                FTSUtilities.printToConsole("Asked for index " + (rowNum + i) + " received row at index " + curGr.getRowIndex());
+                                ImageView ivElement = new ImageView(gl.getContext()); // (ImageView)inflater.inflate(R.layout.layout_game_element, null);
+                                ivElement.setImageDrawable(gr.getImageView().getDrawable());
+                                curGr.deactivate(new MyViewDragListener());
+                                llTote.addView(ivElement);
+                            }
+                            */
+                            /*
                             for(int i = 0; i < gl.getChildCount(); i++) {
                                 View child = gl.getChildAt(i);
                                 if(child != null && child.getClass() == GaugeRow.class) {
                                     GaugeRow gr = (GaugeRow) child;
+                                    gr.setOnDragListener(new MyViewDragListener());
                                     ImageView iv = gr.getImageView();
                                     if(gr == parent) {
                                         ((ImageView)llTote.findViewById(R.id.imgTote1)).setImageDrawable(iv.getDrawable());
@@ -251,6 +288,7 @@ public class MatchTeleModeActivity extends Activity {
                                 ImageView imgTote = (ImageView)inflater.inflate(R.layout.layout_game_element, null);
                                 llTote.addView(imgTote);
                             }
+                            */
 
                             ClipData.Item item = new ClipData.Item(String.valueOf(numElements));
                             String[] mimeType  = {"text/plain"};
@@ -352,7 +390,7 @@ public class MatchTeleModeActivity extends Activity {
 		return true;
 	}
 
-    private class MyViewDragListener implements View.OnDragListener {
+    public class MyViewDragListener implements View.OnDragListener {
         boolean dragging = false;
         @Override
         public boolean onDrag(View v, DragEvent event) {
@@ -365,23 +403,41 @@ public class MatchTeleModeActivity extends Activity {
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
                     if(v.getClass() == GaugeRow.class) {
+                        GaugeLayout gl = (GaugeLayout)((GaugeRow)v).getParent();
                         ImageView iv = (ImageView)v.findViewWithTag("rowImageView");
+                        if(view.getClass() == LinearLayout.class) {
+                            LinearLayout llTote = (LinearLayout)view;
+                            int elementCount = llTote.getChildCount();
+                            int extraInt = elementCount % 2;
+                            int mid = elementCount / 2 + extraInt;
+                            gl.highlightRows((GaugeRow)v, elementCount);
+                        } else {
+                            gl.highlightRows((GaugeRow)v, 1);
+                        }
+                        /*
                         if(iv != null) {
                             iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_light_106x50));
                             //iv.setTag(R.drawable.gray_tote_side_up_silhouette_light_106x50);
                         }
+                        */
                     }
                     //v.setBackgroundDrawable(enterShape);
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
                     if(v.getClass() == GaugeRow.class) {
-                        ImageView iv = (ImageView)v.findViewWithTag("rowImageView");
-                        if(iv != null) {
-                            iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
-                            //iv.setTag(R.drawable.gray_tote_side_up_silhouette_106x50);
-                            iv.setOnTouchListener(null);
-                            unregisterForContextMenu(iv);
+                        GaugeLayout gl = (GaugeLayout)((GaugeRow)v).getParent();
+                        ImageView iv = ((GaugeRow)v).getImageView();
+                        if(view.getClass() == LinearLayout.class) {
+                            gl.unHighlightRows((GaugeRow)v, ((LinearLayout) view).getChildCount());
+                        } else if(view.getClass() == ImageView.class) {
+                            gl.unHighlightRows((GaugeRow)v, 1); //iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
                         }
+                        //if(iv != null) {
+                            //iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
+                            //iv.setTag(R.drawable.gray_tote_side_up_silhouette_106x50);
+                            //iv.setOnTouchListener(null);
+                            //unregisterForContextMenu(iv);
+                        //}
                     }
                     //v.setBackgroundDrawable(normalShape);
                     break;
@@ -399,22 +455,37 @@ public class MatchTeleModeActivity extends Activity {
                         //Toast.makeText(getBaseContext(),"Clip data: " + numRows, Toast.LENGTH_LONG).show();
                     }
 
-                    ViewGroup owner = (ViewGroup) view.getParent();
-                    GaugeRow container = (GaugeRow) v;
+                    ViewGroup owner = (ViewGroup) v.getParent();
 
                     if(v.getClass() == GaugeRow.class) {
                         GaugeRow gr = (GaugeRow)v;
+                        gr.setOnDragListener(null);
                         ImageView iv = gr.getImageView();
                         int rowNum = gr.getRowIndex();
 
                         if(iv != null) {
                             if(view.getClass() == ImageView.class) {
-                                iv.setImageDrawable(((ImageView) view).getDrawable());
+                                gr.activate(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, ((ImageView) view).getDrawable(), new MyViewTouchListener());
+                                //iv.setImageDrawable(((ImageView) view).getDrawable());
                             } else if(view.getClass() == LinearLayout.class) {
-                                iv.setImageDrawable(((ImageView) ((LinearLayout) view).findViewById(R.id.imgTote1)).getDrawable());
+                                LinearLayout llTotes = (LinearLayout)view;
+                                if(owner.getClass() == GaugeLayout.class) {
+                                    GaugeLayout gl = (GaugeLayout)owner;
+                                    FTSUtilities.printToConsole("DROP on Gauge: " + gl.getGaugeName());
+                                    // Sub class LinearLayout as TransportContainer, then give it functions to work with ArrayLists of GaugeRows.
+                                    for (int i = 0; i < llTotes.getChildCount(); i++) {
+                                        ImageView child = (ImageView)llTotes.getChildAt(i);
+                                        GaugeRow curGr = gl.getRowAtIndex(rowNum + i);
+                                        if(curGr != null) {
+                                            curGr.activate(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, child.getDrawable(), new MyViewTouchListener());
+                                        }
+                                    }
+                                }
+                                // ditch the linear layout so garbage collection can do its job
+                                ((GaugeLayout)llTotes.getParent()).removeView(llTotes);
                             }
                             iv.setOnTouchListener(new MyViewTouchListener());
-                            registerForContextMenu(iv);
+                            //registerForContextMenu(iv);
                         }
                     }
 

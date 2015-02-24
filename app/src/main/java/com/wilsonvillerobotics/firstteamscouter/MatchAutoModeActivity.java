@@ -374,7 +374,7 @@ public class MatchAutoModeActivity extends Activity {
                 msg += "\n";
             }
         }
-        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
     }
 
     private void openDatabase() {
@@ -639,7 +639,7 @@ public class MatchAutoModeActivity extends Activity {
                     case ROBOT:
                         break;
                     default:
-                        Toast.makeText(getBaseContext(), "What was that? A piece of paper?", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getBaseContext(), "What was that? A piece of paper?", Toast.LENGTH_LONG).show();
                         break;
                 }
             } else {
@@ -728,7 +728,7 @@ public class MatchAutoModeActivity extends Activity {
 
     private void knockOver(int itemId) {
         if(lastViewTouched != null) {
-            Toast.makeText(getBaseContext(), "OOPS!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getBaseContext(), "OOPS!", Toast.LENGTH_SHORT).show();
             lastViewTouched = null;
         }
     }

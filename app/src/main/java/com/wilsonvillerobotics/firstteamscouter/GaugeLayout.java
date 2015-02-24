@@ -16,6 +16,7 @@ import java.util.List;
  * Created by SommervilleT on 2/13/2015.
  */
 public class GaugeLayout extends TableLayout {
+    private String gaugeName;
     private int numRows;
     private Context context;
     private ArrayList<GaugeRow> gaugeRows;
@@ -63,8 +64,16 @@ public class GaugeLayout extends TableLayout {
         Collections.reverse(gaugeRows);
     }
 
-    public TableRow getRowByIndex(int index) {
-        if(index >= numRows) return null;
+    public void setGaugeName(String name) {
+        this.gaugeName = name;
+    }
+
+    public String getGaugeName() {
+        return this.gaugeName;
+    }
+
+    public GaugeRow getRowAtIndex(int index) {
+        if(index >= numRows || index < 0) return null;
         return gaugeRows.get(index);
     }
 
@@ -112,14 +121,14 @@ public class GaugeLayout extends TableLayout {
         return activeRows;
     }
 
-    public void activateRow(int rowIndex, GameElement.GameElementType get, GameElement.GameElementState ges) {
+    public void activateRow(int rowIndex, GameElement.GameElementType get, GameElement.GameElementState ges, OnTouchListener touchy) {
         if(rowIndex >= numRows) return;
-        this.gaugeRows.get(rowIndex).activate(get, ges, getDrawableForElementTypeAndState(get, ges));
+        this.gaugeRows.get(rowIndex).activate(get, ges, getDrawableForElementTypeAndState(get, ges), touchy);
     }
 
-    public void deactivateRow(int rowIndex) {
+    public void deactivateRow(int rowIndex, OnDragListener dragger) {
         if(rowIndex >= numRows) return;
-        this.gaugeRows.get(rowIndex).deactivate();
+        this.gaugeRows.get(rowIndex).deactivate(dragger);
     }
 
     private Drawable getDrawableForElementTypeAndState(GameElement.GameElementType get, GameElement.GameElementState ges) {
@@ -234,6 +243,72 @@ public class GaugeLayout extends TableLayout {
         return d;
     }
 
+    public void highlightRows(GaugeRow gaugeRow, int numRows) {
+        if(!gaugeRow.isActive()) {
+            GaugeLayout gl = (GaugeLayout)gaugeRow.getParent();
+            int rowsModTwo = numRows % 2;
+            int halfNumRows = numRows / 2;
+            int curIndex = gaugeRow.getRowIndex();
+            int lowerBounds = curIndex - halfNumRows + (1 - rowsModTwo);
+            int upperBounds = curIndex + halfNumRows;
+
+            if(lowerBounds >= 0 && upperBounds < this.numRows) {
+                boolean foundActiveRow = false;
+                ArrayList<GaugeRow> rowsToHighlight = new ArrayList<GaugeRow>();
+                rowsToHighlight.add(gaugeRow);
+                for (int i = curIndex + 1; i <= upperBounds; i++) {
+                    GaugeRow gr = gl.getRowAtIndex(i);
+                    foundActiveRow &= gr.isActive();
+                    rowsToHighlight.add(gr);
+                }
+                for (int i = curIndex - 1; i >= lowerBounds; i--) {
+                    GaugeRow gr = gl.getRowAtIndex(i);
+                    foundActiveRow &= gr.isActive();
+                    rowsToHighlight.add(gr);
+                }
+
+                if (!foundActiveRow) {
+                    for (GaugeRow gr : rowsToHighlight) {
+                        gr.getImageView().setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_light_106x50));
+                    }
+                }
+            }
+        }
+    }
+
+    public void unHighlightRows(GaugeRow gaugeRow, int numRows) {
+        if (!gaugeRow.isActive()) {
+            GaugeLayout gl = (GaugeLayout) gaugeRow.getParent();
+            int rowsModTwo = numRows % 2;
+            int halfNumRows = numRows / 2;
+            int curIndex = gaugeRow.getRowIndex();
+            int lowerBounds = curIndex - halfNumRows + (1 - rowsModTwo);
+            int upperBounds = curIndex + halfNumRows;
+
+            if(lowerBounds >= 0 && upperBounds < this.numRows) {
+                boolean foundActiveRow = false;
+                ArrayList<GaugeRow> rowsToHighlight = new ArrayList<GaugeRow>();
+                rowsToHighlight.add(gaugeRow);
+                for (int i = curIndex + 1; i <= upperBounds; i++) {
+                    GaugeRow gr = gl.getRowAtIndex(i);
+                    foundActiveRow &= gr.isActive();
+                    rowsToHighlight.add(gr);
+                }
+                for (int i = curIndex - 1; i >= lowerBounds; i--) {
+                    GaugeRow gr = gl.getRowAtIndex(i);
+                    foundActiveRow &= gr.isActive();
+                    rowsToHighlight.add(gr);
+                }
+
+                if (!foundActiveRow) {
+                    for (GaugeRow gr : rowsToHighlight) {
+                        gr.getImageView().setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
+                    }
+                }
+            }
+        }
+    }
+
     public ArrayList<GaugeRow> getInactiveRows() {
         ArrayList<GaugeRow> altr = new ArrayList<GaugeRow>();
         for(GaugeRow gr : gaugeRows) {
@@ -254,22 +329,36 @@ public class GaugeLayout extends TableLayout {
         return altr;
     }
 
-    public ArrayList<Drawable> getPackingList() {
+    public ArrayList<Drawable> getPackingList(OnDragListener dragger) {
         ArrayList<Drawable> packList = new ArrayList<Drawable>();
 
         ArrayList<GaugeRow> tr = this.getActiveRows();
         for(GaugeRow t : tr) {
             packList.add(t.getImageView().getDrawable());
-            t.deactivate();
+            t.deactivate(dragger);
         }
         return packList;
     }
 
     public ArrayList<GaugeRow> getInActiveRowsAbove(GaugeRow gr) {
         ArrayList<GaugeRow> altr = new ArrayList<GaugeRow>();
-        for(int i = 0; i < gr.getRowIndex(); i++) {
-            if(this.gaugeRows.get(i).isActive()) {
-                altr.add(gr);
+        for(int i = gr.getRowIndex(); i < this.numRows; i++) {
+            GaugeRow curGr = this.gaugeRows.get(i);
+            if(!curGr.isActive()) {
+                altr.add(curGr);
+            }
+        }
+        return altr;
+    }
+
+    public ArrayList<GaugeRow> getActiveRowsAbove(GaugeRow gr) {
+        ArrayList<GaugeRow> altr = new ArrayList<GaugeRow>();
+        for(int i = gr.getRowIndex(); i < this.numRows; i++) {
+            GaugeRow curGr = this.gaugeRows.get(i);
+            if(curGr.isActive()) {
+                altr.add(curGr);
+            } else {
+                break;
             }
         }
         return altr;
@@ -277,9 +366,12 @@ public class GaugeLayout extends TableLayout {
 
     public ArrayList<GaugeRow> getInActiveRowsBelow(GaugeRow gr) {
         ArrayList<GaugeRow> altr = new ArrayList<GaugeRow>();
-        for(int i = gr.getRowIndex(); i > 0 ; i--) {
-            if(!this.gaugeRows.get(i).isActive()) {
-                altr.add(gr);
+        for(int i = gr.getRowIndex(); i >= 0 ; i--) {
+            GaugeRow curGr = this.gaugeRows.get(i);
+            if(!curGr.isActive()) {
+                altr.add(curGr);
+            } else {
+                break;
             }
         }
         return altr;
@@ -287,9 +379,11 @@ public class GaugeLayout extends TableLayout {
 
     public int getInActiveRowsAboveCount(GaugeRow gr) {
         int numRows = 0;
-        for(int i = 0; i < gr.getRowIndex(); i++) {
-            if(this.gaugeRows.get(i).isActive()) {
+        for(int i = gr.getRowIndex(); i < this.numRows; i++) {
+            if(!this.gaugeRows.get(i).isActive()) {
                 numRows++;
+            } else {
+                break;
             }
         }
         return numRows;
@@ -297,9 +391,11 @@ public class GaugeLayout extends TableLayout {
 
     public int getInActiveRowsBelowCount(GaugeRow gr) {
         int numRows = 0;
-        for(int i = gr.getRowIndex(); i > 0 ; i--) {
+        for(int i = gr.getRowIndex(); i >= 0 ; i--) {
             if(!this.gaugeRows.get(i).isActive()) {
                 numRows++;
+            } else {
+                break;
             }
         }
         return numRows;

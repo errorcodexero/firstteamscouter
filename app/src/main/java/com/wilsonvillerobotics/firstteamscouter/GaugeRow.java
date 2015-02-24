@@ -57,17 +57,21 @@ public class GaugeRow extends TableRow {
         return this.rowActive;
     }
 
-    public void activate(GameElement.GameElementType get, GameElement.GameElementState ges, Drawable d) {
+    public void activate(GameElement.GameElementType get, GameElement.GameElementState ges, Drawable d, OnTouchListener touchy) {
         this.iv.setImageDrawable(d);
+        this.iv.setOnTouchListener(touchy);
         this.ge.setElementType(get);
         this.ge.setElementState(ges);
+        this.setOnDragListener(null);
         this.rowActive = true;
     }
 
-    public void deactivate() {
+    public void deactivate(OnDragListener dragger) {
         this.iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
+        iv.setOnTouchListener(null);
         this.ge.setElementType(GameElement.GameElementType.UNKNOWN);
         this.ge.setElementState(GameElement.GameElementState.UNKNOWN);
+        this.setOnDragListener(dragger);
         this.rowActive = false;
     }
 }
