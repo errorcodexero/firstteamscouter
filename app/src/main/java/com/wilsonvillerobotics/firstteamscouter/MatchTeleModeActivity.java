@@ -2,8 +2,6 @@ package com.wilsonvillerobotics.firstteamscouter;
 
 import android.app.Activity;
 import android.content.ClipData;
-import android.content.ClipDescription;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.SQLException;
@@ -20,16 +18,11 @@ import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.Toast;
 //import android.widget.TableRow;
 
-import com.wilsonvillerobotics.firstteamscouter.GaugeRow;
-import com.wilsonvillerobotics.firstteamscouter.GaugeLayout;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MatchTeleModeActivity extends Activity {
@@ -89,7 +82,7 @@ public class MatchTeleModeActivity extends Activity {
     protected long teamMatchID;
 	protected long teamID;
 	protected long matchID;
-	protected Button btnSubmit;
+	protected Button btnSubmit, btnRotateElements;
 	private String tabletID;
     private int matchNumber;
 
@@ -114,7 +107,7 @@ public class MatchTeleModeActivity extends Activity {
 		matchID = -1;
 
         this.openDatabase();
-        this.configureSubmitButton();
+        this.configButtons();
 	}
 
     private void processIntent(Intent intent) {
@@ -175,20 +168,23 @@ public class MatchTeleModeActivity extends Activity {
         }
     }
 
-    private void configureSubmitButton() {
+    private void configButtons() {
         btnSubmit = (Button) findViewById(R.id.btnSubmitMatchTele);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                btnSubmitOnClick(v);
-                //finish();
-            }
-
-            private void btnSubmitOnClick(View v) {
                 Intent autoIntent = new Intent(v.getContext(), MatchNotesActivity.class);
                 buildIntent(autoIntent);
                 startActivity(autoIntent);
+            }
+        });
+
+        btnRotateElements = (Button)findViewById(R.id.btnRotateElements);
+        btnRotateElements.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }

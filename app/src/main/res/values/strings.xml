@@ -61,4 +61,5 @@
     <string name="label_add_note">Add Notes</string>
     <string name="label_add_note_for_team">Add Note For Team:</string>
     <string name="hint_new_note">New note</string>
+    <string name="label_robot_gauge_title">Robot</string>
 </resources>
