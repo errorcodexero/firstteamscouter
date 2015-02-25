@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
+import com.wilsonvillerobotics.firstteamscouter.GaugeLayout.GaugeType;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public class MatchTeleModeActivity extends Activity {
     protected HashMap<Integer, GameElement> teleFieldObjects;
     protected HashMap<Integer, GaugeLayout> teleGauges;
 
-    protected HashMap<Integer, String> teleGaugeNames;
+    protected HashMap<Integer, GaugeType> teleGaugeTypes;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -162,18 +163,19 @@ public class MatchTeleModeActivity extends Activity {
     }
 
     private void initGauges() {
-        teleGaugeNames = new HashMap<Integer, String>();
-        teleGaugeNames.put(R.id.Platform_Gauge_TableView, "Platform");
-        teleGaugeNames.put(R.id.Robot_Gauge_TableView, "Robot");
-        teleGaugeNames.put(R.id.Step_Gauge_TableView, "Step");
-        teleGaugeNames.put(R.id.Floor_Gauge_TableView, "Floor");
+        teleGaugeTypes = new HashMap<Integer, GaugeLayout.GaugeType>();
+        teleGaugeTypes.put(R.id.Platform_Gauge_TableView, GaugeType.PLATFORM);
+        teleGaugeTypes.put(R.id.Robot_Gauge_TableView, GaugeType.ROBOT);
+        teleGaugeTypes.put(R.id.Step_Gauge_TableView, GaugeType.STEP);
+        teleGaugeTypes.put(R.id.Floor_Gauge_TableView, GaugeType.FLOOR);
 
         teleGauges = new HashMap<Integer, GaugeLayout>();
 
-        for(int id : teleGaugeNames.keySet()) {
+        for(int id : teleGaugeTypes.keySet()) {
             GaugeLayout gauge = (GaugeLayout) findViewById(id);
             gauge.init(new MyViewDragListener());
-            gauge.setGaugeName(teleGaugeNames.get(id));
+            gauge.setGaugeType(teleGaugeTypes.get(id));
+            gauge.setGaugeName(teleGaugeTypes.get(id).getGaugeTypeString());
             teleGauges.put(id, gauge);
         }
     }
@@ -437,8 +439,12 @@ public class MatchTeleModeActivity extends Activity {
                         int rowNum = gr.getRowIndex();
 
                         if(iv != null) {
+                            GaugeLayout gaugeLayout = (GaugeLayout)gr.getParent();
                             if(view.getClass() == ImageView.class) {
                                 gr.activate(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, ((ImageView) view).getDrawable(), new MyViewTouchListener());
+                                if(gaugeLayout.getGaugeType() == GaugeType.ROBOT) {
+                                    this.resetNonRobotGauges();
+                                }
                                 //iv.setImageDrawable(((ImageView) view).getDrawable());
                             } else if(view.getClass() == LinearLayout.class) {
                                 LinearLayout llTotes = (LinearLayout)view;
@@ -448,10 +454,13 @@ public class MatchTeleModeActivity extends Activity {
                                     // Sub class LinearLayout as TransportContainer, then give it functions to work with ArrayLists of GaugeRows.
                                     gl.activateRows(gr, llTotes, new MyViewTouchListener());
                                 }
+                                if(gaugeLayout.getGaugeType() == GaugeType.ROBOT) {
+                                    this.resetNonRobotGauges();
+                                }
                                 // ditch the linear layout so garbage collection can do its job
                                 ((GaugeLayout)llTotes.getParent()).removeView(llTotes);
                             }
-                            iv.setOnTouchListener(new MyViewTouchListener());
+                            //iv.setOnTouchListener(new MyViewTouchListener());
                             //registerForContextMenu(iv);
                         }
                     }
@@ -534,6 +543,14 @@ public class MatchTeleModeActivity extends Activity {
                     break;
             }
             return true;
+        }
+
+        private void resetNonRobotGauges() {
+            for(GaugeLayout gl : teleGauges.values()) {
+                if(gl.getGaugeType() != GaugeType.ROBOT) {
+                    gl.deactivateAllRows(new MyViewDragListener());
+                }
+            }
         }
     }
 }

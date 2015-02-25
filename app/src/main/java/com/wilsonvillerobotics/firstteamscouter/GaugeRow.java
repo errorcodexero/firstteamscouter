@@ -33,7 +33,6 @@ public class GaugeRow extends TableRow {
 
     private GameElement ge;
     private ImageView iv;
-    private boolean rowActive;
     private int rowIndex;
     private RowState rowState;
 
@@ -42,7 +41,6 @@ public class GaugeRow extends TableRow {
         this.ge = null;
         this.iv = null;
         this.rowIndex = -1;
-        this.rowActive = false;
         this.rowState = RowState.INACTIVE;
     }
 
@@ -57,7 +55,9 @@ public class GaugeRow extends TableRow {
     public GaugeRow(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.ge = new GameElement();
-        this.rowActive = false;
+        this.iv = null;
+        this.rowIndex = -1;
+        this.rowState = RowState.INACTIVE;
     }
 
     public void setGameElement(GameElement ge) {
@@ -96,7 +96,6 @@ public class GaugeRow extends TableRow {
         this.iv.setImageDrawable(d);
         this.ge.setElementType(get);
         this.ge.setElementState(ges);
-        this.setOnDragListener(null);
         this.rowState = RowState.HIGHLIGHTED;
     }
 
@@ -104,7 +103,6 @@ public class GaugeRow extends TableRow {
         this.iv.setImageDrawable(d);
         this.ge.setElementType(get);
         this.ge.setElementState(ges);
-        this.setOnDragListener(null);
         this.rowState = RowState.INACTIVE;
     }
 

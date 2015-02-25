@@ -17,7 +17,33 @@ import java.util.List;
  * Created by SommervilleT on 2/13/2015.
  */
 public class GaugeLayout extends TableLayout {
+
+    public enum GaugeType {
+        ROBOT ("Robot Gauge"),
+        FLOOR ("Floor Gauge"),
+        PLATFORM ("Platform Gauge"),
+        STEP ("Step Gauge"),
+        UNKNOWN ("Unknown Gauge");
+
+        String type;
+        GaugeType(String type) {
+            this.type = type;
+        }
+
+        public GaugeType getgaugeByString(String type) {
+            for(GaugeType gt : GaugeType.values()) {
+                if(gt.type.matches(type)) return gt;
+            }
+            return UNKNOWN;
+        }
+
+        public String getGaugeTypeString() {
+            return this.type;
+        }
+    }
+
     private String gaugeName;
+    private GaugeType gaugeType;
     private int numRows;
     private Context context;
     private ArrayList<GaugeRow> gaugeRows;
@@ -43,6 +69,7 @@ public class GaugeLayout extends TableLayout {
     }
 
     public void init(OnDragListener odl) {
+        this.gaugeType = GaugeType.UNKNOWN;
         this.numRows = this.getChildCount();
         for(int i = 0; i < numRows; i++) {
             GaugeRow gr = (GaugeRow)this.getChildAt(i);
@@ -63,6 +90,14 @@ public class GaugeLayout extends TableLayout {
             gaugeRows.add(i, gr);
         }
         Collections.reverse(gaugeRows);
+    }
+
+    public void setGaugeType(GaugeType gaugeType) {
+        this.gaugeType = gaugeType;
+    }
+
+    public  GaugeType getGaugeType() {
+        return this.gaugeType;
     }
 
     public void setGaugeName(String name) {
@@ -245,7 +280,7 @@ public class GaugeLayout extends TableLayout {
     }
 
     public void highlightRows(GaugeRow gaugeRow, int numRows) {
-        if(!gaugeRow.isActive()) {
+        if(gaugeRow.isInactive()) {
             int rowsModTwo = numRows % 2;
             int halfNumRows = numRows / 2;
             int curIndex = gaugeRow.getRowIndex();
@@ -253,15 +288,9 @@ public class GaugeLayout extends TableLayout {
             int upperBounds = curIndex + halfNumRows;
 
             if(lowerBounds >= 0 && upperBounds < this.numRows) {
-                boolean foundAllInactiveRows = false;
+                boolean foundAllInactiveRows = true;
                 ArrayList<GaugeRow> rowsToHighlight = new ArrayList<GaugeRow>();
-                rowsToHighlight.add(gaugeRow);
-                for (int i = curIndex + 1; i <= upperBounds; i++) {
-                    GaugeRow gr = this.getRowAtIndex(i);
-                    foundAllInactiveRows &= gr.isInactive();
-                    rowsToHighlight.add(gr);
-                }
-                for (int i = curIndex - 1; i >= lowerBounds; i--) {
+                for(int i = lowerBounds; i <= upperBounds; i++) {
                     GaugeRow gr = this.getRowAtIndex(i);
                     foundAllInactiveRows &= gr.isInactive();
                     rowsToHighlight.add(gr);
@@ -279,7 +308,7 @@ public class GaugeLayout extends TableLayout {
     }
 
     public void unHighlightRows(GaugeRow gaugeRow, int numRows) {
-        if (!gaugeRow.isActive()) {
+        if (gaugeRow.isHighlighted()) {
             int rowsModTwo = numRows % 2;
             int halfNumRows = numRows / 2;
             int curIndex = gaugeRow.getRowIndex();
@@ -288,21 +317,15 @@ public class GaugeLayout extends TableLayout {
 
             if(lowerBounds >= 0 && upperBounds < this.numRows) {
                 boolean foundOnlyHighlightedRows = true;
-                ArrayList<GaugeRow> rowsToHighlight = new ArrayList<GaugeRow>();
-                rowsToHighlight.add(gaugeRow);
-                for (int i = curIndex + 1; i <= upperBounds; i++) {
+                ArrayList<GaugeRow> rowsToUnhighlight = new ArrayList<GaugeRow>();
+                for(int i = lowerBounds; i <= upperBounds; i++) {
                     GaugeRow gr = this.getRowAtIndex(i);
                     foundOnlyHighlightedRows &= gr.isHighlighted();
-                    rowsToHighlight.add(gr);
-                }
-                for (int i = curIndex - 1; i >= lowerBounds; i--) {
-                    GaugeRow gr = this.getRowAtIndex(i);
-                    foundOnlyHighlightedRows &= gr.isHighlighted();
-                    rowsToHighlight.add(gr);
+                    rowsToUnhighlight.add(gr);
                 }
 
                 if (foundOnlyHighlightedRows) {
-                    for (GaugeRow gr : rowsToHighlight) {
+                    for (GaugeRow gr : rowsToUnhighlight) {
                         Drawable d = getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50);
                         gr.unhighlight(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, d);
                         //gr.getImageView().setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
@@ -314,7 +337,7 @@ public class GaugeLayout extends TableLayout {
 
     public void activateRows(GaugeRow gaugeRow, LinearLayout llElements, OnTouchListener touchy) {
         int numRows = llElements.getChildCount();
-        if(gaugeRow.isInactive()) {
+        if(!gaugeRow.isActive()) {
             int rowsModTwo = numRows % 2;
             int halfNumRows = numRows / 2;
             int curIndex = gaugeRow.getRowIndex();
@@ -322,23 +345,18 @@ public class GaugeLayout extends TableLayout {
             int upperBounds = curIndex + halfNumRows;
 
             if(lowerBounds >= 0 && upperBounds < this.numRows) {
-                boolean foundAllInactiveRows = false;
-                ArrayList<GaugeRow> rowsToPopulate = new ArrayList<GaugeRow>();
-                rowsToPopulate.add(gaugeRow);
-                for (int i = curIndex + 1; i <= upperBounds; i++) {
+                boolean foundAllInactiveRows = true;
+                ArrayList<GaugeRow> rowsToActivate = new ArrayList<GaugeRow>();
+                for(int i = lowerBounds; i <= upperBounds; i++) {
                     GaugeRow gr = this.getRowAtIndex(i);
-                    foundAllInactiveRows &= gr.isActive();
-                    rowsToPopulate.add(gr);
-                }
-                for (int i = curIndex - 1; i >= lowerBounds; i--) {
-                    GaugeRow gr = this.getRowAtIndex(i);
-                    foundAllInactiveRows &= gr.isActive();
-                    rowsToPopulate.add(gr);
+                    foundAllInactiveRows &= !gr.isActive();
+                    rowsToActivate.add(gr);
                 }
 
                 if (foundAllInactiveRows) {
-                    for(int i = 0; i < rowsToPopulate.size() && i < numRows; i++) {
-                        GaugeRow gr = rowsToPopulate.get(i);
+                    Collections.reverse(rowsToActivate);
+                    for(int i = 0; i < rowsToActivate.size() && i < numRows; i++) {
+                        GaugeRow gr = rowsToActivate.get(i);
                         ImageView iv = (ImageView)llElements.getChildAt(i);
                         //gr.getImageView().setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_light_106x50));
                         GameElement.GameElementType get = GameElement.GameElementType.getTypeByString("");
@@ -362,23 +380,16 @@ public class GaugeLayout extends TableLayout {
             int upperBounds = curIndex + halfNumRows;
 
             if(lowerBounds >= 0 && upperBounds < this.numRows) {
-                boolean foundAllActiveRows = false;
-                ArrayList<GaugeRow> rowsToPopulate = new ArrayList<GaugeRow>();
-                rowsToPopulate.add(gaugeRow);
-                for (int i = curIndex + 1; i <= upperBounds; i++) {
+                boolean foundAllActiveRows = true;
+                ArrayList<GaugeRow> rowsToDeactivate = new ArrayList<GaugeRow>();
+                for(int i = lowerBounds; i <= upperBounds; i++) {
                     GaugeRow gr = this.getRowAtIndex(i);
                     foundAllActiveRows &= gr.isActive();
-                    rowsToPopulate.add(gr);
+                    rowsToDeactivate.add(gr);
                 }
-                for (int i = curIndex - 1; i >= lowerBounds; i--) {
-                    GaugeRow gr = this.getRowAtIndex(i);
-                    foundAllActiveRows &= gr.isActive();
-                    rowsToPopulate.add(gr);
-                }
-
                 if (foundAllActiveRows) {
-                    for(int i = 0; i < rowsToPopulate.size() && i < numRows; i++) {
-                        GaugeRow gr = rowsToPopulate.get(i);
+                    for(int i = 0; i < rowsToDeactivate.size() && i < numRows; i++) {
+                        GaugeRow gr = rowsToDeactivate.get(i);
                         ImageView iv = (ImageView)llElements.getChildAt(i);
                         //gr.getImageView().setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_light_106x50));
                         GameElement.GameElementType get = GameElement.GameElementType.getTypeByString("");
@@ -389,6 +400,12 @@ public class GaugeLayout extends TableLayout {
                     }
                 }
             }
+        }
+    }
+
+    public void deactivateAllRows(OnDragListener dragger) {
+        for(GaugeRow gr : this.gaugeRows) {
+            gr.deactivate(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, dragger);
         }
     }
 
