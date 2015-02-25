@@ -11,7 +11,7 @@ public class DBAdapter {
 
     public static final String DATABASE_NAME = "FIRSTTeamScouter"; //$NON-NLS-1$
 
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6;
     
     private static final int CREATE_TABLE_SQL = 0;
     private static final int DELETE_TABLE_SQL = 1;
@@ -40,7 +40,9 @@ public class DBAdapter {
     	TEAM_MATCH_DATA(13),
     	TEAM_MATCH_NOTES(14),
     	TEAM_PITS(15),
-    	TEAM_ROBOTS(16);
+    	TEAM_ROBOTS(16),
+        TEAM_MATCH_TRANSACTION_DATA(17),
+        TEAM_MATCH_TRANSACTIONS(18);
     	
     	private int index;
     	private TABLE_NAMES(int i) {
@@ -330,7 +332,46 @@ public class DBAdapter {
     		");",
     		
     		"DROP TABLE IF EXISTS " + TeamRobotsDBAdapter.TABLE_NAME
-    	}
+    	},
+
+        {
+            //17
+            //TEAM_MATCH_TRANSACTION_DATA
+            "CREATE TABLE " + TeamMatchTransactionDataDBAdapter.TABLE_NAME + " (" +
+                AUTO_INC_ID +
+                TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_MATCH_ID + INT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TIMESTAMP + INT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION + TEXT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_START_LOCATION_X + INT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_START_LOCATION_Y + INT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_END_LOCATION_X + INT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_END_LOCATION_Y + INT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_TYPES + TEXT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_STATES + TEXT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_QUANTITIES + TEXT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_START_LOCATIONS_X + INT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_START_LOCATIONS_Y + INT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_END_LOCATIONS_X + INT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_END_LOCATIONS_Y + INT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_SAVED + TEXT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TRANSACTION_READY_TO_EXPORT + TEXT_TYPE +
+            ");",
+
+            "DROP TABLE IF EXISTS " + TeamMatchTransactionDataDBAdapter.TABLE_NAME
+        },
+
+            {
+                //17
+                //TEAM_MATCH_TRANSACTIONS
+                "CREATE TABLE " + TeamMatchTransactionsDBAdapter.TABLE_NAME + " (" +
+                    AUTO_INC_ID +
+                    TeamMatchTransactionsDBAdapter.COLUMN_NAME_TEAM_MATCH_ID + INT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionsDBAdapter.COLUMN_NAME_TRANSACTION_ID + INT_TYPE +
+               ");",
+
+               "DROP TABLE IF EXISTS " + TeamMatchTransactionsDBAdapter.TABLE_NAME
+            }
     };
 
     private final Context context; 
