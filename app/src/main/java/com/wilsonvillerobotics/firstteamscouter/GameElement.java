@@ -32,11 +32,25 @@ public class GameElement {
     }
 
     public enum GameElementState {
-        UPRIGHT,
-        ONSIDE,
-        UPSIDEDOWN,
-        ONEND,
-        UNKNOWN
+        UPRIGHT ("Upright"),
+        ONSIDE ("On Side"),
+        UPSIDEDOWN ("Upside Down"),
+        ONEND ("On End"),
+        UNKNOWN ("Unknown");
+
+        private String state;
+        GameElementState(String state) {
+            this.state = state;
+        }
+
+        static GameElementState getStateByString(String state) {
+            for(GameElementState ges : GameElementState.values()) {
+                if(ges.state.equals(state)) {
+                    return ges;
+                }
+            }
+            return UNKNOWN;
+        }
     }
 
     private ImageView           elementImageView;

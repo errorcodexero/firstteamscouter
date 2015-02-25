@@ -201,6 +201,7 @@ public class MatchAutoModeActivity extends Activity {
 
     private void setBackground(RelativeLayout automodeParentLayout) {
         int backgroundResource = R.drawable.automode_background_2015;
+        float rotation = 0.0f;
 
         switch(tabletAlliancePosition) {
             case RED1:
@@ -211,20 +212,15 @@ public class MatchAutoModeActivity extends Activity {
             case BLUE1:
             case BLUE2:
             case BLUE3:
-                backgroundResource = R.drawable.auto_mode_blue_field_500x500;
+                backgroundResource = R.drawable.auto_mode_blue_field_500x500_flipped;
+                rotation = 0.0f;
                 break;
             default:
                 backgroundResource = R.drawable.automode_background_2015;
                 break;
         }
-        /*
-        if(this.tabletID.startsWith("Red")) {
-            backgroundResource = R.drawable.automode_background_2015;
-        } else if(this.tabletID.startsWith("Blue")) {
-            backgroundResource = R.drawable.automode_background_2015;
-        }
-        */
         automodeParentLayout.setBackgroundResource(backgroundResource);
+        automodeParentLayout.setRotation(rotation);
     }
 
     private void createRobotImageView() {

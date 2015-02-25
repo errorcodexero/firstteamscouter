@@ -74,6 +74,7 @@ public class MatchStartingPositionActivity extends Activity {
 
     private void setBackground(RelativeLayout startingPositionParentLayout) {
         int backgroundResource = R.drawable.starting_position_background_2015;
+        float rotation = 0.0f;
 
         switch(tabletAlliancePosition) {
             case RED1:
@@ -84,20 +85,15 @@ public class MatchStartingPositionActivity extends Activity {
             case BLUE1:
             case BLUE2:
             case BLUE3:
-                backgroundResource = R.drawable.starting_position_blue_field_500x500;
+                backgroundResource = R.drawable.starting_position_blue_field_500x500_flipped;
+                rotation = 0.0f;
                 break;
             default:
                 backgroundResource = R.drawable.starting_position_background_2015;
                 break;
         }
-        /*
-        if(this.tabletID.startsWith("Red")) {
-            backgroundResource = R.drawable.starting_position_background_2015; //starting_position_red_background;
-        } else if(this.tabletID.startsWith("Blue")) {
-            backgroundResource = R.drawable.starting_position_background_2015; //starting_position_blue_background;
-        }
-        */
         startingPositionParentLayout.setBackgroundResource(backgroundResource);
+        startingPositionParentLayout.setRotation(rotation);
     }
 
     private void openDatabase() {
