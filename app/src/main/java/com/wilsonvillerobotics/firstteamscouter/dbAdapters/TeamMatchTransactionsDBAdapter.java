@@ -110,13 +110,14 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
     /**
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
-     * @param values A HashMap of Objects, inserted using column names as keys.
+     * @param teamMatchId
+     * @param transactionId
      * @return rowId or -1 if failed
      */
-    public long createTeamMatchTransaction(HashMap<String, Object> values) {
+    public long createTeamMatchTransaction(long teamMatchId, long transactionId) {
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_TEAM_MATCH_ID, String.valueOf(values.get(COLUMN_NAME_TEAM_MATCH_ID)));
-        args.put(COLUMN_NAME_TRANSACTION_ID, String.valueOf(values.get(COLUMN_NAME_TRANSACTION_ID)));
+        args.put(COLUMN_NAME_TEAM_MATCH_ID, teamMatchId);
+        args.put(COLUMN_NAME_TRANSACTION_ID, transactionId);
         return this.mDb.insert(TABLE_NAME, null, args);
     }
 

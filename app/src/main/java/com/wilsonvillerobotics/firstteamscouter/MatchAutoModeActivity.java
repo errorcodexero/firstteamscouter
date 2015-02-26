@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
+import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities.ALLIANCE_POSITION;
 
 import java.util.HashMap;
 
@@ -78,9 +79,9 @@ public class MatchAutoModeActivity extends Activity {
     protected long teamMatchID;
 	protected long teamID;
 	protected long matchID;
+    protected String teamNumber;
 	protected Button btnSubmit;
-	//private String tabletID;
-    private FTSUtilities.ALLIANCE_POSITION tabletAlliancePosition;
+	private ALLIANCE_POSITION tabletAlliancePosition;
     private int matchNumber;
     private View lastViewTouched;
     private GameElement lastElementCollided;
@@ -140,35 +141,16 @@ public class MatchAutoModeActivity extends Activity {
 		matchID = -1;
 
         this.openDatabase();
-
-
         configureSubmitButton();
-		/*
-		btnSubmit = (Button) findViewById(R.id.btnSubmitMatchAuto);
-		btnSubmit.setOnClickListener(new View.OnClickListener() {
-		    @Override
-            public void onClick(View v) {
-                btnSubmitOnClick(v);
-                //finish();
-            }
-
-            private void btnSubmitOnClick(View v) {
-                FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate::btnSubmitMatchAuto : CLOSING DB\n");
-
-                Intent autoIntent = new Intent(v.getContext(), MatchTeleModeActivity.class);
-                buildIntent(autoIntent);
-                startActivity(autoIntent);
-            }
-        });
-        */
 	}
 
     private void processIntent(Intent intent) {
-        this.tabletAlliancePosition = FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForString(intent.getStringExtra("tablet_id"));
+        this.tabletAlliancePosition = ALLIANCE_POSITION.getAlliancePositionForString(intent.getStringExtra("tablet_id"));
         //this.tabletID = intent.getStringExtra("tablet_id");
         this.fieldOrientationRedOnRight = intent.getBooleanExtra("field_orientation", false);
         this.matchNumber = intent.getIntExtra("match_number", 0);
         this.teamMatchID = intent.getLongExtra("tmID", -1);
+        this.teamNumber  = intent.getStringExtra("team_number");
         this.autoRobotStartingLocation.x = intent.getIntExtra("robot_x", 25);
         this.autoRobotStartingLocation.y = intent.getIntExtra("robot_y", 25);
     }
@@ -178,6 +160,7 @@ public class MatchAutoModeActivity extends Activity {
         intent.putExtra("tablet_id", FTSUtilities.getTabletID(tabletAlliancePosition));
         intent.putExtra("field_orientation", fieldOrientationRedOnRight);
         intent.putExtra("match_number", matchNumber);
+        intent.putExtra("team_number", teamNumber);
         intent.putExtra("tmID", teamMatchID);
     }
 

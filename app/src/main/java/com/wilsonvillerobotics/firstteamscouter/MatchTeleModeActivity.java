@@ -18,13 +18,14 @@ import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-//import android.widget.TableRow;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionDataDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionsDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
+import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities.ALLIANCE_POSITION;
 import com.wilsonvillerobotics.firstteamscouter.GaugeLayout.GaugeType;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -81,17 +82,21 @@ public class MatchTeleModeActivity extends Activity {
     }
 
 	protected TeamMatchDBAdapter tmDBAdapter;
-	protected String[] teamNumberArray;
+    protected TeamMatchTransactionDataDBAdapter tmtdDBAdapter;
+    protected TeamMatchTransactionsDBAdapter tmtDBAdapter;
     protected long teamMatchID;
 	protected long teamID;
 	protected long matchID;
+    protected String teamNumber;
 	protected Button btnSubmit, btnRotateElements;
-	private String tabletID;
+    private ALLIANCE_POSITION tabletAlliancePosition;
     private int matchNumber;
 
     private View lastViewTouched;
 
 	protected Boolean fieldOrientationRedOnRight;
+
+    protected ArrayList<Transaction> transactionList;
 
     protected HashMap<Integer, GameElement> teleFieldObjects;
     protected HashMap<Integer, GaugeLayout> teleGauges;
@@ -108,6 +113,8 @@ public class MatchTeleModeActivity extends Activity {
         this.initFieldObjects();
         this.initGauges();
 
+        this.transactionList = new ArrayList<Transaction>();
+
         teamID = -1;
 		matchID = -1;
 
@@ -116,31 +123,25 @@ public class MatchTeleModeActivity extends Activity {
 	}
 
     private void processIntent(Intent intent) {
-        this.tabletID = intent.getStringExtra("tablet_id");
+        this.tabletAlliancePosition = ALLIANCE_POSITION.getAlliancePositionForString(intent.getStringExtra("tablet_id"));
         this.fieldOrientationRedOnRight = intent.getBooleanExtra("field_orientation", false);
         this.matchNumber = intent.getIntExtra("match_number", 0);
         this.teamMatchID = intent.getLongExtra("tmID", -1);
+        this.teamNumber  = intent.getStringExtra("team_number");
     }
 
     private void buildIntent(Intent intent) {
-        intent.putExtra("tablet_id", tabletID);
+        intent.putExtra("tablet_id", FTSUtilities.getTabletID(tabletAlliancePosition));
         intent.putExtra("field_orientation", fieldOrientationRedOnRight);
         intent.putExtra("match_number", matchNumber);
         intent.putExtra("tmID", teamMatchID);
+        intent.putExtra("team_number", teamNumber);
     }
 
     private void initFieldObjects() {
         this.teleFieldObjects = new HashMap<Integer, GameElement>();
 
         for(TeleFieldObject fo : TeleFieldObject.values()) {
-            /*
-            GameElement ge = new GameElement();
-            ge.setId(fo.getId());
-            ge.setLocation(new Point());
-            ge.setElementType(fo.getType());
-            ge.setElementState(fo.getState());
-            */
-
             ImageView iv = (ImageView)findViewById(fo.getId());
             if(iv == null) {
                 iv = new ImageView(getBaseContext());
@@ -248,7 +249,6 @@ public class MatchTeleModeActivity extends Activity {
                             ArrayList<GaugeRow> activeRowsAbove = gl.getActiveRowsAbove(gr);
                             String log = "Active Row Above Count: " + activeRowsAbove.size() + "\n";
                             for(int i = activeRowsAbove.size() - 1; i >= 0; i--) {
-                            //for(GaugeRow gRow : activeRowsAbove) {
                                 GaugeRow gRow = activeRowsAbove.get(i);
                                 log += "Received row at index " + gRow.getRowIndex() + "\n";
                                 ImageView ivElement = new ImageView(gl.getContext());
@@ -257,40 +257,6 @@ public class MatchTeleModeActivity extends Activity {
                                 llTote.addView(ivElement);
                             }
                             FTSUtilities.printToConsole(log);
-                            /*
-                            for(int i = 0; i <= numInactiveAbove; i++) {
-                                GaugeRow curGr = gl.getRowAtIndex(rowNum + i);
-                                FTSUtilities.printToConsole("Asked for index " + (rowNum + i) + " received row at index " + curGr.getRowIndex());
-                                ImageView ivElement = new ImageView(gl.getContext()); // (ImageView)inflater.inflate(R.layout.layout_game_element, null);
-                                ivElement.setImageDrawable(gr.getImageView().getDrawable());
-                                curGr.deactivate(new MyViewDragListener());
-                                llTote.addView(ivElement);
-                            }
-                            */
-                            /*
-                            for(int i = 0; i < gl.getChildCount(); i++) {
-                                View child = gl.getChildAt(i);
-                                if(child != null && child.getClass() == GaugeRow.class) {
-                                    GaugeRow gr = (GaugeRow) child;
-                                    gr.setOnDragListener(new MyViewDragListener());
-                                    ImageView iv = gr.getImageView();
-                                    if(gr == parent) {
-                                        ((ImageView)llTote.findViewById(R.id.imgTote1)).setImageDrawable(iv.getDrawable());
-                                        numElements = gl.getInActiveRowsBelowCount(gr);
-                                    }
-                                    if(iv != null) {
-                                        iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
-                                        iv.setOnTouchListener(null);
-                                        unregisterForContextMenu(iv);
-                                    }
-                                }
-                            }
-
-                            for(int i = 0; i < numElements; i++) {
-                                ImageView imgTote = (ImageView)inflater.inflate(R.layout.layout_game_element, null);
-                                llTote.addView(imgTote);
-                            }
-                            */
 
                             ClipData.Item item = new ClipData.Item(String.valueOf(numElements));
                             String[] mimeType  = {"text/plain"};
@@ -331,10 +297,22 @@ public class MatchTeleModeActivity extends Activity {
     private void openDatabase() {
         try {
             FTSUtilities.printToConsole("MatchTeleModeActivity::openDatabase : OPENING DB\n");
-            tmDBAdapter = new TeamMatchDBAdapter(this.getBaseContext()).open();
+            tmDBAdapter = new TeamMatchDBAdapter(this).open();
+            tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this).open();
+            tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this).open();
         } catch(SQLException e) {
             e.printStackTrace();
             tmDBAdapter = null;
+            tmtdDBAdapter = null;
+            tmtDBAdapter = null;
+        }
+    }
+
+    private void saveData() {
+        for(Transaction t : transactionList) {
+            HashMap<String, Object> values = t.getValuesHashMap();
+            long id = tmtdDBAdapter.createTeamMatchTransaction(values);
+            if(id != -1) tmtDBAdapter.createTeamMatchTransaction(teamMatchID, id);
         }
     }
 
@@ -347,9 +325,13 @@ public class MatchTeleModeActivity extends Activity {
     protected void onRestart() {
         super.onRestart();
         if(tmDBAdapter == null) {
-        	tmDBAdapter = new TeamMatchDBAdapter(this.getBaseContext());
+        	tmDBAdapter = new TeamMatchDBAdapter(this);
+            tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this);
+            tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this);
         }
         tmDBAdapter.open();
+        tmtdDBAdapter.open();
+        tmtDBAdapter.open();
     }
 
     @Override
@@ -376,6 +358,7 @@ public class MatchTeleModeActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
+        saveData();
         FTSUtilities.printToConsole("SelectTeamMatchActivity::onStop : CLOSING DB\n");
 		tmDBAdapter.close();
     }
@@ -436,16 +419,20 @@ public class MatchTeleModeActivity extends Activity {
                         GaugeRow gr = (GaugeRow)v;
                         gr.setOnDragListener(null);
                         ImageView iv = gr.getImageView();
-                        int rowNum = gr.getRowIndex();
 
                         if(iv != null) {
                             GaugeLayout gaugeLayout = (GaugeLayout)gr.getParent();
                             if(view.getClass() == ImageView.class) {
                                 gr.activate(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, ((ImageView) view).getDrawable(), new MyViewTouchListener());
+                                transactionList.add(new Transaction(teamID, matchID, System.nanoTime(), "Place", new Point((int)view.getX(), (int)view.getY()),
+                                        new Point((int)gr.getX(), (int)gr.getY()), new GameElement.GameElementType[]{GameElement.GameElementType.GRAY_TOTE},
+                                        new GameElement.GameElementState[]{GameElement.GameElementState.UPRIGHT}, new int[]{1},
+                                        new Point[]{new Point((int)view.getX(), (int)view.getY())},
+                                        new Point[]{new Point((int)view.getX(), (int)view.getY())}));
+
                                 if(gaugeLayout.getGaugeType() == GaugeType.ROBOT) {
                                     this.resetNonRobotGauges();
                                 }
-                                //iv.setImageDrawable(((ImageView) view).getDrawable());
                             } else if(view.getClass() == LinearLayout.class) {
                                 LinearLayout llTotes = (LinearLayout)view;
                                 if(owner.getClass() == GaugeLayout.class) {
@@ -460,84 +447,13 @@ public class MatchTeleModeActivity extends Activity {
                                 // ditch the linear layout so garbage collection can do its job
                                 ((GaugeLayout)llTotes.getParent()).removeView(llTotes);
                             }
-                            //iv.setOnTouchListener(new MyViewTouchListener());
-                            //registerForContextMenu(iv);
                         }
                     }
-
-                    /*
-                    GameElement ge = new GameElement();
-                    ImageView iv = new ImageView(getBaseContext());
-                    GaugeRow.LayoutParams lp = null;
-                    switch(teleFieldObjects.get(lastViewTouched.getId()).getElementType()) {
-                        case GRAY_TOTE:
-                            iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_50x24));
-                            lp = new GaugeRow.LayoutParams(50, 24);
-                            lp.setMargins(0, 0, 0, 0);
-                            break;
-                        case CAN:
-                            iv.setImageDrawable(getResources().getDrawable(R.drawable.green_can_side_up_50x59));
-                            lp = new GaugeRow.LayoutParams(25, 29);
-                            lp.setMargins(0, 0, 0, 0);
-                            break;
-                        default:
-                            iv.setImageDrawable(getResources().getDrawable(R.drawable.robot_50x50));
-                            lp = new GaugeRow.LayoutParams(50, 50);
-                            lp.setMargins(0, 0, 0, 0);
-                            break;
-                    }
-                    iv.setLayoutParams(lp);
-                    container.addView(iv);
-                    */
-                    /*
-                    if(owner.getId() != container.getId()) {
-                        owner.removeView(view);
-                        container.addView(view);
-                    }
-                    */
-
-                    //int left = (int) event.getX();
-                    //int top = (int) event.getY();
-                    //autoFieldObjects.get(view.getId()).getLocation().set(left, top);
-
-                    /*
-                    if(view.getId() == AutoFieldObject.Robot.id) {
-                        setInitialRobotLayout();
-                    } else {
-                        setViewLayout(view, left, top);
-                    }
-                    */
-                    //setViewLayout(view, left, top);
-
-                    //lastElementCollided = findCollidingElement(view, left, top);
-
-                    /*
-                    if(autoFieldObjects.get(lastViewTouched.getId()).isRobot()) {
-                        if(lastElementCollided != null) {
-                            lastViewTouched.showContextMenu();
-                        } else if(autoFieldObjects.get(lastViewTouched.getId()).getStackSize() > 1) {
-                            lastViewTouched.showContextMenu();
-                        }
-                    } else {
-                        if(lastElementCollided != null && lastElementCollided.isRobot()) {
-                            lastViewTouched.showContextMenu();
-                        }
-                    }
-                    */
-
                     view.setVisibility(View.VISIBLE);
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
-                    //v.setBackgroundDrawable(normalShape);
+                    break;
                 case DragEvent.ACTION_DRAG_LOCATION:
-                    if(dragging) {
-                        /*
-                        if(view.getId() == AutoFieldObject.Robot.getId()) {
-                            Point robotFinalLocation = autoFieldObjects.get(R.id.imgRobot).getLocation();
-                            robotFinalLocation.set((int) event.getX(), (int) event.getY());
-                        }
-                        */
-                    }
                     break;
                 default:
                     break;

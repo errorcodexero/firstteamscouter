@@ -72,6 +72,7 @@ public class MatchTeamNumberDisplayActivity extends Activity {
         intent.putExtra("tablet_id", tabletID);
         intent.putExtra("field_orientation", fieldOrientationRedOnRight);
         intent.putExtra("match_number", matchNumber);
+        intent.putExtra("team_number", teamNumber);
         intent.putExtra("tmID", teamMatchID);
     }
 

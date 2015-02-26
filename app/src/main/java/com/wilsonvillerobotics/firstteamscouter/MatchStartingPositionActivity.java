@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
+import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities.ALLIANCE_POSITION;
 
 public class MatchStartingPositionActivity extends Activity {
 
@@ -25,8 +26,9 @@ public class MatchStartingPositionActivity extends Activity {
     protected Long teamMatchID;
 	protected long teamID;
 	protected long matchID;
+    protected String teamNumber;
 	protected Button btnSubmit;
-    private FTSUtilities.ALLIANCE_POSITION tabletAlliancePosition;
+    private ALLIANCE_POSITION tabletAlliancePosition;
     private int matchNumber;
 
     private ImageView imgRobot;
@@ -70,6 +72,7 @@ public class MatchStartingPositionActivity extends Activity {
         this.fieldOrientationRedOnRight = intent.getBooleanExtra("field_orientation", false);
         this.matchNumber = intent.getIntExtra("match_number", 0);
         this.teamMatchID = intent.getLongExtra("tmID", -1);
+        this.teamNumber  = intent.getStringExtra("team_number");
     }
 
     private void setBackground(RelativeLayout startingPositionParentLayout) {
@@ -152,6 +155,7 @@ public class MatchStartingPositionActivity extends Activity {
         //intent.putExtra("tablet_id", tabletID);
         intent.putExtra("field_orientation", fieldOrientationRedOnRight);
         intent.putExtra("match_number", matchNumber);
+        intent.putExtra("team_number", teamNumber);
         intent.putExtra("tmID", teamMatchID);
         intent.putExtra("robot_x", robotX);
         intent.putExtra("robot_y", robotY);
