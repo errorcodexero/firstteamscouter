@@ -18,19 +18,15 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_TEAM_ID = "team_id";
     public static final String COLUMN_NAME_MATCH_ID = "match_id";
     public static final String COLUMN_NAME_TIMESTAMP = "timestamp";
-    public static final String COLUMN_NAME_ACTION_START_LOCATION_X = "starting_location_X";
-    public static final String COLUMN_NAME_ACTION_START_LOCATION_Y = "starting_location_Y";
-    public static final String COLUMN_NAME_ACTION_END_LOCATION_X = "auto_end_location_X";
-    public static final String COLUMN_NAME_ACTION_END_LOCATION_Y = "auto_end_location_Y";
-    public static final String COLUMN_NAME_ACTION = "action";
+    public static final String COLUMN_NAME_ACTION_START_LOCATION_NAME = "action_start_location_name";
+    public static final String COLUMN_NAME_ACTION_START_LOCATION_X = "action_start_location_X";
+    public static final String COLUMN_NAME_ACTION_START_LOCATION_Y = "action_start_location_Y";
+    public static final String COLUMN_NAME_ACTION_END_LOCATION_NAME = "action_end_location_name";
+    public static final String COLUMN_NAME_ACTION_END_LOCATION_X = "action_end_location_X";
+    public static final String COLUMN_NAME_ACTION_END_LOCATION_Y = "action_end_location_Y";
+    public static final String COLUMN_NAME_ACTION = "action_name";
     public static final String COLUMN_NAME_ELEMENT_TYPES = "element_types";
     public static final String COLUMN_NAME_ELEMENT_STATES = "element_states";
-    public static final String COLUMN_NAME_ELEMENT_QUANTITIES = "element_quantities";
-    public static final String COLUMN_NAME_ELEMENT_START_LOCATIONS_X = "element_start_locations_X";
-    public static final String COLUMN_NAME_ELEMENT_START_LOCATIONS_Y = "element_start_locations_Y";
-    public static final String COLUMN_NAME_ELEMENT_END_LOCATIONS_X = "element_end_locations_X";
-    public static final String COLUMN_NAME_ELEMENT_END_LOCATIONS_Y = "element_end_locations_Y";
-    public static final String COLUMN_NAME_ACTION_SAVED = "action_saved";
     public static final String COLUMN_NAME_TRANSACTION_READY_TO_EXPORT = "transaction_ready_to_export";
 
     private String[] allColumnNames = new String[]{
@@ -39,18 +35,14 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
     	    COLUMN_NAME_MATCH_ID,
             COLUMN_NAME_TIMESTAMP,
             COLUMN_NAME_ACTION,
+            COLUMN_NAME_ACTION_START_LOCATION_NAME,
             COLUMN_NAME_ACTION_START_LOCATION_X,
             COLUMN_NAME_ACTION_START_LOCATION_Y,
+            COLUMN_NAME_ACTION_END_LOCATION_NAME,
             COLUMN_NAME_ACTION_END_LOCATION_X,
             COLUMN_NAME_ACTION_END_LOCATION_Y,
             COLUMN_NAME_ELEMENT_TYPES,
             COLUMN_NAME_ELEMENT_STATES,
-            COLUMN_NAME_ELEMENT_QUANTITIES,
-            COLUMN_NAME_ELEMENT_START_LOCATIONS_X,
-            COLUMN_NAME_ELEMENT_START_LOCATIONS_Y,
-            COLUMN_NAME_ELEMENT_END_LOCATIONS_X,
-            COLUMN_NAME_ELEMENT_END_LOCATIONS_Y,
-            COLUMN_NAME_ACTION_SAVED,
             COLUMN_NAME_TRANSACTION_READY_TO_EXPORT
     };
 
@@ -147,24 +139,17 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_TEAM_ID, String.valueOf(values.get(COLUMN_NAME_TEAM_ID)));
         args.put(COLUMN_NAME_MATCH_ID, String.valueOf(values.get(COLUMN_NAME_MATCH_ID)));
-        // TODO - Lots of stuff
-        /*
-            COLUMN_NAME_TIMESTAMP,
-            COLUMN_NAME_ACTION,
-            COLUMN_NAME_ACTION_START_LOCATION_X,
-            COLUMN_NAME_ACTION_START_LOCATION_Y,
-            COLUMN_NAME_ACTION_END_LOCATION_X,
-            COLUMN_NAME_ACTION_END_LOCATION_Y,
-            COLUMN_NAME_ELEMENT_TYPES,
-            COLUMN_NAME_ELEMENT_STATES,
-            COLUMN_NAME_ELEMENT_QUANTITIES,
-            COLUMN_NAME_ELEMENT_START_LOCATIONS_X,
-            COLUMN_NAME_ELEMENT_START_LOCATIONS_Y,
-            COLUMN_NAME_ELEMENT_END_LOCATIONS_X,
-            COLUMN_NAME_ELEMENT_END_LOCATIONS_Y,
-            COLUMN_NAME_ACTION_SAVED,
-            COLUMN_NAME_TRANSACTION_READY_TO_EXPORT
-         */
+        args.put(COLUMN_NAME_TIMESTAMP, String.valueOf(values.get(COLUMN_NAME_TIMESTAMP)));
+        args.put(COLUMN_NAME_ACTION, String.valueOf(values.get(COLUMN_NAME_ACTION)));
+        args.put(COLUMN_NAME_ACTION_START_LOCATION_NAME, String.valueOf(values.get(COLUMN_NAME_ACTION_START_LOCATION_NAME)));
+        args.put(COLUMN_NAME_ACTION_START_LOCATION_X, String.valueOf(values.get(COLUMN_NAME_ACTION_START_LOCATION_X)));
+        args.put(COLUMN_NAME_ACTION_START_LOCATION_Y, String.valueOf(values.get(COLUMN_NAME_ACTION_START_LOCATION_Y)));
+        args.put(COLUMN_NAME_ACTION_END_LOCATION_NAME, String.valueOf(values.get(COLUMN_NAME_ACTION_END_LOCATION_NAME)));
+        args.put(COLUMN_NAME_ACTION_END_LOCATION_X, String.valueOf(values.get(COLUMN_NAME_ACTION_END_LOCATION_X)));
+        args.put(COLUMN_NAME_ACTION_END_LOCATION_Y, String.valueOf(values.get(COLUMN_NAME_ACTION_END_LOCATION_Y)));
+        args.put(COLUMN_NAME_ELEMENT_TYPES, String.valueOf(values.get(COLUMN_NAME_ELEMENT_TYPES)));
+        args.put(COLUMN_NAME_ELEMENT_STATES, String.valueOf(values.get(COLUMN_NAME_ELEMENT_STATES)));
+        args.put(COLUMN_NAME_TRANSACTION_READY_TO_EXPORT, String.valueOf(values.get(COLUMN_NAME_TRANSACTION_READY_TO_EXPORT)));
         return this.mDb.insert(TABLE_NAME, null, args);
     }
 

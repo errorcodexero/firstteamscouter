@@ -14,7 +14,7 @@
         android:id="@+id/AutoMode_Field_LayoutRelative"
         android:layout_marginLeft="100dp">
 
-        <ImageView
+        <com.wilsonvillerobotics.firstteamscouter.GameElement
             android:layout_width="@dimen/tote_width"
             android:layout_height="@dimen/tote_height"
             android:id="@+id/imgYellowTote1"
@@ -25,7 +25,7 @@
             android:layout_marginLeft="@dimen/tote_left"
             android:layout_marginTop="@dimen/tote_1_top" />
 
-        <ImageView
+        <com.wilsonvillerobotics.firstteamscouter.GameElement
             android:layout_width="@dimen/tote_width"
             android:layout_height="@dimen/tote_height"
             android:id="@+id/imgYellowTote2"
@@ -36,7 +36,7 @@
             android:layout_marginLeft="@dimen/tote_left"
             android:layout_marginTop="@dimen/tote_2_top" />
 
-        <ImageView
+        <com.wilsonvillerobotics.firstteamscouter.GameElement
             android:layout_width="@dimen/tote_width"
             android:layout_height="@dimen/tote_height"
             android:id="@+id/imgYellowTote3"
@@ -47,7 +47,7 @@
             android:layout_marginLeft="@dimen/tote_left"
             android:layout_marginTop="@dimen/tote_3_top" />
 
-        <ImageView
+        <com.wilsonvillerobotics.firstteamscouter.GameElement
             android:layout_width="@dimen/can_width"
             android:layout_height="@dimen/can_height"
             android:id="@+id/imgGreenCan1"
@@ -58,7 +58,7 @@
             android:layout_marginLeft="@dimen/can_left"
             android:layout_marginTop="@dimen/can_1_top" />
 
-        <ImageView
+        <com.wilsonvillerobotics.firstteamscouter.GameElement
             android:layout_width="@dimen/can_width"
             android:layout_height="@dimen/can_height"
             android:id="@+id/imgGreenCan2"
@@ -69,7 +69,7 @@
             android:layout_marginLeft="@dimen/can_left"
             android:layout_marginTop="@dimen/can_2_top" />
 
-        <ImageView
+        <com.wilsonvillerobotics.firstteamscouter.GameElement
             android:layout_width="@dimen/can_width"
             android:layout_height="@dimen/can_height"
             android:id="@+id/imgGreenCan3"
@@ -80,7 +80,7 @@
             android:layout_marginLeft="@dimen/can_left"
             android:layout_marginTop="@dimen/can_3_top" />
 
-        <ImageView
+        <com.wilsonvillerobotics.firstteamscouter.GameElement
             android:layout_width="@dimen/can_width"
             android:layout_height="@dimen/can_height"
             android:id="@+id/imgGreenCan4"
@@ -91,7 +91,7 @@
             android:layout_marginLeft="@dimen/step_can_left"
             android:layout_marginTop="@dimen/can_4_top" />
 
-        <ImageView
+        <com.wilsonvillerobotics.firstteamscouter.GameElement
             android:layout_width="@dimen/can_width"
             android:layout_height="@dimen/can_height"
             android:id="@+id/imgGreenCan5"
@@ -102,7 +102,7 @@
             android:layout_marginLeft="@dimen/step_can_left"
             android:layout_marginTop="@dimen/can_5_top" />
 
-        <ImageView
+        <com.wilsonvillerobotics.firstteamscouter.GameElement
             android:layout_width="@dimen/can_width"
             android:layout_height="@dimen/can_height"
             android:id="@+id/imgGreenCan6"
@@ -113,7 +113,7 @@
             android:layout_marginLeft="@dimen/step_can_left"
             android:layout_marginTop="@dimen/can_6_top" />
 
-        <ImageView
+        <com.wilsonvillerobotics.firstteamscouter.GameElement
             android:layout_width="@dimen/can_width"
             android:layout_height="@dimen/can_height"
             android:id="@+id/imgGreenCan7"
@@ -166,6 +166,8 @@
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="bottom"></FrameLayout>
+        android:layout_gravity="bottom">
+
+    </FrameLayout>
 
 </LinearLayout>

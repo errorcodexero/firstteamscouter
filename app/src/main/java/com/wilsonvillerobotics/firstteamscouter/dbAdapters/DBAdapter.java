@@ -11,7 +11,7 @@ public class DBAdapter {
 
     public static final String DATABASE_NAME = "FIRSTTeamScouter"; //$NON-NLS-1$
 
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 10;
     
     private static final int CREATE_TABLE_SQL = 0;
     private static final int DELETE_TABLE_SQL = 1;
@@ -343,18 +343,14 @@ public class DBAdapter {
                     TeamMatchTransactionDataDBAdapter.COLUMN_NAME_MATCH_ID + INT_TYPE + COMMA_SEP +
                     TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TIMESTAMP + INT_TYPE + COMMA_SEP +
                     TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION + TEXT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_START_LOCATION_NAME + TEXT_TYPE + COMMA_SEP +
                     TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_START_LOCATION_X + INT_TYPE + COMMA_SEP +
                     TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_START_LOCATION_Y + INT_TYPE + COMMA_SEP +
+                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_END_LOCATION_NAME + TEXT_TYPE + COMMA_SEP +
                     TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_END_LOCATION_X + INT_TYPE + COMMA_SEP +
                     TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_END_LOCATION_Y + INT_TYPE + COMMA_SEP +
                     TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_TYPES + TEXT_TYPE + COMMA_SEP +
                     TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_STATES + TEXT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_QUANTITIES + TEXT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_START_LOCATIONS_X + INT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_START_LOCATIONS_Y + INT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_END_LOCATIONS_X + INT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_END_LOCATIONS_Y + INT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_SAVED + TEXT_TYPE + COMMA_SEP +
                     TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TRANSACTION_READY_TO_EXPORT + TEXT_TYPE +
             ");",
 

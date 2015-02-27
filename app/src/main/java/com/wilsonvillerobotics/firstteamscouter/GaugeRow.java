@@ -32,14 +32,12 @@ public class GaugeRow extends TableRow {
     };
 
     private GameElement ge;
-    private ImageView iv;
     private int rowIndex;
     private RowState rowState;
 
     public GaugeRow(Context context) {
         super(context);
         this.ge = null;
-        this.iv = null;
         this.rowIndex = -1;
         this.rowState = RowState.INACTIVE;
     }
@@ -54,8 +52,7 @@ public class GaugeRow extends TableRow {
 
     public GaugeRow(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.ge = new GameElement();
-        this.iv = null;
+        this.ge = new GameElement(context);
         this.rowIndex = -1;
         this.rowState = RowState.INACTIVE;
     }
@@ -66,14 +63,6 @@ public class GaugeRow extends TableRow {
 
     public GameElement getGameElement() {
         return this.ge;
-    }
-
-    public void setImageView(ImageView iv) {
-        this.iv = iv;
-    }
-
-    public ImageView getImageView() {
-        return this.iv;
     }
 
     public boolean isInactive() {
@@ -93,36 +82,34 @@ public class GaugeRow extends TableRow {
     //        now it's only working with ImageView's from a LinearLayout, so type and state are lost.
 
     public void highlight(GameElement.GameElementType get, GameElement.GameElementState ges, Drawable d) {
-        this.iv.setImageDrawable(d);
+        this.ge.setImageDrawable(d);
         this.ge.setElementType(get);
         this.ge.setElementState(ges);
         this.rowState = RowState.HIGHLIGHTED;
     }
 
     public void unhighlight(GameElement.GameElementType get, GameElement.GameElementState ges, Drawable d) {
-        this.iv.setImageDrawable(d);
+        this.ge.setImageDrawable(d);
         this.ge.setElementType(get);
         this.ge.setElementState(ges);
         this.rowState = RowState.INACTIVE;
     }
 
     public void activate(GameElement.GameElementType get, GameElement.GameElementState ges, Drawable d, OnTouchListener touchy) {
-        this.iv.setImageDrawable(d);
-        this.iv.setOnTouchListener(touchy);
+        this.ge.setImageDrawable(d);
+        this.ge.setOnTouchListener(touchy);
         this.ge.setElementType(get);
         this.ge.setElementState(ges);
         this.setOnDragListener(null);
-        //this.rowActive = true;
         this.rowState = RowState.ACTIVE;
     }
 
     public void deactivate(GameElement.GameElementType get, GameElement.GameElementState ges, OnDragListener dragger) {
-        this.iv.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
-        iv.setOnTouchListener(null);
-        this.ge.setElementType(GameElement.GameElementType.UNKNOWN);
-        this.ge.setElementState(GameElement.GameElementState.UNKNOWN);
+        this.ge.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
+        this.ge.setOnTouchListener(null);
+        this.ge.setElementType(get);
+        this.ge.setElementState(ges);
         this.setOnDragListener(dragger);
-        //this.rowActive = false;
         this.rowState = RowState.INACTIVE;
     }
 }

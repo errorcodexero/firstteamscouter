@@ -16,13 +16,12 @@ public class Transaction {
     long matchID;
     long timestamp;
     String action;
+    String actionStartLocationName;
+    String actionEndLocationName;
     Point actionStart;
     Point actionEnd;
-    GameElement.GameElementType elementTypes[];
-    GameElement.GameElementState elementStates[];
-    int elementQuantities[];
-    Point elementStartLocations[];
-    Point elementEndLocations[];
+    String elementTypes[];
+    String elementStates[];
     boolean transactionSaved;
     boolean readyToExport;
 
@@ -31,13 +30,12 @@ public class Transaction {
         this.matchID = -1;
         this.timestamp = -1;
         this.action = "";
+        this.actionStartLocationName = "";
+        this.actionEndLocationName = "";
         this.actionStart = null;
         this.actionEnd = null;
         this.elementTypes = null;
         this.elementStates = null;
-        this.elementQuantities = null;
-        this.elementStartLocations = null;
-        this.elementEndLocations = null;
         this.transactionSaved = false;
         this.readyToExport = false;
     }
@@ -47,25 +45,23 @@ public class Transaction {
             long matchID,
             long timestamp,
             String action,
+            String actionStartLocationName,
+            String actionEndLocationName,
             Point actionStart,
             Point actionEnd,
-            GameElement.GameElementType elementTypes[],
-            GameElement.GameElementState elementStates[],
-            int elementQuantities[],
-            Point elementStartLocations[],
-            Point elementEndLocations[]
+            String elementTypes[],
+            String elementStates[]
     ) {
         this.teamID = teamID;
         this.matchID = matchID;
         this.timestamp = timestamp;
         this.action = action;
+        this.actionStartLocationName = actionStartLocationName;
+        this.actionEndLocationName = actionEndLocationName;
         this.actionStart = actionStart;
         this.actionEnd = actionEnd;
         this.elementTypes = elementTypes;
         this.elementStates = elementStates;
-        this.elementQuantities = elementQuantities;
-        this.elementStartLocations = elementStartLocations;
-        this.elementEndLocations = elementEndLocations;
         this.transactionSaved = false;
         this.readyToExport = false;
     }
@@ -102,6 +98,22 @@ public class Transaction {
         this.action = action;
     }
 
+    public String getActionStartLocationName() {
+        return actionStartLocationName;
+    }
+
+    public void setActionStartLocationName(String actionStartLocationName) {
+        this.actionStartLocationName = actionStartLocationName;
+    }
+
+    public String getActionEndLocationName() {
+        return actionEndLocationName;
+    }
+
+    public void setActionEndLocationName(String actionEndLocationName) {
+        this.actionEndLocationName = actionEndLocationName;
+    }
+
     public Point getActionStart() {
         return actionStart;
     }
@@ -118,44 +130,20 @@ public class Transaction {
         this.actionEnd = actionEnd;
     }
 
-    public GameElement.GameElementType[] getElementTypes() {
+    public String[] getElementTypes() {
         return elementTypes;
     }
 
-    public void setElementTypes(GameElement.GameElementType[] elementTypes) {
+    public void setElementTypes(String[] elementTypes) {
         this.elementTypes = elementTypes;
     }
 
-    public GameElement.GameElementState[] getElementStates() {
+    public String[] getElementStates() {
         return elementStates;
     }
 
-    public void setElementStates(GameElement.GameElementState[] elementStates) {
+    public void setElementStates(String[] elementStates) {
         this.elementStates = elementStates;
-    }
-
-    public int[] getElementQuantities() {
-        return elementQuantities;
-    }
-
-    public void setElementQuantities(int[] elementQuantities) {
-        this.elementQuantities = elementQuantities;
-    }
-
-    public Point[] getElementStartLocations() {
-        return elementStartLocations;
-    }
-
-    public void setElementStartLocations(Point[] elementStartLocations) {
-        this.elementStartLocations = elementStartLocations;
-    }
-
-    public Point[] getElementEndLocations() {
-        return elementEndLocations;
-    }
-
-    public void setElementEndLocations(Point[] elementEndLocations) {
-        this.elementEndLocations = elementEndLocations;
     }
 
     public boolean isTransactionSaved() {
@@ -179,27 +167,32 @@ public class Transaction {
         // TODO - populate the strings from the arrays
         String types = "";
         String states = "";
-        String quantities = "";
-        String startX = "";
-        String startY = "";
-        String endX = "";
-        String endY = "";
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TEAM_ID, this.teamID);
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_MATCH_ID, this.matchID);
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TIMESTAMP, this.timestamp);
+        values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_START_LOCATION_NAME, this.actionStartLocationName);
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_START_LOCATION_X, this.actionStart.x);
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_START_LOCATION_Y, this.actionStart.y);
+        values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_END_LOCATION_NAME, this.actionEndLocationName);
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_END_LOCATION_X, this.actionEnd.x);
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_END_LOCATION_Y, this.actionEnd.y);
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION, this.action);
+
+        for(int i = 0; i < this.elementTypes.length; i++) {
+            types += this.elementTypes[i];
+            if(i < this.elementTypes.length - 1) {
+                types += ",";
+            }
+        }
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_TYPES, types);
+
+        for(int i = 0; i < this.elementStates.length; i++) {
+            states += this.elementStates[i];
+            if(i < this.elementStates.length - 1) {
+                states += ",";
+            }
+        }
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_STATES, states);
-        values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_QUANTITIES, quantities);
-        values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_START_LOCATIONS_X, startX);
-        values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_START_LOCATIONS_Y, startY);
-        values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_END_LOCATIONS_X, endX);
-        values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_END_LOCATIONS_Y, endY);
-        values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_SAVED, this.transactionSaved);
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TRANSACTION_READY_TO_EXPORT, this.readyToExport);
 
         return values;
@@ -208,19 +201,15 @@ public class Transaction {
         COLUMN_NAME_TEAM_ID
         COLUMN_NAME_MATCH_ID
         COLUMN_NAME_TIMESTAMP
+        COLUMN_NAME_ACTION_START_LOCATION_NAME
         COLUMN_NAME_ACTION_START_LOCATION_X
         COLUMN_NAME_ACTION_START_LOCATION_Y
+        COLUMN_NAME_ACTION_END_LOCATION_NAME
         COLUMN_NAME_ACTION_END_LOCATION_X
         COLUMN_NAME_ACTION_END_LOCATION_Y
         COLUMN_NAME_ACTION
         COLUMN_NAME_ELEMENT_TYPES
         COLUMN_NAME_ELEMENT_STATES
-        COLUMN_NAME_ELEMENT_QUANTITIES
-        COLUMN_NAME_ELEMENT_START_LOCATIONS_X
-        COLUMN_NAME_ELEMENT_START_LOCATIONS_Y
-        COLUMN_NAME_ELEMENT_END_LOCATIONS_X
-        COLUMN_NAME_ELEMENT_END_LOCATIONS_Y
-        COLUMN_NAME_ACTION_SAVED
         COLUMN_NAME_TRANSACTION_READY_TO_EXPORT
          */
 }

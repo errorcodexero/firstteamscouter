@@ -2,22 +2,20 @@ package com.wilsonvillerobotics.firstteamscouter;
 
 import android.app.Activity;
 import android.content.ClipData;
-import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.view.MotionEventCompat;
 import android.view.DragEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionDataDBAdapter;
@@ -34,44 +32,29 @@ import java.util.HashMap;
 public class MatchTeleModeActivity extends Activity {
 
     public enum TeleFieldObject {
-        Robot(R.id.imgRobot, GameElement.GameElementType.ROBOT, GameElement.GameElementState.UPRIGHT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_VISIBLE),
-        GroundToteUp(R.id.imgGroundToteUp, GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE1_VISIBLE),
-        GroundToteDown(R.id.imgGroundToteDown, GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPSIDEDOWN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE2_VISIBLE),
-        GroundToteYellow(R.id.imgGroundToteYellow, GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, "", "", ""),
-        HumanTote(R.id.imgHumanTote, GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE3_VISIBLE),
-        StepTote(R.id.imgStepTote, GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN1_VISIBLE),
-        CanUp(R.id.imgCanUp, GameElement.GameElementType.CAN, GameElement.GameElementState.UPRIGHT, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN2_VISIBLE),
-        CanSide(R.id.imgCanSide, GameElement.GameElementType.CAN, GameElement.GameElementState.ONSIDE, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN3_VISIBLE),
-        CanDown(R.id.imgCanDown, GameElement.GameElementType.CAN, GameElement.GameElementState.UPSIDEDOWN, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_X, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_Y, TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN4_VISIBLE);
+        Robot(R.id.imgRobot, GameElementType.ROBOT, GameElementState.UPRIGHT),
+        GroundToteUp(R.id.imgGroundToteUp, GameElementType.GRAY_TOTE, GameElementState.UPRIGHT),
+        GroundToteDown(R.id.imgGroundToteDown, GameElementType.GRAY_TOTE, GameElementState.UPSIDEDOWN),
+        GroundToteYellow(R.id.imgGroundToteYellow, GameElementType.YELLOW_TOTE, GameElementState.UPRIGHT),
+        HumanTote(R.id.imgHumanTote, GameElementType.GRAY_TOTE, GameElementState.UPRIGHT),
+        StepTote(R.id.imgStepTote, GameElementType.GRAY_TOTE, GameElementState.UPRIGHT),
+        StepToteYellow(R.id.imgStepTote, GameElementType.YELLOW_TOTE, GameElementState.UPRIGHT),
+        CanUp(R.id.imgCanUp, GameElementType.CAN, GameElementState.UPRIGHT),
+        CanSide(R.id.imgCanSide, GameElementType.CAN, GameElementState.ONSIDE),
+        CanDown(R.id.imgCanDown, GameElementType.CAN, GameElementState.UPSIDEDOWN);
 
         private int id;
-        private String dbColumnX, dbColumnY, dbVisible;
         private GameElement.GameElementType type;
         private GameElement.GameElementState state;
 
-        TeleFieldObject(int id, GameElement.GameElementType et, GameElement.GameElementState state, String colX, String colY, String visible) {
+        TeleFieldObject(int id, GameElement.GameElementType et, GameElement.GameElementState state) {
             this.id = id;
-            this.dbColumnX = colX;
-            this.dbColumnY = colY;
-            this.dbVisible = visible;
             this.type = et;
             this.state = state;
         }
 
         public int getId() {
             return this.id;
-        }
-
-        public String dbLocX() {
-            return this.dbColumnX;
-        }
-
-        public String dbLocY() {
-            return this.dbColumnY;
-        }
-
-        public String dbVisible() {
-            return this.dbVisible;
         }
 
         public GameElement.GameElementType getType() {
@@ -144,22 +127,14 @@ public class MatchTeleModeActivity extends Activity {
         this.teleFieldObjects = new HashMap<Integer, GameElement>();
 
         for(TeleFieldObject fo : TeleFieldObject.values()) {
-            ImageView iv = (ImageView)findViewById(fo.getId());
-            if(iv == null) {
-                iv = new ImageView(getBaseContext());
+            GameElement ge = (GameElement)findViewById(fo.getId());
+
+            if(ge == null) {
+                ge = new GameElement(getBaseContext());
             }
-            iv.setOnTouchListener(new MyViewTouchListener());
-            registerForContextMenu(iv);
-            //ge.setImageView(iv);
-            GameElement ge = new GameElement(
-                    fo.getId(),
-                    iv,
-                    new Point(),
-                    true,
-                    fo.getType(),
-                    fo.getState()
-            );
-            //ge.makeVisible();
+            ge.setOnTouchListener(new MyViewTouchListener());
+            registerForContextMenu(ge);
+            ge.initGameElement(fo.getId(), new Point(), true, fo.getType(), fo.getState());
 
             this.teleFieldObjects.put(fo.getId(), ge);
         }
@@ -232,20 +207,18 @@ public class MatchTeleModeActivity extends Activity {
                      *
                      * Come up with a touch/multi-touch state machine for this
                      */
-                    if(view.getClass() == ImageView.class) {
+                    if(view.getClass() == GameElement.class) {
+                        GameElement gameElement = (GameElement)view;
                         ViewParent parent = view.getParent();
                         ViewParent grandparent = (parent != null) ? parent.getParent() : null;
                         if(grandparent != null && grandparent.getClass() == GaugeLayout.class) {
                             GaugeLayout gl = (GaugeLayout)grandparent;
                             GaugeRow gr    = (GaugeRow)parent;
-                            int rowNum = gr.getRowIndex();
 
-                            LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService
-                                    (Context.LAYOUT_INFLATER_SERVICE);
-                            LinearLayout llTote = new LinearLayout(gl.getContext()); // (LinearLayout)inflater.inflate(R.layout.layout_single_tote, null);
-                            llTote.setVisibility(View.VISIBLE);
-                            llTote.setOrientation(LinearLayout.VERTICAL);
-                            gl.addView(llTote);
+                            TransportContainer tp = new TransportContainer(gl.getContext());
+                            tp.setVisibility(View.VISIBLE);
+                            tp.setOrientation(LinearLayout.VERTICAL);
+                            gl.addView(tp);
 
                             int numElements = 0;
                             ArrayList<GaugeRow> activeRowsAbove = gl.getActiveRowsAbove(gr);
@@ -253,10 +226,13 @@ public class MatchTeleModeActivity extends Activity {
                             for(int i = activeRowsAbove.size() - 1; i >= 0; i--) {
                                 GaugeRow gRow = activeRowsAbove.get(i);
                                 log += "Received row at index " + gRow.getRowIndex() + "\n";
-                                ImageView ivElement = new ImageView(gl.getContext());
-                                ivElement.setImageDrawable(gRow.getImageView().getDrawable());
+
+                                GameElement ge = new GameElement(gl.getContext());
+                                ge.setImageDrawable(gRow.getGameElement().getDrawable());
+                                ge.setElementType(gRow.getGameElement().getElementType());
+                                ge.setElementState(gRow.getGameElement().getElementState());
                                 gRow.deactivate(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, new MyViewDragListener());
-                                llTote.addView(ivElement);
+                                tp.addGameElement(ge);
                             }
                             FTSUtilities.printToConsole(log);
 
@@ -264,13 +240,13 @@ public class MatchTeleModeActivity extends Activity {
                             String[] mimeType  = {"text/plain"};
                             ClipData clipData  = new ClipData(String.valueOf(numElements),mimeType,item);
 
-                            llTote.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            tp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                             final int size=View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
-                            llTote.measure(size, size);
-                            llTote.layout(0, 0, llTote.getMeasuredWidth(), llTote.getMeasuredHeight());
-                            llTote.invalidate();
-                            View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(llTote);
-                            llTote.startDrag(clipData, shadowBuilder, llTote, 0);
+                            tp.measure(size, size);
+                            tp.layout(0, 0, tp.getMeasuredWidth(), tp.getMeasuredHeight());
+                            tp.invalidate();
+                            View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(tp);
+                            tp.startDrag(clipData, shadowBuilder, tp, 0);
                             return true;
                         /*
                         http://www.programcreek.com/java-api-examples/index.php?api=android.view.View.DragShadowBuilder
@@ -285,6 +261,12 @@ public class MatchTeleModeActivity extends Activity {
                           shadowView.invalidate();
                           return new DragShadowBuilder(shadowView);
                          */
+                        } else if(grandparent != null && grandparent.getClass() == RelativeLayout.class) {
+                            RelativeLayout rl = (RelativeLayout)grandparent;
+                            GameElement ge = new GameElement(rl.getContext());
+                            ge.setImageDrawable(gameElement.getDrawable());
+                            ge.setElementType(gameElement.getElementType());
+                            ge.setElementState(gameElement.getElementState());
                         }
                     }
                     ClipData data = ClipData.newPlainText("", "");
@@ -302,6 +284,12 @@ public class MatchTeleModeActivity extends Activity {
             tmDBAdapter = new TeamMatchDBAdapter(this).open();
             tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this).open();
             tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this).open();
+
+            Cursor c = tmDBAdapter.getTeamMatch(this.teamMatchID);
+            if(c.moveToFirst()) {
+                this.teamID = c.getLong(c.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID));
+                this.matchID = c.getLong(c.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID));
+            }
         } catch(SQLException e) {
             e.printStackTrace();
             tmDBAdapter = null;
@@ -360,9 +348,9 @@ public class MatchTeleModeActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        saveData();
         FTSUtilities.printToConsole("SelectTeamMatchActivity::onStop : CLOSING DB\n");
-		tmDBAdapter.close();
+        saveData();
+        tmDBAdapter.close();
     }
 
     @Override
@@ -391,14 +379,14 @@ public class MatchTeleModeActivity extends Activity {
                 case DragEvent.ACTION_DRAG_ENTERED:
                     if(v.getClass() == GaugeRow.class) {
                         GaugeLayout gl = (GaugeLayout)v.getParent();
-                        int count = (view.getClass() == LinearLayout.class) ? ((LinearLayout)view).getChildCount() : 1;
+                        int count = (view.getClass() == TransportContainer.class) ? ((TransportContainer)view).getChildCount() : 1;
                         gl.highlightRows((GaugeRow)v, count);
                     }
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
                     if(v.getClass() == GaugeRow.class) {
                         GaugeLayout gl = (GaugeLayout)v.getParent();
-                        int count = (view.getClass() == LinearLayout.class) ? ((LinearLayout)view).getChildCount() : 1;
+                        int count = (view.getClass() == TransportContainer.class) ? ((TransportContainer)view).getChildCount() : 1;
                         gl.unHighlightRows((GaugeRow)v, count);
                     }
                     break;
@@ -415,66 +403,37 @@ public class MatchTeleModeActivity extends Activity {
                         }
                     }
 
-                    ViewGroup owner = (ViewGroup) v.getParent();
-
                     if(v.getClass() == GaugeRow.class) {
                         GaugeRow gr = (GaugeRow)v;
                         gr.setOnDragListener(null);
-                        ImageView iv = gr.getImageView();
+                        GameElement ge = gr.getGameElement();
 
-                        if(iv != null) {
+                        if(ge != null) {
                             GaugeLayout gaugeLayout = (GaugeLayout)gr.getParent();
-                            if(view.getClass() == ImageView.class) {
-                                gr.activate(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, ((ImageView) view).getDrawable(), new MyViewTouchListener());
-                                Transaction t = new Transaction();
-
-                                t.setTeamID(teamID);
-                                t.setMatchID(matchID);
-                                t.setTimestamp(System.nanoTime());
-                                t.setAction("Place");
-
-                                int x = (int)view.getX();
-                                int y = (int)view.getY();
-                                Point p = new Point(x, y);
-                                t.setActionStart(p);
-
-                                x = (int)gr.getX();
-                                y = (int)gr.getY();
-                                p = new Point(x, y);
-                                t.setActionEnd(p);
-
-                                GameElementType gameElementTypes[] = new GameElementType[]{GameElement.GameElementType.GRAY_TOTE};
-                                GameElementState gameElementStates[] = new GameElement.GameElementState[]{GameElement.GameElementState.UPRIGHT};
-                                t.setElementTypes(gameElementTypes);
-                                t.setElementStates(gameElementStates);
-
-                                int gameElementQuantities[] = new int[]{1};
-                                t.setElementQuantities(gameElementQuantities);
-
-                                p = new Point(x, y);
-                                Point gameElementStartPoints[] = new Point[]{p};
-                                Point gameElementEndPoints[] = new Point[]{p};
-                                t.setElementStartLocations(gameElementStartPoints);
-                                t.setElementEndLocations(gameElementEndPoints);
-
-                                transactionList.add(t);
+                            if(view.getClass() == GameElement.class) {
+                                GameElement ge2 = (GameElement)view;
+                                // TODO - Fix this to use a TransportContainer so I know what type of element this represents
+                                String from = "Floor";
+                                String to = gaugeLayout.getGaugeName();
+                                gr.activate(ge2.getElementType(), ge2.getElementState(), ge2.getDrawable(), new MyViewTouchListener());
+                                recordTransaction("Place", from, to, ge2, gr);
 
                                 if(gaugeLayout.getGaugeType() == GaugeType.ROBOT) {
                                     this.resetNonRobotGauges();
                                 }
-                            } else if(view.getClass() == LinearLayout.class) {
-                                LinearLayout llTotes = (LinearLayout)view;
-                                if(owner.getClass() == GaugeLayout.class) {
-                                    GaugeLayout gl = (GaugeLayout)owner;
-                                    FTSUtilities.printToConsole("DROP on Gauge: " + gl.getGaugeName());
-                                    // Sub class LinearLayout as TransportContainer, then give it functions to work with ArrayLists of GaugeRows.
-                                    gl.activateRows(gr, llTotes, new MyViewTouchListener());
-                                }
+                            } else if(view.getClass() == TransportContainer.class) {
+                                TransportContainer transportContainer = (TransportContainer)view;
+                                FTSUtilities.printToConsole("DROP on Gauge: " + gaugeLayout.getGaugeName());
+                                String fromGauge = ((GaugeLayout)transportContainer.getParent()).getGaugeName();
+                                String toGauge = gaugeLayout.getGaugeName();
+
+                                gaugeLayout.activateRows(gr, transportContainer, new MyViewTouchListener());
+                                recordTransaction("Place", fromGauge, toGauge, transportContainer, gr);
                                 if(gaugeLayout.getGaugeType() == GaugeType.ROBOT) {
                                     this.resetNonRobotGauges();
                                 }
                                 // ditch the linear layout so garbage collection can do its job
-                                ((GaugeLayout)llTotes.getParent()).removeView(llTotes);
+                                ((GaugeLayout)transportContainer.getParent()).removeView(transportContainer);
                             }
                         }
                     }
@@ -497,5 +456,68 @@ public class MatchTeleModeActivity extends Activity {
                 }
             }
         }
+    }
+
+    private void recordTransaction(String action, String from, String to, GameElement gameElement, GaugeRow gr) {
+        Transaction t = new Transaction();
+
+        t.setTeamID(teamID);
+        t.setMatchID(matchID);
+        t.setTimestamp(System.nanoTime());
+        t.setAction(action);
+        t.setActionStartLocationName(from);
+        t.setActionEndLocationName(to);
+
+        int x = (int)gameElement.getX();
+        int y = (int)gameElement.getY();
+        Point p = new Point(x, y);
+        t.setActionStart(p);
+
+        x = (int)gr.getX();
+        y = (int)gr.getY();
+        p = new Point(x, y);
+        t.setActionEnd(p);
+
+        String gameElementTypes[] = new String[]{GameElementType.GRAY_TOTE.getType()};
+        String gameElementStates[] = new String[]{GameElementState.UPRIGHT.getState()};
+        t.setElementTypes(gameElementTypes);
+        t.setElementStates(gameElementStates);
+
+        transactionList.add(t);
+    }
+
+    private void recordTransaction(String action, String from, String to, TransportContainer container, GaugeRow gr) {
+        Transaction t = new Transaction();
+
+        t.setTeamID(teamID);
+        t.setMatchID(matchID);
+        t.setTimestamp(System.nanoTime());
+
+        t.setAction(action);
+        t.setActionStartLocationName(from);
+        t.setActionEndLocationName(to);
+
+        int x = (int)container.getX();
+        int y = (int)container.getY();
+        Point p = new Point(x, y);
+        t.setActionStart(p);
+
+        x = (int)gr.getX();
+        y = (int)gr.getY();
+        p = new Point(x, y);
+        t.setActionEnd(p);
+
+        ArrayList<String> gameElementTypes = new ArrayList<String>();
+        ArrayList<String> gameElementStates = new ArrayList<String>();
+
+        for(GameElement ge : container.getGameElements()) {
+            gameElementTypes.add(ge.getElementType().getType());
+            gameElementStates.add(ge.getElementState().getState());
+        }
+
+        t.setElementTypes(gameElementTypes.toArray(new String[gameElementTypes.size()]));
+        t.setElementStates(gameElementStates.toArray(new String[gameElementStates.size()]));
+
+        transactionList.add(t);
     }
 }

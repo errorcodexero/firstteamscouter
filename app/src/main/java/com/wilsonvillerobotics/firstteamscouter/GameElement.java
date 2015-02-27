@@ -1,13 +1,18 @@
 package com.wilsonvillerobotics.firstteamscouter;
 
+import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Point;
-import android.view.View;
+import android.graphics.drawable.Drawable;
+import android.util.AttributeSet;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 /**
  * Created by SommervilleT on 2/9/2015.
  */
-public class GameElement {
+public class GameElement extends ImageView {
     public enum GameElementType {
         ROBOT("ROBOT"),
         GRAY_TOTE("GRAY_TOTE"),
@@ -28,6 +33,10 @@ public class GameElement {
                 }
             }
             return UNKNOWN;
+        }
+
+        String getType() {
+            return this.type;
         }
     }
 
@@ -51,9 +60,12 @@ public class GameElement {
             }
             return UNKNOWN;
         }
+
+        String getState() {
+            return this.state;
+        }
     }
 
-    private ImageView           elementImageView;
     private Point               elementLocation;
     private boolean             elementVisible;
     private int                 elementId;
@@ -62,8 +74,11 @@ public class GameElement {
     private GameElementState    elementState;
     private boolean             elementActive;
 
-    GameElement() {
-        this.elementImageView = null;
+    private Context context;
+
+    GameElement(Context context) {
+        super(context);
+        this.context = context;
         this.elementLocation = null;
         this.elementId = -1;
         this.elementVisible = false;
@@ -73,20 +88,32 @@ public class GameElement {
         this.elementActive = false;
     }
 
-    GameElement(int id, ImageView iv, Point loc, boolean vis) {
-        this.elementId = id;
-        this.elementImageView = iv;
-        this.elementLocation = loc;
-        this.elementVisible = vis;
+    public GameElement(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.context = context;
+        this.elementLocation = null;
+        this.elementId = -1;
+        this.elementVisible = false;
         this.elementLink = null;
         this.elementType = GameElementType.UNKNOWN;
         this.elementState = GameElementState.UNKNOWN;
-        this.elementActive = vis;
+        this.elementActive = false;
     }
 
-    GameElement(int id, ImageView iv, Point loc, boolean vis, GameElementType et, GameElementState ges) {
+    public GameElement(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        this.context = context;
+        this.elementLocation = null;
+        this.elementId = -1;
+        this.elementVisible = false;
+        this.elementLink = null;
+        this.elementType = GameElementType.UNKNOWN;
+        this.elementState = GameElementState.UNKNOWN;
+        this.elementActive = false;
+    }
+
+    public void initGameElement(int id, Point loc, boolean vis, GameElementType et, GameElementState ges) {
         this.elementId = id;
-        this.elementImageView = iv;
         this.elementLocation = loc;
         this.elementVisible = vis;
         this.elementLink = null;
@@ -195,26 +222,14 @@ public class GameElement {
 
     public void makeVisible() {
         this.elementVisible = true;
-        this.elementImageView.setVisibility(View.VISIBLE);
+        this.setVisibility(VISIBLE);
+        //this.elementImageView.setVisibility(View.VISIBLE);
     }
 
     public void makeInvisible() {
         this.elementVisible = false;
-        this.elementImageView.setVisibility(View.INVISIBLE);
-    }
-
-    public ImageView getImageView() {
-        return this.elementImageView;
-    }
-
-    public void setImageView(ImageView iv) {
-        this.elementImageView = iv;
-    }
-
-    public void setImageViewTag(Object tag) {
-        if(this.elementImageView != null) {
-            this.elementImageView.setTag(tag);
-        }
+        this.setVisibility(INVISIBLE);
+        //this.elementImageView.setVisibility(View.INVISIBLE);
     }
 
     public Point getLocation() {

@@ -115,20 +115,30 @@ public class MatchAutoModeActivity extends Activity {
         this.autoFieldObjects = new HashMap<Integer, GameElement>();
 
         for(AutoFieldObject fo : AutoFieldObject.values()) {
-            GameElement ge = new GameElement();
-            ge.setId(fo.getId());
-            ge.setLocation(new Point());
-            ge.setElementType(fo.getType());
+            //GameElement ge = new GameElement(this.getBaseContext());
+            //ge.setId(fo.getId());
+            //ge.setLocation(new Point());
+            //ge.setElementType(fo.getType());
 
+            /*
             ImageView iv = (ImageView)findViewById(fo.getId());
             if(iv == null) {
                 iv = new ImageView(getBaseContext());
                 iv.setId(fo.getId());
             }
             ge.setImageView(iv);
-            ge.makeVisible();
+            */
+            GameElement gameElement = (GameElement)findViewById(fo.getId());
+            if(gameElement == null) {
+                gameElement = new GameElement(getBaseContext());
+                gameElement.setId(fo.getId());
+            }
+            gameElement.setId(fo.getId());
+            gameElement.setLocation(new Point());
+            gameElement.setElementType(fo.getType());
+            gameElement.makeVisible();
 
-            this.autoFieldObjects.put(fo.getId(), ge);
+            this.autoFieldObjects.put(fo.getId(), gameElement);
         }
 
         processIntent(getIntent());
@@ -207,14 +217,15 @@ public class MatchAutoModeActivity extends Activity {
     }
 
     private void createRobotImageView() {
-        ImageView imgRobot = this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).getImageView();
+        //ImageView imgRobot = this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).getImageView();
+        GameElement imgRobot = this.autoFieldObjects.get(AutoFieldObject.Robot.getId());
         if(imgRobot == null) {
-            imgRobot = new ImageView(getBaseContext());
+            imgRobot = new GameElement(getBaseContext());
             imgRobot.setId(AutoFieldObject.Robot.getId());
             imgRobot.setImageDrawable(getResources().getDrawable(R.drawable.robot_50x50));
             imgRobot.setOnTouchListener(new MyViewTouchListener());
             registerForContextMenu(imgRobot);
-            this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).setImageView(imgRobot);
+            //this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).setImageView(imgRobot);
         } else if(imgRobot.getDrawable() == null) {
             imgRobot.setImageDrawable(getResources().getDrawable(R.drawable.robot_50x50));
             imgRobot.setOnTouchListener(new MyViewTouchListener());
@@ -225,7 +236,8 @@ public class MatchAutoModeActivity extends Activity {
     }
 
     private void placeRobotOnScreen() {
-        ImageView imgRobot = this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).getImageView();
+        //ImageView imgRobot = this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).getImageView();
+        GameElement imgRobot = this.autoFieldObjects.get(AutoFieldObject.Robot.getId());
         ViewGroup parent = (ViewGroup)imgRobot.getParent();
         if(parent == null) {
             RelativeLayout relLayout = (RelativeLayout) findViewById(R.id.AutoMode_Field_LayoutRelative);
@@ -247,10 +259,12 @@ public class MatchAutoModeActivity extends Activity {
         int left = (robotFinalLocation.x == -1) ? this.autoRobotStartingLocation.x : robotFinalLocation.x;
         int top  = (robotFinalLocation.y == -1) ? this.autoRobotStartingLocation.y : robotFinalLocation.y;
 
-        ImageView imgRobot = this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).getImageView();
+        //ImageView imgRobot = this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).getImageView();
+        GameElement imgRobot = this.autoFieldObjects.get(AutoFieldObject.Robot.getId());
 
         if(imgRobot == null) {
-            imgRobot = (ImageView) findViewById(R.id.imgRobot);
+            //imgRobot = (ImageView) findViewById(R.id.imgRobot);
+            imgRobot = (GameElement)findViewById(R.id.imgRobot);
         }
         setViewLayout(imgRobot, width, height, left, top);
     }
@@ -315,14 +329,19 @@ public class MatchAutoModeActivity extends Activity {
     }
 
     private void configureTotesAndCans() {
-        ImageView iv;
+        //ImageView iv;
+        GameElement ge;
         for(AutoFieldObject fo : AutoFieldObject.values()) {
             if(fo.getId() != AutoFieldObject.Robot.getId()) {
-                iv = this.autoFieldObjects.get(fo.getId()).getImageView();
+                //iv = this.autoFieldObjects.get(fo.getId()).getImageView();
+                ge = this.autoFieldObjects.get(fo.getId());
                 int visibility = (this.autoFieldObjects.get(fo.getId()).isVisible()) ? View.VISIBLE : View.INVISIBLE;
-                iv.setVisibility(visibility);
-                iv.setOnTouchListener(new MyViewTouchListener());
-                registerForContextMenu(iv);
+                //iv.setVisibility(visibility);
+                //iv.setOnTouchListener(new MyViewTouchListener());
+                ge.setVisibility(visibility);
+                ge.setOnTouchListener(new MyViewTouchListener());
+                //registerForContextMenu(iv);
+                registerForContextMenu(ge);
             }
         }
     }
@@ -494,9 +513,10 @@ public class MatchAutoModeActivity extends Activity {
                     GameElement ge = autoFieldObjects.get(fo.getId());
                     int left = ge.getLocation().x;
                     int top = ge.getLocation().y;
-                    ImageView iv = ge.getImageView();
+                    //ImageView iv = ge.getImageView();
                     int visibility = (ge.isVisible()) ? View.VISIBLE : View.INVISIBLE;
-                    iv.setVisibility(visibility);
+                    //iv.setVisibility(visibility);
+                    ge.setVisibility(visibility);
                     int width = 0, height = 0;
 
                     switch(fo) {
@@ -526,13 +546,15 @@ public class MatchAutoModeActivity extends Activity {
                     lp.setMargins(left - width/2, top - height/2, 0, 0);
                     lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                     lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-                    iv.setLayoutParams(lp);
+                    //iv.setLayoutParams(lp);
+                    ge.setLayoutParams(lp);
                 }
             }
         } else {
             for(AutoFieldObject fo : AutoFieldObject.values()) {
                 if (fo.getId() != AutoFieldObject.Robot.getId()) {
-                    RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) autoFieldObjects.get(fo.getId()).getImageView().getLayoutParams();
+                    //RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) autoFieldObjects.get(fo.getId()).getImageView().getLayoutParams();
+                    RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) autoFieldObjects.get(fo.getId()).getLayoutParams();
                     autoFieldObjects.get(fo.getId()).setLocation(lp.leftMargin + lp.width/2, lp.topMargin + lp.height/2);
                 }
             }
@@ -553,7 +575,8 @@ public class MatchAutoModeActivity extends Activity {
             if(fo.getId() != v.getId()) {
                 GameElement ge = autoFieldObjects.get(fo.getId());
                 if(ge.isVisible()) {
-                    ge.getImageView().getHitRect(r1);
+                    //ge.getImageView().getHitRect(r1);
+                    ge.getHitRect(r1);
                     if (Rect.intersects(viewRect, r1)) {
                         return ge;
                     }
@@ -739,7 +762,8 @@ public class MatchAutoModeActivity extends Activity {
             currElement = robot.popFromStack();
             currElement.makeVisible();
             currElement.setLocation(robot.getLocation().x, robot.getLocation().y);
-            setViewLayout(currElement.getImageView(), robot.getLocation().x, robot.getLocation().y);
+            //setViewLayout(currElement.getImageView(), robot.getLocation().x, robot.getLocation().y);
+            setViewLayout(currElement, robot.getLocation().x, robot.getLocation().y);
         }
     }
 
