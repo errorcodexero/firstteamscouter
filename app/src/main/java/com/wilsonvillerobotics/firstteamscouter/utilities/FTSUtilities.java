@@ -26,7 +26,7 @@ import android.widget.Button;
 public class FTSUtilities {
 
 	public static Boolean DEBUG = true;
-	public static Boolean POPULATE_TEST_DATA = false;
+	public static Boolean POPULATE_TEST_DATA = true;
 	public static String alliancePositions[] = {"Red1","Red2","Red3","Blue1","Blue2","Blue3",};
 
     public enum ItemType {

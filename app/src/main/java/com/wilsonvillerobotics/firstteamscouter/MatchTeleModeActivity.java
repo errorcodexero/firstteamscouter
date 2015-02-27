@@ -25,6 +25,8 @@ import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactions
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities.ALLIANCE_POSITION;
 import com.wilsonvillerobotics.firstteamscouter.GaugeLayout.GaugeType;
+import com.wilsonvillerobotics.firstteamscouter.GameElement.GameElementType;
+import com.wilsonvillerobotics.firstteamscouter.GameElement.GameElementState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -424,11 +426,38 @@ public class MatchTeleModeActivity extends Activity {
                             GaugeLayout gaugeLayout = (GaugeLayout)gr.getParent();
                             if(view.getClass() == ImageView.class) {
                                 gr.activate(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, ((ImageView) view).getDrawable(), new MyViewTouchListener());
-                                transactionList.add(new Transaction(teamID, matchID, System.nanoTime(), "Place", new Point((int)view.getX(), (int)view.getY()),
-                                        new Point((int)gr.getX(), (int)gr.getY()), new GameElement.GameElementType[]{GameElement.GameElementType.GRAY_TOTE},
-                                        new GameElement.GameElementState[]{GameElement.GameElementState.UPRIGHT}, new int[]{1},
-                                        new Point[]{new Point((int)view.getX(), (int)view.getY())},
-                                        new Point[]{new Point((int)view.getX(), (int)view.getY())}));
+                                Transaction t = new Transaction();
+
+                                t.setTeamID(teamID);
+                                t.setMatchID(matchID);
+                                t.setTimestamp(System.nanoTime());
+                                t.setAction("Place");
+
+                                int x = (int)view.getX();
+                                int y = (int)view.getY();
+                                Point p = new Point(x, y);
+                                t.setActionStart(p);
+
+                                x = (int)gr.getX();
+                                y = (int)gr.getY();
+                                p = new Point(x, y);
+                                t.setActionEnd(p);
+
+                                GameElementType gameElementTypes[] = new GameElementType[]{GameElement.GameElementType.GRAY_TOTE};
+                                GameElementState gameElementStates[] = new GameElement.GameElementState[]{GameElement.GameElementState.UPRIGHT};
+                                t.setElementTypes(gameElementTypes);
+                                t.setElementStates(gameElementStates);
+
+                                int gameElementQuantities[] = new int[]{1};
+                                t.setElementQuantities(gameElementQuantities);
+
+                                p = new Point(x, y);
+                                Point gameElementStartPoints[] = new Point[]{p};
+                                Point gameElementEndPoints[] = new Point[]{p};
+                                t.setElementStartLocations(gameElementStartPoints);
+                                t.setElementEndLocations(gameElementEndPoints);
+
+                                transactionList.add(t);
 
                                 if(gaugeLayout.getGaugeType() == GaugeType.ROBOT) {
                                     this.resetNonRobotGauges();
