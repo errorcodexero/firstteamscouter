@@ -16,6 +16,7 @@ public class Transaction {
     long matchID;
     long timestamp;
     String action;
+    String actionPhase;
     String actionStartLocationName;
     String actionEndLocationName;
     Point actionStart;
@@ -45,6 +46,7 @@ public class Transaction {
             long matchID,
             long timestamp,
             String action,
+            String actionPhase,
             String actionStartLocationName,
             String actionEndLocationName,
             Point actionStart,
@@ -56,6 +58,7 @@ public class Transaction {
         this.matchID = matchID;
         this.timestamp = timestamp;
         this.action = action;
+        this.actionPhase = actionPhase;
         this.actionStartLocationName = actionStartLocationName;
         this.actionEndLocationName = actionEndLocationName;
         this.actionStart = actionStart;
@@ -96,6 +99,14 @@ public class Transaction {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public String getActionPhase() {
+        return actionPhase;
+    }
+
+    public void setActionPhase(String actionPhase) {
+        this.actionPhase = actionPhase;
     }
 
     public String getActionStartLocationName() {
@@ -170,13 +181,14 @@ public class Transaction {
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TEAM_ID, this.teamID);
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_MATCH_ID, this.matchID);
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TIMESTAMP, this.timestamp);
+        values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION, this.action);
+        values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_PHASE, this.actionPhase);
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_START_LOCATION_NAME, this.actionStartLocationName);
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_START_LOCATION_X, this.actionStart.x);
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_START_LOCATION_Y, this.actionStart.y);
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_END_LOCATION_NAME, this.actionEndLocationName);
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_END_LOCATION_X, this.actionEnd.x);
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_END_LOCATION_Y, this.actionEnd.y);
-        values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION, this.action);
 
         for(int i = 0; i < this.elementTypes.length; i++) {
             types += this.elementTypes[i];
@@ -201,13 +213,14 @@ public class Transaction {
         COLUMN_NAME_TEAM_ID
         COLUMN_NAME_MATCH_ID
         COLUMN_NAME_TIMESTAMP
+        COLUMN_NAME_ACTION
+        COLUMN_NAME_ACTION_PHASE
         COLUMN_NAME_ACTION_START_LOCATION_NAME
         COLUMN_NAME_ACTION_START_LOCATION_X
         COLUMN_NAME_ACTION_START_LOCATION_Y
         COLUMN_NAME_ACTION_END_LOCATION_NAME
         COLUMN_NAME_ACTION_END_LOCATION_X
         COLUMN_NAME_ACTION_END_LOCATION_Y
-        COLUMN_NAME_ACTION
         COLUMN_NAME_ELEMENT_TYPES
         COLUMN_NAME_ELEMENT_STATES
         COLUMN_NAME_TRANSACTION_READY_TO_EXPORT

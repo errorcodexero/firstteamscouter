@@ -63,10 +63,8 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="To Auto"
+            android:text="@string/label_start_match"
             android:id="@+id/btnSubmitStartingPosition"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
             android:gravity="center_vertical|center_horizontal"
             android:layout_marginTop="115dp" />
 

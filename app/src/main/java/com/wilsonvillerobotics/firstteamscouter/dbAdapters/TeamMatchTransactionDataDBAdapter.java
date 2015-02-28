@@ -18,13 +18,14 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_TEAM_ID = "team_id";
     public static final String COLUMN_NAME_MATCH_ID = "match_id";
     public static final String COLUMN_NAME_TIMESTAMP = "timestamp";
+    public static final String COLUMN_NAME_ACTION = "action_name";
+    public static final String COLUMN_NAME_ACTION_PHASE = "action_phase";
     public static final String COLUMN_NAME_ACTION_START_LOCATION_NAME = "action_start_location_name";
     public static final String COLUMN_NAME_ACTION_START_LOCATION_X = "action_start_location_X";
     public static final String COLUMN_NAME_ACTION_START_LOCATION_Y = "action_start_location_Y";
     public static final String COLUMN_NAME_ACTION_END_LOCATION_NAME = "action_end_location_name";
     public static final String COLUMN_NAME_ACTION_END_LOCATION_X = "action_end_location_X";
     public static final String COLUMN_NAME_ACTION_END_LOCATION_Y = "action_end_location_Y";
-    public static final String COLUMN_NAME_ACTION = "action_name";
     public static final String COLUMN_NAME_ELEMENT_TYPES = "element_types";
     public static final String COLUMN_NAME_ELEMENT_STATES = "element_states";
     public static final String COLUMN_NAME_TRANSACTION_READY_TO_EXPORT = "transaction_ready_to_export";
@@ -35,6 +36,7 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
     	    COLUMN_NAME_MATCH_ID,
             COLUMN_NAME_TIMESTAMP,
             COLUMN_NAME_ACTION,
+            COLUMN_NAME_ACTION_PHASE,
             COLUMN_NAME_ACTION_START_LOCATION_NAME,
             COLUMN_NAME_ACTION_START_LOCATION_X,
             COLUMN_NAME_ACTION_START_LOCATION_Y,
@@ -141,6 +143,7 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
         args.put(COLUMN_NAME_MATCH_ID, String.valueOf(values.get(COLUMN_NAME_MATCH_ID)));
         args.put(COLUMN_NAME_TIMESTAMP, String.valueOf(values.get(COLUMN_NAME_TIMESTAMP)));
         args.put(COLUMN_NAME_ACTION, String.valueOf(values.get(COLUMN_NAME_ACTION)));
+        args.put(COLUMN_NAME_ACTION_PHASE, String.valueOf(values.get(COLUMN_NAME_ACTION_PHASE)));
         args.put(COLUMN_NAME_ACTION_START_LOCATION_NAME, String.valueOf(values.get(COLUMN_NAME_ACTION_START_LOCATION_NAME)));
         args.put(COLUMN_NAME_ACTION_START_LOCATION_X, String.valueOf(values.get(COLUMN_NAME_ACTION_START_LOCATION_X)));
         args.put(COLUMN_NAME_ACTION_START_LOCATION_Y, String.valueOf(values.get(COLUMN_NAME_ACTION_START_LOCATION_Y)));

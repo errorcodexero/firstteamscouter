@@ -9,6 +9,8 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 /**
  * Created by SommervilleT on 2/9/2015.
  */
@@ -178,10 +180,74 @@ public class GameElement extends ImageView {
         return currElement;
     }
 
-    public int getStackSize() {
-        int count = 1;
+    public GameElement getElementAtIndex(int index) {
+        GameElement currElement = this.nextElement();
+        GameElement prevElement = this;
+        int i = 0;
+        while(currElement != null) {
+            prevElement = currElement;
+            currElement = currElement.nextElement();
+            if(i == index) break;
+            i++;
+        }
+
+        if(i == index) {
+            if (currElement != null) {
+                currElement.makeVisible();
+                prevElement.setNextElement(currElement.nextElement());
+                currElement.setNextElement(null);
+                return currElement;
+            }
+        }
+        return null;
+    }
+
+    public GameElement peekAtIndex(int index) {
+        GameElement currElement = this.nextElement();
+        int i = 0;
+        while(currElement != null) {
+            currElement = currElement.nextElement();
+            if(i == index) break;
+            i++;
+        }
+        return currElement;
+    }
+
+    public ArrayList<GameElement> getAllOfTypeFromStack(GameElementType type) {
+        ArrayList<GameElement> elements = new ArrayList<GameElement>();
+        GameElement currElement = this.nextElement();
+        GameElement prevElement = this;
+        GameElement nextElement = null;
+        while(currElement != null) {
+            nextElement = currElement.nextElement();
+            if(currElement.getElementType() == type) {
+                prevElement.setNextElement(nextElement);
+                currElement.setNextElement(null);
+                elements.add(currElement);
+                currElement = nextElement;
+            } else {
+                prevElement = currElement;
+                currElement = nextElement;
+            }
+        }
+        return elements;
+    }
+
+    public boolean stackHas(GameElementType type) {
         GameElement currElement = this;
-        while(currElement.nextElement() != null) {
+        boolean cansFound = false;
+        while(currElement != null) {
+            cansFound = (currElement.getElementType() == type);
+            if(cansFound) break;
+            currElement = currElement.nextElement();
+        }
+        return cansFound;
+    }
+
+    public int getStackSize() {
+        int count = 0;
+        GameElement currElement = this.nextElement();
+        while(currElement != null) {
             count++;
             currElement = currElement.nextElement();
         }

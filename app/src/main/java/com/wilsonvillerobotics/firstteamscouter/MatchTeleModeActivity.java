@@ -465,6 +465,7 @@ public class MatchTeleModeActivity extends Activity {
         t.setMatchID(matchID);
         t.setTimestamp(System.nanoTime());
         t.setAction(action);
+        t.setActionPhase("Tele");
         t.setActionStartLocationName(from);
         t.setActionEndLocationName(to);
 
@@ -494,6 +495,7 @@ public class MatchTeleModeActivity extends Activity {
         t.setTimestamp(System.nanoTime());
 
         t.setAction(action);
+        t.setActionPhase("Tele");
         t.setActionStartLocationName(from);
         t.setActionEndLocationName(to);
 

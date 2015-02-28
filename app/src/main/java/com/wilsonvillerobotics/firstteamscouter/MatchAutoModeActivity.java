@@ -16,14 +16,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionDataDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionsDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities.ALLIANCE_POSITION;
+import com.wilsonvillerobotics.firstteamscouter.GameElement.GameElementType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MatchAutoModeActivity extends Activity {
@@ -75,6 +77,9 @@ public class MatchAutoModeActivity extends Activity {
     }
 
 	protected TeamMatchDBAdapter tmDBAdapter;
+    protected TeamMatchTransactionDataDBAdapter tmtdDBAdapter;
+    protected TeamMatchTransactionsDBAdapter    tmtDBAdapter;
+
 	protected String[] teamNumberArray;
     protected long teamMatchID;
 	protected long teamID;
@@ -83,13 +88,14 @@ public class MatchAutoModeActivity extends Activity {
 	protected Button btnSubmit;
 	private ALLIANCE_POSITION tabletAlliancePosition;
     private int matchNumber;
-    private View lastViewTouched;
+    private View lastGameElementTouched;
     private GameElement lastElementCollided;
 
 	protected Boolean fieldOrientationRedOnRight;
     protected Point autoRobotStartingLocation;
 
     protected HashMap<Integer, GameElement> autoFieldObjects;
+    protected ArrayList<Transaction> transactionList;
 
     public int totesPickedUp;
     public int totesStacked;
@@ -113,21 +119,9 @@ public class MatchAutoModeActivity extends Activity {
 
         this.autoRobotStartingLocation = new Point();
         this.autoFieldObjects = new HashMap<Integer, GameElement>();
+        this.transactionList = new ArrayList<Transaction>();
 
         for(AutoFieldObject fo : AutoFieldObject.values()) {
-            //GameElement ge = new GameElement(this.getBaseContext());
-            //ge.setId(fo.getId());
-            //ge.setLocation(new Point());
-            //ge.setElementType(fo.getType());
-
-            /*
-            ImageView iv = (ImageView)findViewById(fo.getId());
-            if(iv == null) {
-                iv = new ImageView(getBaseContext());
-                iv.setId(fo.getId());
-            }
-            ge.setImageView(iv);
-            */
             GameElement gameElement = (GameElement)findViewById(fo.getId());
             if(gameElement == null) {
                 gameElement = new GameElement(getBaseContext());
@@ -145,7 +139,7 @@ public class MatchAutoModeActivity extends Activity {
         setBackground(automodeParentLayout);
         configureTotesAndCans();
 
-        lastViewTouched = null;
+        lastGameElementTouched = null;
         lastElementCollided = null;
 		teamID = -1;
 		matchID = -1;
@@ -216,8 +210,7 @@ public class MatchAutoModeActivity extends Activity {
         automodeParentLayout.setRotation(rotation);
     }
 
-    private void createRobotImageView() {
-        //ImageView imgRobot = this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).getImageView();
+    private void createRobotGameElement() {
         GameElement imgRobot = this.autoFieldObjects.get(AutoFieldObject.Robot.getId());
         if(imgRobot == null) {
             imgRobot = new GameElement(getBaseContext());
@@ -225,7 +218,6 @@ public class MatchAutoModeActivity extends Activity {
             imgRobot.setImageDrawable(getResources().getDrawable(R.drawable.robot_50x50));
             imgRobot.setOnTouchListener(new MyViewTouchListener());
             registerForContextMenu(imgRobot);
-            //this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).setImageView(imgRobot);
         } else if(imgRobot.getDrawable() == null) {
             imgRobot.setImageDrawable(getResources().getDrawable(R.drawable.robot_50x50));
             imgRobot.setOnTouchListener(new MyViewTouchListener());
@@ -236,7 +228,6 @@ public class MatchAutoModeActivity extends Activity {
     }
 
     private void placeRobotOnScreen() {
-        //ImageView imgRobot = this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).getImageView();
         GameElement imgRobot = this.autoFieldObjects.get(AutoFieldObject.Robot.getId());
         ViewGroup parent = (ViewGroup)imgRobot.getParent();
         if(parent == null) {
@@ -259,12 +250,9 @@ public class MatchAutoModeActivity extends Activity {
         int left = (robotFinalLocation.x == -1) ? this.autoRobotStartingLocation.x : robotFinalLocation.x;
         int top  = (robotFinalLocation.y == -1) ? this.autoRobotStartingLocation.y : robotFinalLocation.y;
 
-        //ImageView imgRobot = this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).getImageView();
         GameElement imgRobot = this.autoFieldObjects.get(AutoFieldObject.Robot.getId());
-
         if(imgRobot == null) {
-            //imgRobot = (ImageView) findViewById(R.id.imgRobot);
-            imgRobot = (GameElement)findViewById(R.id.imgRobot);
+            imgRobot = (GameElement)this.findViewById(AutoFieldObject.Robot.getId());
         }
         setViewLayout(imgRobot, width, height, left, top);
     }
@@ -378,10 +366,20 @@ public class MatchAutoModeActivity extends Activity {
     private void openDatabase() {
         try {
             FTSUtilities.printToConsole("MatchAutoModeActivity::onCreate : OPENING DB\n");
-            tmDBAdapter = new TeamMatchDBAdapter(this.getBaseContext()).open();
+            tmDBAdapter = new TeamMatchDBAdapter(this).open();
+            tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this).open();
+            tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this).open();
+
+            Cursor c = tmDBAdapter.getTeamMatch(this.teamMatchID);
+            if(c.moveToFirst()) {
+                this.teamID = c.getLong(c.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID));
+                this.matchID = c.getLong(c.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID));
+            }
         } catch(SQLException e) {
             e.printStackTrace();
             tmDBAdapter = null;
+            tmtdDBAdapter = null;
+            tmtDBAdapter = null;
         }
     }
 
@@ -479,6 +477,15 @@ public class MatchAutoModeActivity extends Activity {
                 );
     }
 
+    private boolean saveTransactions() {
+        for(Transaction t : transactionList) {
+            HashMap<String, Object> values = t.getValuesHashMap();
+            long id = tmtdDBAdapter.createTeamMatchTransaction(values);
+            if(id != -1) tmtDBAdapter.createTeamMatchTransaction(teamMatchID, id);
+        }
+        return false;
+    }
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -502,7 +509,7 @@ public class MatchAutoModeActivity extends Activity {
     protected void onResume() {
         super.onResume();
         loadData();
-        createRobotImageView();
+        createRobotGameElement();
         layoutTotesAndCans();
     }
 
@@ -595,7 +602,10 @@ public class MatchAutoModeActivity extends Activity {
     protected void onPause() {
         super.onPause();
         saveData();
+        saveTransactions();
         tmDBAdapter.close();
+        tmtDBAdapter.close();
+        tmtdDBAdapter.close();
     }
 
     @Override
@@ -603,6 +613,8 @@ public class MatchAutoModeActivity extends Activity {
         super.onStop();
         FTSUtilities.printToConsole("SelectTeamMatchActivity::onStop : CLOSING DB\n");
 		tmDBAdapter.close();
+        tmtDBAdapter.close();
+        tmtdDBAdapter.close();
     }
 
     @Override
@@ -619,22 +631,35 @@ public class MatchAutoModeActivity extends Activity {
 
         super.onCreateContextMenu(menu, v, menuInfo);
         GameElement el = autoFieldObjects.get(v.getId());
-        if(v.getId()== AutoFieldObject.Robot.getId()) {
+        if(el.getId()== AutoFieldObject.Robot.getId()) {
             menu.setHeaderIcon(R.drawable.robot_50x50);
             menu.setHeaderTitle("Robot");
 
             if (lastElementCollided != null) {
+                menu.add(0, 0, 0, "Cancel");
                 switch (lastElementCollided.getElementType()) {
                     case YELLOW_TOTE:
-                        menu.add(0, 0, 0, "Pick Up Tote");
-                        if (el.getStackSize() > 1) {
-                            menu.add(0, 1, 0, "Stack Tote");
+                        menu.add(0, 1, 0, "Pick Up Tote");
+                        if (el.getStackSize() > 0 && el.stackHas(GameElementType.YELLOW_TOTE)) {
+                            menu.add(0, 2, 0, "Stack Tote");
                         }
-                        menu.add(0, 3, 0, "Knock Tote Over");
+                        if (el.stackHas(GameElementType.YELLOW_TOTE)) {
+                            menu.add(0, 3, 0, "Set tote(s) down");
+                        }
+                        if (el.stackHas(GameElementType.CAN)) {
+                            menu.add(0, 6, 0, "Set can(s) down");
+                        }
+                        menu.add(0, 4, 0, "Knock Tote Over");
                         break;
                     case CAN:
-                        menu.add(0, 4, 0, "Pick Up Can");
-                        menu.add(0, 6, 0, "Knock Can Over");
+                        menu.add(0, 5, 0, "Pick Up Can");
+                        menu.add(0, 7, 0, "Knock Can Over");
+                        if (el.stackHas(GameElementType.YELLOW_TOTE)) {
+                            menu.add(0, 3, 0, "Set tote(s) down");
+                        }
+                        if (el.stackHas(GameElementType.CAN)) {
+                            menu.add(0, 6, 0, "Set can(s) down");
+                        }
                         break;
                     case TRASH:
                         break;
@@ -646,11 +671,13 @@ public class MatchAutoModeActivity extends Activity {
                 }
             } else {
                 GameElement robot = autoFieldObjects.get(AutoFieldObject.Robot.getId());
-                if (robot.getStackSize() > 1) {
-                    if (robot.nextElement().isTote()) {
-                        menu.add(0, 2, 0, "Set tote(s) down");
-                    } else if (robot.nextElement().isCan()) {
-                        menu.add(0, 5, 0, "Set can down");
+                if (robot.getStackSize() > 0) {
+                    menu.add(0, 0, 0, "Cancel");
+                    if (robot.stackHas(GameElementType.YELLOW_TOTE)) {
+                        menu.add(0, 3, 0, "Set tote(s) down");
+                    }
+                    if (robot.stackHas(GameElementType.CAN)) {
+                        menu.add(0, 6, 0, "Set can(s) down");
                     }
                 }
             }
@@ -658,15 +685,17 @@ public class MatchAutoModeActivity extends Activity {
             menu.setHeaderIcon(R.drawable.yellow_tote_top_down_25x38);
             menu.setHeaderTitle("Yellow Tote");
 
-            menu.add(1,0,0, "Pick Up Tote");
-            menu.add(1,1,0, "Stack Tote");
-            menu.add(1,2,0, "Knock Tote Over");
+            menu.add(1,0,0, "Cancel");
+            menu.add(1,1,0, "Pick Up Tote");
+            menu.add(1,2,0, "Stack Tote");
+            menu.add(1,3,0, "Knock Tote Over");
         } if(autoFieldObjects.get(v.getId()).getElementType() == GameElement.GameElementType.CAN) {
             menu.setHeaderIcon(R.drawable.green_can_top_down_25x25);
             menu.setHeaderTitle("Green Can");
 
-            menu.add(2,0,0, "Pick Up Can");
-            menu.add(2,1,0, "Knock Can Over");
+            menu.add(2,0,0, "Cancel");
+            menu.add(2,1,0, "Pick Up Can");
+            menu.add(2,2,0, "Knock Can Over");
         }
     }
 
@@ -680,47 +709,56 @@ public class MatchAutoModeActivity extends Activity {
             case 0: // Robot actions
                 switch (item.getItemId()) {
                     case 0:
-                        pickUp(item.getItemId());
+                        //cancel
                         break;
                     case 1:
-                        stackUp(item.getItemId());
+                        pickUp(item.getGroupId());
                         break;
                     case 2:
-                        setDown(item.getItemId());
+                        stackUp(item.getGroupId());
                         break;
                     case 3:
-                        knockOver(item.getItemId());
+                        setDown(item.getGroupId(), GameElementType.YELLOW_TOTE);
                         break;
                     case 4:
-                        pickUp(item.getItemId());
+                        knockOver(item.getGroupId());
                         break;
                     case 5:
-                        setDown(item.getItemId());
+                        pickUp(item.getGroupId());
                         break;
                     case 6:
-                        knockOver(item.getItemId());
+                        setDown(item.getGroupId(), GameElementType.CAN);
+                        break;
+                    case 7:
+                        knockOver(item.getGroupId());
                 }
                 break;
             case 1: // Tote actions
                 switch (item.getItemId()) {
                     case 0:
-                        pickUp(item.getItemId());
+                        //cancel
                         break;
                     case 1:
-                        stackUp(item.getItemId());
+                        pickUp(item.getGroupId());
                         break;
                     case 2:
-                        knockOver(item.getItemId());
+                        stackUp(item.getGroupId());
+                        break;
+                    case 3:
+                        knockOver(item.getGroupId());
                         break;
                 }
                 break;
             case 2: // Can actions
                 switch (item.getItemId()) {
                     case 0:
-                        pickUp(item.getItemId());
+                        //cancel
                         break;
                     case 1:
-                        knockOver(item.getItemId());
+                        pickUp(item.getGroupId());
+                        break;
+                    case 2:
+                        knockOver(item.getGroupId());
                         break;
                 }
                 break;
@@ -728,47 +766,79 @@ public class MatchAutoModeActivity extends Activity {
         return true;
     }
 
-    private void knockOver(int itemId) {
-        if(lastViewTouched != null) {
+    private void knockOver(int groupId) {
+        if(lastGameElementTouched != null) {
             //Toast.makeText(getBaseContext(), "OOPS!", Toast.LENGTH_SHORT).show();
-            lastViewTouched = null;
+            GameElement currElement = (GameElement)lastGameElementTouched;
+            recordTransaction("Knock", currElement, currElement.getLocation());
+            lastGameElementTouched = null;
         }
     }
 
-    private void pickUp(int itemId) {
+    private void pickUp(int groupId) {
         GameElement robot;
-        GameElement object;
-        if(lastViewTouched != null) {
-            GameElement el = autoFieldObjects.get(lastViewTouched.getId());
+        GameElement currElement;
+        if(lastGameElementTouched != null) {
+            GameElement el = autoFieldObjects.get(lastGameElementTouched.getId());
             if(el.isRobot()) {
                 robot = el;
-                object = lastElementCollided;
+                currElement = lastElementCollided;
             } else {
                 robot = lastElementCollided;
-                object = el;
+                currElement = el;
             }
 
-            object.makeInvisible();
-            robot.pushToStack(object);
+            currElement.makeInvisible();
+            robot.pushToStack(currElement);
+            recordTransaction("Pick", currElement, currElement.getLocation());
 
-            lastViewTouched = null;
+            lastGameElementTouched = null;
         }
     }
 
-    public void setDown(int itemId) {
+    public void setDown(int groupId, GameElement.GameElementType type) {
         GameElement robot = autoFieldObjects.get(AutoFieldObject.Robot.getId());
-        GameElement currElement;
-        for(int i = 0; i < robot.getStackSize(); i++) {
-            currElement = robot.popFromStack();
+        int x, y, i = 0;
+        ArrayList<GameElement> elements = robot.getAllOfTypeFromStack(type);
+        Point prevXY;
+        for(GameElement currElement : elements) {
             currElement.makeVisible();
-            currElement.setLocation(robot.getLocation().x, robot.getLocation().y);
-            //setViewLayout(currElement.getImageView(), robot.getLocation().x, robot.getLocation().y);
-            setViewLayout(currElement, robot.getLocation().x, robot.getLocation().y);
+            if (currElement.getElementType() == GameElementType.CAN) {
+                double mod[] = {0.5, 0.5, -0.5, -0.5, 0.5};
+                x = robot.getLocation().x - (int) (mod[i + 1] * currElement.getWidth());
+                y = robot.getLocation().y - (int) (mod[i++] * currElement.getHeight());
+            } else {
+                x = robot.getLocation().x;
+                y = robot.getLocation().y;
+            }
+            prevXY = new Point(currElement.getLocation());
+            currElement.setLocation(x, y);
+            setViewLayout(currElement, x, y);
+            recordTransaction("Place", currElement, prevXY);
+
         }
     }
 
-    private void stackUp(int itemId) {
+    private void stackUp(int groupId) {
+        GameElement robot = autoFieldObjects.get(AutoFieldObject.Robot.getId());
+        int x, y;
+        if(lastElementCollided != null) {
+            x = (int)lastElementCollided.getX() + lastElementCollided.getWidth()/2;
+            y = (int)lastElementCollided.getY() + lastElementCollided.getHeight()/2;
+        } else {
+            x = robot.getLocation().x;
+            y = robot.getLocation().y;
+        }
 
+        Point prevXY;
+        ArrayList<GameElement> elements = robot.getAllOfTypeFromStack(GameElementType.YELLOW_TOTE);
+        for(GameElement currElement : elements) {
+            currElement.makeVisible();
+            prevXY = new Point(currElement.getLocation());
+            currElement.setLocation(x, y);
+            setViewLayout(currElement, x, y);
+            recordTransaction("Stack",currElement, prevXY);
+        }
     }
 
     @Override
@@ -783,7 +853,8 @@ public class MatchAutoModeActivity extends Activity {
         @Override
         public boolean onDrag(View v, DragEvent event) {
             int action = event.getAction();
-            View view = (View) event.getLocalState();
+            //View gameElement = (View) event.getLocalState();
+            GameElement gameElement = (GameElement) event.getLocalState();
             switch (action) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     dragging = true;
@@ -795,84 +866,50 @@ public class MatchAutoModeActivity extends Activity {
                     //v.setBackgroundDrawable(normalShape);
                     break;
                 case DragEvent.ACTION_DROP:
-                    lastViewTouched = view;
+                    lastGameElementTouched = gameElement;
                     dragging = false;
 
-                    Point finalLocation = null;
-                    if(view.getId() == AutoFieldObject.Robot.getId()) {
-                        finalLocation = autoFieldObjects.get(AutoFieldObject.Robot.getId()).getLocation();
-                    } else if(view.getId() == AutoFieldObject.YellowTote1.getId()) {
-                        finalLocation = autoFieldObjects.get(AutoFieldObject.YellowTote1.getId()).getLocation();
-                    } else if(view.getId() == AutoFieldObject.YellowTote2.getId()) {
-                        finalLocation = autoFieldObjects.get(AutoFieldObject.YellowTote2.getId()).getLocation();
-                    } else if(view.getId() == AutoFieldObject.YellowTote3.getId()) {
-                        finalLocation = autoFieldObjects.get(AutoFieldObject.YellowTote3.getId()).getLocation();
-                    } else if(view.getId() == AutoFieldObject.GreenCan1.getId()) {
-                        finalLocation = autoFieldObjects.get(AutoFieldObject.GreenCan1.getId()).getLocation();
-                    } else if(view.getId() == AutoFieldObject.GreenCan2.getId()) {
-                        finalLocation = autoFieldObjects.get(AutoFieldObject.GreenCan2.getId()).getLocation();
-                    } else if(view.getId() == AutoFieldObject.GreenCan3.getId()) {
-                        finalLocation = autoFieldObjects.get(AutoFieldObject.GreenCan3.getId()).getLocation();
-                    } else if(view.getId() == AutoFieldObject.GreenCan4.getId()) {
-                        finalLocation = autoFieldObjects.get(AutoFieldObject.GreenCan4.getId()).getLocation();
-                    } else if(view.getId() == AutoFieldObject.GreenCan5.getId()) {
-                        finalLocation = autoFieldObjects.get(AutoFieldObject.GreenCan5.getId()).getLocation();
-                    } else if(view.getId() == AutoFieldObject.GreenCan6.getId()) {
-                        finalLocation = autoFieldObjects.get(AutoFieldObject.GreenCan6.getId()).getLocation();
-                    } else if(view.getId() == AutoFieldObject.GreenCan7.getId()) {
-                        finalLocation = autoFieldObjects.get(AutoFieldObject.GreenCan7.getId()).getLocation();
-                    }
-                    if(finalLocation != null) {
-                        finalLocation.set((int) event.getX(), (int) event.getY());
-                    }
-
-
-                    ViewGroup owner = (ViewGroup) view.getParent();
-                    RelativeLayout container = (RelativeLayout) v;
-                    if(owner.getId() != container.getId()) {
-                        owner.removeView(view);
-                        container.addView(view);
-                    }
-
+                    Point prevXY = gameElement.getLocation();
                     int left = (int) event.getX();
                     int top = (int) event.getY();
-                    autoFieldObjects.get(view.getId()).getLocation().set(left, top);
+                    gameElement.getLocation().set(left, top);
 
-                    /*
-                    if(view.getId() == AutoFieldObject.Robot.getId()) {
-                        setInitialRobotLayout();
-                    } else {
-                        setViewLayout(view, left, top);
+                    ViewGroup owner = (ViewGroup) gameElement.getParent();
+                    RelativeLayout container = (RelativeLayout) v;
+                    if(owner.getId() != container.getId()) {
+                        owner.removeView(gameElement);
+                        container.addView(gameElement);
                     }
-                    */
-                    setViewLayout(view, left, top);
 
-                    lastElementCollided = findCollidingElement(view, left, top);
+                    setViewLayout(gameElement, left, top);
+
+                    lastElementCollided = findCollidingElement(gameElement, left, top);
 
                     // If the robot has something on it, show context
                     // If it's touching a tote, offer to stack
                     // if it's not touching anything, offer to drop if it
                     // If the robot has nothing and is not in contact with something, don't show context
-                    // If the lastViewTouched is not a robot, and the lastElementCollided is not the robot, don't show context
-                    if(autoFieldObjects.get(lastViewTouched.getId()).isRobot()) {
+                    // If the lastGameElementTouched is not a robot, and the lastElementCollided is not the robot, don't show context
+                    if(autoFieldObjects.get(lastGameElementTouched.getId()).isRobot()) {
+                        recordTransaction("Move", autoFieldObjects.get(lastGameElementTouched.getId()), prevXY);
                         if(lastElementCollided != null) {
-                            lastViewTouched.showContextMenu();
-                        } else if(autoFieldObjects.get(lastViewTouched.getId()).getStackSize() > 1) {
-                            lastViewTouched.showContextMenu();
+                            lastGameElementTouched.showContextMenu();
+                        } else if(autoFieldObjects.get(lastGameElementTouched.getId()).getStackSize() > 0) {
+                            lastGameElementTouched.showContextMenu();
                         }
                     } else {
                         if(lastElementCollided != null && lastElementCollided.isRobot()) {
-                            lastViewTouched.showContextMenu();
+                            lastGameElementTouched.showContextMenu();
                         }
                     }
 
-                    view.setVisibility(View.VISIBLE);
+                    gameElement.setVisibility(View.VISIBLE);
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     //v.setBackgroundDrawable(normalShape);
                 case DragEvent.ACTION_DRAG_LOCATION:
                     if(dragging) {
-                        if(view != null && view.getId() == AutoFieldObject.Robot.getId()) {
+                        if(gameElement != null && gameElement.getId() == AutoFieldObject.Robot.getId()) {
                             Point robotFinalLocation = autoFieldObjects.get(AutoFieldObject.Robot.getId()).getLocation();
                             robotFinalLocation.set((int) event.getX(), (int) event.getY());
                         }
@@ -883,5 +920,29 @@ public class MatchAutoModeActivity extends Activity {
             }
             return true;
         }
+    }
+
+    private void recordTransaction(String action, GameElement gameElement, Point prevLocation) {
+        Transaction t = new Transaction();
+
+        t.setTeamID(teamID);
+        t.setMatchID(matchID);
+        t.setTimestamp(System.nanoTime());
+        t.setAction(action);
+        t.setActionPhase("Auto");
+
+        t.setActionStart(prevLocation);
+
+        int x = (int)gameElement.getX();
+        int y = (int)gameElement.getY();
+        Point p = new Point(x, y);
+        t.setActionEnd(p);
+
+        String gameElementTypes[] = new String[]{gameElement.getElementType().getType()};
+        String gameElementStates[] = new String[]{gameElement.getElementState().getState()};
+        t.setElementTypes(gameElementTypes);
+        t.setElementStates(gameElementStates);
+
+        transactionList.add(t);
     }
 }
