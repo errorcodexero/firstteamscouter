@@ -230,7 +230,9 @@ public class SelectMatchTeamActivity extends Activity {
                 TextView txtTeam;
 
                 for(FTSUtilities.ALLIANCE_POSITION ap : FTSUtilities.ALLIANCE_POSITION.validPositions()) {
-                    strTeamNum = String.valueOf(tDBAdapter.getTeamNumberFromID(Long.valueOf(teamsForMatch.get(ap.myAlliancePosition()))));
+                    //strTeamNum = String.valueOf(tDBAdapter.getTeamNumberFromID(Long.valueOf(teamsForMatch.get(ap.myAlliancePosition()))));
+                    // team ID is now the team number + a sub-number for teams with alternate designations (e.g. 1540a, 1540b, etc)
+                    strTeamNum = teamsForMatch.get(ap.myAlliancePosition());
                     txtTeamNumberField.get(ap.allianceIndex()).setText(strTeamNum);
                     if(ap == tabletAlliancePosition) {
                         strCurrTeamNum = strTeamNum;

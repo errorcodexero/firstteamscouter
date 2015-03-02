@@ -389,7 +389,7 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
             rdDBAdapter = new RobotDataDBAdapter(this).open();
             trDBAdapter = new TeamRobotsDBAdapter(this).open();
             int tNum = Integer.parseInt(this.teamNumber);
-            tdData = tdDBAdapter.getTeamDataEntry(tNum);
+            tdData = tdDBAdapter.getTeamDataEntry(tNum, 0); // TODO - update this so it works with new team_sub_number
             tmdData = tmdDBAdapter.getMatchesForTeam(this.teamID);
         } catch(SQLException e) {
             e.printStackTrace();

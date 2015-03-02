@@ -20,9 +20,10 @@ public class DBAdapter {
     private static final String AUTO_INC_ID = "_id integer primary key autoincrement, ";
     private static final String TEXT_TYPE = " TEXT";
     private static final String INT_TYPE = " INTEGER";
+    private static final String NOT_NULL = "NOT NULL";
     private static final String BOOL_TYPE = " TEXT";
     private static final String COMMA_SEP = ",";
-    
+
     private enum TABLE_NAMES {
     	COMPETITION_DATA(0),
     	COMPETITION_MATCHES(1),
@@ -215,14 +216,24 @@ public class DBAdapter {
     	{
     		//12
     		//TEAM_DATA
+            /*
+            CREATE TABLE something (
+              column1 INTEGER NOT NULL,
+              column2 INTEGER NOT NULL,
+              value,
+              PRIMARY KEY ( column1, column2)
+            );
+             */
     		"CREATE TABLE " + TeamDataDBAdapter.TABLE_NAME + " (" +
-    		AUTO_INC_ID + 
-	        TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER + INT_TYPE + COMMA_SEP +
+    		//AUTO_INC_ID +
+	        TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER + INT_TYPE + NOT_NULL + COMMA_SEP +
+            TeamDataDBAdapter.COLUMN_NAME_TEAM_SUB_NUMBER + INT_TYPE + NOT_NULL + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_NAME + TEXT_TYPE + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_LOCATION + TEXT_TYPE + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_NUM_MEMBERS + TEXT_TYPE + COMMA_SEP +
             TeamDataDBAdapter.COLUMN_NAME_TEAM_YEAR_CREATED + TEXT_TYPE + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_DATA_UPDATED + BOOL_TYPE +
+            TeamDataDBAdapter.PRIMARY_KEY +
     		");",
     		
     		"DROP TABLE IF EXISTS " + TeamDataDBAdapter.TABLE_NAME

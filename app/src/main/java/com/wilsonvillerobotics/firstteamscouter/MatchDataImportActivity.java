@@ -193,7 +193,7 @@ public class MatchDataImportActivity extends Activity {
 						        		//Time : Type : MatchNum : Red1 : Red2 : Red3 : Blue1 : Blue2 : Blue3
 						        		long teamIDs[] = {-1, -1, -1, -1, -1, -1};
 						        		for(int i = 0; i < 6; i++) {
-						        			teamIDs[i] = teamDataDBAdapter.createTeamDataEntry(Integer.parseInt(lineArray[i+3]));
+						        			teamIDs[i] = teamDataDBAdapter.createTeamDataEntry(Integer.parseInt(lineArray[i+3]), 0);
 						        		}
 
 						        		long matchID = matchDataDBAdapter.createMatchData(lineArray[0], lineArray[1], lineArray[2], teamIDs[0], teamIDs[1], teamIDs[2], teamIDs[3], teamIDs[4], teamIDs[5]);

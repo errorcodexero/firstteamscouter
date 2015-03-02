@@ -14,12 +14,19 @@ import android.provider.BaseColumns;
 
 public class TeamDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "team_data";
+
+    // Primary Key comprised of two columns
     public static final String COLUMN_NAME_TEAM_NUMBER = "team_number";
+    public static final String COLUMN_NAME_TEAM_SUB_NUMBER = "team_sub_number";
+
+
     public static final String COLUMN_NAME_TEAM_NAME = "team_name";
     public static final String COLUMN_NAME_TEAM_LOCATION = "team_location";
     public static final String COLUMN_NAME_TEAM_NUM_MEMBERS = "num_team_members";
     public static final String COLUMN_NAME_TEAM_DATA_UPDATED = "team_data_updated";
     public static final String COLUMN_NAME_TEAM_YEAR_CREATED = "team_creation_year";
+
+    public static final String PRIMARY_KEY = "PRIMARY KEY (" + TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER + TeamDataDBAdapter.COLUMN_NAME_TEAM_SUB_NUMBER + ")";
 
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -96,10 +103,11 @@ public class TeamDataDBAdapter implements BaseColumns {
      * @param num_team_members
      * @return rowId or -1 if failed
      */
-    public long createTeamDataEntry(int team_number, String team_name, String team_location, int num_team_members){
+    public long createTeamDataEntry(int team_number, int team_sub_number, String team_name, String team_location, int num_team_members){
         ContentValues args = new ContentValues();
         //args.put(COLUMN_NAME_TEAM_ID, team_id);
         args.put(COLUMN_NAME_TEAM_NUMBER, team_number);
+        args.put(COLUMN_NAME_TEAM_SUB_NUMBER, team_sub_number);
         args.put(COLUMN_NAME_TEAM_NAME, team_name);
         args.put(COLUMN_NAME_TEAM_LOCATION, team_location);
         args.put(COLUMN_NAME_TEAM_NUM_MEMBERS, num_team_members);
@@ -107,16 +115,17 @@ public class TeamDataDBAdapter implements BaseColumns {
         return this.mDb.insert(TABLE_NAME, null, args);
     }
 
-    public long createTeamDataEntry(int team_number){
+    public long createTeamDataEntry(int team_number, int team_sub_number) {
     	Cursor c;
     	long retVal;
     	try {
-    		c = this.getTeamDataEntry(team_number);
+    		c = this.getTeamDataEntry(team_number, team_sub_number);
     		retVal = c.getLong(c.getColumnIndex(_ID));
     	}
     	catch(Exception e) {
     		ContentValues args = new ContentValues();
             args.put(COLUMN_NAME_TEAM_NUMBER, team_number);
+            args.put(COLUMN_NAME_TEAM_SUB_NUMBER, team_sub_number);
             args.put(COLUMN_NAME_TEAM_DATA_UPDATED, Boolean.TRUE.toString());
             retVal = this.mDb.insert(TABLE_NAME, null, args);
     	}
@@ -126,18 +135,18 @@ public class TeamDataDBAdapter implements BaseColumns {
     /**
      * Update the entry.
      * 
-     * @param team_id
      * @param team_number
+     * @param team_sub_number
      * @param team_name
      * @param team_location
      * @param num_team_members
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updateTeamDataEntry(int team_id, int team_number, String team_name, 
+    public boolean updateTeamDataEntry(int team_number, int team_sub_number, String team_name,
     		String team_location, int num_team_members){
         ContentValues args = new ContentValues();
-        //args.put(COLUMN_NAME_TEAM_ID, team_id);
         args.put(COLUMN_NAME_TEAM_NUMBER, team_number);
+        args.put(COLUMN_NAME_TEAM_SUB_NUMBER, team_sub_number);
         args.put(COLUMN_NAME_TEAM_NAME, team_name);
         args.put(COLUMN_NAME_TEAM_LOCATION, team_location);
         args.put(COLUMN_NAME_TEAM_NUM_MEMBERS, num_team_members);
@@ -165,7 +174,7 @@ public class TeamDataDBAdapter implements BaseColumns {
     public Cursor getAllTeamDataEntries() {
 
         Cursor mCursor = this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		/*COLUMN_NAME_TEAM_ID,*/ COLUMN_NAME_TEAM_NUMBER, COLUMN_NAME_TEAM_NAME,
+        		/*COLUMN_NAME_TEAM_ID,*/ COLUMN_NAME_TEAM_NUMBER, COLUMN_NAME_TEAM_SUB_NUMBER, COLUMN_NAME_TEAM_NAME,
         		COLUMN_NAME_TEAM_LOCATION, COLUMN_NAME_TEAM_NUM_MEMBERS, COLUMN_NAME_TEAM_DATA_UPDATED
         		}, null, null, null, null, COLUMN_NAME_TEAM_NUMBER + " ASC");
         FTSUtilities.printToConsole("TeamDataDBAdapter::getAllTeamDataEntries : Cursor Size : " + mCursor.getCount() + "\n");
@@ -180,7 +189,7 @@ public class TeamDataDBAdapter implements BaseColumns {
     public Cursor getUpdatedTeamDataEntries() {
 
         Cursor mCursor = this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_TEAM_NUMBER, COLUMN_NAME_TEAM_NAME,
+        		COLUMN_NAME_TEAM_NUMBER, COLUMN_NAME_TEAM_SUB_NUMBER, COLUMN_NAME_TEAM_NAME,
         		COLUMN_NAME_TEAM_LOCATION, COLUMN_NAME_TEAM_NUM_MEMBERS, COLUMN_NAME_TEAM_DATA_UPDATED
         		}, COLUMN_NAME_TEAM_DATA_UPDATED + "=" + Boolean.TRUE.toString(), null, null, null, COLUMN_NAME_TEAM_NUMBER + " ASC");
         FTSUtilities.printToConsole("TeamDataDBAdapter::getAllTeamDataEntries : Cursor Size : " + mCursor.getCount() + "\n");
@@ -193,10 +202,10 @@ public class TeamDataDBAdapter implements BaseColumns {
      * @return Cursor positioned to matching entry, if found
      * @throws SQLException if entry could not be found/retrieved
      */
-    public Cursor getTeamDataEntry(int teamNumber) throws SQLException {
+    public Cursor getTeamDataEntry(int teamNumber, int team_sub_number) throws SQLException {
 
         Cursor mCursor = this.mDb.query(true, TABLE_NAME, new String[] { _ID, 
-        		/*COLUMN_NAME_TEAM_ID,*/ COLUMN_NAME_TEAM_NUMBER, COLUMN_NAME_TEAM_NAME,
+        		COLUMN_NAME_TEAM_NUMBER, COLUMN_NAME_TEAM_SUB_NUMBER, COLUMN_NAME_TEAM_NAME,
         		COLUMN_NAME_TEAM_LOCATION, COLUMN_NAME_TEAM_NUM_MEMBERS, COLUMN_NAME_TEAM_DATA_UPDATED
         		}, COLUMN_NAME_TEAM_NUMBER + "=" + teamNumber, null, null, null, null, null);
         if (mCursor != null) {
@@ -207,10 +216,11 @@ public class TeamDataDBAdapter implements BaseColumns {
     
     /**
      * Return a Cursor positioned at the entry that matches the given rowId
-     * @param teamID
+     * @param //teamID
      * @return Cursor positioned to matching entry, if found
      * @throws SQLException if entry could not be found/retrieved
      */
+    /*  NO LONGER VALID NOW THAT TEAM NUMBER IS PART OF THE ID
     public int getTeamNumberFromID(long teamID) throws SQLException {
     	int teamNum = -1;
 
@@ -221,6 +231,7 @@ public class TeamDataDBAdapter implements BaseColumns {
         }
         return teamNum;
     }
+    */
     
     public void deleteAllData()
     {
@@ -236,7 +247,7 @@ public class TeamDataDBAdapter implements BaseColumns {
     	int i = 0;
     	
     	for(int teamNum : teamNums) {
-    		teamIDs[i++] = this.createTeamDataEntry(teamNum, FTSUtilities.getTeamName(teamNum), "Location", 42);
+    		teamIDs[i++] = this.createTeamDataEntry(teamNum, 0, FTSUtilities.getTeamName(teamNum), "Location", 42);
     	}
     	return teamIDs;
     }

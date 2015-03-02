@@ -32,7 +32,7 @@ public class OldTeamInformationActivity extends Activity {
 		tDBAdapter = new TeamDataDBAdapter(this).open();
 		tInfo = new TeamInformation();
 		
-		this.loadTeamInfo(teamNumber);
+		this.loadTeamInfo(teamNumber, 0);
 		
 		btnSave = (Button) findViewById(R.id.btnTeamInfoSave);
 		btnSave.setOnClickListener(new View.OnClickListener() {
@@ -103,8 +103,8 @@ public class OldTeamInformationActivity extends Activity {
 		return true;
 	}
 	
-	public void loadTeamInfo(int teamNum) {
-		Cursor cursor = tDBAdapter.getTeamDataEntry(teamNum);
+	public void loadTeamInfo(int teamNum, int teamSubNum) {
+		Cursor cursor = tDBAdapter.getTeamDataEntry(teamNum, teamSubNum);
 		EditText teamName, teamLocation, teamNumber, teamNumMembers;
 		
 		try{
@@ -147,7 +147,7 @@ public class OldTeamInformationActivity extends Activity {
 		}
 		
 		if(!tDBAdapter.updateTeamDataEntry(teamID, teamNumber, teamName, teamLocation, numTeamMembers)) {
-			tDBAdapter.createTeamDataEntry(teamNumber, teamName, teamLocation, numTeamMembers);
+			tDBAdapter.createTeamDataEntry(teamNumber, 0, teamName, teamLocation, numTeamMembers);
 		}
 	}
 	
