@@ -30,7 +30,7 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_ELEMENT_STATES = "element_states";
     public static final String COLUMN_NAME_TRANSACTION_READY_TO_EXPORT = "transaction_ready_to_export";
 
-    private String[] allColumnNames = new String[]{
+    public static String[] allColumnNames = new String[]{
     		_ID,
     	    COLUMN_NAME_TEAM_ID,
     	    COLUMN_NAME_MATCH_ID,

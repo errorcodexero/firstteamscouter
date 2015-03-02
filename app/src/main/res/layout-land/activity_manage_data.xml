@@ -1,0 +1,58 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppTheme"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true"
+    android:baselineAligned="false"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity" >
+
+    <TextView
+        android:id="@+id/lblTabletID"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="24sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:baselineAligned="false"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btnImportMatchData"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:minHeight="@dimen/activity_vertical_margin"
+            android:orientation="vertical"
+            android:text="@string/label_import_match_data"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            android:typeface="normal"
+            android:layout_weight="0.50"
+            android:layout_margin="10dp" />
+
+        <Button
+            android:id="@+id/btnExportMatchData"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.50"
+            android:minHeight="@dimen/activity_vertical_margin"
+            android:text="Export Match Data"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            android:typeface="normal"
+            android:layout_margin="10dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

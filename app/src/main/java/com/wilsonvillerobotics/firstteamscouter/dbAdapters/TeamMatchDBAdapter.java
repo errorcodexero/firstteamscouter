@@ -1,12 +1,11 @@
 package com.wilsonvillerobotics.firstteamscouter.dbAdapters;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import com.wilsonvillerobotics.firstteamscouter.ImportMatchDataActivity;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -14,7 +13,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
-import android.widget.ProgressBar;
 
 public class TeamMatchDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "team_match";
@@ -321,9 +319,30 @@ public class TeamMatchDBAdapter implements BaseColumns {
      * @return Cursor over all Match Data entries that have data ready to export
      */
     public Cursor getTeamMatchesWithDataToExport() {
-    	String WHERE = TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
+        String WHERE = TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
 
         return this.mDb.query(TABLE_NAME, this.allColumnNames, WHERE, null, null, null, null);
+    }
+
+    /**
+     * Set the Data Ready To Export field for a list of elements in the DB
+     * @param exportedItems IDs of the entries to set to exported
+     * @return A boolean denoting status
+     */
+    public boolean setItemsExported(ArrayList<Long> exportedItems) {
+        ContentValues args = new ContentValues();
+        args.put(COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT, Boolean.FALSE.toString());
+
+        String WHERE = "";
+        for(int i = 0; i < exportedItems.size(); i++) {
+            WHERE += TeamMatchDBAdapter._ID + "=" + String.valueOf(exportedItems.get(i));
+
+            if(i != exportedItems.size() - 1) {
+                WHERE += " OR ";
+            }
+        }
+
+        return this.mDb.update(TABLE_NAME, args, WHERE, null) > 0;
     }
 
     /**

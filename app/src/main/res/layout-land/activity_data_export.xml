@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        style="@drawable/edittext_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.3"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Export Data"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="24sp"
+            android:layout_marginTop="20dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginTop="40dp">
+
+            <Button
+                android:id="@+id/btnExportDataBluetooth"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:text="Export Via Bluetooth"
+                android:layout_weight="0.50"
+                android:layout_margin="10dp"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btnRepeatDataExport"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:text="@string/lbl_repeat_data_export"
+                android:layout_margin="10dp"
+                android:layout_weight="0.50"
+                android:textSize="20sp"
+                android:singleLine="false" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="700dp"
+            android:layout_height="200dp"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:text="@string/text_export_status"
+            android:id="@+id/txtDataExportStatus"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:gravity="left" />
+    </LinearLayout>
+
+</LinearLayout>

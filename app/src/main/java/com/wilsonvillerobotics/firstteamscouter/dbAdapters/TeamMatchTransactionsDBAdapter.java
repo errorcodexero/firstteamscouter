@@ -184,7 +184,15 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
         String selection = _ID + "=" + String.valueOf(teamMatchID);
         Cursor mCursor = null;
         try {
-            mCursor = this.mDb.query(TABLE_NAME, this.allColumnNames, selection, null, null, null, _ID);
+            //mCursor = this.mDb.query(TABLE_NAME, this.allColumnNames, selection, null, null, null, _ID);
+            //mCursor.moveToFirst();
+            String SELECT_QUERY = "SELECT DISTINCT t2." + TeamMatchTransactionDataDBAdapter.allColumnNames;
+            SELECT_QUERY += " FROM " + TeamMatchTransactionsDBAdapter.TABLE_NAME + " AS t1";
+            SELECT_QUERY += " INNER JOIN " + TeamMatchTransactionDataDBAdapter.TABLE_NAME + " AS t2";
+            SELECT_QUERY += " ON t1." + TeamMatchTransactionsDBAdapter.COLUMN_NAME_TRANSACTION_ID + " = t2." + TeamMatchTransactionDataDBAdapter._ID;
+            SELECT_QUERY += " ORDER BY " + TeamMatchTransactionDataDBAdapter._ID + " ASC";
+
+            mCursor = this.mDb.rawQuery(SELECT_QUERY, null);
             mCursor.moveToFirst();
         }
         catch (Exception e) {

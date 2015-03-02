@@ -19,7 +19,7 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
 	private Button btnViewTeamData;
-	private Button btnImportMatchData;
+	private Button btnManageMatchData;
 	private Button btnMatchScouting;
     private Button btnPitScouting;
 	private DBAdapter mDBAdapter;
@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
         this.mDBAdapter = new DBAdapter(this).open();
         
         btnViewTeamData = (Button) findViewById(R.id.btnViewTeamData);
-        btnImportMatchData = (Button) findViewById(R.id.btnViewMatchData);
+        btnManageMatchData = (Button) findViewById(R.id.btnManageMatchData);
         btnMatchScouting = (Button) findViewById(R.id.btnMatchScouting);
         btnPitScouting = (Button) findViewById(R.id.btnPitScouting);
         
@@ -55,16 +55,15 @@ public class MainActivity extends Activity {
 			}
 		});
         
-        btnImportMatchData.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(v.getContext(), ImportMatchDataActivity.class);
-				intent.putExtra("tablet_id", FTSUtilities.getTabletID(tabletAlliancePosition));
-				intent.putExtra("field_orientation", fieldOrientRedOnRight);
-				startActivity(intent);
-			}
-		});
+        btnManageMatchData.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), MatchDataManagementActivity.class);
+                intent.putExtra("tablet_id", FTSUtilities.getTabletID(tabletAlliancePosition));
+                startActivity(intent);
+            }
+        });
 
         btnMatchScouting.setOnClickListener(new View.OnClickListener() {
 

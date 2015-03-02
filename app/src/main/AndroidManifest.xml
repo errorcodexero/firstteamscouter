@@ -20,7 +20,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" android:name="FIRSTTeamScouter">
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.MainActivity"
+        <activity android:name=".MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
             <intent-filter>
@@ -29,15 +29,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.EnterTeamMatchDataActivity"
+        <activity android:name=".EnterTeamMatchDataActivity"
             android:label="@string/title_activity_enter_team_match_data"
-            android:screenOrientation="landscape" >
-        </activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.ImportMatchDataActivity"
-            android:label="@string/title_activity_import_match_data"
-            android:screenOrientation="landscape" >
-        </activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.SelectMatchTeamActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".SelectMatchTeamActivity"
             android:label="@string/title_activity_team_match_list"
             android:screenOrientation="landscape" >
         </activity>
@@ -45,40 +40,48 @@
             android:label="@string/title_activity_team_information"
             android:screenOrientation="landscape" >
         </activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.ViewDataActivity"
+        <activity android:name=".ViewDataActivity"
             android:label="@string/title_activity_view_data"
 			android:screenOrientation="landscape" >
         </activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.TeamDataListActivity"
+        <activity android:name=".TeamDataListActivity"
             android:label="@string/title_activity_team_data_list"
-            android:screenOrientation="landscape"  >
-        </activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.TeamMatchDataListActivity"
-            android:screenOrientation="landscape" ></activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.TeamMatchInformationActivity"
-            android:screenOrientation="landscape" ></activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.MatchAutoModeActivity"
-            android:screenOrientation="landscape" ></activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.MatchTeleModeActivity"
-            android:screenOrientation="landscape" ></activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.MatchStartingPositionActivity"
-            android:screenOrientation="landscape" ></activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.MatchTeamNumberDisplayActivity"
-            android:screenOrientation="landscape" ></activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.MatchNotesActivity"
-            android:screenOrientation="landscape" ></activity>
+            android:screenOrientation="landscape"  />
+        <activity android:name=".TeamMatchDataListActivity"
+            android:label="@string/title_team_match_data_list"
+            android:screenOrientation="landscape" />
+        <activity android:name=".TeamMatchInformationActivity"
+            android:label="@string/title_team_match_information"
+            android:screenOrientation="landscape" />
+        <activity android:name=".MatchAutoModeActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".MatchTeleModeActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".MatchStartingPositionActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".MatchTeamNumberDisplayActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".MatchNotesActivity"
+            android:screenOrientation="landscape" />
         <activity android:name=".TeamInformationActivity"
-            android:screenOrientation="landscape" ></activity>
+            android:screenOrientation="landscape" />
         <activity android:name=".TeamListActivity"
-            android:screenOrientation="landscape" ></activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.PictureListActivity"
-            android:screenOrientation="landscape" ></activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.NoteListActivity"
-            android:screenOrientation="landscape" ></activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.AddNoteActivity"
-            android:screenOrientation="landscape" ></activity>
-        <activity android:name="com.wilsonvillerobotics.firstteamscouter.SetPreferenceActivity"
-            android:screenOrientation="landscape" ></activity>
-        </application>
+            android:screenOrientation="landscape" />
+        <activity android:name=".PictureListActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".NoteListActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".AddNoteActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".SetPreferenceActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".MatchDataManagementActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".MatchDataImportActivity"
+            android:label="@string/title_activity_import_match_data"
+            android:screenOrientation="landscape" />
+        <activity android:name=".MatchDataExportActivity"
+            android:screenOrientation="landscape" />
+    </application>
 
 </manifest>

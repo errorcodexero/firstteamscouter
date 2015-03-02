@@ -63,4 +63,13 @@
     <string name="hint_new_note">New note</string>
     <string name="label_robot_gauge_title">Robot</string>
     <string name="label_start_match">Start Match</string>
+    <string name="label_import_match_data">Import Match Data</string>
+    <string name="label_export_match_data">Export Match Data</string>
+    <string name="title_team_match_data_list">Match Data List</string>
+    <string name="title_team_match_information">Match Information</string>
+    <string name="lbl_repeat_data_export">Repeat Export</string>
+    <string name="label_bluetooth_data_export">Export Via Bluetooth</string>
+    <string name="text_export_status">Export Status:</string>
+    <string name="label_import_data">Import Data</string>
+    <string name="label_show_screen_metrics">Show Screen Metrics</string>
 </resources>
