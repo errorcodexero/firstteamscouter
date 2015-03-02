@@ -1,0 +1,39 @@
+Make pictures deletable
+Select one robot picture to represent the team
+Show the robot picture on the match team screen
+Show a 50x50 version of the robot image on the Starting Position and AutoMode screens
+Show the team number on all match screens
+Set the field background and orientation correctly based on scouting position
+*** Get the menu back on the main screen
+Placing an item on a populated level of a gauge shifts the set upward or downward, if it is at bottom or top
+Export all data from SQLite DB
+Set up SQL server on laptop
+Write exported data to SQL server, if available - CSV if not
+Add setting for SQL Server address and ability to test the connection
+When setting field background, translate the coordinates correctly before storing them
+Store matches under a corresponding competition
+Add competition field to import function and CSV headers
+Add way to delete competition and match
+Add small thumbnail of robot to Pit Info page
+Add ability to assign a robot to a competition/match
+Add a SW language to the robot profile
+Add a Tote Manipulator to the Robot Profile (e.g. Forklift)
+Add a Can Manipulator to the Robot Profile
+Separate robot info into competition-agnostic and competition-dependent fields (e.q. wheel-type vs can lifter type)
+Add a 'Season' table to the DB
+Add a 'SeasonCompetition' table to the DB
+Add a 'SeasonRobotData' table to the DB
+The robot profile shouild pull from RobotData and SeasonRobotData
+Add a SeasonTeamRobotData table to the DB
+Robot is assigned to a team, and can be selected for one or more seasons for multiple competitions in those season(s)
+Gauge level 7 should only be for cans - update the background to show can silhouette at all times
+Highlight on gauge should mirror what is in the TransportContainer
+Minimize the elements at the bottom of the Telemode screen - one of each type per position
+Implement the Rotate button in Telemode to rotate the elements across the bottom of the screen
+Add a button to allow the scouter to manually add a new robot gauge
+Dynamically add robot gauges equal to the number of stacks from the robot data
+Add a 'Drop' area to left of robot gauges
+Add a 'Knock Over' button which activates all non-robot gauges and allows totes/cans to be selected for knock-over
+Extend the 'Step' gauge to be 6 levels high (max yellow tote stack)
+Change notes on match screen to use list like in pit scouting
+If a robot ends Automode with an element in its manipulator, add it to the robot gauge in Telemode
