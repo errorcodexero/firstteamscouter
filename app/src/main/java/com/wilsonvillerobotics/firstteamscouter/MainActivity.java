@@ -33,17 +33,18 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FTSUtilities.printToConsole("Creating MainActivity");
-        
+
         this.txtTabletID = (TextView) findViewById(R.id.txtTabletID);
         this.loadPref();
 
         this.mDBAdapter = new DBAdapter(this).open();
         
-        btnViewTeamData = (Button) findViewById(R.id.btnViewTeamData);
+        //btnViewTeamData = (Button) findViewById(R.id.btnViewTeamData);
         btnManageMatchData = (Button) findViewById(R.id.btnManageMatchData);
         btnMatchScouting = (Button) findViewById(R.id.btnMatchScouting);
         btnPitScouting = (Button) findViewById(R.id.btnPitScouting);
-        
+
+        /*
         btnViewTeamData.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -54,6 +55,7 @@ public class MainActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+		*/
         
         btnManageMatchData.setOnClickListener(new View.OnClickListener() {
 

@@ -40,7 +40,7 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
 
     private int selectedPosition;
     private long teamID, robotID;
-    private String teamNumber;
+    private long teamNumber;
 
     private TeamDataDBAdapter    tdDBAdapter;
     private RobotDataDBAdapter   rdDBAdapter;
@@ -341,7 +341,7 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
         }
 
         if(this.hmTeamInfoTextViews.get(R.id.txtPitTeamNum) != null) {
-            this.hmTeamInfoTextViews.get(R.id.txtPitTeamNum).setText(this.teamNumber);
+            this.hmTeamInfoTextViews.get(R.id.txtPitTeamNum).setText(String.valueOf(this.teamNumber));
         }
 
         if(tdData != null) {
@@ -388,8 +388,7 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
             mdDBAdapter = new MatchDataDBAdapter(this).open();
             rdDBAdapter = new RobotDataDBAdapter(this).open();
             trDBAdapter = new TeamRobotsDBAdapter(this).open();
-            int tNum = Integer.parseInt(this.teamNumber);
-            tdData = tdDBAdapter.getTeamDataEntry(tNum, 0); // TODO - update this so it works with new team_sub_number
+            tdData = tdDBAdapter.getTeamDataEntry(this.teamNumber, 0); // TODO - update this so it works with new team_sub_number
             tmdData = tmdDBAdapter.getMatchesForTeam(this.teamID);
         } catch(SQLException e) {
             e.printStackTrace();
@@ -406,8 +405,8 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
         Intent intent = getIntent();
 
         selectedPosition = intent.getIntExtra("position", -1);
-        teamID = intent.getLongExtra(TeamDataDBAdapter._ID, -1);
-        teamNumber = intent.getStringExtra("team_number");
+        teamID = intent.getLongExtra(TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER, -1);
+        teamNumber = intent.getLongExtra("team_number", -1);
     }
 
     private void loadRobotData() {

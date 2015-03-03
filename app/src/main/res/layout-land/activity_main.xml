@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/AppTheme"
+    style="@android:style/Theme.Holo.Light.DarkActionBar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_alignParentLeft="true"
@@ -11,7 +11,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity"
+    android:background="@android:color/black">
 
     <TextView
         android:id="@+id/txtTabletID"
@@ -48,7 +49,8 @@
                 android:textSize="48sp"
                 android:textStyle="bold"
                 android:typeface="normal"
-                android:layout_weight="0.50" />
+                android:layout_weight="0.40"
+                android:background="@drawable/custom_btn_shakespeare" />
 
             <Button
                 android:id="@+id/btnPitScouting"
@@ -62,7 +64,22 @@
                 android:textSize="48sp"
                 android:textStyle="bold"
                 android:typeface="normal"
-                android:layout_weight="0.50" />
+                android:layout_weight="0.40"
+                android:background="@drawable/custom_btn_shakespeare" />
+
+            <Button
+                android:id="@+id/btnManageMatchData"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="0.2"
+                android:minHeight="@dimen/activity_vertical_margin"
+                android:text="@string/text_button_manage_data"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                android:typeface="normal"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/custom_btn_shakespeare" />
 
         </LinearLayout>
 
@@ -76,29 +93,15 @@
             android:paddingRight="@dimen/activity_vertical_margin"
             tools:context=".MainActivity" >
 
-            <Button
-                android:id="@+id/btnViewTeamData"
+            <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="0.75"
-                android:minHeight="@dimen/activity_vertical_margin"
-                android:text="@string/text_button_view_team_data"
-                android:textStyle="bold"
-                android:typeface="normal" />
-
-            <Button
-                android:id="@+id/btnManageMatchData"
-                android:layout_width="fill_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="0.25"
-                android:minHeight="@dimen/activity_vertical_margin"
-                android:text="@string/text_button_manage_data"
-                android:textSize="36sp"
-                android:textStyle="bold"
-                android:typeface="normal" />
+                android:id="@+id/ivFTSLogo"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.85"
+                android:src="@drawable/fts_logo"
+                android:scaleType="fitXY"
+                android:layout_margin="5dp" />
 
         </LinearLayout>
 

@@ -11,7 +11,7 @@ public class DBAdapter {
 
     public static final String DATABASE_NAME = "FIRSTTeamScouter"; //$NON-NLS-1$
 
-    public static final int DATABASE_VERSION = 11;
+    public static final int DATABASE_VERSION = 13;
     
     private static final int CREATE_TABLE_SQL = 0;
     private static final int DELETE_TABLE_SQL = 1;
@@ -20,7 +20,7 @@ public class DBAdapter {
     private static final String AUTO_INC_ID = "_id integer primary key autoincrement, ";
     private static final String TEXT_TYPE = " TEXT";
     private static final String INT_TYPE = " INTEGER";
-    private static final String NOT_NULL = "NOT NULL";
+    private static final String NOT_NULL = " NOT NULL";
     private static final String BOOL_TYPE = " TEXT";
     private static final String COMMA_SEP = ",";
 
@@ -226,13 +226,14 @@ public class DBAdapter {
              */
     		"CREATE TABLE " + TeamDataDBAdapter.TABLE_NAME + " (" +
     		//AUTO_INC_ID +
+            "_id integer, " +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER + INT_TYPE + NOT_NULL + COMMA_SEP +
             TeamDataDBAdapter.COLUMN_NAME_TEAM_SUB_NUMBER + INT_TYPE + NOT_NULL + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_NAME + TEXT_TYPE + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_LOCATION + TEXT_TYPE + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_NUM_MEMBERS + TEXT_TYPE + COMMA_SEP +
             TeamDataDBAdapter.COLUMN_NAME_TEAM_YEAR_CREATED + TEXT_TYPE + COMMA_SEP +
-	        TeamDataDBAdapter.COLUMN_NAME_TEAM_DATA_UPDATED + BOOL_TYPE +
+	        TeamDataDBAdapter.COLUMN_NAME_TEAM_DATA_UPDATED + BOOL_TYPE + COMMA_SEP +
             TeamDataDBAdapter.PRIMARY_KEY +
     		");",
     		

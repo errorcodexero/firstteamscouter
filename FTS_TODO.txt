@@ -1,4 +1,8 @@
-*** Get the menu back on the main screen
+COMPLETED:
+Get the menu back on the main screen
+
+
+
 
 Pictures:
 Make pictures deletable

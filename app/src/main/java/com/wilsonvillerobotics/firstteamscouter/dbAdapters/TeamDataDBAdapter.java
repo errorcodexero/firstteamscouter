@@ -26,7 +26,7 @@ public class TeamDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_TEAM_DATA_UPDATED = "team_data_updated";
     public static final String COLUMN_NAME_TEAM_YEAR_CREATED = "team_creation_year";
 
-    public static final String PRIMARY_KEY = "PRIMARY KEY (" + TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER + TeamDataDBAdapter.COLUMN_NAME_TEAM_SUB_NUMBER + ")";
+    public static final String PRIMARY_KEY = " PRIMARY KEY ( " + TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER + ", " + TeamDataDBAdapter.COLUMN_NAME_TEAM_SUB_NUMBER + " )";
 
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -105,29 +105,31 @@ public class TeamDataDBAdapter implements BaseColumns {
      */
     public long createTeamDataEntry(int team_number, int team_sub_number, String team_name, String team_location, int num_team_members){
         ContentValues args = new ContentValues();
-        //args.put(COLUMN_NAME_TEAM_ID, team_id);
         args.put(COLUMN_NAME_TEAM_NUMBER, team_number);
         args.put(COLUMN_NAME_TEAM_SUB_NUMBER, team_sub_number);
         args.put(COLUMN_NAME_TEAM_NAME, team_name);
         args.put(COLUMN_NAME_TEAM_LOCATION, team_location);
         args.put(COLUMN_NAME_TEAM_NUM_MEMBERS, num_team_members);
         args.put(COLUMN_NAME_TEAM_DATA_UPDATED, Boolean.TRUE.toString());
-        return this.mDb.insert(TABLE_NAME, null, args);
+        if(this.mDb.insert(TABLE_NAME, null, args) > 0) return team_number;
+        return -1;
     }
 
-    public long createTeamDataEntry(int team_number, int team_sub_number) {
+    public long[] createTeamDataEntry(int team_number, int team_sub_number) {
     	Cursor c;
-    	long retVal;
+    	long retVal[] = {-1,-1};
     	try {
     		c = this.getTeamDataEntry(team_number, team_sub_number);
-    		retVal = c.getLong(c.getColumnIndex(_ID));
+    		retVal[0] = c.getLong(c.getColumnIndex(COLUMN_NAME_TEAM_NUMBER));
+            retVal[1] = c.getLong(c.getColumnIndex(COLUMN_NAME_TEAM_SUB_NUMBER));
     	}
     	catch(Exception e) {
     		ContentValues args = new ContentValues();
             args.put(COLUMN_NAME_TEAM_NUMBER, team_number);
             args.put(COLUMN_NAME_TEAM_SUB_NUMBER, team_sub_number);
             args.put(COLUMN_NAME_TEAM_DATA_UPDATED, Boolean.TRUE.toString());
-            retVal = this.mDb.insert(TABLE_NAME, null, args);
+            retVal[0] = this.mDb.insert(TABLE_NAME, null, args);
+            retVal[1] = team_sub_number;
     	}
         return retVal; 
     }
@@ -174,7 +176,7 @@ public class TeamDataDBAdapter implements BaseColumns {
     public Cursor getAllTeamDataEntries() {
 
         Cursor mCursor = this.mDb.query(TABLE_NAME, new String[] { _ID,
-        		/*COLUMN_NAME_TEAM_ID,*/ COLUMN_NAME_TEAM_NUMBER, COLUMN_NAME_TEAM_SUB_NUMBER, COLUMN_NAME_TEAM_NAME,
+        		COLUMN_NAME_TEAM_NUMBER, COLUMN_NAME_TEAM_SUB_NUMBER, COLUMN_NAME_TEAM_NAME,
         		COLUMN_NAME_TEAM_LOCATION, COLUMN_NAME_TEAM_NUM_MEMBERS, COLUMN_NAME_TEAM_DATA_UPDATED
         		}, null, null, null, null, COLUMN_NAME_TEAM_NUMBER + " ASC");
         FTSUtilities.printToConsole("TeamDataDBAdapter::getAllTeamDataEntries : Cursor Size : " + mCursor.getCount() + "\n");
@@ -188,7 +190,7 @@ public class TeamDataDBAdapter implements BaseColumns {
      */
     public Cursor getUpdatedTeamDataEntries() {
 
-        Cursor mCursor = this.mDb.query(TABLE_NAME, new String[] { _ID,
+        Cursor mCursor = this.mDb.query(TABLE_NAME, new String[] {
         		COLUMN_NAME_TEAM_NUMBER, COLUMN_NAME_TEAM_SUB_NUMBER, COLUMN_NAME_TEAM_NAME,
         		COLUMN_NAME_TEAM_LOCATION, COLUMN_NAME_TEAM_NUM_MEMBERS, COLUMN_NAME_TEAM_DATA_UPDATED
         		}, COLUMN_NAME_TEAM_DATA_UPDATED + "=" + Boolean.TRUE.toString(), null, null, null, COLUMN_NAME_TEAM_NUMBER + " ASC");
@@ -202,7 +204,7 @@ public class TeamDataDBAdapter implements BaseColumns {
      * @return Cursor positioned to matching entry, if found
      * @throws SQLException if entry could not be found/retrieved
      */
-    public Cursor getTeamDataEntry(int teamNumber, int team_sub_number) throws SQLException {
+    public Cursor getTeamDataEntry(long teamNumber, long team_sub_number) throws SQLException {
 
         Cursor mCursor = this.mDb.query(true, TABLE_NAME, new String[] { _ID, 
         		COLUMN_NAME_TEAM_NUMBER, COLUMN_NAME_TEAM_SUB_NUMBER, COLUMN_NAME_TEAM_NAME,

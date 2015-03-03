@@ -50,12 +50,12 @@ public class TeamListActivity extends ListActivity {
                  long arg3)
            {
                  Cursor value = (Cursor)adapter.getItemAtPosition(position);
-                 long teamID = value.getLong(value.getColumnIndex(TeamDataDBAdapter._ID));
+                 long teamID = value.getLong(value.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER));
                  String teamNum = value.getString(value.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER));
                  Intent myIntent = new Intent(v.getContext(), TeamInformationActivity.class);
                  myIntent.putExtra("position", position);
                  myIntent.putExtra("team_number", teamNum);
-                 myIntent.putExtra(TeamDataDBAdapter._ID, teamID);
+                 myIntent.putExtra(TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER, teamID);
                  startActivityForResult(myIntent, 0);
            }
         });
