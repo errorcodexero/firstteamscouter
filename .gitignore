@@ -31,3 +31,9 @@ Thumbs.db
 #.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 .gradle
 build/
+
+#database backup files
+db_backups/
+
+#Notepad++ backups
+nppBackup/
