@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.database.SQLException;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
@@ -44,7 +45,7 @@ public class NoteListActivity extends Activity implements OnClickListener {
     private NotesDataDBAdapter  ndDBAdapter;
 
     private long teamId;
-    private String teamNumber;
+    private long teamNumber;
 
     private final int ADD_NOTE = 2;
 
@@ -109,7 +110,7 @@ public class NoteListActivity extends Activity implements OnClickListener {
     private void processIntent() {
         Intent intent = getIntent();
         this.teamId = intent.getLongExtra("team_id", -1);
-        this.teamNumber = intent.getStringExtra("team_number");
+        this.teamNumber = intent.getLongExtra("team_number", -1);
         this.itemType = ItemType.getItemTypeByName(intent.getStringExtra("item_type"));
     }
 
@@ -224,6 +225,7 @@ public class NoteListActivity extends Activity implements OnClickListener {
                 textView.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 75));
                 textView.setPadding(0, 0, 0, 0);
                 textView.setTextSize(24.0f);
+                textView.setTextColor(Color.WHITE);
                 textView.setGravity(Gravity.LEFT);
                 textView.setGravity(Gravity.CENTER_VERTICAL);
             } else {

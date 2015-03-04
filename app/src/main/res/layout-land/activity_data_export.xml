@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@android:style/Theme.Holo.Light.DarkActionBar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <LinearLayout
-        style="@drawable/edittext_bg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.3"
-        android:orientation="vertical"
-        android:layout_gravity="center_horizontal">
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:background="@android:color/black">
 
         <TextView
             android:id="@+id/textView"
@@ -20,10 +15,11 @@
             android:text="Export Data"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="24sp"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="20dp"
+            android:textColor="@android:color/white" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="275dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:orientation="horizontal"
@@ -36,7 +32,8 @@
                 android:text="Export Via Bluetooth"
                 android:layout_weight="0.50"
                 android:layout_margin="10dp"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:background="@drawable/custom_btn_shakespeare" />
 
             <Button
                 android:id="@+id/btnRepeatDataExport"
@@ -46,7 +43,8 @@
                 android:layout_margin="10dp"
                 android:layout_weight="0.50"
                 android:textSize="20sp"
-                android:singleLine="false" />
+                android:singleLine="false"
+                android:background="@drawable/custom_btn_shakespeare" />
         </LinearLayout>
 
         <TextView
@@ -57,7 +55,7 @@
             android:id="@+id/txtDataExportStatus"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:gravity="left" />
-    </LinearLayout>
+            android:gravity="left"
+            android:textColor="@android:color/white" />
 
 </LinearLayout>

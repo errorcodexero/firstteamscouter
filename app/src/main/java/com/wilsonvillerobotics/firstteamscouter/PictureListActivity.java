@@ -3,6 +3,7 @@ package com.wilsonvillerobotics.firstteamscouter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.database.SQLException;
@@ -11,10 +12,15 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
@@ -48,11 +54,12 @@ import java.util.List;
  */
 public class PictureListActivity extends Activity implements OnClickListener {
     private GridView gridView;
-    private GridViewAdapter customGridAdapter;
 
     private RobotPicturesDBAdapter rpDBAdapter;
     private PitPicturesDBAdapter   ppDBAdapter;
     private PictureDataDBAdapter   pdDBAdapter;
+
+    private ImageView clickedImage;
 
     private long rpID;
     private long teamId;
@@ -76,6 +83,8 @@ public class PictureListActivity extends Activity implements OnClickListener {
         setContentView(R.layout.activity_picture_list);
 
         this.processIntent();
+
+        this.clickedImage = null;
 
         filePath = getExternalFilesDir(null);
         imagesPath = filePath.getAbsolutePath() + "/images/";
@@ -126,7 +135,7 @@ public class PictureListActivity extends Activity implements OnClickListener {
         listOfImagesPath = null;
         listOfImagesPath = RetrieveCapturedImagePath();
         if(listOfImagesPath!=null){
-            gridView.setAdapter(new ImageListAdapter(this,listOfImagesPath));
+            gridView.setAdapter(new ImageListAdapter(this,listOfImagesPath, this.itemType));
         }
     }
 
@@ -193,7 +202,7 @@ public class PictureListActivity extends Activity implements OnClickListener {
                 listOfImagesPath = null;
                 listOfImagesPath = RetrieveCapturedImagePath();
                 if(listOfImagesPath!=null){
-                    gridView.setAdapter(new ImageListAdapter(this,listOfImagesPath));
+                    gridView.setAdapter(new ImageListAdapter(this,listOfImagesPath, this.itemType));
                 }
             }
         }
@@ -219,10 +228,12 @@ public class PictureListActivity extends Activity implements OnClickListener {
     {
         private Context context;
         private List<String> imgPic;
-        public ImageListAdapter(Context c, List<String> thePic)
+        private ItemType imgType;
+        public ImageListAdapter(Context c, List<String> thePic, ItemType type)
         {
             context = c;
             imgPic = thePic;
+            imgType = type;
         }
         public int getCount() {
             if(imgPic != null)
@@ -259,13 +270,18 @@ public class PictureListActivity extends Activity implements OnClickListener {
             FileInputStream fs = null;
             Bitmap bm;
             try {
-                fs = new FileInputStream(new File(imgPic.get(position).toString()));
+                String path = imgPic.get(position).toString();
+                fs = new FileInputStream(new File(path));
 
                 if(fs!=null) {
                     bm=BitmapFactory.decodeFileDescriptor(fs.getFD(), null, bfOptions);
                     imageView.setImageBitmap(bm);
                     imageView.setId(position);
                     imageView.setLayoutParams(new GridView.LayoutParams(200, 160));
+                    imageView.setOnTouchListener(new MyViewTouchListener());
+                    imageView.setTag(R.id.TAG_PATH_ID, path);
+                    imageView.setTag(R.id.TAG_ITEM_TYPE_ID, itemType);
+                    registerForContextMenu(imageView);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -279,6 +295,22 @@ public class PictureListActivity extends Activity implements OnClickListener {
                 }
             }
             return imageView;
+        }
+
+        private final class MyViewTouchListener implements View.OnTouchListener {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    //ClipData data = ClipData.newPlainText("", "");
+                    //View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+                    //view.startDrag(data, shadowBuilder, view, 0);
+                    view.showContextMenu();
+                    return true;
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                    //view.setVisibility(View.GONE);
+                    return true;
+                } else return motionEvent.getAction() == MotionEvent.ACTION_UP;
+            }
         }
     }
 
@@ -299,6 +331,96 @@ public class PictureListActivity extends Activity implements OnClickListener {
             boolean matches = filename.toLowerCase().startsWith(filePrefix.toLowerCase());
             matches &= filename.toLowerCase().endsWith(ext.toLowerCase());
             return matches;
+        }
+    }
+
+    /*
+     * This method is called when a context menu for the view about to be shown.
+     */
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        if(v.getClass() == ImageView.class) this.clickedImage = (ImageView)v;
+
+        if(this.clickedImage != null) {
+            switch((ItemType)clickedImage.getTag(R.id.TAG_ITEM_TYPE_ID)) {
+                case ROBOT:
+                    menu.setHeaderIcon(R.drawable.robot_50x50);
+                    menu.setHeaderTitle("Robot Image");
+                    menu.add(0, 0, 0, "Cancel");
+                    menu.add(0, 1, 0, "Delete Image");
+                    menu.add(0, 2, 0, "Set As Main Image");
+                    break;
+                case PIT:
+                    menu.setHeaderIcon(R.drawable.gray_tote_side_up_50x24);
+                    menu.setHeaderTitle("Pit Image");
+                    menu.add(1, 0, 0, "Cancel");
+                    menu.add(1, 1, 0, "Delete Image");
+                    break;
+                case TEAM:
+                    menu.setHeaderIcon(R.drawable.green_can_top_down_40x40);
+                    menu.setHeaderTitle("Team Image");
+                    menu.add(2, 0, 0, "Cancel");
+                    menu.add(2, 1, 0, "Delete Image");
+                    menu.add(2, 2, 0, "Set As Main Image");
+                    break;
+            }
+
+
+        }
+    }
+
+    /*
+    * This method is called when an item in a context menu is selected.
+    *
+    */
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch(item.getGroupId()) {
+            case 0: // Robot image actions
+            case 1: // Pit image actions
+            case 2: // Team image actions
+                switch (item.getItemId()) {
+                    case 0:
+                        //cancel
+                        break;
+                    case 1: // delete
+                        if(clickedImage != null) deleteImage();
+                        clickedImage = null;
+                        break;
+                }
+                break;
+        }
+        return true;
+    }
+
+    private void deleteImage() {
+        if(clickedImage != null) {
+            String path = (String)clickedImage.getTag(R.id.TAG_PATH_ID);
+            if(path != null) {
+                FTSUtilities.printToConsole("Deleting Image from ImageView: " + path);
+
+                if(listOfImagesPath != null) {
+                    GridView gv = (GridView)clickedImage.getParent();
+                    ImageListAdapter ila = (ImageListAdapter)gv.getAdapter();
+                    listOfImagesPath.remove(path);
+                    ila.notifyDataSetChanged();
+                }
+
+                File f = new File(path);
+                String deleted = "";
+                if(f.delete()) {
+                    deleted = " deleted.";
+                } else {
+                    deleted = " NOT deleted.";
+                }
+                Toast.makeText(getBaseContext(), "File" + deleted, Toast.LENGTH_LONG).show();
+
+                clickedImage = null;
+            }
         }
     }
 }

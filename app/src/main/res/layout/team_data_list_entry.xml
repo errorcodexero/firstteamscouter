@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@android:style/Theme.Holo.Light.DarkActionBar"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="left"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:background="@android:color/black">
 
     <TextView
         android:id="@+id/number_entry"
         android:layout_width="150dp"
         android:layout_height="80dp"
         android:text="Team #"
-        android:textSize="28sp" />
+        android:textSize="28sp"
+        android:textColor="@android:color/white"
+        android:gravity="center_vertical" />
 
     <TextView
         android:id="@+id/name_entry"
         android:layout_width="650dp"
         android:layout_height="80dp"
         android:text="Team Name"
-        android:textSize="28sp" />
+        android:textSize="28sp"
+        android:textColor="@android:color/white"
+        android:gravity="center_vertical" />
 
 </LinearLayout>

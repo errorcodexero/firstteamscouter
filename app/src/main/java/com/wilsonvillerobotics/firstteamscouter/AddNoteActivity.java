@@ -33,7 +33,7 @@ import java.util.List;
  * http://blog.andolasoft.com/2013/06/how-to-show-captured-images-dynamically-in-gridview-layout.html
  */
 public class AddNoteActivity extends Activity implements OnClickListener {
-    private String teamNumber;
+    private long teamNumber;
 
     Button btnNoteSave = null;
     TextView lblAddNoteForTeam;
@@ -50,7 +50,7 @@ public class AddNoteActivity extends Activity implements OnClickListener {
         this.processIntent();
 
         lblAddNoteForTeam = (TextView)findViewById(R.id.lblAddNoteForTeam);
-        if(lblAddNoteForTeam != null) lblAddNoteForTeam.append(this.teamNumber);
+        if(lblAddNoteForTeam != null) lblAddNoteForTeam.append(String.valueOf(teamNumber));
 
         etNewNote = (EditText)findViewById(R.id.etNewNote);
         if(etNewNote != null) etNewNote.setEnabled(true);
@@ -61,7 +61,7 @@ public class AddNoteActivity extends Activity implements OnClickListener {
 
     private void processIntent() {
         Intent intent = getIntent();
-        this.teamNumber = intent.getStringExtra("team_number");
+        this.teamNumber = intent.getLongExtra("team_number", -1);
     }
 
     @Override
