@@ -17,6 +17,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import java.util.ArrayList;
+
 public class CompetitionDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "competition_data";
     public static final String COLUMN_NAME_COMPETITION_NAME = "competition_name";
@@ -33,7 +35,11 @@ public class CompetitionDataDBAdapter implements BaseColumns {
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
 
-    private final Context mCtx;
+    private Context mCtx;
+
+    public static boolean restoreTableData(ArrayList<Object> data) {
+        return false;
+    }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -79,6 +85,22 @@ public class CompetitionDataDBAdapter implements BaseColumns {
     public CompetitionDataDBAdapter open() throws SQLException {
         this.mDbHelper = new DatabaseHelper(this.mCtx);
         this.mDb = this.mDbHelper.getWritableDatabase();
+        return this;
+    }
+
+    /**
+     * Open the CompetitionData database. If it cannot be opened, try to create a new
+     * instance of the database. If it cannot be created, throw an exception to
+     * signal the failure
+     *
+     * @return this (self reference, allowing this to be chained in an
+     *         initialization call)
+     * @throws SQLException
+     *             if the database could be neither opened or created
+     */
+    public CompetitionDataDBAdapter openToRead() throws SQLException {
+        this.mDbHelper = new DatabaseHelper(this.mCtx);
+        this.mDb = this.mDbHelper.getReadableDatabase();
         return this;
     }
 

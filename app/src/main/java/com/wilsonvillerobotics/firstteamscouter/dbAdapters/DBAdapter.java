@@ -2,19 +2,28 @@ package com.wilsonvillerobotics.firstteamscouter.dbAdapters;
 
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DBAdapter {
 
     public static final String DATABASE_NAME = "FIRSTTeamScouter"; //$NON-NLS-1$
 
-    public static final int DATABASE_VERSION = 13;
-    
-    private static final int CREATE_TABLE_SQL = 0;
-    private static final int DELETE_TABLE_SQL = 1;
+    public static final int DATABASE_VERSION = 15;
+
+    private static final int TABLE_NAME        = 0;
+    private static final int CREATE_TABLE_SQL  = 1;
+    private static final int BACKUP_TABLE_SQL  = 2;
+    private static final int DELETE_TABLE_SQL  = 3;
+    private static final int RESTORE_TABLE_SQL = 4;
     
 
     private static final String AUTO_INC_ID = "_id integer primary key autoincrement, ";
@@ -53,35 +62,40 @@ public class DBAdapter {
     		return index;
     	}
     };
-    
+
     private static final String[][] TABLE_LIST = {
     	{
     		//0
     		//COMPETITION_DATA
+            CompetitionDataDBAdapter.TABLE_NAME,
 	    	"CREATE TABLE " + CompetitionDataDBAdapter.TABLE_NAME + " (" +
 	    	AUTO_INC_ID + 
 	        CompetitionDataDBAdapter.COLUMN_NAME_COMPETITION_NAME + TEXT_TYPE + COMMA_SEP +
 	        CompetitionDataDBAdapter.COLUMN_NAME_COMPETITION_LOCATION + TEXT_TYPE + 
 	   	    ");",
-	   	    
-	   	    "DROP TABLE IF EXISTS " + CompetitionDataDBAdapter.TABLE_NAME
+            "SELECT * FROM "  + CompetitionDataDBAdapter.TABLE_NAME,
+	   	    "DROP TABLE IF EXISTS " + CompetitionDataDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + CompetitionDataDBAdapter.TABLE_NAME
     	},
    	    
     	{
     		//1
     		//COMPETITION_MATCHES
+            CompetitionMatchesDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + CompetitionMatchesDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
     		CompetitionMatchesDBAdapter.COLUMN_NAME_COMPETITION_ID + TEXT_TYPE + COMMA_SEP +
     		CompetitionMatchesDBAdapter.COLUMN_NAME_MATCH_ID + TEXT_TYPE +
 			");",
-			
-			"DROP TABLE IF EXISTS " + CompetitionMatchesDBAdapter.TABLE_NAME
+            "SELECT * FROM "  + CompetitionMatchesDBAdapter.TABLE_NAME,
+			"DROP TABLE IF EXISTS " + CompetitionMatchesDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + CompetitionMatchesDBAdapter.TABLE_NAME
     	},
 		
     	{
     		//2
     		//MATCH_DATA
+            MatchDataDBAdapter.TABLE_NAME,
 			"CREATE TABLE " + MatchDataDBAdapter.TABLE_NAME + " (" +
 			AUTO_INC_ID + 
 	        MatchDataDBAdapter.COLUMN_NAME_MATCH_TIME + TEXT_TYPE + COMMA_SEP +
@@ -96,84 +110,105 @@ public class DBAdapter {
 	        MatchDataDBAdapter.COLUMN_NAME_BLUE_TEAM_THREE_ID + INT_TYPE + COMMA_SEP +
 	        MatchDataDBAdapter.COLUMN_NAME_MATCH_DATA_UPDATED + BOOL_TYPE +
 			");",
-			
-			"DROP TABLE IF EXISTS " + MatchDataDBAdapter.TABLE_NAME
+
+            "SELECT * FROM "  + MatchDataDBAdapter.TABLE_NAME,
+			"DROP TABLE IF EXISTS " + MatchDataDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + MatchDataDBAdapter.TABLE_NAME
     	},
 		
     	{
     		//3
     		//MATCH_NOTES
+            MatchNotesDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + MatchNotesDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
     		MatchNotesDBAdapter.COLUMN_NAME_MATCH_ID + TEXT_TYPE + COMMA_SEP +
     		MatchNotesDBAdapter.COLUMN_NAME_NOTE_ID + TEXT_TYPE + 
     		");",
-    		
-    		"DROP TABLE IF EXISTS " + MatchNotesDBAdapter.TABLE_NAME
+
+            "SELECT * FROM "  + MatchNotesDBAdapter.TABLE_NAME,
+    		"DROP TABLE IF EXISTS " + MatchNotesDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + MatchNotesDBAdapter.TABLE_NAME
     	},
     	
     	{
     		//4
     		//NOTES_DATA
+            NotesDataDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + NotesDataDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
 			NotesDataDBAdapter.COLUMN_NAME_NOTE_TYPE + TEXT_TYPE + COMMA_SEP +
 			NotesDataDBAdapter.COLUMN_NAME_NOTE_TEXT + TEXT_TYPE +
     		");",
-    		
-    		"DROP TABLE IF EXISTS " + NotesDataDBAdapter.TABLE_NAME
+
+            "SELECT * FROM "  + NotesDataDBAdapter.TABLE_NAME,
+            "DROP TABLE IF EXISTS " + NotesDataDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + NotesDataDBAdapter.TABLE_NAME
     	},
 		
     	{
     		//5
     		//PICTURE_DATA
+            PictureDataDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + PictureDataDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
     		PictureDataDBAdapter.COLUMN_NAME_PICTURE_TYPE + TEXT_TYPE + COMMA_SEP +
     		PictureDataDBAdapter.COLUMN_NAME_PICTURE_URI + TEXT_TYPE +
     		");",
-    		
-    		"DROP TABLE IF EXISTS " + PictureDataDBAdapter.TABLE_NAME
+
+            "SELECT * FROM "  + PictureDataDBAdapter.TABLE_NAME,
+            "DROP TABLE IF EXISTS " + PictureDataDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + PictureDataDBAdapter.TABLE_NAME
     	},
 		
     	{
     		//6
     		//PIT_DATA
+            PitDataDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + PitDataDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
     		PitDataDBAdapter.COLUMN_NAME_PIT_INFO + INT_TYPE +
     		");",
-    		
-    		"DROP TABLE IF EXISTS " + PitDataDBAdapter.TABLE_NAME
+
+            "SELECT * FROM "  + PitDataDBAdapter.TABLE_NAME,
+            "DROP TABLE IF EXISTS " + PitDataDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + PitDataDBAdapter.TABLE_NAME
     	},
 		
     	{
     		//7
     		//PIT_NOTES
+            PitNotesDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + PitNotesDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
     		PitNotesDBAdapter.COLUMN_NAME_PIT_ID + TEXT_TYPE + COMMA_SEP +
     		PitNotesDBAdapter.COLUMN_NAME_NOTE_ID + TEXT_TYPE +
     		");",
-    		
-    		"DROP TABLE IF EXISTS " + PitNotesDBAdapter.TABLE_NAME
+
+            "SELECT * FROM "  + PitNotesDBAdapter.TABLE_NAME,
+            "DROP TABLE IF EXISTS " + PitNotesDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + PitNotesDBAdapter.TABLE_NAME
     	},
 		
     	{
     		//8
     		//PIT_PICTURES
+            PitPicturesDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + PitPicturesDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID +
             PitPicturesDBAdapter.COLUMN_NAME_PIT_ID + INT_TYPE + COMMA_SEP +
     		PitPicturesDBAdapter.COLUMN_NAME_PICTURE_ID + TEXT_TYPE +
     		");",
-    		
-    		"DROP TABLE IF EXISTS " + PitPicturesDBAdapter.TABLE_NAME
+
+            "SELECT * FROM "  + PitPicturesDBAdapter.TABLE_NAME,
+            "DROP TABLE IF EXISTS " + PitPicturesDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + PitPicturesDBAdapter.TABLE_NAME
     	},
 		
     	{
     		//9
     		//ROBOT_DATA
+            RobotDataDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + RobotDataDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
     		RobotDataDBAdapter.COLUMN_NAME_DRIVE_TRAIN_TYPE + TEXT_TYPE + COMMA_SEP +
@@ -185,32 +220,40 @@ public class DBAdapter {
             RobotDataDBAdapter.COLUMN_NAME_GET_STEP_CANS + BOOL_TYPE + COMMA_SEP +
             RobotDataDBAdapter.COLUMN_NAME_PUT_TOTES_ON_STEP + BOOL_TYPE +
     		");",
-    		
-    		"DROP TABLE IF EXISTS " + RobotDataDBAdapter.TABLE_NAME
+
+            "SELECT * FROM "  + RobotDataDBAdapter.TABLE_NAME,
+            "DROP TABLE IF EXISTS " + RobotDataDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + RobotDataDBAdapter.TABLE_NAME
     	},
 		
     	{
     		//10
     		//ROBOT_NOTES
+            RobotNotesDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + RobotNotesDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
     		RobotNotesDBAdapter.COLUMN_NAME_ROBOT_ID + TEXT_TYPE + COMMA_SEP +
     		RobotNotesDBAdapter.COLUMN_NAME_NOTE_ID + TEXT_TYPE +
     		");",
-    		
-    		"DROP TABLE IF EXISTS " + RobotNotesDBAdapter.TABLE_NAME
+
+            "SELECT * FROM "  + RobotNotesDBAdapter.TABLE_NAME,
+            "DROP TABLE IF EXISTS " + RobotNotesDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + RobotNotesDBAdapter.TABLE_NAME
     	},
 		
     	{
     		//11
     		//ROBOT_PICTURES
+            RobotPicturesDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + RobotPicturesDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
     		RobotPicturesDBAdapter.COLUMN_NAME_ROBOT_ID + TEXT_TYPE + COMMA_SEP +
     		RobotPicturesDBAdapter.COLUMN_NAME_PICTURE_ID + TEXT_TYPE +
     		");",
-    		
-    		"DROP TABLE IF EXISTS " + RobotPicturesDBAdapter.TABLE_NAME
+
+            "SELECT * FROM "  + RobotPicturesDBAdapter.TABLE_NAME,
+            "DROP TABLE IF EXISTS " + RobotPicturesDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + RobotPicturesDBAdapter.TABLE_NAME
     	},
 		
     	{
@@ -224,6 +267,7 @@ public class DBAdapter {
               PRIMARY KEY ( column1, column2)
             );
              */
+            TeamDataDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + TeamDataDBAdapter.TABLE_NAME + " (" +
     		//AUTO_INC_ID +
             "_id integer, " +
@@ -236,13 +280,16 @@ public class DBAdapter {
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_DATA_UPDATED + BOOL_TYPE + COMMA_SEP +
             TeamDataDBAdapter.PRIMARY_KEY +
     		");",
-    		
-    		"DROP TABLE IF EXISTS " + TeamDataDBAdapter.TABLE_NAME
+
+            "SELECT * FROM "  + TeamDataDBAdapter.TABLE_NAME,
+            "DROP TABLE IF EXISTS " + TeamDataDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + TeamDataDBAdapter.TABLE_NAME
     	},
 		
     	{
     		//13
     		//TEAM_MATCH_DATA
+            TeamMatchDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + TeamMatchDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
     		TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
@@ -305,50 +352,62 @@ public class DBAdapter {
             TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_STACK_LIST + TEXT_TYPE + COMMA_SEP +
             TeamMatchDBAdapter.COLUMN_NAME_AUTO_MODE_SAVED + BOOL_TYPE +
     		");",
-    		
-    		"DROP TABLE IF EXISTS " + TeamMatchDBAdapter.TABLE_NAME
+
+            "SELECT * FROM "  + TeamMatchDBAdapter.TABLE_NAME,
+            "DROP TABLE IF EXISTS " + TeamMatchDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + TeamMatchDBAdapter.TABLE_NAME
     	},
 		
     	{
     		//14
     		//TEAM_MATCH_NOTES
+            TeamMatchNotesDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + TeamMatchNotesDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
     		TeamMatchNotesDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
     		TeamMatchNotesDBAdapter.COLUMN_NAME_MATCH_ID + INT_TYPE + COMMA_SEP +
     		TeamMatchNotesDBAdapter.COLUMN_NAME_NOTE_ID + INT_TYPE +
     		");",
-    		
-    		"DROP TABLE IF EXISTS " + TeamMatchNotesDBAdapter.TABLE_NAME
+
+            "SELECT * FROM "  + TeamMatchNotesDBAdapter.TABLE_NAME,
+            "DROP TABLE IF EXISTS " + TeamMatchNotesDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + TeamMatchNotesDBAdapter.TABLE_NAME
     	},
 		
     	{
     		//15
     		//TEAM_PITS
+            TeamPitsDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + TeamPitsDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
 			TeamPitsDBAdapter.COLUMN_NAME_TEAM_ID + TEXT_TYPE + COMMA_SEP +
 			TeamPitsDBAdapter.COLUMN_NAME_PIT_ID + TEXT_TYPE +
     		");",
-    		
-    		"DROP TABLE IF EXISTS " + TeamPitsDBAdapter.TABLE_NAME
+
+            "SELECT * FROM "  + TeamPitsDBAdapter.TABLE_NAME,
+            "DROP TABLE IF EXISTS " + TeamPitsDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + TeamPitsDBAdapter.TABLE_NAME
     	},
 		
     	{
     		//16
     		//TEAM_ROBOTS
+            TeamRobotsDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + TeamRobotsDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
 			TeamRobotsDBAdapter.COLUMN_NAME_TEAM_ID + TEXT_TYPE + COMMA_SEP +
 			TeamRobotsDBAdapter.COLUMN_NAME_ROBOT_ID + TEXT_TYPE +
     		");",
-    		
-    		"DROP TABLE IF EXISTS " + TeamRobotsDBAdapter.TABLE_NAME
+
+            "SELECT * FROM "  + TeamRobotsDBAdapter.TABLE_NAME,
+            "DROP TABLE IF EXISTS " + TeamRobotsDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + TeamRobotsDBAdapter.TABLE_NAME
     	},
 
         {
             //17
             //TEAM_MATCH_TRANSACTION_DATA
+            TeamMatchTransactionDataDBAdapter.TABLE_NAME,
             "CREATE TABLE " + TeamMatchTransactionDataDBAdapter.TABLE_NAME + " (" +
                 AUTO_INC_ID +
                 TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
@@ -367,19 +426,24 @@ public class DBAdapter {
                     TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TRANSACTION_READY_TO_EXPORT + TEXT_TYPE +
             ");",
 
-            "DROP TABLE IF EXISTS " + TeamMatchTransactionDataDBAdapter.TABLE_NAME
+            "SELECT * FROM "  + TeamMatchTransactionDataDBAdapter.TABLE_NAME,
+            "DROP TABLE IF EXISTS " + TeamMatchTransactionDataDBAdapter.TABLE_NAME,
+            "SELECT * FROM "  + TeamMatchTransactionDataDBAdapter.TABLE_NAME
         },
 
             {
                 //17
                 //TEAM_MATCH_TRANSACTIONS
+                TeamMatchTransactionsDBAdapter.TABLE_NAME,
                 "CREATE TABLE " + TeamMatchTransactionsDBAdapter.TABLE_NAME + " (" +
                     AUTO_INC_ID +
                     TeamMatchTransactionsDBAdapter.COLUMN_NAME_TEAM_MATCH_ID + INT_TYPE + COMMA_SEP +
                     TeamMatchTransactionsDBAdapter.COLUMN_NAME_TRANSACTION_ID + INT_TYPE +
                ");",
 
-               "DROP TABLE IF EXISTS " + TeamMatchTransactionsDBAdapter.TABLE_NAME
+                "SELECT * FROM "  + TeamMatchTransactionsDBAdapter.TABLE_NAME,
+                "DROP TABLE IF EXISTS " + TeamMatchTransactionsDBAdapter.TABLE_NAME,
+                "SELECT * FROM "  + TeamMatchTransactionsDBAdapter.TABLE_NAME
             }
     };
 
@@ -401,10 +465,12 @@ public class DBAdapter {
 
     private static class DatabaseHelper extends SQLiteOpenHelper 
     {
+        Context ctx;
         DatabaseHelper(Context context) 
         {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
             FTSUtilities.printToConsole("Constructor::DBAdapter::DatabaseHelper : DB: " + DATABASE_NAME + "    Version: " + DATABASE_VERSION);
+            this.ctx = context;
         }
 
         @Override
@@ -424,14 +490,53 @@ public class DBAdapter {
         {               
         	String query = "";
         	FTSUtilities.printToConsole("Upgrading tables in DBAdapter::DatabaseHelper -- Old DB Version: " + oldVersion + " - New DB Version: " + newVersion);
+
         	for(TABLE_NAMES table : TABLE_NAMES.values()) {
-        		FTSUtilities.printToConsole("Deleting/Re-Creating table " + table + "\n\n");
+                FTSUtilities.printToConsole("Backing up data from table: " + table + "\n\n");
+                query = TABLE_LIST[table.getIndex()][BACKUP_TABLE_SQL];
+                Cursor c = db.rawQuery(query, null);
+
+                ArrayList<HashMap<String, String>> data = new ArrayList<HashMap<String, String>>();
+                while(c.moveToNext()) {
+                    HashMap<String, String> datum = new HashMap<String, String>();
+                    for(String column : c.getColumnNames()) {
+                        datum.put(column, c.getString(c.getColumnIndex(column)));
+                    }
+                    data.add(datum);
+                }
+
+                FTSUtilities.printToConsole("Deleting/Re-Creating table: " + table + "\n\n");
         		query = TABLE_LIST[table.getIndex()][DELETE_TABLE_SQL];
         		FTSUtilities.printToConsole("Delete query: " + query + "\n\n");
         		db.execSQL(query);
-        		query = TABLE_LIST[table.getIndex()][CREATE_TABLE_SQL];
+
+                query = TABLE_LIST[table.getIndex()][CREATE_TABLE_SQL];
         		FTSUtilities.printToConsole("Create query: " + query + "\n\n");
         		db.execSQL(query);
+
+                FTSUtilities.printToConsole("Restoring data to table: " + table + "\n\n");
+                query = TABLE_LIST[table.getIndex()][RESTORE_TABLE_SQL];
+
+                c = db.rawQuery(query, null);
+                //TODO Restore the values in 'data' List
+                int index;
+                for(HashMap<String, String> datum : data) {
+                    ContentValues initialValues = new ContentValues();
+                    for(String col : datum.keySet()) {
+                        try {
+                            index = c.getColumnIndexOrThrow(col);
+                            if(index > 0) {
+                                initialValues.put(col, datum.get(col));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if(initialValues.size() > 0) {
+                        db.insert(TABLE_LIST[table.getIndex()][TABLE_NAME], null, initialValues);
+                    }
+                }
+                //c = db.rawQuery(query, null);
         	}
         }
         
