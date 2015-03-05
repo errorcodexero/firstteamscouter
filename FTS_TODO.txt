@@ -1,11 +1,9 @@
 COMPLETED:
 Get the menu back on the main screen
-
-
+Make pictures deletable
 
 
 Pictures:
-Make pictures deletable
 Select one robot picture to represent the team
 Show the robot picture on the match team screen
 Show a 50x50 version of the robot image on the Starting Position and AutoMode screens
@@ -14,7 +12,12 @@ Add small thumbnail of robot to Pit Info page
 
 Match Scouting:
 Show the team number on all match screens
+Label the Step gauge
+Update the Notes screen to include new fields for this year
+Add an option to start with yellow totes removed from auto field
 Set the field background and orientation correctly based on scouting position
+Add an element to track a team’s highest possible stack (in notes section) -- add a highlight on the gauges to show the highest stack so far
+Add numbers to the gauge levels
 Placing an item on a populated level of a gauge shifts the set upward or downward, if it is at bottom or top
 When setting field background, translate the coordinates correctly before storing them
 Gauge level 7 should only be for cans - update the background to show can silhouette at all times
@@ -28,11 +31,24 @@ Add a 'Knock Over' button which activates all non-robot gauges and allows totes/
 Extend the 'Step' gauge to be 6 levels high (max yellow tote stack)
 Change notes on match screen to use list like in pit scouting
 If a robot ends Automode with an element in its manipulator, add it to the robot gauge in Telemode
+The robot disappears if it is moved too far onto the field in auto
+There should be some way to show litter (from hp and ground)
+
+
 
 Pit Scouting:
 Add a SW language to the robot profile
 Add a Tote Manipulator to the Robot Profile (e.g. Forklift)
 Add a Can Manipulator to the Robot Profile
+Handling mechanism?
+Drive range?
+Drive team skills?
+Coopertition? Or nah?
+Stack from? (bottom, top, both)
+
+
+Application Work:
+When app is closed, resets to first match. Could it reset to last scouted match?
 
 
 Data Export:
@@ -56,3 +72,65 @@ Add a 'SeasonRobotData' table to the DB
 The robot profile shouild pull from RobotData and SeasonRobotData
 Add a SeasonTeamRobotData table to the DB
 Robot is assigned to a team, and can be selected for one or more seasons for multiple competitions in those season(s)
+
+
+
+
+
+
+
+
+
+
+
+
+
+Notes from Oregon City:
+Scouting App Notes:
+X when scouting for red alliance, the onscreen field is flipped 
+X the stack option for the step is unlabeled
+X final screen still says ball control and lists roles from last year
+X add an option to remove yellow totes from auto field
+X the knock over element and those around it appear to do nothing
+X add an element to track a team’s highest possible stack (in notes section)
+X the robot disappears if it is moved too far onto the field in auto
+X when app is closed, resets to first match. Could it reset to last scouted match?
+X there should be some way to show litter (from hp and ground)
+
+Pit Scouting Notes:
+needs to happen on friday
+needs two people: notetaker and question-askererer
+ran out of time quickly
+Questions:
+X Drive base?
+X Handling mechanism?
+X Max # of totes stacked?
+X Drive range?
+XXX # of stacks built in a match? - you get this from live data
+X Drive team skills?
+X Coopertition? Or nah?
+teams tend to talk a lot about their robots
+didn’t use tablets because tablets were used for field scouting
+
+Team Notes/pics:
+753
+4sim tank traction wheels
+Rollers bring totes in. Lift totes up then stack from bottom. 
+6 totes
+Auto-close to scoring platform. Don't move Landfill 
+3-4 stacks with cans for others to work with
+Can on stack (don't like to) 
+Good communication 
+Coopertition (can but don't focus on it.) 
+
+1540
+Octocanum mech and trac
+Clamp and lift tote/container
+Rollers align totes. 
+Totes stacked in and outside
+ Auto start in corners (diagonally) grab tote & icon rained 
+Teleop landfill
+Upright containers can be collected
+Cans while stacking (can do on existing stack)
+5-6 totes
+Coopertition 

@@ -17,7 +17,7 @@ public class DBAdapter {
 
     public static final String DATABASE_NAME = "FIRSTTeamScouter"; //$NON-NLS-1$
 
-    public static final int DATABASE_VERSION = 15;
+    public static final int DATABASE_VERSION = 16;
 
     private static final int TABLE_NAME        = 0;
     private static final int CREATE_TABLE_SQL  = 1;

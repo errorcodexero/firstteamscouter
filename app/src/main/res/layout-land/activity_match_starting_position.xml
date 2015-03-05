@@ -3,7 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="horizontal"
-    android:id="@+id/StartingPosition_LayoutLinear">
+    android:id="@+id/StartingPosition_LayoutLinear"
+    android:background="@android:color/black">
 
     <RelativeLayout
         android:layout_width="@dimen/field_width"
@@ -22,7 +23,7 @@
         android:orientation="vertical"
         android:layout_gravity="center_horizontal"
         android:id="@+id/StartingPosition_RobotGutter_RelativeLayout"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="25dp"
         android:background="#ffe8e8e8">
 
         <ImageView
@@ -42,31 +43,44 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="100dp"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/StartingPosition_ButtonGutter_LinearLayout"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="25dp"
         android:gravity="center_horizontal">
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="60dp"
-            android:id="@+id/robotX_TextView"
-            android:layout_marginTop="20dp" />
+            android:id="@+id/txtTeamNumber"
+            android:layout_marginTop="20dp"
+            android:textColor="@android:color/white"
+            android:text="@string/label_team_number"
+            android:textSize="36sp"
+            android:gravity="center_vertical" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="60dp"
-            android:id="@+id/robotY_TextView"/>
+            android:id="@+id/robotX_TextView"
+            android:layout_marginTop="20dp"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:id="@+id/robotY_TextView"
+            android:textColor="@android:color/white" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="75dp"
             android:text="@string/label_start_match"
             android:id="@+id/btnSubmitStartingPosition"
             android:gravity="center_vertical|center_horizontal"
-            android:layout_marginTop="115dp" />
+            android:layout_marginTop="20dp"
+            android:background="@drawable/custom_btn_shakespeare" />
 
     </LinearLayout>
 
