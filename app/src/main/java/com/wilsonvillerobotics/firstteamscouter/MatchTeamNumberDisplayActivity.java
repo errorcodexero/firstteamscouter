@@ -37,8 +37,9 @@ public class MatchTeamNumberDisplayActivity extends Activity {
         } else if(this.tabletID.startsWith("Blue")) {
         	backgroundColor = Color.BLUE;
         }
-        LinearLayout parentView = (LinearLayout)txtTeamNumberDisplay.getParent();
-        parentView.setBackgroundColor(backgroundColor);
+        //LinearLayout parentView = (LinearLayout)txtTeamNumberDisplay.getParent();
+        //parentView.setBackgroundColor(backgroundColor);
+        txtTeamNumberDisplay.setBackgroundColor(backgroundColor);
 
         configureSubmitButton();
 	}

@@ -182,11 +182,11 @@ public class SelectMatchTeamActivity extends Activity {
 		int[] matchToControlIDs = new int[] {android.R.id.text1, android.R.id.text2};
 
 		// use a SimpleCursorAdapter
-		SimpleCursorAdapter matchCA = new SimpleCursorAdapter(this, android.R.layout.simple_spinner_item, matchNumbers,
+		SimpleCursorAdapter matchCA = new SimpleCursorAdapter(this, R.layout.custom_spinner_item, matchNumbers,
 			       matchFromColumns,
 			       matchToControlIDs);
 
-        matchCA.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        matchCA.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
         spinMatchNum.setAdapter(matchCA);
         int selection = 0;
         if(matchCA.getCount() > 0) {

@@ -264,7 +264,6 @@ public class FTSUtilities {
 		String COMMA = ", ";
 		String retVal = "";
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA + COMMA;
-		//retVal += TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_BROKE_DOWN + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_NO_MOVE + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_LOST_CONNECTION + COMMA;
@@ -307,7 +306,6 @@ public class FTSUtilities {
     private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
 
     /**
-     * Generate a value suitable for use in {@link #setId(int)}.
      * This value will not collide with ID values generated at build time by aapt for R.id.
      *
      * @return a generated ID value

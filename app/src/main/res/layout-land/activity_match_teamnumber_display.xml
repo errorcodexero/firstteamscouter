@@ -2,41 +2,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_dark"
+    android:background="@android:color/black"
     android:orientation="vertical" >
 
     <TextView
         android:id="@+id/lblTeamNumberDisplay"
-        android:layout_width="wrap_content"
+        android:layout_width="450dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="0.5"
         android:gravity="center"
         android:text="@string/label_scouting_team"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:textSize="36sp"
+        android:layout_marginTop="25dp" />
 
     <TextView
         android:id="@+id/txtTeamNumberDisplay"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_gravity="center"
-        android:layout_weight="0.5"
         android:gravity="top|center_horizontal"
         android:textColor="@android:color/white"
         android:textColorHint="@android:color/white"
         android:textColorLink="@android:color/white"
         android:textSize="84sp"
         android:textStyle="bold"
-        android:layout_marginBottom="150dp" />
+        android:layout_marginTop="50dp" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
         android:text="To Starting Position"
         android:id="@+id/btnSubmitTeamNumber"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="0.5"
-        android:layout_marginBottom="5dp" />
+        android:background="@drawable/custom_btn_shakespeare"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_marginTop="80dp" />
 
 </LinearLayout>
