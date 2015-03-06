@@ -373,11 +373,6 @@ public class TeamMatchData {
 		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_BROKE_DOWN, this.brokeDown);
 		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_NO_MOVE, this.noMove);
 		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_LOST_CONNECTION, this.lostConnection);
-		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_ROLE_SHOOTER, this.robotRole[ROBOT_ROLE.SHOOTER.id]);
-		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_ROLE_DEFENDER, this.robotRole[ROBOT_ROLE.DEFENDER.id]);
-		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_ROLE_PASSER, this.robotRole[ROBOT_ROLE.PASSER.id]);
-		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_ROLE_CATCHER, this.robotRole[ROBOT_ROLE.CATCHER.id]);
-		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_ROLE_GOALIE, this.robotRole[ROBOT_ROLE.GOALIE.id]);
 
 		return htBoolValues;
 	}
@@ -388,12 +383,7 @@ public class TeamMatchData {
 		//retVal += TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_BROKE_DOWN + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_NO_MOVE + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_LOST_CONNECTION + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_SHOOTER + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_DEFENDER + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_PASSER + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_CATCHER + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_GOALIE;
+		retVal += TeamMatchDBAdapter.COLUMN_NAME_LOST_CONNECTION;
 
 		return retVal;
 	}
@@ -585,12 +575,6 @@ public class TeamMatchData {
 				this.noMove = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_NO_MOVE)));
 				this.lostConnection = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_LOST_CONNECTION)));
 				
-				this.robotRole[ROBOT_ROLE.SHOOTER.id] = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_ROLE_SHOOTER)));
-				this.robotRole[ROBOT_ROLE.DEFENDER.id] = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_ROLE_DEFENDER)));
-				this.robotRole[ROBOT_ROLE.PASSER.id] = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_ROLE_PASSER)));
-				this.robotRole[ROBOT_ROLE.CATCHER.id] = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_ROLE_CATCHER)));
-				this.robotRole[ROBOT_ROLE.GOALIE.id] = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_ROLE_GOALIE)));
-
 				this.startingLocation = STARTING_LOC.getLocForID(tmCursor.getInt(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_START_LOCATION)));
 
 				this.teamMatchNotes = tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_NOTES));

@@ -267,11 +267,6 @@ public class FTSUtilities {
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_BROKE_DOWN + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_NO_MOVE + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_LOST_CONNECTION + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_SHOOTER + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_DEFENDER + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_PASSER + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_CATCHER + COMMA;
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_ROLE_GOALIE + COMMA;
 
 		return retVal;
 	}
