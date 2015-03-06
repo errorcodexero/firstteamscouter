@@ -1,7 +1,9 @@
 package com.wilsonvillerobotics.firstteamscouter.dbAdapters;
 
+import com.wilsonvillerobotics.firstteamscouter.FIRSTTeamScouter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
+import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -17,7 +19,7 @@ public class DBAdapter {
 
     public static final String DATABASE_NAME = "FIRSTTeamScouter"; //$NON-NLS-1$
 
-    public static final int DATABASE_VERSION = 16;
+    public static final int DATABASE_VERSION = 17;
 
     private static final int TABLE_NAME        = 0;
     private static final int CREATE_TABLE_SQL  = 1;
@@ -34,33 +36,45 @@ public class DBAdapter {
     private static final String COMMA_SEP = ",";
 
     private enum TABLE_NAMES {
-    	COMPETITION_DATA(0),
-    	COMPETITION_MATCHES(1),
-    	MATCH_DATA(2),
-    	MATCH_NOTES(3),
-    	NOTES_DATA(4),
-    	PICTURE_DATA(5),
-    	PIT_DATA(6),
-    	PIT_NOTES(7),
-    	PIT_PICTURES(8),
-    	ROBOT_DATA(9),
-    	ROBOT_NOTES(10),
-    	ROBOT_PICTURES(11),
-    	TEAM_DATA(12),
-    	TEAM_MATCH_DATA(13),
-    	TEAM_MATCH_NOTES(14),
-    	TEAM_PITS(15),
-    	TEAM_ROBOTS(16),
-        TEAM_MATCH_TRANSACTION_DATA(17),
-        TEAM_MATCH_TRANSACTIONS(18);
+    	COMPETITION_DATA(0, CompetitionDataDBAdapter.class.getCanonicalName()),
+    	COMPETITION_MATCHES(1, CompetitionMatchesDBAdapter.class.getCanonicalName()),
+    	MATCH_DATA(2, MatchDataDBAdapter.class.getCanonicalName()),
+    	MATCH_NOTES(3, MatchNotesDBAdapter.class.getCanonicalName()),
+    	NOTES_DATA(4, NotesDataDBAdapter.class.getCanonicalName()),
+    	PICTURE_DATA(5, PictureDataDBAdapter.class.getCanonicalName()),
+    	PIT_DATA(6, PitDataDBAdapter.class.getCanonicalName()),
+    	PIT_NOTES(7, PitNotesDBAdapter.class.getCanonicalName()),
+    	PIT_PICTURES(8, PitPicturesDBAdapter.class.getCanonicalName()),
+    	ROBOT_DATA(9, RobotDataDBAdapter.class.getCanonicalName()),
+    	ROBOT_NOTES(10, RobotNotesDBAdapter.class.getCanonicalName()),
+    	ROBOT_PICTURES(11, RobotPicturesDBAdapter.class.getCanonicalName()),
+    	TEAM_DATA(12, TeamDataDBAdapter.class.getCanonicalName()),
+    	TEAM_MATCH_DATA(13, TeamMatchDBAdapter.class.getCanonicalName()),
+    	TEAM_MATCH_NOTES(14, TeamMatchNotesDBAdapter.class.getCanonicalName()),
+    	TEAM_PITS(15, TeamPitsDBAdapter.class.getCanonicalName()),
+    	TEAM_ROBOTS(16, TeamRobotsDBAdapter.class.getCanonicalName()),
+        TEAM_MATCH_TRANSACTION_DATA(17, TeamMatchTransactionDataDBAdapter.class.getCanonicalName()),
+        TEAM_MATCH_TRANSACTIONS(18, TeamMatchTransactionsDBAdapter.class.getCanonicalName());
     	
     	private int index;
-    	private TABLE_NAMES(int i) {
+        private String className;
+    	private TABLE_NAMES(int i, String aClass) {
     		index = i;
+            className = aClass;
     	}
     	public int getIndex() {
     		return index;
     	}
+
+        public Class<?> CLASS() {
+            Class<?> c = null;
+            try {
+                c = Class.forName(className);
+            } catch (Exception e) {
+                //
+            }
+            return c;
+        }
     };
 
     private static final String[][] TABLE_LIST = {
@@ -494,6 +508,11 @@ public class DBAdapter {
         	for(TABLE_NAMES table : TABLE_NAMES.values()) {
                 FTSUtilities.printToConsole("Backing up data from table: " + table + "\n\n");
                 query = TABLE_LIST[table.getIndex()][BACKUP_TABLE_SQL];
+                try {
+                    Method m = table.CLASS().getMethod("restoreTableData", ArrayList.class);
+                }catch (Exception e) {
+                    FTSUtilities.printToConsole("**** restoreTableData not found for: " + table.className);
+                }
                 Cursor c = db.rawQuery(query, null);
 
                 ArrayList<HashMap<String, String>> data = new ArrayList<HashMap<String, String>>();
