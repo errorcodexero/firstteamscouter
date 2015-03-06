@@ -24,11 +24,6 @@ public class TeamMatchDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_BROKE_DOWN = "broke_down";
     public static final String COLUMN_NAME_NO_MOVE = "no_move";
     public static final String COLUMN_NAME_LOST_CONNECTION = "lost_connection";
-    public static final String COLUMN_NAME_ROLE_SHOOTER = "role_shooter";
-    public static final String COLUMN_NAME_ROLE_DEFENDER = "role_defender";
-    public static final String COLUMN_NAME_ROLE_PASSER = "role_passer";
-    public static final String COLUMN_NAME_ROLE_CATCHER = "role_catcher";
-    public static final String COLUMN_NAME_ROLE_GOALIE = "role_goalie";
     public static final String COLUMN_NAME_START_LOCATION = "starting_location";
     public static final String COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X = "starting_location_X";
     public static final String COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y = "starting_location_Y";
@@ -89,11 +84,6 @@ public class TeamMatchDBAdapter implements BaseColumns {
     	    COLUMN_NAME_BROKE_DOWN,
     	    COLUMN_NAME_NO_MOVE,
     	    COLUMN_NAME_LOST_CONNECTION,
-    	    COLUMN_NAME_ROLE_SHOOTER,
-    	    COLUMN_NAME_ROLE_DEFENDER,
-    	    COLUMN_NAME_ROLE_PASSER,
-    	    COLUMN_NAME_ROLE_CATCHER,
-    	    COLUMN_NAME_ROLE_GOALIE,
     	    COLUMN_NAME_START_LOCATION,
             COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X,
             COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y,

@@ -21,6 +21,13 @@ public class RobotDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_NUMBER_CANS_AT_ONCE = "number_of_cans_robot_can_handle";
     public static final String COLUMN_NAME_GET_STEP_CANS = "robot_can_get_step_cans";
     public static final String COLUMN_NAME_PUT_TOTES_ON_STEP = "robot_can_put_totes_on_step";
+    public static final String COLUMN_NAME_ROBOT_SOFTWARE_LANGUAGE = "robot_software_language";
+    public static final String COLUMN_NAME_TOTE_MANIPULATOR_TYPE = "tote_manipulator_type";
+    public static final String COLUMN_NAME_CAN_MANIPULATOR_TYPE = "can_manipulator_type";
+    public static final String COLUMN_NAME_ROBOT_DRIVE_RANGE = "robot_drive_range";
+    public static final String COLUMN_NAME_COOPERTITION = "team_does_coopertition";
+    public static final String COLUMN_NAME_ROBOT_STACKS_FROM = "robot_stacks_from";
+
 
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;

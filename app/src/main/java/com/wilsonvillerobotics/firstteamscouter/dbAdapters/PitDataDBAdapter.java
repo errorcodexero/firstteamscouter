@@ -11,7 +11,6 @@ import android.provider.BaseColumns;
 public class PitDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "pit_data";
     public static final String COLUMN_NAME_PIT_INFO = "pit_info";
-    //public static final String COLUMN_NAME_PIT_ID = "pit_data_id";
 
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;

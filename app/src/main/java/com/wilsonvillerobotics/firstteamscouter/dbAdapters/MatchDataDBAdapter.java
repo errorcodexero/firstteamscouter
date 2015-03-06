@@ -11,20 +11,21 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 public class MatchDataDBAdapter implements BaseColumns {
-	public static final String TABLE_NAME = "match_data";
-    public static final String COLUMN_NAME_MATCH_TIME 				  = "match_time";
-    public static final String COLUMN_NAME_MATCH_TYPE				  = "match_type";
-    public static final String COLUMN_NAME_MATCH_NUMBER               = "match_number";
-    public static final String COLUMN_NAME_MATCH_LOCATION             = "match_location";
+	public static final String TABLE_NAME                       = "match_data";
+    public static final String COLUMN_NAME_COMPETITION_ID       = "competition_id";
+    public static final String COLUMN_NAME_MATCH_TIME 			= "match_time";
+    public static final String COLUMN_NAME_MATCH_TYPE			= "match_type";
+    public static final String COLUMN_NAME_MATCH_NUMBER         = "match_number";
+    public static final String COLUMN_NAME_MATCH_LOCATION       = "match_location";
 
-    public static final String COLUMN_NAME_RED_TEAM_ONE_ID            = "red_team_one_id";
-    public static final String COLUMN_NAME_RED_TEAM_TWO_ID            = "red_team_two_id";
-    public static final String COLUMN_NAME_RED_TEAM_THREE_ID          = "red_team_three_id";
-    public static final String COLUMN_NAME_BLUE_TEAM_ONE_ID           = "blue_team_one_id";
-    public static final String COLUMN_NAME_BLUE_TEAM_TWO_ID           = "blue_team_two_id";
-    public static final String COLUMN_NAME_BLUE_TEAM_THREE_ID         = "blue_team_three_id";
+    public static final String COLUMN_NAME_RED_TEAM_ONE_ID      = "red_team_one_id";
+    public static final String COLUMN_NAME_RED_TEAM_TWO_ID      = "red_team_two_id";
+    public static final String COLUMN_NAME_RED_TEAM_THREE_ID    = "red_team_three_id";
+    public static final String COLUMN_NAME_BLUE_TEAM_ONE_ID     = "blue_team_one_id";
+    public static final String COLUMN_NAME_BLUE_TEAM_TWO_ID     = "blue_team_two_id";
+    public static final String COLUMN_NAME_BLUE_TEAM_THREE_ID   = "blue_team_three_id";
     
-    public static final String COLUMN_NAME_MATCH_DATA_UPDATED		  = "match_data_updated";
+    public static final String COLUMN_NAME_MATCH_DATA_UPDATED	= "match_data_updated";
     
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
