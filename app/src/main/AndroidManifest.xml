@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.ACCESS_BLUETOOTH_SHARE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     
 	
     <application
@@ -82,6 +83,13 @@
             android:screenOrientation="landscape" />
         <activity android:name=".MatchDataExportActivity"
             android:screenOrientation="landscape" />
+
+        <service android:name="org.jumpmind.symmetric.android.SymmetricService"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="org.jumpmind.symmetric.android.SymmetricService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

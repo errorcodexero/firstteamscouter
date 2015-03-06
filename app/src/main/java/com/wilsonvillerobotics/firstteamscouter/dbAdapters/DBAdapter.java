@@ -6,14 +6,20 @@ import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.jumpmind.symmetric.android.SQLiteOpenHelperRegistry;
+import org.jumpmind.symmetric.android.SymmetricService;
+import org.jumpmind.symmetric.common.ParameterConstants;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Properties;
 
 public class DBAdapter {
 
@@ -476,6 +482,26 @@ public class DBAdapter {
     	FTSUtilities.printToConsole("Constructor::DBAdapter");
         this.context = ctx;
         this.DBHelper = new DatabaseHelper(this.context);
+
+        final String HELPER_KEY = "FTSHelperKey";
+
+        // Register the database helper, so it can be shared with the SymmetricService
+        SQLiteOpenHelperRegistry.register(HELPER_KEY, DBHelper);
+        Intent intent = new Intent(ctx, SymmetricService.class);
+
+        // Notify the service of the database helper key
+        intent.putExtra(SymmetricService.INTENTKEY_SQLITEOPENHELPER_REGISTRY_KEY, HELPER_KEY);
+        intent.putExtra(SymmetricService.INTENTKEY_REGISTRATION_URL, "http://10.0.0.191:32665/sync/server");
+        intent.putExtra(SymmetricService.INTENTKEY_EXTERNAL_ID, "android-simulator");
+        intent.putExtra(SymmetricService.INTENTKEY_NODE_GROUP_ID, "client");
+        intent.putExtra(SymmetricService.INTENTKEY_START_IN_BACKGROUND, true);
+
+        // initial load existing notes from the Client to the Server
+        Properties properties = new Properties();
+        properties.setProperty(ParameterConstants.AUTO_RELOAD_REVERSE_ENABLED, "true");
+        intent.putExtra(SymmetricService.INTENTKEY_PROPERTIES, properties);
+
+        ctx.startService(intent);
     }
 
     private static class DatabaseHelper extends SQLiteOpenHelper 

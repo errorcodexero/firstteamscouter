@@ -28,7 +28,7 @@ blue_team_three_id integer);
 CREATE TABLE IF NOT EXISTS match_notes (
 _id integer primary key auto_increment,
 match_id integer,
-note_id integer,);
+note_id integer);
 
 
 CREATE TABLE IF NOT EXISTS notes_data (
@@ -69,7 +69,7 @@ number_of_tote_stacks integer,
 number_of_totes_per_stack integer,
 number_of_cans_robot_can_handle integer,
 robot_can_get_step_cans char(5),
-robot_can_put_totes_on_step char(5)
+robot_can_put_totes_on_step char(5),
 robot_software_language varchar(20),
 tote_manipulator_type varchar(20),
 can_manipulator_type varchar(20),
@@ -98,7 +98,7 @@ team_name varchar(20),
 team_location varchar(20),
 num_team_members integer,
 team_creation_year integer,
-primary key ( team_number, team_sub_number );
+primary key ( team_number, team_sub_number ));
 
 
 CREATE TABLE IF NOT EXISTS team_match (
