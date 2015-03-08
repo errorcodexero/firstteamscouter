@@ -19,8 +19,21 @@ public class PitDataDBAdapter implements BaseColumns {
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
+        private static DatabaseHelper mInstance = null;
+
         DatabaseHelper(Context context) {
             super(context, DBAdapter.DATABASE_NAME, null, DBAdapter.DATABASE_VERSION);
+        }
+
+        public static DatabaseHelper getInstance(Context ctx) {
+
+            // Use the application context, which will ensure that you
+            // don't accidentally leak an Activity's context.
+            // See this article for more information: http://bit.ly/6LRzfx
+            if (mInstance == null) {
+                mInstance = new DatabaseHelper(ctx.getApplicationContext());
+            }
+            return mInstance;
         }
 
         @Override
@@ -58,9 +71,25 @@ public class PitDataDBAdapter implements BaseColumns {
      * @throws SQLException
      *             if the database could be neither opened or created
      */
-    public PitDataDBAdapter open() throws SQLException {
-        this.mDbHelper = new DatabaseHelper(this.mCtx);
+    public PitDataDBAdapter openForWrite() throws SQLException {
+        this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
         this.mDb = this.mDbHelper.getWritableDatabase();
+        return this;
+    }
+
+    /**
+     * Open the FirstTeamScouter database. If it cannot be opened, try to create a new
+     * instance of the database. If it cannot be created, throw an exception to
+     * signal the failure
+     *
+     * @return this (self reference, allowing this to be chained in an
+     *         initialization call)
+     * @throws SQLException
+     *             if the database could be neither opened or created
+     */
+    public PitDataDBAdapter openForRead() throws SQLException {
+        this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
+        this.mDb = this.mDbHelper.getReadableDatabase();
         return this;
     }
 

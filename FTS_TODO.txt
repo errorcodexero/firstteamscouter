@@ -16,7 +16,7 @@ Label the Step gauge
 Update the Notes screen to include new fields for this year
 Add an option to start with yellow totes removed from auto field
 Set the field background and orientation correctly based on scouting position
-Add an element to track a team’s highest possible stack (in notes section) -- add a highlight on the gauges to show the highest stack so far
+Add an element to track a teamï¿½s highest possible stack (in notes section) -- add a highlight on the gauges to show the highest stack so far
 Add numbers to the gauge levels
 Placing an item on a populated level of a gauge shifts the set upward or downward, if it is at bottom or top
 When setting field background, translate the coordinates correctly before storing them
@@ -52,6 +52,7 @@ When app is closed, resets to first match. Could it reset to last scouted match?
 
 
 Data Export:
+REMOVE NOTE CONNECTION TABLE, MAKE NOTEDATA THE ONLY NOTE TABLE, USE OWNER ID AND NOTE TYPE
 Export all data from SQLite DB
 Set up SQL server on laptop
 Write exported data to SQL server, if available - CSV if not
@@ -92,7 +93,7 @@ X the stack option for the step is unlabeled
 X final screen still says ball control and lists roles from last year
 X add an option to remove yellow totes from auto field
 X the knock over element and those around it appear to do nothing
-X add an element to track a team’s highest possible stack (in notes section)
+X add an element to track a teamï¿½s highest possible stack (in notes section)
 X the robot disappears if it is moved too far onto the field in auto
 X when app is closed, resets to first match. Could it reset to last scouted match?
 X there should be some way to show litter (from hp and ground)
@@ -110,7 +111,7 @@ XXX # of stacks built in a match? - you get this from live data
 X Drive team skills?
 X Coopertition? Or nah?
 teams tend to talk a lot about their robots
-didn’t use tablets because tablets were used for field scouting
+didnï¿½t use tablets because tablets were used for field scouting
 
 Team Notes/pics:
 753

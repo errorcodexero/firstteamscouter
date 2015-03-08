@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
         this.txtTabletID = (TextView) findViewById(R.id.txtTabletID);
         this.loadPref();
 
-        this.mDBAdapter = new DBAdapter(this).open();
+        this.mDBAdapter = new DBAdapter(this).openForWrite();
         
         //btnViewTeamData = (Button) findViewById(R.id.btnViewTeamData);
         btnManageMatchData = (Button) findViewById(R.id.btnManageMatchData);

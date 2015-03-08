@@ -110,9 +110,9 @@ public class TeamDataDBAdapter implements BaseColumns {
      */
     public TeamDataDBAdapter openForRead() throws SQLException {
         FTSUtilities.printToConsole("Opening TeamDataDBAdapter Database");
-        this.mDbHelper = new DatabaseHelper(this.mCtx);
+        this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
         this.mDb = this.mDbHelper.getReadableDatabase();
-        FTSUtilities.printToConsole("TeamDataDBAdapter::openForWrite : DB " + ((mDb == null) ? "IS" : "Is Not") + " null");
+        FTSUtilities.printToConsole("TeamDataDBAdapter::openForRead : DB " + ((mDb == null) ? "IS" : "Is Not") + " null");
         return this;
     }
 

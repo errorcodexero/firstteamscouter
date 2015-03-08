@@ -156,7 +156,8 @@ public class DBAdapter {
     		//NOTES_DATA
             NotesDataDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + NotesDataDBAdapter.TABLE_NAME + " (" +
-    		AUTO_INC_ID + 
+    		AUTO_INC_ID +
+            NotesDataDBAdapter.COLUMN_NAME_OWNER_ID + INT_TYPE + COMMA_SEP +
 			NotesDataDBAdapter.COLUMN_NAME_NOTE_TYPE + TEXT_TYPE + COMMA_SEP +
 			NotesDataDBAdapter.COLUMN_NAME_NOTE_TEXT + TEXT_TYPE +
     		");",
@@ -491,7 +492,7 @@ public class DBAdapter {
 
         // Notify the service of the database helper key
         intent.putExtra(SymmetricService.INTENTKEY_SQLITEOPENHELPER_REGISTRY_KEY, HELPER_KEY);
-        intent.putExtra(SymmetricService.INTENTKEY_REGISTRATION_URL, "http://10.0.0.191:32665/sync/fts-master");
+        intent.putExtra(SymmetricService.INTENTKEY_REGISTRATION_URL, "http://10.0.0.100:32665/sync/fts-master");
         intent.putExtra(SymmetricService.INTENTKEY_EXTERNAL_ID, "001");
         intent.putExtra(SymmetricService.INTENTKEY_NODE_GROUP_ID, "fts-node");
         intent.putExtra(SymmetricService.INTENTKEY_START_IN_BACKGROUND, true);
@@ -508,6 +509,7 @@ public class DBAdapter {
     {
         Context ctx;
         private static DatabaseHelper mInstance = null;
+
         private DatabaseHelper(Context context)
         {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -611,10 +613,23 @@ public class DBAdapter {
      * @throws SQLException
      * return type: DBAdapter
      */
-    public DBAdapter open() throws SQLException 
+    public DBAdapter openForWrite() throws SQLException
     {
-    	FTSUtilities.printToConsole("Opening DBAdapter Database");
+    	FTSUtilities.printToConsole("Opening DBAdapter Database for Write");
         this.db = this.DBHelper.getWritableDatabase();
+        return this;
+    }
+
+    /**
+     * openForWrite the db
+     * @return this
+     * @throws SQLException
+     * return type: DBAdapter
+     */
+    public DBAdapter openForRead() throws SQLException
+    {
+        FTSUtilities.printToConsole("Opening DBAdapter Database for Read");
+        this.db = this.DBHelper.getReadableDatabase();
         return this;
     }
 

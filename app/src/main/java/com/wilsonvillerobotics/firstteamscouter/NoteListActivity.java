@@ -14,7 +14,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,16 +70,16 @@ public class NoteListActivity extends Activity implements OnClickListener {
             FTSUtilities.printToConsole("PictureListActivity::onCreate : OPENING DB\n");
             switch(this.itemType) {
                 case ROBOT:
-                    rnDBAdapter = new RobotNotesDBAdapter(this).open();
+                    rnDBAdapter = new RobotNotesDBAdapter(this).openForWrite();
                     pnDBAdapter = null;
                     break;
                 case PIT:
                     rnDBAdapter = null;
-                    pnDBAdapter = new PitNotesDBAdapter(this).open();
+                    pnDBAdapter = new PitNotesDBAdapter(this).openForWrite();
                     break;
                 case ALL:
-                    rnDBAdapter = new RobotNotesDBAdapter(this).open();
-                    pnDBAdapter = new PitNotesDBAdapter(this).open();
+                    rnDBAdapter = new RobotNotesDBAdapter(this).openForWrite();
+                    pnDBAdapter = new PitNotesDBAdapter(this).openForWrite();
                     break;
                 default:
                 case NONE:
@@ -95,7 +94,7 @@ public class NoteListActivity extends Activity implements OnClickListener {
 
         try {
             FTSUtilities.printToConsole("NoteListActivity::onCreate : OPENING DB\n");
-            ndDBAdapter = new NotesDataDBAdapter(this).open();
+            ndDBAdapter = new NotesDataDBAdapter(this).openForWrite();
         } catch(SQLException e) {
             e.printStackTrace();
             ndDBAdapter = null;

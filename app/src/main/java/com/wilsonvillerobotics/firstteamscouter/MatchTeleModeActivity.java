@@ -281,8 +281,8 @@ public class MatchTeleModeActivity extends Activity {
         try {
             FTSUtilities.printToConsole("MatchTeleModeActivity::openDatabase : OPENING DB\n");
             tmDBAdapter = new TeamMatchDBAdapter(this).openForWrite();
-            tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this).open();
-            tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this).open();
+            tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this).openForWrite();
+            tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this).openForWrite();
 
             Cursor c = tmDBAdapter.getTeamMatch(this.teamMatchID);
             if(c.moveToFirst()) {
@@ -319,8 +319,8 @@ public class MatchTeleModeActivity extends Activity {
             tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this);
         }
         tmDBAdapter.openForWrite();
-        tmtdDBAdapter.open();
-        tmtDBAdapter.open();
+        tmtdDBAdapter.openForWrite();
+        tmtDBAdapter.openForWrite();
     }
 
     @Override

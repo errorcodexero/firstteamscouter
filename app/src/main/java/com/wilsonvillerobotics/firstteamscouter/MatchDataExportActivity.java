@@ -109,8 +109,8 @@ public class MatchDataExportActivity extends Activity {
             matchDataDBAdapter = new MatchDataDBAdapter(this).openForWrite();
             teamMatchDBAdapter = new TeamMatchDBAdapter(this).openForWrite();
             teamDataDBAdapter = new TeamDataDBAdapter(this).openForWrite();
-            tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this).open();
-            tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this).open();
+            tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this).openForWrite();
+            tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this).openForWrite();
 robotDataDBAdapter = new RobotDataDBAdapter(this).openForWrite();
         } catch(SQLException e) {
             e.printStackTrace();

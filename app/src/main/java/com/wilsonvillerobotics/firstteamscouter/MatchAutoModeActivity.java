@@ -367,8 +367,8 @@ public class MatchAutoModeActivity extends Activity {
         try {
             FTSUtilities.printToConsole("MatchAutoModeActivity::onCreate : OPENING DB\n");
             tmDBAdapter = new TeamMatchDBAdapter(this).openForWrite();
-            tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this).open();
-            tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this).open();
+            tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this).openForWrite();
+            tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this).openForWrite();
 
             Cursor c = tmDBAdapter.getTeamMatch(this.teamMatchID);
             if(c.moveToFirst()) {

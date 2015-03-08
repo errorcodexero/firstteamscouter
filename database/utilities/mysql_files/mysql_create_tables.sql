@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS team_match_transaction (
 _id integer primary key auto_increment,
 team_id integer,
 match_id integer,
-timestamp integer,
+timestamp varchar(16),
 action_name varchar(20),
 action_phase varchar(20),
 action_start_location_name varchar(20),
@@ -157,8 +157,8 @@ action_start_location_Y integer,
 action_end_location_name varchar(20),
 action_end_location_X integer,
 action_end_location_Y integer,
-element_types varchar(20),
-element_states varchar(20));
+element_types varchar(255),
+element_states varchar(255));
 
 
 CREATE TABLE IF NOT EXISTS team_match_transactions (

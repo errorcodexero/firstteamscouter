@@ -3,7 +3,6 @@ package com.wilsonvillerobotics.firstteamscouter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.database.SQLException;
@@ -19,8 +18,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
@@ -98,16 +95,16 @@ public class PictureListActivity extends Activity implements OnClickListener {
             FTSUtilities.printToConsole("PictureListActivity::onCreate : OPENING DB\n");
             switch(this.itemType) {
                 case ROBOT:
-                    rpDBAdapter = new RobotPicturesDBAdapter(this).open();
+                    rpDBAdapter = new RobotPicturesDBAdapter(this).openForWrite();
                     ppDBAdapter = null;
                     break;
                 case PIT:
                     rpDBAdapter = null;
-                    ppDBAdapter = new PitPicturesDBAdapter(this).open();
+                    ppDBAdapter = new PitPicturesDBAdapter(this).openForWrite();
                     break;
                 case ALL:
-                    rpDBAdapter = new RobotPicturesDBAdapter(this).open();
-                    ppDBAdapter = new PitPicturesDBAdapter(this).open();
+                    rpDBAdapter = new RobotPicturesDBAdapter(this).openForWrite();
+                    ppDBAdapter = new PitPicturesDBAdapter(this).openForWrite();
                     break;
                 default:
                 case NONE:
@@ -122,7 +119,7 @@ public class PictureListActivity extends Activity implements OnClickListener {
 
         try {
             FTSUtilities.printToConsole("PictureListActivity::onCreate : OPENING DB\n");
-            pdDBAdapter = new PictureDataDBAdapter(this).open();
+            pdDBAdapter = new PictureDataDBAdapter(this).openForWrite();
         } catch(SQLException e) {
             e.printStackTrace();
             pdDBAdapter = null;
