@@ -25,8 +25,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PictureDataDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PitPicturesDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.RobotPicturesDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities.ItemType;
 
@@ -52,8 +50,6 @@ import java.util.List;
 public class PictureListActivity extends Activity implements OnClickListener {
     private GridView gridView;
 
-    private RobotPicturesDBAdapter rpDBAdapter;
-    private PitPicturesDBAdapter   ppDBAdapter;
     private PictureDataDBAdapter   pdDBAdapter;
 
     private ImageView clickedImage;
@@ -92,34 +88,8 @@ public class PictureListActivity extends Activity implements OnClickListener {
         this.imageNamePrefix = this.teamNumber + "_" + this.itemType.getName() + "_";
 
         try {
-            FTSUtilities.printToConsole("PictureListActivity::onCreate : OPENING DB\n");
-            switch(this.itemType) {
-                case ROBOT:
-                    rpDBAdapter = new RobotPicturesDBAdapter(this).openForWrite();
-                    ppDBAdapter = null;
-                    break;
-                case PIT:
-                    rpDBAdapter = null;
-                    ppDBAdapter = new PitPicturesDBAdapter(this).openForWrite();
-                    break;
-                case ALL:
-                    rpDBAdapter = new RobotPicturesDBAdapter(this).openForWrite();
-                    ppDBAdapter = new PitPicturesDBAdapter(this).openForWrite();
-                    break;
-                default:
-                case NONE:
-                    rpDBAdapter = null;
-                    ppDBAdapter = null;
-            }
-        } catch(SQLException e) {
-            e.printStackTrace();
-            rpDBAdapter = null;
-            ppDBAdapter = null;
-        }
-
-        try {
-            FTSUtilities.printToConsole("PictureListActivity::onCreate : OPENING DB\n");
-            pdDBAdapter = new PictureDataDBAdapter(this).openForWrite();
+            FTSUtilities.printToConsole("PictureListActivity::onCreate : INIT dbADAPTER\n");
+            pdDBAdapter = new PictureDataDBAdapter(this);
         } catch(SQLException e) {
             e.printStackTrace();
             pdDBAdapter = null;
@@ -421,91 +391,3 @@ public class PictureListActivity extends Activity implements OnClickListener {
         }
     }
 }
-/*
-public class PitPitPictureListActivity extends Activity {
-    private GridView gridView;
-    private GridViewAdapter customGridAdapter;
-
-    private PitPicturesDBAdapter ppDBAdapter;
-    private PictureDataDBAdapter pdDBAdapter;
-
-    private long ppID;
-    private long teamId;
-    private long pitId;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_picture_list);
-
-        try {
-            FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate : OPENING DB\n");
-            ppDBAdapter = new PitPicturesDBAdapter(this.getBaseContext()).openForWrite();
-        } catch(SQLException e) {
-            e.printStackTrace();
-            ppDBAdapter = null;
-        }
-
-        try {
-            FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate : OPENING DB\n");
-            pdDBAdapter = new PictureDataDBAdapter(this.getBaseContext()).openForWrite();
-        } catch(SQLException e) {
-            e.printStackTrace();
-            pdDBAdapter = null;
-        }
-
-
-
-        gridView = (GridView) findViewById(R.id.gridView);
-        customGridAdapter = new GridViewAdapter(this, R.layout.activity_picture_list, getData());
-        gridView.setAdapter(customGridAdapter);
-    }
-
-    private ArrayList getData() {
-        final ArrayList imageItems = new ArrayList();
-        // retrieve String drawable array
-        //TypedArray imgs = getResources().obtainTypedArray(R.array.image_ids);
-
-        ArrayList<Long> imgs = ppDBAdapter.getAllPictureIDsForPit(pitId);
-        //for (int i = 0; i < imgs.length(); i++) {
-        for(Long id : imgs) {
-            Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(),
-                    imgs.getResourceId(i, -1));
-            imageItems.add(new ImageItem(bitmap, "Image#" + i));
-        }
-
-        return imageItems;
-    }
-
-    private void processIntent() {
-        Intent intent = getIntent();
-        this.teamId = intent.getLongExtra("team_id", -1);
-        this.teamNumber = intent.getStringExtra("team_number");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-}
-*/

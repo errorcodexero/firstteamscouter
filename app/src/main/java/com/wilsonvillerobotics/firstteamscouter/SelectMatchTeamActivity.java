@@ -197,6 +197,8 @@ public class SelectMatchTeamActivity extends Activity {
 		spinMatchNum.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+
+                long competition_id = 0; // TODO - get the competition id and pass it to each activity.
             	
             	matchID = -1;
             	if(arg0.getItemAtPosition(arg2) != null) {
@@ -209,7 +211,7 @@ public class SelectMatchTeamActivity extends Activity {
             	}
             	
             	MatchDataDBAdapter mDBAdapter = new MatchDataDBAdapter(getBaseContext()).openForWrite();
-            	Cursor teamIDs = mDBAdapter.getTeamIDsForMatchByAlliancePosition(matchID);
+            	Cursor teamIDs = mDBAdapter.getTeamIDsForMatchByAlliancePosition(competition_id, matchID);
             	
             	Hashtable<String, String> teamsForMatch = new Hashtable<String, String>();
 

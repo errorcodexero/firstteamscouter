@@ -19,8 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.NotesDataDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PitNotesDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.RobotNotesDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities.ItemType;
 
@@ -39,10 +37,9 @@ import java.util.List;
 public class NoteListActivity extends Activity implements OnClickListener {
     private ListView lvNoteList;
 
-    private RobotNotesDBAdapter rnDBAdapter;
-    private PitNotesDBAdapter   pnDBAdapter;
     private NotesDataDBAdapter  ndDBAdapter;
 
+    private long competition_id;
     private long teamId;
     private long teamNumber;
 
@@ -67,34 +64,8 @@ public class NoteListActivity extends Activity implements OnClickListener {
         if(lvNoteList != null) lvNoteList.setAdapter(new NoteListAdapter(this, listOfNotes));
 
         try {
-            FTSUtilities.printToConsole("PictureListActivity::onCreate : OPENING DB\n");
-            switch(this.itemType) {
-                case ROBOT:
-                    rnDBAdapter = new RobotNotesDBAdapter(this).openForWrite();
-                    pnDBAdapter = null;
-                    break;
-                case PIT:
-                    rnDBAdapter = null;
-                    pnDBAdapter = new PitNotesDBAdapter(this).openForWrite();
-                    break;
-                case ALL:
-                    rnDBAdapter = new RobotNotesDBAdapter(this).openForWrite();
-                    pnDBAdapter = new PitNotesDBAdapter(this).openForWrite();
-                    break;
-                default:
-                case NONE:
-                    rnDBAdapter = null;
-                    pnDBAdapter = null;
-            }
-        } catch(SQLException e) {
-            e.printStackTrace();
-            rnDBAdapter = null;
-            pnDBAdapter = null;
-        }
-
-        try {
-            FTSUtilities.printToConsole("NoteListActivity::onCreate : OPENING DB\n");
-            ndDBAdapter = new NotesDataDBAdapter(this).openForWrite();
+            FTSUtilities.printToConsole("NoteListActivity::onCreate : INIT dbADAPTER\n");
+            ndDBAdapter = new NotesDataDBAdapter(this);
         } catch(SQLException e) {
             e.printStackTrace();
             ndDBAdapter = null;
@@ -110,24 +81,27 @@ public class NoteListActivity extends Activity implements OnClickListener {
         Intent intent = getIntent();
         this.teamId = intent.getLongExtra("team_id", -1);
         this.teamNumber = intent.getLongExtra("team_number", -1);
+        this.competition_id = intent.getLongExtra("competition_id", 0); // TODO - get the real comepetition id
         this.itemType = ItemType.getItemTypeByName(intent.getStringExtra("item_type"));
     }
 
     private void loadData() {
-        switch(this.itemType) {
-            case ROBOT:
-                if(this.rnDBAdapter != null) {
-                    ArrayList<Long> noteIds = rnDBAdapter.getAllRobotNoteIdsForRobotId(teamId);
-                    if(noteIds.size() > 0 && this.ndDBAdapter != null) {
-                        ArrayList<String> noteStringList = new ArrayList<String>();
-                        for(Long l : noteIds) {
-                            noteStringList.add(ndDBAdapter.getNotesDataEntry(l));
-                        }
-                        listOfNotes.clear();
-                        listOfNotes.addAll(noteStringList);
+        if(this.ndDBAdapter != null) {
+            try {
+                ArrayList<Long> noteIds = ndDBAdapter.openForRead().getAllNotesDataEntriesForOwner(teamId, this.itemType.toString());
+                if (noteIds.size() > 0 && this.ndDBAdapter != null) {
+                    ArrayList<String> noteStringList = new ArrayList<String>();
+                    for (Long l : noteIds) {
+                        noteStringList.add(ndDBAdapter.getNotesDataEntry(l));
                     }
+                    listOfNotes.clear();
+                    listOfNotes.addAll(noteStringList);
                 }
-                break;
+            }catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if(ndDBAdapter != null && !ndDBAdapter.dbIsClosed()) ndDBAdapter.close();
+            }
         }
         ((NoteListAdapter)this.lvNoteList.getAdapter()).notifyDataSetChanged();
     }
@@ -143,9 +117,9 @@ public class NoteListActivity extends Activity implements OnClickListener {
     public void onClick(View arg0) {
         if (arg0.getId() == R.id.btnAddNote) {
             try {
-                //Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 Intent addNoteIntent = new Intent(getBaseContext(), AddNoteActivity.class);
                 addNoteIntent.putExtra("team_number", teamNumber);
+                addNoteIntent.putExtra("competition_id", competition_id);
                 startActivityForResult(addNoteIntent, ADD_NOTE);
             } catch(ActivityNotFoundException anfe){
                 //display an error message
@@ -173,21 +147,12 @@ public class NoteListActivity extends Activity implements OnClickListener {
 
     protected void addNoteToDatabase(String note) {
         if(note != null && !note.isEmpty() && ndDBAdapter != null) {
-            switch(this.itemType) {
-                case ROBOT:
-                    if(rnDBAdapter != null) {
-                        long noteId = ndDBAdapter.createNotesDataEntry(itemType.getName(), note);
-                        rnDBAdapter.createRobotNote(teamId, noteId);
-                    }
-                    break;
-                case PIT:
-                    break;
-                case TEAM:
-                    break;
-                case ALL:
-                    break;
-                case NONE:
-                    break;
+            try {
+                ndDBAdapter.openForWrite().createNotesDataEntry(teamId, itemType.getName(), note);
+            } catch (Exception e) {
+
+            } finally {
+                if(ndDBAdapter != null && !ndDBAdapter.dbIsClosed()) ndDBAdapter.close();
             }
         }
     }

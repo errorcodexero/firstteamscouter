@@ -196,7 +196,9 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
         args.put(COLUMN_NAME_ELEMENT_TYPES, String.valueOf(values.get(COLUMN_NAME_ELEMENT_TYPES)));
         args.put(COLUMN_NAME_ELEMENT_STATES, String.valueOf(values.get(COLUMN_NAME_ELEMENT_STATES)));
         args.put(COLUMN_NAME_TRANSACTION_READY_TO_EXPORT, String.valueOf(values.get(COLUMN_NAME_TRANSACTION_READY_TO_EXPORT)));
-        return this.mDb.insert(TABLE_NAME, null, args);
+        long id = this.openForWrite().mDb.insert(TABLE_NAME, null, args);
+        if(!this.dbIsClosed()) this.close();
+        return id;
     }
 
     /**
@@ -208,7 +210,7 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
     public Cursor getTransaction(long rowId) throws SQLException {
         Cursor mCursor = null;
         try {
-            mCursor = this.mDb.query(true, TABLE_NAME, this.allColumnNames,
+            mCursor = this.openForRead().mDb.query(true, TABLE_NAME, this.allColumnNames,
                     _ID + "=" + rowId, null, null, null, null, null);
             mCursor.moveToFirst();
         }
@@ -229,13 +231,16 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
         Cursor mCursor = null;
         ArrayList<Long> transactionIDs = new ArrayList<Long>();
         try {
-            mCursor = this.mDb.query(true, TABLE_NAME, this.allColumnNames, WHERE, null, null, null, null, _ID);
+            mCursor = this.openForRead().mDb.query(true, TABLE_NAME, this.allColumnNames, WHERE, null, null, null, null, _ID);
             while(mCursor.moveToNext()) {
                 transactionIDs.add(mCursor.getLong(mCursor.getColumnIndex(_ID)));
             }
         }
         catch (Exception e) {
             FTSUtilities.printToConsole("TeamMatchTransactionDBAdapter::getTeamMatchTransactionIDs : No transaction for teamID " + teamID + " and matchID " + matchID + " was found.");
+        } finally {
+            if(mCursor != null && !mCursor.isClosed()) mCursor.close();
+            if(!this.dbIsClosed()) this.close();
         }
         return transactionIDs.toArray(new Long[0]);
     }
@@ -248,17 +253,17 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
      */
     public boolean deleteTeamMatchTransaction(long rowId) {
 
-        return this.mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
+        return this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
     }
     
     public void deleteAllData()
     {
-        mDb.delete(TABLE_NAME, null, null);
+        this.openForWrite().mDb.delete(TABLE_NAME, null, null);
     }
 
     public boolean populateTestData(long[] matchIDs, long[] teamIDs) {
     	FTSUtilities.printToConsole("TeamMatchTransactionDBAdapter::populateTestData\n");
-    	deleteAllData();
+    	//deleteAllData();
 
     	return false;
     }

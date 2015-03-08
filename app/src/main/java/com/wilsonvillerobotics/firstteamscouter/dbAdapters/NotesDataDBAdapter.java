@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import java.util.ArrayList;
+
 public class NotesDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "notes_data";
     public static final String COLUMN_NAME_OWNER_ID = "owner_id";
@@ -102,6 +104,14 @@ public class NotesDataDBAdapter implements BaseColumns {
         this.mDbHelper.close();
     }
 
+    public boolean dbIsClosed() {
+        if(this.mDb == null) {
+            return true;
+        } else {
+            return !this.mDb.isOpen();
+        }
+    }
+
     /**
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
@@ -110,8 +120,9 @@ public class NotesDataDBAdapter implements BaseColumns {
      * @param note_text id
      * @return rowId or -1 if failed
      */
-    public long createNotesDataEntry(String note_type, String note_text){
+    public long createNotesDataEntry(long owner_id, String note_type, String note_text){
         ContentValues initialValues = new ContentValues();
+        initialValues.put(COLUMN_NAME_OWNER_ID, owner_id);
         initialValues.put(COLUMN_NAME_NOTE_TYPE, note_type);
         initialValues.put(COLUMN_NAME_NOTE_TEXT, note_text);
         return this.mDb.insert(TABLE_NAME, null, initialValues);
@@ -136,8 +147,28 @@ public class NotesDataDBAdapter implements BaseColumns {
     public Cursor getAllNotesDataEntries() {
 
         return this.mDb.query(TABLE_NAME, new String[] {
-                _ID, COLUMN_NAME_NOTE_TYPE, COLUMN_NAME_NOTE_TEXT
+                _ID, COLUMN_NAME_OWNER_ID, COLUMN_NAME_NOTE_TYPE, COLUMN_NAME_NOTE_TEXT
         		}, null, null, null, null, null);
+    }
+
+    /**
+     * Return a Cursor over the list of all entries in the database
+     *
+     * @return Cursor over all Match Data entries
+     */
+    public ArrayList<Long> getAllNotesDataEntriesForOwner(long owner_id, String owner_type) {
+        ArrayList<Long> noteIDs = new ArrayList<Long>();
+        String WHERE = COLUMN_NAME_OWNER_ID + "=" + String.valueOf(owner_id);
+        WHERE += " AND " + COLUMN_NAME_NOTE_TYPE + "=" + owner_type;
+        Cursor c = this.mDb.query(TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_OWNER_ID, COLUMN_NAME_NOTE_TYPE, COLUMN_NAME_NOTE_TEXT
+        }, WHERE, null, null, null, null);
+
+        while(c.moveToNext()) {
+            noteIDs.add(c.getLong(c.getColumnIndex(_ID)));
+        }
+
+        return noteIDs;
     }
 
     /**
@@ -148,11 +179,10 @@ public class NotesDataDBAdapter implements BaseColumns {
      */
     public String getNotesDataEntry(long rowId) throws SQLException {
         String note = "";
-        Cursor mCursor =
-
-        this.mDb.query(true, TABLE_NAME, new String[] {
-                _ID, COLUMN_NAME_NOTE_TYPE, COLUMN_NAME_NOTE_TEXT
-        		}, _ID + "=" + rowId, null, null, null, null, null);
+        String WHERE = _ID + "=" + rowId;
+        Cursor mCursor = this.mDb.query(true, TABLE_NAME, new String[] {
+                _ID, COLUMN_NAME_OWNER_ID, COLUMN_NAME_NOTE_TYPE, COLUMN_NAME_NOTE_TEXT
+        		}, WHERE, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
             note = mCursor.getString(mCursor.getColumnIndex(COLUMN_NAME_NOTE_TEXT));
@@ -168,8 +198,9 @@ public class NotesDataDBAdapter implements BaseColumns {
      * @param note_text
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updateNotesDataEntry(int rowId, String note_type, String note_text){
+    public boolean updateNotesDataEntry(int rowId, long owner_id, String note_type, String note_text){
         ContentValues args = new ContentValues();
+        args.put(COLUMN_NAME_OWNER_ID, owner_id);
         args.put(COLUMN_NAME_NOTE_TYPE, note_type);
         args.put(COLUMN_NAME_NOTE_TEXT, note_text);
         return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 

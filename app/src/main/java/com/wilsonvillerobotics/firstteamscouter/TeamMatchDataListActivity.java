@@ -25,31 +25,32 @@ public class TeamMatchDataListActivity extends ListActivity {
 	@Override
     public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
-          setContentView(R.layout.activity_list_team_match_data);
+        setContentView(R.layout.activity_list_team_match_data);
 
-          //this.teamDataDBAdapter = new TeamDataDBAdapter(this).openForWrite();
-          this.tmDataDBAdapter = new TeamMatchDBAdapter(this).openForWrite();
+        //this.teamDataDBAdapter = new TeamDataDBAdapter(this).openForWrite();
+        this.tmDataDBAdapter = new TeamMatchDBAdapter(this).openForWrite();
           
-          Intent intent = getIntent();
-          long teamID = intent.getLongExtra(TeamDataDBAdapter._ID, -1);
-  		
-          //Cursor cursor = this.teamDataDBAdapter.getAllTeamDataEntries();
-          Cursor cursor = this.tmDataDBAdapter.getMatchesForTeam(teamID);
-          startManagingCursor(cursor);
+        Intent intent = getIntent();
+        long teamID = intent.getLongExtra(TeamDataDBAdapter._ID, -1);
+        long competition_id = intent.getLongExtra("competition_id", 0);
+
+        //Cursor cursor = this.teamDataDBAdapter.getAllTeamDataEntries();
+        Cursor cursor = this.tmDataDBAdapter.getMatchesForTeam(teamID, competition_id);
+        startManagingCursor(cursor);
           
-          FTSUtilities.printToConsole("TeamDataListActivity::onCreate : Cursor Size: " + cursor.getCount() + "\n");
+        FTSUtilities.printToConsole("TeamDataListActivity::onCreate : Cursor Size: " + cursor.getCount() + "\n");
 
-          // THE DESIRED COLUMNS TO BE BOUND
-          String[] columns = new String[] { TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID, TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA };
-          // THE XML DEFINED VIEWS WHICH THE DATA WILL BE BOUND TO
-          int[] to = new int[] { R.id.match_number_entry, R.id.match_data_saved_entry };
+        // THE DESIRED COLUMNS TO BE BOUND
+        String[] columns = new String[] { TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID, TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA };
+        // THE XML DEFINED VIEWS WHICH THE DATA WILL BE BOUND TO
+        int[] to = new int[] { R.id.match_number_entry, R.id.match_data_saved_entry };
 
-          // CREATE THE ADAPTER USING THE CURSOR POINTING TO THE DESIRED DATA AS WELL AS THE LAYOUT INFORMATION
-          SimpleCursorAdapter mAdapter = new SimpleCursorAdapter(this, R.layout.team_match_data_list_entry, cursor, columns, to);
+        // CREATE THE ADAPTER USING THE CURSOR POINTING TO THE DESIRED DATA AS WELL AS THE LAYOUT INFORMATION
+        SimpleCursorAdapter mAdapter = new SimpleCursorAdapter(this, R.layout.team_match_data_list_entry, cursor, columns, to);
 
-          ListView lv = this.getListView();
+        ListView lv = this.getListView();
 
-          lv.setOnItemClickListener(new OnItemClickListener()
+        lv.setOnItemClickListener(new OnItemClickListener()
           {
              @Override
              public void onItemClick(AdapterView<?> adapter, View v, int position,
@@ -63,11 +64,11 @@ public class TeamMatchDataListActivity extends ListActivity {
                    myIntent.putExtra("position", position);
                    myIntent.putExtra(TeamMatchDBAdapter._ID, tmID);
                    startActivityForResult(myIntent, 0);
-             }
+           }
           });
           
-          // SET THIS ADAPTER AS YOUR LISTACTIVITY'S ADAPTER
-          this.setListAdapter(mAdapter);
+        // SET THIS ADAPTER AS YOUR LISTACTIVITY'S ADAPTER
+        this.setListAdapter(mAdapter);
     }
 	
 	@Override

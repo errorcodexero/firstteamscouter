@@ -1,9 +1,7 @@
 package com.wilsonvillerobotics.firstteamscouter.dbAdapters;
 
-import com.wilsonvillerobotics.firstteamscouter.FIRSTTeamScouter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
-import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -23,9 +21,9 @@ import java.util.Properties;
 
 public class DBAdapter {
 
-    public static final String DATABASE_NAME = "FIRSTTeamScouter"; //$NON-NLS-1$
+    public static final String DATABASE_NAME = "FIRSTTeamScouter.sqlite"; //$NON-NLS-1$
 
-    public static final int DATABASE_VERSION = 17;
+    public static final int DATABASE_VERSION = 2;
 
     private static final int TABLE_NAME        = 0;
     private static final int CREATE_TABLE_SQL  = 1;
@@ -43,24 +41,15 @@ public class DBAdapter {
 
     private enum TABLE_NAMES {
     	COMPETITION_DATA(0, CompetitionDataDBAdapter.class.getCanonicalName()),
-    	COMPETITION_MATCHES(1, CompetitionMatchesDBAdapter.class.getCanonicalName()),
-    	MATCH_DATA(2, MatchDataDBAdapter.class.getCanonicalName()),
-    	MATCH_NOTES(3, MatchNotesDBAdapter.class.getCanonicalName()),
-    	NOTES_DATA(4, NotesDataDBAdapter.class.getCanonicalName()),
-    	PICTURE_DATA(5, PictureDataDBAdapter.class.getCanonicalName()),
-    	PIT_DATA(6, PitDataDBAdapter.class.getCanonicalName()),
-    	PIT_NOTES(7, PitNotesDBAdapter.class.getCanonicalName()),
-    	PIT_PICTURES(8, PitPicturesDBAdapter.class.getCanonicalName()),
-    	ROBOT_DATA(9, RobotDataDBAdapter.class.getCanonicalName()),
-    	ROBOT_NOTES(10, RobotNotesDBAdapter.class.getCanonicalName()),
-    	ROBOT_PICTURES(11, RobotPicturesDBAdapter.class.getCanonicalName()),
-    	TEAM_DATA(12, TeamDataDBAdapter.class.getCanonicalName()),
-    	TEAM_MATCH_DATA(13, TeamMatchDBAdapter.class.getCanonicalName()),
-    	TEAM_MATCH_NOTES(14, TeamMatchNotesDBAdapter.class.getCanonicalName()),
-    	TEAM_PITS(15, TeamPitsDBAdapter.class.getCanonicalName()),
-    	TEAM_ROBOTS(16, TeamRobotsDBAdapter.class.getCanonicalName()),
-        TEAM_MATCH_TRANSACTION_DATA(17, TeamMatchTransactionDataDBAdapter.class.getCanonicalName()),
-        TEAM_MATCH_TRANSACTIONS(18, TeamMatchTransactionsDBAdapter.class.getCanonicalName());
+    	MATCH_DATA(1, MatchDataDBAdapter.class.getCanonicalName()),
+    	NOTES_DATA(2, NotesDataDBAdapter.class.getCanonicalName()),
+    	PICTURE_DATA(3, PictureDataDBAdapter.class.getCanonicalName()),
+    	PIT_DATA(4, PitDataDBAdapter.class.getCanonicalName()),
+    	ROBOT_DATA(5, RobotDataDBAdapter.class.getCanonicalName()),
+    	TEAM_DATA(6, TeamDataDBAdapter.class.getCanonicalName()),
+    	TEAM_MATCH_DATA(7, TeamMatchDBAdapter.class.getCanonicalName()),
+        TEAM_MATCH_TRANSACTION_DATA(8, TeamMatchTransactionDataDBAdapter.class.getCanonicalName()),
+        TEAM_MATCH_TRANSACTIONS(9, TeamMatchTransactionsDBAdapter.class.getCanonicalName());
     	
     	private int index;
         private String className;
@@ -100,24 +89,11 @@ public class DBAdapter {
    	    
     	{
     		//1
-    		//COMPETITION_MATCHES
-            CompetitionMatchesDBAdapter.TABLE_NAME,
-    		"CREATE TABLE " + CompetitionMatchesDBAdapter.TABLE_NAME + " (" +
-    		AUTO_INC_ID + 
-    		CompetitionMatchesDBAdapter.COLUMN_NAME_COMPETITION_ID + INT_TYPE + COMMA_SEP +
-    		CompetitionMatchesDBAdapter.COLUMN_NAME_MATCH_ID + INT_TYPE +
-			");",
-            "SELECT * FROM "  + CompetitionMatchesDBAdapter.TABLE_NAME,
-			"DROP TABLE IF EXISTS " + CompetitionMatchesDBAdapter.TABLE_NAME,
-            "SELECT * FROM "  + CompetitionMatchesDBAdapter.TABLE_NAME
-    	},
-		
-    	{
-    		//2
     		//MATCH_DATA
             MatchDataDBAdapter.TABLE_NAME,
 			"CREATE TABLE " + MatchDataDBAdapter.TABLE_NAME + " (" +
-			AUTO_INC_ID + 
+			AUTO_INC_ID +
+            MatchDataDBAdapter.COLUMN_NAME_COMPETITION_ID + INT_TYPE + COMMA_SEP +
 	        MatchDataDBAdapter.COLUMN_NAME_MATCH_TIME + TEXT_TYPE + COMMA_SEP +
 	        MatchDataDBAdapter.COLUMN_NAME_MATCH_TYPE + TEXT_TYPE + COMMA_SEP +
 	        MatchDataDBAdapter.COLUMN_NAME_MATCH_NUMBER + INT_TYPE + COMMA_SEP +
@@ -135,24 +111,9 @@ public class DBAdapter {
 			"DROP TABLE IF EXISTS " + MatchDataDBAdapter.TABLE_NAME,
             "SELECT * FROM "  + MatchDataDBAdapter.TABLE_NAME
     	},
-		
-    	{
-    		//3
-    		//MATCH_NOTES
-            MatchNotesDBAdapter.TABLE_NAME,
-    		"CREATE TABLE " + MatchNotesDBAdapter.TABLE_NAME + " (" +
-    		AUTO_INC_ID + 
-    		MatchNotesDBAdapter.COLUMN_NAME_MATCH_ID + INT_TYPE + COMMA_SEP +
-    		MatchNotesDBAdapter.COLUMN_NAME_NOTE_ID + INT_TYPE +
-    		");",
 
-            "SELECT * FROM "  + MatchNotesDBAdapter.TABLE_NAME,
-    		"DROP TABLE IF EXISTS " + MatchNotesDBAdapter.TABLE_NAME,
-            "SELECT * FROM "  + MatchNotesDBAdapter.TABLE_NAME
-    	},
-    	
     	{
-    		//4
+    		//2
     		//NOTES_DATA
             NotesDataDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + NotesDataDBAdapter.TABLE_NAME + " (" +
@@ -168,11 +129,12 @@ public class DBAdapter {
     	},
 		
     	{
-    		//5
+    		//3
     		//PICTURE_DATA
             PictureDataDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + PictureDataDBAdapter.TABLE_NAME + " (" +
-    		AUTO_INC_ID + 
+    		AUTO_INC_ID +
+            PictureDataDBAdapter.COLUMN_NAME_OWNER_ID + INT_TYPE + COMMA_SEP +
     		PictureDataDBAdapter.COLUMN_NAME_PICTURE_TYPE + TEXT_TYPE + COMMA_SEP +
     		PictureDataDBAdapter.COLUMN_NAME_PICTURE_URI + TEXT_TYPE +
     		");",
@@ -183,7 +145,7 @@ public class DBAdapter {
     	},
 		
     	{
-    		//6
+    		//4
     		//PIT_DATA
             PitDataDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + PitDataDBAdapter.TABLE_NAME + " (" +
@@ -197,41 +159,13 @@ public class DBAdapter {
     	},
 		
     	{
-    		//7
-    		//PIT_NOTES
-            PitNotesDBAdapter.TABLE_NAME,
-    		"CREATE TABLE " + PitNotesDBAdapter.TABLE_NAME + " (" +
-    		AUTO_INC_ID + 
-    		PitNotesDBAdapter.COLUMN_NAME_PIT_ID + INT_TYPE + COMMA_SEP +
-    		PitNotesDBAdapter.COLUMN_NAME_NOTE_ID + INT_TYPE +
-    		");",
-
-            "SELECT * FROM "  + PitNotesDBAdapter.TABLE_NAME,
-            "DROP TABLE IF EXISTS " + PitNotesDBAdapter.TABLE_NAME,
-            "SELECT * FROM "  + PitNotesDBAdapter.TABLE_NAME
-    	},
-		
-    	{
-    		//8
-    		//PIT_PICTURES
-            PitPicturesDBAdapter.TABLE_NAME,
-    		"CREATE TABLE " + PitPicturesDBAdapter.TABLE_NAME + " (" +
-    		AUTO_INC_ID +
-            PitPicturesDBAdapter.COLUMN_NAME_PIT_ID + INT_TYPE + COMMA_SEP +
-    		PitPicturesDBAdapter.COLUMN_NAME_PICTURE_ID + INT_TYPE +
-    		");",
-
-            "SELECT * FROM "  + PitPicturesDBAdapter.TABLE_NAME,
-            "DROP TABLE IF EXISTS " + PitPicturesDBAdapter.TABLE_NAME,
-            "SELECT * FROM "  + PitPicturesDBAdapter.TABLE_NAME
-    	},
-		
-    	{
-    		//9
+    		//5
     		//ROBOT_DATA
             RobotDataDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + RobotDataDBAdapter.TABLE_NAME + " (" +
-    		AUTO_INC_ID + 
+    		AUTO_INC_ID +
+            RobotDataDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
+            RobotDataDBAdapter.COLUMN_NAME_COMPETITION_ID  + INT_TYPE + COMMA_SEP +
     		RobotDataDBAdapter.COLUMN_NAME_DRIVE_TRAIN_TYPE + TEXT_TYPE + COMMA_SEP +
             RobotDataDBAdapter.COLUMN_NAME_WHEEL_TYPE + TEXT_TYPE + COMMA_SEP +
             RobotDataDBAdapter.COLUMN_NAME_NUMBER_WHEELS + INT_TYPE + COMMA_SEP +
@@ -254,37 +188,7 @@ public class DBAdapter {
     	},
 		
     	{
-    		//10
-    		//ROBOT_NOTES
-            RobotNotesDBAdapter.TABLE_NAME,
-    		"CREATE TABLE " + RobotNotesDBAdapter.TABLE_NAME + " (" +
-    		AUTO_INC_ID + 
-    		RobotNotesDBAdapter.COLUMN_NAME_ROBOT_ID + INT_TYPE + COMMA_SEP +
-    		RobotNotesDBAdapter.COLUMN_NAME_NOTE_ID + INT_TYPE +
-    		");",
-
-            "SELECT * FROM "  + RobotNotesDBAdapter.TABLE_NAME,
-            "DROP TABLE IF EXISTS " + RobotNotesDBAdapter.TABLE_NAME,
-            "SELECT * FROM "  + RobotNotesDBAdapter.TABLE_NAME
-    	},
-		
-    	{
-    		//11
-    		//ROBOT_PICTURES
-            RobotPicturesDBAdapter.TABLE_NAME,
-    		"CREATE TABLE " + RobotPicturesDBAdapter.TABLE_NAME + " (" +
-    		AUTO_INC_ID + 
-    		RobotPicturesDBAdapter.COLUMN_NAME_ROBOT_ID + INT_TYPE + COMMA_SEP +
-    		RobotPicturesDBAdapter.COLUMN_NAME_PICTURE_ID + INT_TYPE +
-    		");",
-
-            "SELECT * FROM "  + RobotPicturesDBAdapter.TABLE_NAME,
-            "DROP TABLE IF EXISTS " + RobotPicturesDBAdapter.TABLE_NAME,
-            "SELECT * FROM "  + RobotPicturesDBAdapter.TABLE_NAME
-    	},
-		
-    	{
-    		//12
+    		//6
     		//TEAM_DATA
             /*
             CREATE TABLE something (
@@ -314,13 +218,14 @@ public class DBAdapter {
     	},
 		
     	{
-    		//13
+    		//7
     		//TEAM_MATCH_DATA
             TeamMatchDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + TeamMatchDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID + 
     		TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
     		TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID + INT_TYPE + COMMA_SEP +
+            TeamMatchDBAdapter.COLUMN_NAME_COMPETITION_ID + INT_TYPE + COMMA_SEP +
     		TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION + TEXT_TYPE + COMMA_SEP +
     		TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA + BOOL_TYPE + COMMA_SEP +
     		TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT + BOOL_TYPE + COMMA_SEP +
@@ -379,73 +284,27 @@ public class DBAdapter {
             "DROP TABLE IF EXISTS " + TeamMatchDBAdapter.TABLE_NAME,
             "SELECT * FROM "  + TeamMatchDBAdapter.TABLE_NAME
     	},
-		
-    	{
-    		//14
-    		//TEAM_MATCH_NOTES
-            TeamMatchNotesDBAdapter.TABLE_NAME,
-    		"CREATE TABLE " + TeamMatchNotesDBAdapter.TABLE_NAME + " (" +
-    		AUTO_INC_ID + 
-    		TeamMatchNotesDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
-    		TeamMatchNotesDBAdapter.COLUMN_NAME_MATCH_ID + INT_TYPE + COMMA_SEP +
-    		TeamMatchNotesDBAdapter.COLUMN_NAME_NOTE_ID + INT_TYPE +
-    		");",
-
-            "SELECT * FROM "  + TeamMatchNotesDBAdapter.TABLE_NAME,
-            "DROP TABLE IF EXISTS " + TeamMatchNotesDBAdapter.TABLE_NAME,
-            "SELECT * FROM "  + TeamMatchNotesDBAdapter.TABLE_NAME
-    	},
-		
-    	{
-    		//15
-    		//TEAM_PITS
-            TeamPitsDBAdapter.TABLE_NAME,
-    		"CREATE TABLE " + TeamPitsDBAdapter.TABLE_NAME + " (" +
-    		AUTO_INC_ID + 
-			TeamPitsDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
-			TeamPitsDBAdapter.COLUMN_NAME_PIT_ID + INT_TYPE +
-    		");",
-
-            "SELECT * FROM "  + TeamPitsDBAdapter.TABLE_NAME,
-            "DROP TABLE IF EXISTS " + TeamPitsDBAdapter.TABLE_NAME,
-            "SELECT * FROM "  + TeamPitsDBAdapter.TABLE_NAME
-    	},
-		
-    	{
-    		//16
-    		//TEAM_ROBOTS
-            TeamRobotsDBAdapter.TABLE_NAME,
-    		"CREATE TABLE " + TeamRobotsDBAdapter.TABLE_NAME + " (" +
-    		AUTO_INC_ID + 
-			TeamRobotsDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
-			TeamRobotsDBAdapter.COLUMN_NAME_ROBOT_ID + INT_TYPE +
-    		");",
-
-            "SELECT * FROM "  + TeamRobotsDBAdapter.TABLE_NAME,
-            "DROP TABLE IF EXISTS " + TeamRobotsDBAdapter.TABLE_NAME,
-            "SELECT * FROM "  + TeamRobotsDBAdapter.TABLE_NAME
-    	},
 
         {
-            //17
+            //8
             //TEAM_MATCH_TRANSACTION_DATA
             TeamMatchTransactionDataDBAdapter.TABLE_NAME,
             "CREATE TABLE " + TeamMatchTransactionDataDBAdapter.TABLE_NAME + " (" +
                 AUTO_INC_ID +
                 TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_MATCH_ID + INT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TIMESTAMP + INT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION + TEXT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_PHASE + TEXT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_START_LOCATION_NAME + TEXT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_START_LOCATION_X + INT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_START_LOCATION_Y + INT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_END_LOCATION_NAME + TEXT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_END_LOCATION_X + INT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_END_LOCATION_Y + INT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_TYPES + TEXT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_STATES + TEXT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TRANSACTION_READY_TO_EXPORT + TEXT_TYPE +
+                TeamMatchTransactionDataDBAdapter.COLUMN_NAME_MATCH_ID + INT_TYPE + COMMA_SEP +
+                TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TIMESTAMP + INT_TYPE + COMMA_SEP +
+                TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION + TEXT_TYPE + COMMA_SEP +
+                TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_PHASE + TEXT_TYPE + COMMA_SEP +
+                TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_START_LOCATION_NAME + TEXT_TYPE + COMMA_SEP +
+                TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_START_LOCATION_X + INT_TYPE + COMMA_SEP +
+                TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_START_LOCATION_Y + INT_TYPE + COMMA_SEP +
+                TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_END_LOCATION_NAME + TEXT_TYPE + COMMA_SEP +
+                TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_END_LOCATION_X + INT_TYPE + COMMA_SEP +
+                TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ACTION_END_LOCATION_Y + INT_TYPE + COMMA_SEP +
+                TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_TYPES + TEXT_TYPE + COMMA_SEP +
+                TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_STATES + TEXT_TYPE + COMMA_SEP +
+                TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TRANSACTION_READY_TO_EXPORT + TEXT_TYPE +
             ");",
 
             "SELECT * FROM "  + TeamMatchTransactionDataDBAdapter.TABLE_NAME,
@@ -454,7 +313,7 @@ public class DBAdapter {
         },
 
             {
-                //17
+                //9
                 //TEAM_MATCH_TRANSACTIONS
                 TeamMatchTransactionsDBAdapter.TABLE_NAME,
                 "CREATE TABLE " + TeamMatchTransactionsDBAdapter.TABLE_NAME + " (" +
@@ -605,7 +464,7 @@ public class DBAdapter {
         	FTSUtilities.printToConsole("Downgrading tables in DBAdapter::DatabaseHelper -- Old DB Version: " + oldVersion + " - New DB Version: " + newVersion);
             onUpgrade(db, oldVersion, newVersion);
         }
-    } 
+    }
 
    /**
      * openForWrite the db
@@ -640,5 +499,28 @@ public class DBAdapter {
     public void close() 
     {
         this.DBHelper.close();
+    }
+
+    public void deleteTableData() {
+        String query;
+        try {
+            this.openForWrite();
+            if(this.db != null && this.db.isOpen()) {
+                for (TABLE_NAMES table : TABLE_NAMES.values()) {
+                    query = TABLE_LIST[table.getIndex()][DELETE_TABLE_SQL];
+                    FTSUtilities.printToConsole("Delete table: " + table.name() + "\n\n");
+                    this.db.execSQL(query);
+
+                    query = TABLE_LIST[table.getIndex()][CREATE_TABLE_SQL];
+                    FTSUtilities.printToConsole("Create table: " + table.name() + "\n\n");
+                    db.execSQL(query);
+                }
+            }
+        } catch (Exception e) {
+            if(db != null && db.isOpen()) this.close();
+            e.printStackTrace();
+        } finally {
+            this.close();
+        }
     }
 }

@@ -23,7 +23,6 @@ import com.wilsonvillerobotics.firstteamscouter.dbAdapters.MatchDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.RobotDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamRobotsDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
 import java.util.ArrayList;
@@ -35,18 +34,13 @@ import java.util.HashMap;
 public class TeamInformationActivity extends Activity implements View.OnClickListener {
 
     private int selectedPosition;
-    private long teamID, robotID;
+    private long teamID, robotID, competition_id;
     private long teamNumber;
 
     private TeamDataDBAdapter    tdDBAdapter;
     private RobotDataDBAdapter   rdDBAdapter;
-    private TeamRobotsDBAdapter  trDBAdapter;
     private TeamMatchDBAdapter   tmdDBAdapter;
     private MatchDataDBAdapter   mdDBAdapter;
-    //private TeamPitsDBAdapter    tpDBAdapter;
-    //private PitDataDBAdapter     pdDBAdapter;
-    //private PitNotesDBAdapter    pnDBAdapter;
-    //private PitPicturesDBAdapter ppDBAdapter;
 
     private Cursor tdData;
     private Cursor tmdData;
@@ -303,7 +297,7 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
             this.alTeamMatchTextViews = new ArrayList<TextView>();
 
             try {
-                tmdData = tmdDBAdapter.openForRead().getMatchesForTeam(this.teamID);
+                tmdData = tmdDBAdapter.openForRead().getMatchesForTeam(this.teamID, this.competition_id);
                 if (tmdData != null && mdDBAdapter != null) {
                     int index = 0;
                     do {
@@ -404,16 +398,12 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
             tmdDBAdapter = new TeamMatchDBAdapter(this);
             mdDBAdapter = new MatchDataDBAdapter(this);
             rdDBAdapter = new RobotDataDBAdapter(this);
-            trDBAdapter = new TeamRobotsDBAdapter(this);
-            //tpDBAdapter = new TeamPitsDBAdapter(this);
         } catch(SQLException e) {
             e.printStackTrace();
             tdDBAdapter = null;
             tmdDBAdapter = null;
             mdDBAdapter = null;
             rdDBAdapter = null;
-            trDBAdapter = null;
-            //tpDBAdapter = null;
         }
     }
 
@@ -423,25 +413,29 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
         selectedPosition = intent.getIntExtra("position", -1);
         teamID = intent.getLongExtra(TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER, -1);
         teamNumber = intent.getLongExtra("team_number", -1);
+        competition_id = intent.getLongExtra("competition_id", 0);
     }
 
     private void loadRobotData() {
-        if(teamID >= 0 && trDBAdapter != null) {
+        /*if(teamID >= 0 && rdDBAdapter != null) {
             try {
-                this.robotID = trDBAdapter.openForRead().getRobotForTeam(teamID);
+                this.robotID = rdDBAdapter.openForRead().getRobotIdForTeamAtCompetition(teamID, competition_id);
             }catch (Exception e) {
-                //trDBAdapter = null;
+                e.printStackTrace();
             } finally {
-                if(trDBAdapter != null && !trDBAdapter.dbIsClosed())trDBAdapter.close();
+                if(rdDBAdapter != null && !rdDBAdapter.dbIsClosed())rdDBAdapter.close();
             }
 
-        }
-        if(this.robotID >= 0 && rdDBAdapter != null) {
+        }*/
+        //if(this.robotID >= 0 && rdDBAdapter != null) {
+        if(rdDBAdapter != null) {
             try {
-                HashMap<String, String> v = rdDBAdapter.openForRead().getRobotDataEntry(robotID);
-                if(v != null && v.size() > 0) this.hmRobotData = v;
+                HashMap<String, String> v = rdDBAdapter.openForRead().getRobotDataEntryForTeamAtCompetition(teamID, competition_id);
+                if(v != null && v.size() > 0) {
+                    this.hmRobotData = v;
+                }
             } catch (Exception e) {
-
+                e.printStackTrace();
             }finally {
                 if(rdDBAdapter != null && !rdDBAdapter.dbIsClosed())rdDBAdapter.close();
             }
@@ -452,6 +446,8 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
             String strDriveTrainArray[] = getResources().getStringArray(R.array.DriveTrains);
             String strWheelArray[] = getResources().getStringArray(R.array.Wheels);
             int index = 0;
+
+            this.robotID = Long.parseLong(hmRobotData.get(RobotDataDBAdapter._ID));
 
             int numStacks = Integer.parseInt(hmRobotData.get(RobotDataDBAdapter.COLUMN_NAME_NUMBER_TOTE_STACKS));
             if(sbNumToteStacks != null) sbNumToteStacks.setProgress(Integer.parseInt(hmRobotData.get(RobotDataDBAdapter.COLUMN_NAME_NUMBER_TOTE_STACKS)));
@@ -499,26 +495,17 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
             if(cbGetStepCans != null) hmRobotData.put(RobotDataDBAdapter.COLUMN_NAME_GET_STEP_CANS, String.valueOf(cbGetStepCans.isChecked()));
             if(cbPutStepTotes != null) hmRobotData.put(RobotDataDBAdapter.COLUMN_NAME_PUT_TOTES_ON_STEP, String.valueOf(cbPutStepTotes.isChecked()));
 
-            if(this.robotID >= 0) {
-                try {
-                    rdDBAdapter.openForWrite().updateRobotDataEntry(robotID, hmRobotData);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if(rdDBAdapter != null && !rdDBAdapter.dbIsClosed())rdDBAdapter.close();
+
+            try {
+                if(this.robotID >= 0) {
+                    rdDBAdapter.openForWrite().updateRobotDataEntry(robotID, teamID, competition_id, hmRobotData);
+                } else {
+                    this.robotID = rdDBAdapter.openForWrite().createRobotDataEntry(teamID, competition_id, hmRobotData);
                 }
-            } else {
-                try {
-                    this.robotID = rdDBAdapter.openForWrite().createRobotDataEntry(hmRobotData);
-                    if (trDBAdapter != null) {
-                        trDBAdapter.openForWrite().createTeamRobot(teamID, robotID);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if(rdDBAdapter != null && !rdDBAdapter.dbIsClosed())rdDBAdapter.close();
-                    if(trDBAdapter != null && !trDBAdapter.dbIsClosed())trDBAdapter.close();
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if(rdDBAdapter != null && !rdDBAdapter.dbIsClosed())rdDBAdapter.close();
             }
         }
     }
@@ -577,6 +564,7 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
 
         Intent intent = new Intent(v.getContext(), c);
         intent.putExtra("team_id", teamID);
+        intent.putExtra("competition_id", competition_id);
         intent.putExtra("team_number", teamNumber);
         intent.putExtra("item_type", itemType);
         startActivity(intent);

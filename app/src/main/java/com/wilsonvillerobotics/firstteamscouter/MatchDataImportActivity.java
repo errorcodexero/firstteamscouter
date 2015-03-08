@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.channels.FileChannel;
 
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.DBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.MatchDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.RobotDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
@@ -31,7 +32,8 @@ import android.widget.Toast;
 public class MatchDataImportActivity extends Activity {
 
 	protected static final int TIMER_RUNTIME = 10000; // in ms --> 10s
-	
+
+    private DBAdapter dbAdapter;
 	private MatchDataDBAdapter matchDataDBAdapter;
 	private TeamMatchDBAdapter teamMatchDBAdapter;
 	private TeamDataDBAdapter teamDataDBAdapter;
@@ -43,6 +45,7 @@ public class MatchDataImportActivity extends Activity {
 	private TextView txtTestDataAlert;
 	protected ProgressBar mProgressBar;
 	protected String tabletID;
+    private long competition_id;
 	
 	private String exportTeamMatchDataFileNamePrefix;
     private String exportTeamDataFileNamePrefix;
@@ -81,6 +84,7 @@ public class MatchDataImportActivity extends Activity {
 		Intent intent = getIntent();
 		this.tabletID = intent.getStringExtra("tablet_id");
 		this.tabletID = (this.tabletID != null) ? this.tabletID : "Unknown Tablet ID";
+        this.competition_id = intent.getLongExtra("competition_id", 0);
 		
 		this.csvExt = ".csv";
 		this.exportTeamMatchDataFileNamePrefix = tabletID + "_team_match_data_export";
@@ -102,10 +106,11 @@ public class MatchDataImportActivity extends Activity {
 		
 		try {
 			FTSUtilities.printToConsole("ImportMatchDataActivity::onCreate : OPENING DB\n");
-			matchDataDBAdapter = new MatchDataDBAdapter(this).openForWrite();
-			teamMatchDBAdapter = new TeamMatchDBAdapter(this).openForWrite();
-			teamDataDBAdapter = new TeamDataDBAdapter(this).openForWrite();
-            robotDataDBAdapter = new RobotDataDBAdapter(this).openForWrite();
+            dbAdapter = new DBAdapter(this);
+			matchDataDBAdapter = new MatchDataDBAdapter(this);
+			teamMatchDBAdapter = new TeamMatchDBAdapter(this);
+			teamDataDBAdapter = new TeamDataDBAdapter(this);
+            robotDataDBAdapter = new RobotDataDBAdapter(this);
 		} catch(SQLException e) {
 			e.printStackTrace();
 			matchDataDBAdapter = null;
@@ -120,7 +125,7 @@ public class MatchDataImportActivity extends Activity {
 			statusMessage = "Press the import button to import test data for " + numTestMatches + " teams\n";
 			testDataAlertMessage = "TEST DATA MODE";
 		} else {
-			statusMessage = "Press the 'Import' button to import matches from 'match_list_data.csv'\nExpected format is:\nTime : Match Type : Match Number : Red1 : Red2 : Red3 : Blue1 : Blue2 : Blue3";
+			statusMessage = "Press the 'Import' button to import matches from 'match_list_data.csv'\nExpected format is:\nCompetition ID : Time : Match Type : Match Number : Red1 : Red2 : Red3 : Blue1 : Blue2 : Blue3";
 		}
 		
 		txtStatus = (TextView) findViewById(R.id.txtStatus);
@@ -147,7 +152,8 @@ public class MatchDataImportActivity extends Activity {
 				String importStatusMessage = "";
 				try {
 					if(FTSUtilities.POPULATE_TEST_DATA) {
-						teamMatchDBAdapter.populateTestData(matchDataDBAdapter.populateTestData(numTestMatches), teamDataDBAdapter.populateTestData());
+                        dbAdapter.deleteTableData();
+						teamMatchDBAdapter.populateTestData(competition_id, matchDataDBAdapter.populateTestData(numTestMatches), teamDataDBAdapter.populateTestData());
 						importStatusMessage = "Test data import complete";
 					} else {
 					    String storageState = Environment.getExternalStorageState();
@@ -158,10 +164,10 @@ public class MatchDataImportActivity extends Activity {
 
 					        if(file.exists() && file.isFile()) {
 					        	txtStatus.setText("File Found, Import Commencing\n");
-                                teamDataDBAdapter.deleteAllData();
-                                matchDataDBAdapter.deleteAllData();
-                                teamMatchDBAdapter.deleteAllData();
-                                robotDataDBAdapter.getAllRobotDataEntries();
+                                //teamDataDBAdapter.deleteAllData();
+                                //matchDataDBAdapter.deleteAllData();
+                                //teamMatchDBAdapter.deleteAllData();
+                                //robotDataDBAdapter.getAllRobotDataEntries();
 
 						        BufferedReader inputReader = new BufferedReader(
 						                new InputStreamReader(new FileInputStream(file)));
@@ -173,13 +179,13 @@ public class MatchDataImportActivity extends Activity {
 						        inputReader.mark((int)file.length());
 						        line = inputReader.readLine();
 						        lineArray = line.split(",");
-						        //String headerArray[] = {"Time", "Type", "#", FTSUtilities.alliancePositions[0], FTSUtilities.alliancePositions[1], FTSUtilities.alliancePositions[2],
+						        //String headerArray[] = {"CompetitionID", "Time", "Type", "#", FTSUtilities.alliancePositions[0], FTSUtilities.alliancePositions[1], FTSUtilities.alliancePositions[2],
 						        //		FTSUtilities.alliancePositions[3], FTSUtilities.alliancePositions[4], FTSUtilities.alliancePositions[5]};
 
-						        if(lineArray[1].startsWith("Type")) {
+						        if(lineArray[2].startsWith("Type")) {
 						        	FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : Header Row Detected");
 						        } else {
-						        	FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : NO Heasder Row Detected");
+						        	FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : NO Header Row Detected");
 						        	inputReader.reset();
 						        }
 
@@ -189,24 +195,47 @@ public class MatchDataImportActivity extends Activity {
 
 						        	if(lineArray.length > 8) {
 						        		//FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : " + lineArray[0] + ":" + lineArray[1] + ":" + lineArray[2] + ":" + lineArray[3] + ":" + lineArray[4] + ":" + lineArray[5] + ":" + lineArray[6] + ":" + lineArray[7]);
-						        		//Time : Type : MatchNum : Red1 : Red2 : Red3 : Blue1 : Blue2 : Blue3
+						        		//CompetitionID : Time : Type : MatchNum : Red1 : Red2 : Red3 : Blue1 : Blue2 : Blue3
 						        		long teamIDs[] = {-1, -1, -1, -1, -1, -1};
-						        		for(int i = 0; i < 6; i++) {
-						        			teamIDs[i] = teamDataDBAdapter.createTeamDataEntry(Integer.parseInt(lineArray[i+3]), 0)[0];
-						        		}
+                                        try {
+                                            teamDataDBAdapter.openForWrite();
+                                            for (int i = 0; i < 6; i++) {
+                                                teamIDs[i] = teamDataDBAdapter.createTeamDataEntry(Integer.parseInt(lineArray[i + 4]), 0)[0];
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        } finally {
+                                            if(teamDataDBAdapter != null && !teamDataDBAdapter.dbIsClosed()) teamDataDBAdapter.close();
+                                        }
 
-						        		long matchID = matchDataDBAdapter.createMatchData(lineArray[0], lineArray[1], lineArray[2], teamIDs[0], teamIDs[1], teamIDs[2], teamIDs[3], teamIDs[4], teamIDs[5]);
-						        		if(matchID >= 0) {
-						        			matchCount += 1;
-						        		}
+                                        long matchID;
+                                        try {
+                                            long compID = Long.parseLong(lineArray[0]);
+                                            matchID = matchDataDBAdapter.createMatchData(compID, lineArray[1], lineArray[2], lineArray[3], teamIDs[0], teamIDs[1], teamIDs[2], teamIDs[3], teamIDs[4], teamIDs[5]);
+                                            if(matchID >= 0) {
+                                                matchCount += 1;
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            matchID = -1;
+                                        } finally {
+                                            if(matchDataDBAdapter != null && !matchDataDBAdapter.dbIsClosed()) matchDataDBAdapter.close();
+                                        }
 
 						        		long teamMatchID;
-						        		for(int i = 0; i < FTSUtilities.ALLIANCE_POSITION.NOT_SET.allianceIndex(); i++) {
-						        			teamMatchID = teamMatchDBAdapter.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForIndex(i) /*.alliancePositions[i]*/, teamIDs[i], matchID);
-						        			if(teamMatchID >= 0) {
-						        				teamCount += 1;
-						        			}
-						        		}
+                                        try {
+                                            for (int i = 0; i < FTSUtilities.ALLIANCE_POSITION.NOT_SET.allianceIndex(); i++) {
+                                                teamMatchID = teamMatchDBAdapter.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForIndex(i) /*.alliancePositions[i]*/, teamIDs[i], matchID);
+                                                if (teamMatchID >= 0) {
+                                                    teamCount += 1;
+                                                }
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                            matchID = -1;
+                                        } finally {
+                                            if(teamMatchDBAdapter != null && !teamMatchDBAdapter.dbIsClosed()) teamMatchDBAdapter.close();
+                                        }
 						        	} else {
 						        		FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : line not in proper format: " + line);
 						        	}

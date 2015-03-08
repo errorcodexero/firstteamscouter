@@ -126,7 +126,8 @@ public class MatchDataDBAdapter implements BaseColumns {
     /**
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
-     * 
+     *
+     * @param competition_id
      * @param match_time
      * @param match_type
      * @param match_num
@@ -138,9 +139,10 @@ public class MatchDataDBAdapter implements BaseColumns {
      * @param blue_three_id
      * @return rowId or -1 if failed
      */
-    public long createMatchData(String match_time, String match_type, String match_num, long red_one_id, long red_two_id, long red_three_id,
+    public long createMatchData(long competition_id, String match_time, String match_type, String match_num, long red_one_id, long red_two_id, long red_three_id,
     		long blue_one_id, long blue_two_id, long blue_three_id){
         ContentValues initialValues = new ContentValues();
+        initialValues.put(COLUMN_NAME_COMPETITION_ID, competition_id);
         initialValues.put(COLUMN_NAME_MATCH_TIME, match_time);
         initialValues.put(COLUMN_NAME_MATCH_TYPE, match_type);
         initialValues.put(COLUMN_NAME_MATCH_NUMBER, match_num);
@@ -152,30 +154,33 @@ public class MatchDataDBAdapter implements BaseColumns {
         initialValues.put(COLUMN_NAME_BLUE_TEAM_THREE_ID, blue_three_id);
         initialValues.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
 
-        return this.mDb.insert(TABLE_NAME, null, initialValues);
+        long id = this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
+        if(!this.dbIsClosed()) this.close();
+        return id;
     }
 
-    public long createMatchData(int match_num){
+    public long createMatchData(long competition_id, int match_num){
         ContentValues initialValues = new ContentValues();
+        initialValues.put(COLUMN_NAME_COMPETITION_ID, competition_id);
         initialValues.put(COLUMN_NAME_MATCH_NUMBER, match_num);
         initialValues.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
 
-        return this.mDb.insert(TABLE_NAME, null, initialValues);
+        return this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
     }
 
     /**
      * Delete the entry with the given rowId
      * 
-     * @param rowId
+     * @param matchId
      * @return true if deleted, false otherwise
      */
-    public boolean deleteMatchDataEntry(long rowId) {
+    public boolean deleteMatchDataEntry(long matchId) {
 
-        return this.mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
+        return this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + matchId, null) > 0;
     }
 
     public boolean deleteAllData() {
-        return this.mDb.delete(TABLE_NAME, null, null) > 0;
+        return this.openForWrite().mDb.delete(TABLE_NAME, null, null) > 0;
     }
 
     /**
@@ -185,7 +190,7 @@ public class MatchDataDBAdapter implements BaseColumns {
      */
     public Cursor getAllMatchDataEntries() {
 
-        return this.mDb.query(TABLE_NAME, new String[] { _ID,
+        return this.openForRead().mDb.query(TABLE_NAME, new String[] { _ID, COLUMN_NAME_COMPETITION_ID,
         		COLUMN_NAME_MATCH_TIME, COLUMN_NAME_MATCH_TYPE, COLUMN_NAME_MATCH_NUMBER, COLUMN_NAME_MATCH_LOCATION, 
         		COLUMN_NAME_RED_TEAM_ONE_ID, COLUMN_NAME_RED_TEAM_TWO_ID, COLUMN_NAME_RED_TEAM_THREE_ID,
         		COLUMN_NAME_BLUE_TEAM_ONE_ID, COLUMN_NAME_BLUE_TEAM_TWO_ID, COLUMN_NAME_BLUE_TEAM_THREE_ID, COLUMN_NAME_MATCH_DATA_UPDATED
@@ -201,7 +206,7 @@ public class MatchDataDBAdapter implements BaseColumns {
     public Cursor getMatchDataEntry(long matchID) throws SQLException {
     	FTSUtilities.printToConsole("MatchDataDBAdapter::getMatchDataEntry : matchID: " + matchID + "\n");
 		
-        Cursor mCursor = this.mDb.query(true, TABLE_NAME, new String[] { _ID, 
+        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, new String[] { _ID, COLUMN_NAME_COMPETITION_ID,
         		COLUMN_NAME_MATCH_TIME, COLUMN_NAME_MATCH_TYPE, COLUMN_NAME_MATCH_NUMBER, COLUMN_NAME_MATCH_LOCATION, 
         		COLUMN_NAME_RED_TEAM_ONE_ID, COLUMN_NAME_RED_TEAM_TWO_ID, COLUMN_NAME_RED_TEAM_THREE_ID,
         		COLUMN_NAME_BLUE_TEAM_ONE_ID, COLUMN_NAME_BLUE_TEAM_TWO_ID, COLUMN_NAME_BLUE_TEAM_THREE_ID, COLUMN_NAME_MATCH_DATA_UPDATED
@@ -222,7 +227,7 @@ public class MatchDataDBAdapter implements BaseColumns {
      */
     public Cursor getUpdatedMatchDataEntries() throws SQLException {
 
-        Cursor mCursor = this.mDb.query(true, TABLE_NAME, new String[] { _ID, 
+        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, new String[] { _ID, COLUMN_NAME_COMPETITION_ID,
         		COLUMN_NAME_MATCH_TIME, COLUMN_NAME_MATCH_TYPE, COLUMN_NAME_MATCH_NUMBER, COLUMN_NAME_MATCH_LOCATION, 
         		COLUMN_NAME_RED_TEAM_ONE_ID, COLUMN_NAME_RED_TEAM_TWO_ID, COLUMN_NAME_RED_TEAM_THREE_ID,
         		COLUMN_NAME_BLUE_TEAM_ONE_ID, COLUMN_NAME_BLUE_TEAM_TWO_ID, COLUMN_NAME_BLUE_TEAM_THREE_ID, COLUMN_NAME_MATCH_DATA_UPDATED
@@ -237,6 +242,7 @@ public class MatchDataDBAdapter implements BaseColumns {
      * Update the entry.
      * 
      * @param rowId
+     * @param competition_id
      * @param match_time
      * @param match_type
      * @param match_num
@@ -248,9 +254,10 @@ public class MatchDataDBAdapter implements BaseColumns {
      * @param blue_three_id
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updateMatchDataEntry(long rowId, String match_time, String match_type, int match_num, int red_one_id, int red_two_id, int red_three_id,
+    public boolean updateMatchDataEntry(long rowId, long competition_id, String match_time, String match_type, int match_num, int red_one_id, int red_two_id, int red_three_id,
     		int blue_one_id, int blue_two_id, int blue_three_id){
         ContentValues args = new ContentValues();
+        args.put(COLUMN_NAME_COMPETITION_ID, competition_id);
     	args.put(COLUMN_NAME_MATCH_TIME, match_time);
     	args.put(COLUMN_NAME_MATCH_TYPE, match_type);
     	args.put(COLUMN_NAME_MATCH_NUMBER, match_num);
@@ -261,10 +268,13 @@ public class MatchDataDBAdapter implements BaseColumns {
     	args.put(COLUMN_NAME_BLUE_TEAM_TWO_ID, blue_two_id);
     	args.put(COLUMN_NAME_BLUE_TEAM_THREE_ID, blue_three_id);
     	args.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
-        return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0;
+
+        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
     }
     
-    public Cursor getTeamIDsForMatchByAlliancePosition(long matchID) {
+    public Cursor getTeamIDsForMatchByAlliancePosition(long competition_id, long matchID) {
     	String SELECT_QUERY = "SELECT t1." + MatchDataDBAdapter._ID;
     	SELECT_QUERY += ", t1." + MatchDataDBAdapter.COLUMN_NAME_MATCH_NUMBER;
     	SELECT_QUERY += ", t1." + MatchDataDBAdapter.COLUMN_NAME_RED_TEAM_ONE_ID;
@@ -275,15 +285,16 @@ public class MatchDataDBAdapter implements BaseColumns {
     	SELECT_QUERY += ", t1." + MatchDataDBAdapter.COLUMN_NAME_BLUE_TEAM_THREE_ID;
 		SELECT_QUERY += " FROM " + MatchDataDBAdapter.TABLE_NAME + " AS t1";
     	SELECT_QUERY += " WHERE t1." + MatchDataDBAdapter._ID + "=" + matchID;
-    	Cursor c = this.mDb.rawQuery(SELECT_QUERY, null);
-    	c.moveToFirst();
+        SELECT_QUERY += " AND t1." + MatchDataDBAdapter.COLUMN_NAME_COMPETITION_ID + "=" + competition_id;
+    	Cursor c = this.openForRead().mDb.rawQuery(SELECT_QUERY, null);
+        if(c != null) c.moveToFirst();
     	
     	return c;
     }
     
-	public boolean setTeamIDsForMatchID(long matchID, long teamIDs[]) {
+	public boolean setTeamIDsForMatchID(long competition_id, long matchID, long teamIDs[]) {
 		FTSUtilities.printToConsole("MatchDataDBAdapter::setTeamIDsForMatchID : matchID: " + matchID + "  numTeamIDs: " + teamIDs.length + "\n");
-		ContentValues args = new ContentValues(); 
+		ContentValues args = new ContentValues();
     	args.put(COLUMN_NAME_RED_TEAM_ONE_ID, teamIDs[0]);
     	args.put(COLUMN_NAME_RED_TEAM_TWO_ID, teamIDs[1]);
     	args.put(COLUMN_NAME_RED_TEAM_THREE_ID, teamIDs[2]);
@@ -295,7 +306,11 @@ public class MatchDataDBAdapter implements BaseColumns {
     	Cursor c = getMatchDataEntry(matchID);
     	if(c.getCount() > 0) {
     		FTSUtilities.printToConsole("MatchDataDBAdapter::setTeamIDsForMatchID : Found " + c.getCount() + " record(s) for matchID: " + matchID + "\n");
-    		return this.mDb.update(TABLE_NAME, args, _ID + "=" + matchID, null) >0;
+            String WHERE = _ID + "=" + matchID;
+            WHERE += " AND " + COLUMN_NAME_COMPETITION_ID + "=" + competition_id;
+            boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, WHERE, null) >0;
+            if(!this.dbIsClosed()) this.close();
+    		return retVal;
     	} else {
     		FTSUtilities.printToConsole("MatchDataDBAdapter::setTeamIDsForMatchID : NO RECORD FOUND FOR matchID: " + matchID + "\n");
     		return false;
@@ -306,13 +321,12 @@ public class MatchDataDBAdapter implements BaseColumns {
 	public long[] populateTestData(int numMatches) {
     	FTSUtilities.printToConsole("MatchDataDBAdapter::populateTestData\n");
 
-    	this.deleteAllData();
+    	//this.deleteAllData();
     	
     	long matchIDs[] = new long[numMatches];
-    	this.deleteAllData();
-    	
+
     	for(int i = 0; i < numMatches; i++) {
-    		matchIDs[i] = this.createMatchData(i + 1);
+    		matchIDs[i] = this.createMatchData(0, i + 1);
     	}
     	return matchIDs;
     }
