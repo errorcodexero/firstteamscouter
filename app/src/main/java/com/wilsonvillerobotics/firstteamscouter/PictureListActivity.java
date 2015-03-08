@@ -443,7 +443,7 @@ public class PitPitPictureListActivity extends Activity {
 
         try {
             FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate : OPENING DB\n");
-            ppDBAdapter = new PitPicturesDBAdapter(this.getBaseContext()).open();
+            ppDBAdapter = new PitPicturesDBAdapter(this.getBaseContext()).openForWrite();
         } catch(SQLException e) {
             e.printStackTrace();
             ppDBAdapter = null;
@@ -451,7 +451,7 @@ public class PitPitPictureListActivity extends Activity {
 
         try {
             FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate : OPENING DB\n");
-            pdDBAdapter = new PictureDataDBAdapter(this.getBaseContext()).open();
+            pdDBAdapter = new PictureDataDBAdapter(this.getBaseContext()).openForWrite();
         } catch(SQLException e) {
             e.printStackTrace();
             pdDBAdapter = null;

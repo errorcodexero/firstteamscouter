@@ -102,7 +102,7 @@ public class MatchStartingPositionActivity extends Activity {
     private void openDatabase() {
         try {
             FTSUtilities.printToConsole("MatchStartingPositionActivity::onCreate : OPENING DB\n");
-            tmDBAdapter = new TeamMatchDBAdapter(this.getBaseContext()).open();
+            tmDBAdapter = new TeamMatchDBAdapter(this.getBaseContext()).openForWrite();
         } catch(SQLException e) {
             e.printStackTrace();
             tmDBAdapter = null;

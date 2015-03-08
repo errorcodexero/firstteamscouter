@@ -24,8 +24,8 @@ public class TeamMatchInformationActivity extends Activity {
 		
 		FTSUtilities.printToConsole("Creating TeamMatchInformationActivity");
 		
-		//tDBAdapter = new TeamDataDBAdapter(this.getBaseContext()).open();
-		tmDBAdapter = new TeamMatchDBAdapter(this).open();
+		//tDBAdapter = new TeamDataDBAdapter(this.getBaseContext()).openForWrite();
+		tmDBAdapter = new TeamMatchDBAdapter(this).openForWrite();
 		tmData = new TeamMatchData(this, this.tabletID, tmID);
 		
 		this.loadTeamMatchInfo(tmID);

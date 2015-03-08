@@ -28,8 +28,8 @@ public class OldTeamInformationActivity extends Activity {
 		
 		FTSUtilities.printToConsole("Creating OldTeamInformationActivity");
 		
-		//tDBAdapter = new TeamDataDBAdapter(this.getBaseContext()).open();
-		tDBAdapter = new TeamDataDBAdapter(this).open();
+		//tDBAdapter = new TeamDataDBAdapter(this.getBaseContext()).openForWrite();
+		tDBAdapter = new TeamDataDBAdapter(this).openForWrite();
 		tInfo = new TeamInformation();
 		
 		this.loadTeamInfo(teamNumber, 0);

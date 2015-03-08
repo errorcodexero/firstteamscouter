@@ -106,12 +106,12 @@ public class MatchDataExportActivity extends Activity {
     private void openDatabase() {
         try {
             FTSUtilities.printToConsole("ImportMatchDataActivity::onCreate : OPENING DB\n");
-            matchDataDBAdapter = new MatchDataDBAdapter(this).open();
-            teamMatchDBAdapter = new TeamMatchDBAdapter(this).open();
-            teamDataDBAdapter = new TeamDataDBAdapter(this).open();
+            matchDataDBAdapter = new MatchDataDBAdapter(this).openForWrite();
+            teamMatchDBAdapter = new TeamMatchDBAdapter(this).openForWrite();
+            teamDataDBAdapter = new TeamDataDBAdapter(this).openForWrite();
             tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this).open();
             tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this).open();
-robotDataDBAdapter = new RobotDataDBAdapter(this).open();
+robotDataDBAdapter = new RobotDataDBAdapter(this).openForWrite();
         } catch(SQLException e) {
             e.printStackTrace();
             matchDataDBAdapter = null;
@@ -363,17 +363,17 @@ robotDataDBAdapter = null;
         if(matchDataDBAdapter == null) {
         	matchDataDBAdapter = new MatchDataDBAdapter(this.getBaseContext());
         }
-        matchDataDBAdapter.open();
+        matchDataDBAdapter.openForWrite();
         
         if(teamMatchDBAdapter == null) {
         	teamMatchDBAdapter = new TeamMatchDBAdapter(this.getBaseContext());
         }
-        teamMatchDBAdapter.open();
+        teamMatchDBAdapter.openForWrite();
 
         if(teamDataDBAdapter == null) {
         	teamDataDBAdapter = new TeamDataDBAdapter(this.getBaseContext());
         }
-        teamDataDBAdapter.open();
+        teamDataDBAdapter.openForWrite();
     }
 
     @Override

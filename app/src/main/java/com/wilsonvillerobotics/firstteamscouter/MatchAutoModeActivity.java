@@ -366,7 +366,7 @@ public class MatchAutoModeActivity extends Activity {
     private void openDatabase() {
         try {
             FTSUtilities.printToConsole("MatchAutoModeActivity::onCreate : OPENING DB\n");
-            tmDBAdapter = new TeamMatchDBAdapter(this).open();
+            tmDBAdapter = new TeamMatchDBAdapter(this).openForWrite();
             tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this).open();
             tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this).open();
 
@@ -497,7 +497,7 @@ public class MatchAutoModeActivity extends Activity {
         if(tmDBAdapter == null) {
         	tmDBAdapter = new TeamMatchDBAdapter(this.getBaseContext());
         }
-        tmDBAdapter.open();
+        tmDBAdapter.openForWrite();
     }
 
     @Override

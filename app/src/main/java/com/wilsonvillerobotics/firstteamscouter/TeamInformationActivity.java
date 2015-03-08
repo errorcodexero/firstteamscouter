@@ -23,10 +23,6 @@ import com.wilsonvillerobotics.firstteamscouter.dbAdapters.MatchDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.RobotDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamPitsDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PitDataDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PitNotesDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.PitPicturesDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamRobotsDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
@@ -47,10 +43,10 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
     private TeamRobotsDBAdapter  trDBAdapter;
     private TeamMatchDBAdapter   tmdDBAdapter;
     private MatchDataDBAdapter   mdDBAdapter;
-    private TeamPitsDBAdapter    tpDBAdapter;
-    private PitDataDBAdapter     pdDBAdapter;
-    private PitNotesDBAdapter    pnDBAdapter;
-    private PitPicturesDBAdapter ppDBAdapter;
+    //private TeamPitsDBAdapter    tpDBAdapter;
+    //private PitDataDBAdapter     pdDBAdapter;
+    //private PitNotesDBAdapter    pnDBAdapter;
+    //private PitPicturesDBAdapter ppDBAdapter;
 
     private Cursor tdData;
     private Cursor tmdData;
@@ -96,7 +92,7 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
         setContentView(R.layout.activity_team_information);
 
         this.processIntent();
-        this.initCursors();
+        this.initDBAdapters();
         this.configVerticalLabels();
         this.initTeamInfoTextViews();
         this.configMatchList();
@@ -305,30 +301,44 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
         this.llMatches = (LinearLayout)findViewById(R.id.llMatches);
         if(svMatches != null && llMatches != null) {
             this.alTeamMatchTextViews = new ArrayList<TextView>();
-            if (tmdData != null && mdDBAdapter != null) {
-                int index = 0;
-                do {
-                    long matchId = tmdData.getLong(tmdData.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID));
-                    mdData = mdDBAdapter.getMatchDataEntry(matchId);
-                    TextView txtMatchNum = new TextView(this);
-                    txtMatchNum.setMinimumHeight(100);
-                    if (mdData != null) {
-                        int matchNum = mdData.getInt(mdData.getColumnIndex(MatchDataDBAdapter.COLUMN_NAME_MATCH_NUMBER));
+
+            try {
+                tmdData = tmdDBAdapter.openForRead().getMatchesForTeam(this.teamID);
+                if (tmdData != null && mdDBAdapter != null) {
+                    int index = 0;
+                    do {
+                        long matchId = tmdData.getLong(tmdData.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID));
+                        TextView txtMatchNum = new TextView(this);
+                        txtMatchNum.setMinimumHeight(100);
+                        int matchNum = -1;
+
+                        mdData = mdDBAdapter.openForRead().getMatchDataEntry(matchId);
+                        matchNum = mdData.getInt(mdData.getColumnIndex(MatchDataDBAdapter.COLUMN_NAME_MATCH_NUMBER));
+
                         txtMatchNum.setText("Match# " + matchNum);
                         long tmId = tmdDBAdapter.getTeamMatchID(matchId, teamID);
                         String alliance = tmdDBAdapter.getTeamAllianceForMatch(tmId);
-                        if(alliance.equals("Red")) {
+                        if (alliance.equals("Red")) {
                             txtMatchNum.setTextColor(Color.RED);
                         } else {
                             txtMatchNum.setTextColor(Color.BLUE);
                         }
                         txtMatchNum.setGravity(Gravity.CENTER);
                         txtMatchNum.setTextSize(20.0f);
-                    }
-                    alTeamMatchTextViews.add(index, txtMatchNum);
-                    llMatches.addView(txtMatchNum);
-                    index++;
-                } while (tmdData.moveToNext());
+
+                        alTeamMatchTextViews.add(index, txtMatchNum);
+                        llMatches.addView(txtMatchNum);
+                        index++;
+                    } while (tmdData.moveToNext());
+                }
+            }catch (Exception e) {
+                tmdData = null;
+                mdData = null;
+            } finally {
+                if(tmdData != null && !tmdData.isClosed()) tmdData.close();
+                if(tmdDBAdapter != null && !tmdDBAdapter.dbIsClosed()) tmdDBAdapter.close();
+                if(mdData != null && !mdData.isClosed()) mdData.close();
+                if(mdDBAdapter != null && !mdDBAdapter.dbIsClosed()) mdDBAdapter.close();
             }
         }
     }
@@ -344,21 +354,29 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
             this.hmTeamInfoTextViews.get(R.id.txtPitTeamNum).setText(String.valueOf(this.teamNumber));
         }
 
-        if(tdData != null) {
-            if (this.hmTeamInfoTextViews.get(R.id.txtPitTeamName) != null) {
-                this.hmTeamInfoTextViews.get(R.id.txtPitTeamName).setText(
-                        tdData.getString(tdData.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_NAME)));
-            }
+        try {
+            tdData = tdDBAdapter.openForRead().getTeamDataEntry(this.teamNumber, 0); // TODO - update this so it works with new team_sub_number
+            if (tdData != null) {
+                if (this.hmTeamInfoTextViews.get(R.id.txtPitTeamName) != null) {
+                    this.hmTeamInfoTextViews.get(R.id.txtPitTeamName).setText(
+                            tdData.getString(tdData.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_NAME)));
+                }
 
-            if (this.hmTeamInfoTextViews.get(R.id.txtPitTeamLocation) != null) {
-                this.hmTeamInfoTextViews.get(R.id.txtPitTeamLocation).setText(
-                        tdData.getString(tdData.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_LOCATION)));
-            }
+                if (this.hmTeamInfoTextViews.get(R.id.txtPitTeamLocation) != null) {
+                    this.hmTeamInfoTextViews.get(R.id.txtPitTeamLocation).setText(
+                            tdData.getString(tdData.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_LOCATION)));
+                }
 
-            if (this.hmTeamInfoTextViews.get(R.id.txtTeamNumMembers) != null) {
-                this.hmTeamInfoTextViews.get(R.id.txtTeamNumMembers).setText(
-                        tdData.getString(tdData.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_NUM_MEMBERS)));
+                if (this.hmTeamInfoTextViews.get(R.id.txtTeamNumMembers) != null) {
+                    this.hmTeamInfoTextViews.get(R.id.txtTeamNumMembers).setText(
+                            tdData.getString(tdData.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_NUM_MEMBERS)));
+                }
             }
+        } catch (Exception e) {
+            tdData = null;
+        } finally {
+            if(tdData != null && !tdData.isClosed()) tdData.close();
+            if(tdDBAdapter != null && !tdDBAdapter.dbIsClosed()) tdDBAdapter.close();
         }
     }
 
@@ -376,28 +394,26 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
         }
     }
 
-    private void initCursors() {
+    private void initDBAdapters() {
         this.tdData = null;
         this.tmdData = null;
         this.mdData = null;
         try {
             FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate : OPENING DB\n");
-            tpDBAdapter = new TeamPitsDBAdapter(this).open();
-            tdDBAdapter = new TeamDataDBAdapter(this).open();
-            tmdDBAdapter = new TeamMatchDBAdapter(this).open();
-            mdDBAdapter = new MatchDataDBAdapter(this).open();
-            rdDBAdapter = new RobotDataDBAdapter(this).open();
-            trDBAdapter = new TeamRobotsDBAdapter(this).open();
-            tdData = tdDBAdapter.getTeamDataEntry(this.teamNumber, 0); // TODO - update this so it works with new team_sub_number
-            tmdData = tmdDBAdapter.getMatchesForTeam(this.teamID);
+            tdDBAdapter = new TeamDataDBAdapter(this);
+            tmdDBAdapter = new TeamMatchDBAdapter(this);
+            mdDBAdapter = new MatchDataDBAdapter(this);
+            rdDBAdapter = new RobotDataDBAdapter(this);
+            trDBAdapter = new TeamRobotsDBAdapter(this);
+            //tpDBAdapter = new TeamPitsDBAdapter(this);
         } catch(SQLException e) {
             e.printStackTrace();
-            tpDBAdapter = null;
             tdDBAdapter = null;
             tmdDBAdapter = null;
             mdDBAdapter = null;
             rdDBAdapter = null;
             trDBAdapter = null;
+            //tpDBAdapter = null;
         }
     }
 
@@ -411,11 +427,25 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
 
     private void loadRobotData() {
         if(teamID >= 0 && trDBAdapter != null) {
-            this.robotID = trDBAdapter.getRobotForTeam(teamID);
+            try {
+                this.robotID = trDBAdapter.openForRead().getRobotForTeam(teamID);
+            }catch (Exception e) {
+                //trDBAdapter = null;
+            } finally {
+                if(trDBAdapter != null && !trDBAdapter.dbIsClosed())trDBAdapter.close();
+            }
+
         }
         if(this.robotID >= 0 && rdDBAdapter != null) {
-            HashMap<String, String> v = rdDBAdapter.getRobotDataEntry(robotID);
-            if(v != null && v.size() > 0) this.hmRobotData = v;
+            try {
+                HashMap<String, String> v = rdDBAdapter.openForRead().getRobotDataEntry(robotID);
+                if(v != null && v.size() > 0) this.hmRobotData = v;
+            } catch (Exception e) {
+
+            }finally {
+                if(rdDBAdapter != null && !rdDBAdapter.dbIsClosed())rdDBAdapter.close();
+            }
+
         }
 
         if(this.hmRobotData.size() > 0) {
@@ -470,11 +500,24 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
             if(cbPutStepTotes != null) hmRobotData.put(RobotDataDBAdapter.COLUMN_NAME_PUT_TOTES_ON_STEP, String.valueOf(cbPutStepTotes.isChecked()));
 
             if(this.robotID >= 0) {
-                rdDBAdapter.updateRobotDataEntry(robotID, hmRobotData);
+                try {
+                    rdDBAdapter.openForWrite().updateRobotDataEntry(robotID, hmRobotData);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if(rdDBAdapter != null && !rdDBAdapter.dbIsClosed())rdDBAdapter.close();
+                }
             } else {
-                this.robotID = rdDBAdapter.createRobotDataEntry(hmRobotData);
-                if(trDBAdapter != null) {
-                    trDBAdapter.createTeamRobot(teamID, robotID);
+                try {
+                    this.robotID = rdDBAdapter.openForWrite().createRobotDataEntry(hmRobotData);
+                    if (trDBAdapter != null) {
+                        trDBAdapter.openForWrite().createTeamRobot(teamID, robotID);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if(rdDBAdapter != null && !rdDBAdapter.dbIsClosed())rdDBAdapter.close();
+                    if(trDBAdapter != null && !trDBAdapter.dbIsClosed())trDBAdapter.close();
                 }
             }
         }

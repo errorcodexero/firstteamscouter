@@ -78,15 +78,15 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
     		}
 
     		try {
-    			FTSUtilities.printToConsole("TeamMatchTransactionsDBAdapter::open : GETTING WRITABLE DB\n");
+    			FTSUtilities.printToConsole("TeamMatchTransactionsDBAdapter::openForWrite : GETTING WRITABLE DB\n");
     			this.mDb = this.mDbHelper.getWritableDatabase();
     		}
     		catch (SQLException e) {
-    			FTSUtilities.printToConsole("TeamMatchTransactionsDBAdapter::open : SQLException\n");
+    			FTSUtilities.printToConsole("TeamMatchTransactionsDBAdapter::openForWrite : SQLException\n");
     			this.mDb = null;
     		}
     	} else {
-    		FTSUtilities.printToConsole("TeamMatchTransactionsDBAdapter::open : DB ALREADY OPEN\n");
+    		FTSUtilities.printToConsole("TeamMatchTransactionsDBAdapter::openForWrite : DB ALREADY OPEN\n");
     	}
     	return this;
     }

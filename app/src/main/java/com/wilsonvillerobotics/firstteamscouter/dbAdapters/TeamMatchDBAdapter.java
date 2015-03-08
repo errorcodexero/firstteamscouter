@@ -139,8 +139,21 @@ public class TeamMatchDBAdapter implements BaseColumns {
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
-        DatabaseHelper(Context context) {
+        private static DatabaseHelper mInstance = null;
+
+        private DatabaseHelper(Context context) {
             super(context, DBAdapter.DATABASE_NAME, null, DBAdapter.DATABASE_VERSION);
+        }
+
+        public static DatabaseHelper getInstance(Context ctx) {
+
+            // Use the application context, which will ensure that you
+            // don't accidentally leak an Activity's context.
+            // See this article for more information: http://bit.ly/6LRzfx
+            if (mInstance == null) {
+                mInstance = new DatabaseHelper(ctx.getApplicationContext());
+            }
+            return mInstance;
         }
 
         @Override
@@ -179,27 +192,57 @@ public class TeamMatchDBAdapter implements BaseColumns {
      * @throws SQLException
      *             if the database could be neither opened or created
      */
-    public TeamMatchDBAdapter open() throws SQLException {
-    	if(this.dbNotOpen()) {
+    public TeamMatchDBAdapter openForWrite() throws SQLException {
+    	if(this.dbIsClosed()) {
     		if(this.mDbHelper == null) {
-    			this.mDbHelper = new DatabaseHelper(this.mCtx);
+    			this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
     		}
 
     		try {
-    			FTSUtilities.printToConsole("TeamMatchDBAdapter::open : GETTING WRITABLE DB\n");
+    			FTSUtilities.printToConsole("TeamMatchDBAdapter::openForWrite : GETTING WRITABLE DB\n");
     			this.mDb = this.mDbHelper.getWritableDatabase();
     		}
     		catch (SQLException e) {
-    			FTSUtilities.printToConsole("TeamMatchDBAdapter::open : SQLException\n");
+    			FTSUtilities.printToConsole("TeamMatchDBAdapter::openForWrite : SQLException\n");
     			this.mDb = null;
     		}
     	} else {
-    		FTSUtilities.printToConsole("TeamMatchDBAdapter::open : DB ALREADY OPEN\n");
+    		FTSUtilities.printToConsole("TeamMatchDBAdapter::openForWrite : DB ALREADY OPEN\n");
     	}
     	return this;
     }
+
+    /**
+     * Open the FirstTeamScouter database. If it cannot be opened, try to create a new
+     * instance of the database. If it cannot be created, throw an exception to
+     * signal the failure
+     *
+     * @return this (self reference, allowing this to be chained in an
+     *         initialization call)
+     * @throws SQLException
+     *             if the database could be neither opened or created
+     */
+    public TeamMatchDBAdapter openForRead() throws SQLException {
+        if(this.dbIsClosed()) {
+            if(this.mDbHelper == null) {
+                this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
+            }
+
+            try {
+                FTSUtilities.printToConsole("TeamMatchDBAdapter::openForRead : GETTING READABLE DB\n");
+                this.mDb = this.mDbHelper.getReadableDatabase();
+            }
+            catch (SQLException e) {
+                FTSUtilities.printToConsole("TeamMatchDBAdapter::openForRead : SQLException\n");
+                this.mDb = null;
+            }
+        } else {
+            FTSUtilities.printToConsole("TeamMatchDBAdapter::openForRead : DB ALREADY OPEN\n");
+        }
+        return this;
+    }
     
-    public boolean dbNotOpen() {
+    public boolean dbIsClosed() {
     	if(this.mDb == null) {
     		return true;
     	} else {
@@ -455,7 +498,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
     public boolean populateTestData(long[] matchIDs, long[] teamIDs) {
     	FTSUtilities.printToConsole("TeamMatchDBAdapter::populateTestData\n");
     	deleteAllData();
-    	MatchDataDBAdapter mdDBAdapter = new MatchDataDBAdapter(this.mCtx).open();
+    	MatchDataDBAdapter mdDBAdapter = new MatchDataDBAdapter(this.mCtx).openForWrite();
     	//Set<Integer> teamNums = FTSUtilities.getTestTeamNumbers(); // {1425, 1520, 2929, 1114, 500, 600, 700, 800, 900, 1000};
     	int teamOffset = 0;
     	boolean result = true;

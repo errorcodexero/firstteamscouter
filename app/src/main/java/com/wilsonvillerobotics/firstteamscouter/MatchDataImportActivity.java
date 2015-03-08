@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.channels.FileChannel;
@@ -103,10 +102,10 @@ public class MatchDataImportActivity extends Activity {
 		
 		try {
 			FTSUtilities.printToConsole("ImportMatchDataActivity::onCreate : OPENING DB\n");
-			matchDataDBAdapter = new MatchDataDBAdapter(this).open();
-			teamMatchDBAdapter = new TeamMatchDBAdapter(this).open();
-			teamDataDBAdapter = new TeamDataDBAdapter(this).open();
-            robotDataDBAdapter = new RobotDataDBAdapter(this).open();
+			matchDataDBAdapter = new MatchDataDBAdapter(this).openForWrite();
+			teamMatchDBAdapter = new TeamMatchDBAdapter(this).openForWrite();
+			teamDataDBAdapter = new TeamDataDBAdapter(this).openForWrite();
+            robotDataDBAdapter = new RobotDataDBAdapter(this).openForWrite();
 		} catch(SQLException e) {
 			e.printStackTrace();
 			matchDataDBAdapter = null;
@@ -288,17 +287,17 @@ public class MatchDataImportActivity extends Activity {
         if(matchDataDBAdapter == null) {
         	matchDataDBAdapter = new MatchDataDBAdapter(this.getBaseContext());
         }
-        matchDataDBAdapter.open();
+        matchDataDBAdapter.openForWrite();
         
         if(teamMatchDBAdapter == null) {
         	teamMatchDBAdapter = new TeamMatchDBAdapter(this.getBaseContext());
         }
-        teamMatchDBAdapter.open();
+        teamMatchDBAdapter.openForWrite();
 
         if(teamDataDBAdapter == null) {
         	teamDataDBAdapter = new TeamDataDBAdapter(this.getBaseContext());
         }
-        teamDataDBAdapter.open();
+        teamDataDBAdapter.openForWrite();
     }
 
     @Override

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
@@ -40,7 +39,7 @@ public class MatchNotesActivity extends Activity {
 		
 		try {
 			FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate : OPENING DB\n");
-			tmDBAdapter = new TeamMatchDBAdapter(this.getBaseContext()).open();
+			tmDBAdapter = new TeamMatchDBAdapter(this.getBaseContext()).openForWrite();
 		} catch(SQLException e) {
 			e.printStackTrace();
 			tmDBAdapter = null;
@@ -80,7 +79,7 @@ public class MatchNotesActivity extends Activity {
         if(tmDBAdapter == null) {
         	tmDBAdapter = new TeamMatchDBAdapter(this.getBaseContext());
         }
-        tmDBAdapter.open();
+        tmDBAdapter.openForWrite();
     }
 
     @Override

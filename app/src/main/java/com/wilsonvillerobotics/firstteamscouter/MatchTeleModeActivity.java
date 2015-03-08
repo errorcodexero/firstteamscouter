@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v4.view.MotionEventCompat;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -182,7 +181,7 @@ public class MatchTeleModeActivity extends Activity {
     private final class MyViewTouchListener implements View.OnTouchListener {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            int action = MotionEventCompat.getActionMasked(motionEvent);
+            int action = motionEvent.getAction();
             switch(action) {
                 case MotionEvent.ACTION_POINTER_DOWN:
                     return true;
@@ -281,7 +280,7 @@ public class MatchTeleModeActivity extends Activity {
     private void openDatabase() {
         try {
             FTSUtilities.printToConsole("MatchTeleModeActivity::openDatabase : OPENING DB\n");
-            tmDBAdapter = new TeamMatchDBAdapter(this).open();
+            tmDBAdapter = new TeamMatchDBAdapter(this).openForWrite();
             tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this).open();
             tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this).open();
 
@@ -319,7 +318,7 @@ public class MatchTeleModeActivity extends Activity {
             tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this);
             tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this);
         }
-        tmDBAdapter.open();
+        tmDBAdapter.openForWrite();
         tmtdDBAdapter.open();
         tmtDBAdapter.open();
     }

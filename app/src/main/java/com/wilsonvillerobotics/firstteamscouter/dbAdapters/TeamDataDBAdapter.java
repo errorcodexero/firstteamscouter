@@ -35,9 +35,22 @@ public class TeamDataDBAdapter implements BaseColumns {
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
-        DatabaseHelper(Context context) {
+        private static DatabaseHelper mInstance = null;
+
+        private DatabaseHelper(Context context) {
             super(context, DBAdapter.DATABASE_NAME, null, DBAdapter.DATABASE_VERSION);
             FTSUtilities.printToConsole("Constructor::TeamDataDBAdapter::DatabaseHelper");
+        }
+
+        public static DatabaseHelper getInstance(Context ctx) {
+
+            // Use the application context, which will ensure that you
+            // don't accidentally leak an Activity's context.
+            // See this article for more information: http://bit.ly/6LRzfx
+            if (mInstance == null) {
+                mInstance = new DatabaseHelper(ctx.getApplicationContext());
+            }
+            return mInstance;
         }
 
         @Override
@@ -77,11 +90,29 @@ public class TeamDataDBAdapter implements BaseColumns {
      * @throws SQLException
      *             if the database could be neither opened or created
      */
-    public TeamDataDBAdapter open() throws SQLException {
+    public TeamDataDBAdapter openForWrite() throws SQLException {
     	FTSUtilities.printToConsole("Opening TeamDataDBAdapter Database");
-        this.mDbHelper = new DatabaseHelper(this.mCtx);
+        this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
         this.mDb = this.mDbHelper.getWritableDatabase();
-        FTSUtilities.printToConsole("TeamDataDBAdapter::open : DB " + ((mDb == null) ? "IS" : "Is Not") + " null");
+        FTSUtilities.printToConsole("TeamDataDBAdapter::openForWrite : DB " + ((mDb == null) ? "IS" : "Is Not") + " null");
+        return this;
+    }
+
+    /**
+     * Open the FirstTeamScouter database. If it cannot be opened, try to create a new
+     * instance of the database. If it cannot be created, throw an exception to
+     * signal the failure
+     *
+     * @return this (self reference, allowing this to be chained in an
+     *         initialization call)
+     * @throws SQLException
+     *             if the database could be neither opened or created
+     */
+    public TeamDataDBAdapter openForRead() throws SQLException {
+        FTSUtilities.printToConsole("Opening TeamDataDBAdapter Database");
+        this.mDbHelper = new DatabaseHelper(this.mCtx);
+        this.mDb = this.mDbHelper.getReadableDatabase();
+        FTSUtilities.printToConsole("TeamDataDBAdapter::openForWrite : DB " + ((mDb == null) ? "IS" : "Is Not") + " null");
         return this;
     }
 
@@ -91,6 +122,14 @@ public class TeamDataDBAdapter implements BaseColumns {
     public void close() {
     	FTSUtilities.printToConsole("Closing TeamDataDBAdapter Database");
         this.mDbHelper.close();
+    }
+
+    public boolean dbIsClosed() {
+        if(this.mDb == null) {
+            return true;
+        } else {
+            return !this.mDb.isOpen();
+        }
     }
 
     /**

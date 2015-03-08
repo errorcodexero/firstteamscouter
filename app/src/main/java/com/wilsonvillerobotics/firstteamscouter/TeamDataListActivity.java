@@ -26,7 +26,7 @@ public class TeamDataListActivity extends ListActivity {
 		super.onCreate(savedInstance);
           setContentView(R.layout.activity_list_team_data);
 
-          this.teamDataDBAdapter = new TeamDataDBAdapter(this).open();
+          this.teamDataDBAdapter = new TeamDataDBAdapter(this).openForWrite();
           
           
 //          if(FTSUtilities.DEBUG) {
@@ -77,6 +77,6 @@ public class TeamDataListActivity extends ListActivity {
 	@Override
     protected void onResume() {
         super.onResume();
-        this.teamDataDBAdapter.open();
+        this.teamDataDBAdapter.openForWrite();
 	}
 }

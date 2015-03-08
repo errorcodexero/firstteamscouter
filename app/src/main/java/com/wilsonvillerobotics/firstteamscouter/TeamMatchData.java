@@ -288,16 +288,16 @@ public class TeamMatchData {
 		
 		try {
 			FTSUtilities.printToConsole("TeamMatchData::openDB : OPENING DB\n");
-			this.tmDBAdapter.open();
+			this.tmDBAdapter.openForWrite();
 		} catch(SQLException e) {
 			e.printStackTrace();
 			this.tmDBAdapter = null;
 		}
 		
-//		if(this.tmDBAdapter.dbNotOpen()) {
+//		if(this.tmDBAdapter.dbIsClosed()) {
 //			try {
 //				FTSUtilities.printToConsole("TeamMatchData::openDB : OPENING DB\n");
-//				this.tmDBAdapter.open();
+//				this.tmDBAdapter.openForWrite();
 //			} catch(SQLException e) {
 //				e.printStackTrace();
 //				this.tmDBAdapter = null;

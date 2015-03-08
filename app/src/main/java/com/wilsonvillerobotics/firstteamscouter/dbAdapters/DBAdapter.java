@@ -480,8 +480,8 @@ public class DBAdapter {
     public DBAdapter(Context ctx)
     {
     	FTSUtilities.printToConsole("Constructor::DBAdapter");
-        this.context = ctx;
-        this.DBHelper = new DatabaseHelper(this.context);
+        this.context = ctx.getApplicationContext();
+        this.DBHelper = DatabaseHelper.getInstance(this.context);
 
         final String HELPER_KEY = "FTSHelperKey";
 
@@ -491,9 +491,9 @@ public class DBAdapter {
 
         // Notify the service of the database helper key
         intent.putExtra(SymmetricService.INTENTKEY_SQLITEOPENHELPER_REGISTRY_KEY, HELPER_KEY);
-        intent.putExtra(SymmetricService.INTENTKEY_REGISTRATION_URL, "http://10.0.0.191:32665/sync/server");
-        intent.putExtra(SymmetricService.INTENTKEY_EXTERNAL_ID, "android-simulator");
-        intent.putExtra(SymmetricService.INTENTKEY_NODE_GROUP_ID, "client");
+        intent.putExtra(SymmetricService.INTENTKEY_REGISTRATION_URL, "http://10.0.0.191:32665/sync/fts-master");
+        intent.putExtra(SymmetricService.INTENTKEY_EXTERNAL_ID, "001");
+        intent.putExtra(SymmetricService.INTENTKEY_NODE_GROUP_ID, "fts-node");
         intent.putExtra(SymmetricService.INTENTKEY_START_IN_BACKGROUND, true);
 
         // initial load existing notes from the Client to the Server
@@ -507,11 +507,23 @@ public class DBAdapter {
     private static class DatabaseHelper extends SQLiteOpenHelper 
     {
         Context ctx;
-        DatabaseHelper(Context context) 
+        private static DatabaseHelper mInstance = null;
+        private DatabaseHelper(Context context)
         {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
             FTSUtilities.printToConsole("Constructor::DBAdapter::DatabaseHelper : DB: " + DATABASE_NAME + "    Version: " + DATABASE_VERSION);
             this.ctx = context;
+        }
+
+        public static DatabaseHelper getInstance(Context ctx) {
+
+            // Use the application context, which will ensure that you
+            // don't accidentally leak an Activity's context.
+            // See this article for more information: http://bit.ly/6LRzfx
+            if (mInstance == null) {
+                mInstance = new DatabaseHelper(ctx.getApplicationContext());
+            }
+            return mInstance;
         }
 
         @Override
@@ -594,7 +606,7 @@ public class DBAdapter {
     } 
 
    /**
-     * open the db
+     * openForWrite the db
      * @return this
      * @throws SQLException
      * return type: DBAdapter

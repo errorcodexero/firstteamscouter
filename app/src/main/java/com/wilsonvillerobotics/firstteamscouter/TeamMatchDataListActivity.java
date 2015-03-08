@@ -27,8 +27,8 @@ public class TeamMatchDataListActivity extends ListActivity {
 		super.onCreate(savedInstance);
           setContentView(R.layout.activity_list_team_match_data);
 
-          //this.teamDataDBAdapter = new TeamDataDBAdapter(this).open();
-          this.tmDataDBAdapter = new TeamMatchDBAdapter(this).open();
+          //this.teamDataDBAdapter = new TeamDataDBAdapter(this).openForWrite();
+          this.tmDataDBAdapter = new TeamMatchDBAdapter(this).openForWrite();
           
           Intent intent = getIntent();
           long teamID = intent.getLongExtra(TeamDataDBAdapter._ID, -1);
@@ -79,6 +79,6 @@ public class TeamMatchDataListActivity extends ListActivity {
 	@Override
     protected void onResume() {
         super.onResume();
-        //this.teamDataDBAdapter.open();
+        //this.teamDataDBAdapter.openForWrite();
 	}
 }

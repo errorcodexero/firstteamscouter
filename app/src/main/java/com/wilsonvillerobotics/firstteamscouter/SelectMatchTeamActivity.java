@@ -75,7 +75,7 @@ public class SelectMatchTeamActivity extends Activity {
 		
 		try {
 			FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate : OPENING DB\n");
-			tmDBAdapter = new TeamMatchDBAdapter(this.getBaseContext()).open();
+			tmDBAdapter = new TeamMatchDBAdapter(this.getBaseContext()).openForWrite();
 		} catch(SQLException e) {
 			e.printStackTrace();
 			tmDBAdapter = null;
@@ -121,7 +121,7 @@ public class SelectMatchTeamActivity extends Activity {
         if(tmDBAdapter == null) {
         	tmDBAdapter = new TeamMatchDBAdapter(this.getBaseContext());
         }
-        tmDBAdapter.open();
+        tmDBAdapter.openForWrite();
     }
 
     @Override
@@ -208,7 +208,7 @@ public class SelectMatchTeamActivity extends Activity {
             		FTSUtilities.printToConsole("SelectTeamMatchActivity::spinMatchNum.onItemSelected : No item at position " + arg2);
             	}
             	
-            	MatchDataDBAdapter mDBAdapter = new MatchDataDBAdapter(getBaseContext()).open();
+            	MatchDataDBAdapter mDBAdapter = new MatchDataDBAdapter(getBaseContext()).openForWrite();
             	Cursor teamIDs = mDBAdapter.getTeamIDsForMatchByAlliancePosition(matchID);
             	
             	Hashtable<String, String> teamsForMatch = new Hashtable<String, String>();
@@ -223,7 +223,7 @@ public class SelectMatchTeamActivity extends Activity {
                 txtTeamNumberField.get(tabletAlliancePosition.allianceIndex()).setTextColor(c);
                 txtTeamNumberLabel.get(tabletAlliancePosition.allianceIndex()).setTextColor(c);
 
-                TeamDataDBAdapter tDBAdapter = new TeamDataDBAdapter(getBaseContext()).open();
+                TeamDataDBAdapter tDBAdapter = new TeamDataDBAdapter(getBaseContext()).openForWrite();
 
                 String strTeamNum;
                 String strCurrTeamNum = FTSUtilities.ALLIANCE_POSITION.NOT_SET.myAlliancePosition();

@@ -59,9 +59,25 @@ public class TeamRobotsDBAdapter implements BaseColumns {
      * @throws SQLException
      *             if the database could be neither opened or created
      */
-    public TeamRobotsDBAdapter open() throws SQLException {
+    public TeamRobotsDBAdapter openForWrite() throws SQLException {
         this.mDbHelper = new DatabaseHelper(this.mCtx);
         this.mDb = this.mDbHelper.getWritableDatabase();
+        return this;
+    }
+
+    /**
+     * Open the FirstTeamScouter database. If it cannot be opened, try to create a new
+     * instance of the database. If it cannot be created, throw an exception to
+     * signal the failure
+     *
+     * @return this (self reference, allowing this to be chained in an
+     *         initialization call)
+     * @throws SQLException
+     *             if the database could be neither opened or created
+     */
+    public TeamRobotsDBAdapter openForRead() throws SQLException {
+        this.mDbHelper = new DatabaseHelper(this.mCtx);
+        this.mDb = this.mDbHelper.getReadableDatabase();
         return this;
     }
 
@@ -70,6 +86,14 @@ public class TeamRobotsDBAdapter implements BaseColumns {
      */
     public void close() {
         this.mDbHelper.close();
+    }
+
+    public boolean dbIsClosed() {
+        if(this.mDb == null) {
+            return true;
+        } else {
+            return !this.mDb.isOpen();
+        }
     }
 
     /**
