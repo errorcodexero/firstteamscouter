@@ -12,9 +12,18 @@ import java.util.ArrayList;
 
 public class NotesDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "notes_data";
+
+    // Columns
     public static final String COLUMN_NAME_OWNER_ID = "owner_id";
     public static final String COLUMN_NAME_NOTE_TYPE = "note_type"; // robot, team, pit, etc.
     public static final String COLUMN_NAME_NOTE_TEXT = "note_text";
+
+    public String[] allColumns = {
+            _ID,
+            COLUMN_NAME_OWNER_ID,
+            COLUMN_NAME_NOTE_TYPE,
+            COLUMN_NAME_NOTE_TEXT
+    };
 
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -125,7 +134,9 @@ public class NotesDataDBAdapter implements BaseColumns {
         initialValues.put(COLUMN_NAME_OWNER_ID, owner_id);
         initialValues.put(COLUMN_NAME_NOTE_TYPE, note_type);
         initialValues.put(COLUMN_NAME_NOTE_TEXT, note_text);
-        return this.mDb.insert(TABLE_NAME, null, initialValues);
+        long id = this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
+        if(!this.dbIsClosed()) this.close();
+        return id;
     }
 
     /**
@@ -135,8 +146,9 @@ public class NotesDataDBAdapter implements BaseColumns {
      * @return true if deleted, false otherwise
      */
     public boolean deleteNotesDataEntry(long rowId) {
-
-        return this.mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
+        boolean retVal = this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
     }
 
     /**
@@ -145,10 +157,7 @@ public class NotesDataDBAdapter implements BaseColumns {
      * @return Cursor over all Match Data entries
      */
     public Cursor getAllNotesDataEntries() {
-
-        return this.mDb.query(TABLE_NAME, new String[] {
-                _ID, COLUMN_NAME_OWNER_ID, COLUMN_NAME_NOTE_TYPE, COLUMN_NAME_NOTE_TEXT
-        		}, null, null, null, null, null);
+        return this.openForRead().mDb.query(TABLE_NAME, allColumns, null, null, null, null, null);
     }
 
     /**
@@ -160,9 +169,8 @@ public class NotesDataDBAdapter implements BaseColumns {
         ArrayList<Long> noteIDs = new ArrayList<Long>();
         String WHERE = COLUMN_NAME_OWNER_ID + "=" + String.valueOf(owner_id);
         WHERE += " AND " + COLUMN_NAME_NOTE_TYPE + "=" + owner_type;
-        Cursor c = this.mDb.query(TABLE_NAME, new String[] {
-                _ID, COLUMN_NAME_OWNER_ID, COLUMN_NAME_NOTE_TYPE, COLUMN_NAME_NOTE_TEXT
-        }, WHERE, null, null, null, null);
+
+        Cursor c = this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
 
         while(c.moveToNext()) {
             noteIDs.add(c.getLong(c.getColumnIndex(_ID)));
@@ -180,13 +188,13 @@ public class NotesDataDBAdapter implements BaseColumns {
     public String getNotesDataEntry(long rowId) throws SQLException {
         String note = "";
         String WHERE = _ID + "=" + rowId;
-        Cursor mCursor = this.mDb.query(true, TABLE_NAME, new String[] {
-                _ID, COLUMN_NAME_OWNER_ID, COLUMN_NAME_NOTE_TYPE, COLUMN_NAME_NOTE_TEXT
-        		}, WHERE, null, null, null, null, null);
+        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns, WHERE, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
             note = mCursor.getString(mCursor.getColumnIndex(COLUMN_NAME_NOTE_TEXT));
         }
+        if(!mCursor.isClosed()) mCursor.close();
+        if(!this.dbIsClosed()) this.close();
         return note;
     }
 
@@ -203,7 +211,9 @@ public class NotesDataDBAdapter implements BaseColumns {
         args.put(COLUMN_NAME_OWNER_ID, owner_id);
         args.put(COLUMN_NAME_NOTE_TYPE, note_type);
         args.put(COLUMN_NAME_NOTE_TEXT, note_text);
-        return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 
+        boolean retVal = this.openForRead().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0;
+        if(!this.dbIsClosed()) this.close();
+        return  retVal;
     }
 
 }

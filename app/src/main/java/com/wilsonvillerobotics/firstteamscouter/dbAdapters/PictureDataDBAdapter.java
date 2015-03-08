@@ -10,9 +10,18 @@ import android.provider.BaseColumns;
 
 public class PictureDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "picture_data";
+
+    // Columns
     public static final String COLUMN_NAME_OWNER_ID = "owner_id";
     public static final String COLUMN_NAME_PICTURE_TYPE = "picture_type"; // robot, team, pit, etc.
     public static final String COLUMN_NAME_PICTURE_URI = "picture_uri";
+
+    public String[] allColumns = {
+            _ID,
+            COLUMN_NAME_OWNER_ID,
+            COLUMN_NAME_PICTURE_TYPE,
+            COLUMN_NAME_PICTURE_URI
+    };
 
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -102,6 +111,14 @@ public class PictureDataDBAdapter implements BaseColumns {
         this.mDbHelper.close();
     }
 
+    public boolean dbIsClosed() {
+        if(this.mDb == null) {
+            return true;
+        } else {
+            return !this.mDb.isOpen();
+        }
+    }
+
     /**
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
@@ -115,7 +132,7 @@ public class PictureDataDBAdapter implements BaseColumns {
         initialValues.put(COLUMN_NAME_OWNER_ID, owner_id);
         initialValues.put(COLUMN_NAME_PICTURE_TYPE, picture_type);
         initialValues.put(COLUMN_NAME_PICTURE_URI, picture_uri);
-        return this.mDb.insert(TABLE_NAME, null, initialValues);
+        return this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
     }
 
     /**
@@ -126,7 +143,7 @@ public class PictureDataDBAdapter implements BaseColumns {
      */
     public boolean deletePictureDataEntry(long rowId) {
 
-        return this.mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
+        return this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
     }
 
     /**
@@ -135,10 +152,7 @@ public class PictureDataDBAdapter implements BaseColumns {
      * @return Cursor over all Match Data entries
      */
     public Cursor getAllPictureDataEntries() {
-
-        return this.mDb.query(TABLE_NAME, new String[] {
-                _ID, COLUMN_NAME_OWNER_ID, COLUMN_NAME_PICTURE_TYPE, COLUMN_NAME_PICTURE_URI
-        		}, null, null, null, null, null);
+        return this.openForRead().mDb.query(TABLE_NAME, allColumns, null, null, null, null, null);
     }
 
     /**
@@ -148,12 +162,8 @@ public class PictureDataDBAdapter implements BaseColumns {
      * @throws SQLException if entry could not be found/retrieved
      */
     public Cursor getPictureDataEntry(long rowId) throws SQLException {
-
-        Cursor mCursor =
-
-        this.mDb.query(true, TABLE_NAME, new String[] {
-                _ID, COLUMN_NAME_OWNER_ID, COLUMN_NAME_PICTURE_TYPE, COLUMN_NAME_PICTURE_URI
-        		}, _ID + "=" + rowId, null, null, null, null, null);
+        String WHERE = _ID + "=" + rowId;
+        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns, WHERE, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
@@ -174,7 +184,9 @@ public class PictureDataDBAdapter implements BaseColumns {
         args.put(COLUMN_NAME_OWNER_ID, owner_id);
         args.put(COLUMN_NAME_PICTURE_TYPE, picture_type);
         args.put(COLUMN_NAME_PICTURE_URI, picture_uri);
-        return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 
+        boolean retVal = this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
     }
 
 }

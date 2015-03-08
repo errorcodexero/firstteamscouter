@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 public class TeamMatchTransactionsDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "team_match_transactions";
+
+    // Columns
     public static final String COLUMN_NAME_TEAM_MATCH_ID = "team_match_id";
     public static final String COLUMN_NAME_TRANSACTION_ID = "transaction_id";
 

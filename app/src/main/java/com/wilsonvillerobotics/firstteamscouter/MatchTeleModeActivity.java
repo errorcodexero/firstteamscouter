@@ -280,9 +280,9 @@ public class MatchTeleModeActivity extends Activity {
     private void openDatabase() {
         try {
             FTSUtilities.printToConsole("MatchTeleModeActivity::openDatabase : OPENING DB\n");
-            tmDBAdapter = new TeamMatchDBAdapter(this).openForWrite();
-            tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this).openForWrite();
-            tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this).openForWrite();
+            tmDBAdapter = new TeamMatchDBAdapter(this);
+            tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this);
+            tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this);
 
             Cursor c = tmDBAdapter.getTeamMatch(this.teamMatchID);
             if(c.moveToFirst()) {
@@ -313,14 +313,9 @@ public class MatchTeleModeActivity extends Activity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(tmDBAdapter == null) {
-        	tmDBAdapter = new TeamMatchDBAdapter(this);
-            tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this);
-            tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this);
-        }
-        tmDBAdapter.openForWrite();
-        tmtdDBAdapter.openForWrite();
-        tmtDBAdapter.openForWrite();
+        if(tmDBAdapter == null) tmDBAdapter = new TeamMatchDBAdapter(this);
+        if(tmtdDBAdapter == null) tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this);
+        if(tmtDBAdapter == null) tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this);
     }
 
     @Override

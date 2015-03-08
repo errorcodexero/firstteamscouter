@@ -13,6 +13,8 @@ import java.util.HashMap;
 
 public class RobotDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "robot_data";
+
+    // Columns
     public static final String COLUMN_NAME_TEAM_ID = "team_id";
     public static final String COLUMN_NAME_COMPETITION_ID = "competition_id";
     public static final String COLUMN_NAME_DRIVE_TRAIN_TYPE = "drive_train_type";
@@ -30,13 +32,7 @@ public class RobotDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_COOPERTITION = "team_does_coopertition";
     public static final String COLUMN_NAME_ROBOT_STACKS_FROM = "robot_stacks_from";
 
-
-    private DatabaseHelper mDbHelper;
-    private SQLiteDatabase mDb;
-
-    private final Context mCtx;
-
-    private final String allColumns[] = {
+    public String[] allColumns = {
             _ID,
             COLUMN_NAME_TEAM_ID,
             COLUMN_NAME_COMPETITION_ID,
@@ -55,6 +51,11 @@ public class RobotDataDBAdapter implements BaseColumns {
             COLUMN_NAME_COOPERTITION,
             COLUMN_NAME_ROBOT_STACKS_FROM
     };
+
+    private DatabaseHelper mDbHelper;
+    private SQLiteDatabase mDb;
+
+    private final Context mCtx;
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -174,7 +175,9 @@ public class RobotDataDBAdapter implements BaseColumns {
             initialValues.put(COLUMN_NAME_COOPERTITION, values.get(COLUMN_NAME_COOPERTITION));
             initialValues.put(COLUMN_NAME_ROBOT_STACKS_FROM, values.get(COLUMN_NAME_ROBOT_STACKS_FROM));
         }
-        return this.mDb.insert(TABLE_NAME, null, initialValues);
+        long id = this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
+        if(!this.dbIsClosed()) this.close();
+        return id;
     }
 
     /**
@@ -184,8 +187,9 @@ public class RobotDataDBAdapter implements BaseColumns {
      * @return true if deleted, false otherwise
      */
     public boolean deleteRobotDataEntry(long rowId) {
-
-        return this.mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
+        boolean retVal = this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
     }
 
     /**
@@ -194,7 +198,7 @@ public class RobotDataDBAdapter implements BaseColumns {
      * @return Cursor over all Match Data entries
      */
     public Cursor getAllRobotDataEntries() {
-        return this.mDb.query(TABLE_NAME, allColumns, null, null, null, null, null);
+        return this.openForRead().mDb.query(TABLE_NAME, allColumns, null, null, null, null, null);
     }
 
     /**
@@ -207,7 +211,7 @@ public class RobotDataDBAdapter implements BaseColumns {
         HashMap<String, String> values = new HashMap<String, String>();
         Cursor mCursor = null;
         try {
-            mCursor = this.mDb.query(true, TABLE_NAME, allColumns,
+            mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns,
                     _ID + "=" + robotId, null, null, null, null, null);
             if (mCursor.moveToFirst()) {
                 for(String k : mCursor.getColumnNames()) {
@@ -218,6 +222,7 @@ public class RobotDataDBAdapter implements BaseColumns {
 
         } finally {
             if(mCursor != null && !mCursor.isClosed()) mCursor.close();
+            if(!this.dbIsClosed()) this.close();
         }
 
         return values;
@@ -237,7 +242,7 @@ public class RobotDataDBAdapter implements BaseColumns {
 
         Cursor mCursor = null;
         try {
-            mCursor = this.mDb.query(true, TABLE_NAME, allColumns,
+            mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns,
                     WHERE, null, null, null, null, null);
             if (mCursor.moveToFirst()) {
                 id = mCursor.getLong(mCursor.getColumnIndex(_ID));
@@ -247,6 +252,7 @@ public class RobotDataDBAdapter implements BaseColumns {
             e.printStackTrace();
         } finally {
             if(mCursor != null && !mCursor.isClosed()) mCursor.close();
+            if(!this.dbIsClosed()) this.close();
         }
         return id;
     }
@@ -265,7 +271,7 @@ public class RobotDataDBAdapter implements BaseColumns {
         WHERE += " AND " + COLUMN_NAME_COMPETITION_ID + "=" + competition_id;
 
         try {
-            mCursor = this.mDb.query(true, TABLE_NAME, allColumns,
+            mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns,
                     WHERE, null, null, null, null, null);
             if (mCursor.moveToFirst()) {
                 for(String k : mCursor.getColumnNames()) {
@@ -276,6 +282,7 @@ public class RobotDataDBAdapter implements BaseColumns {
 
         } finally {
             if(mCursor != null && !mCursor.isClosed()) mCursor.close();
+            if(!this.dbIsClosed()) this.close();
         }
 
         return values;
@@ -295,7 +302,9 @@ public class RobotDataDBAdapter implements BaseColumns {
         for(String k : values.keySet()) {
             args.put(k, values.get(k));
         }
-        return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 
+        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
     }
 
 }

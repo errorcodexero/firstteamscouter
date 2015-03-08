@@ -12,6 +12,8 @@ import android.provider.BaseColumns;
 
 public class MatchDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME                       = "match_data";
+
+    // Columns
     public static final String COLUMN_NAME_COMPETITION_ID       = "competition_id";
     public static final String COLUMN_NAME_MATCH_TIME 			= "match_time";
     public static final String COLUMN_NAME_MATCH_TYPE			= "match_type";
@@ -26,7 +28,23 @@ public class MatchDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_BLUE_TEAM_THREE_ID   = "blue_team_three_id";
     
     public static final String COLUMN_NAME_MATCH_DATA_UPDATED	= "match_data_updated";
-    
+
+    public String[] allColumns = {
+            _ID,
+            COLUMN_NAME_COMPETITION_ID,
+            COLUMN_NAME_MATCH_TIME,
+            COLUMN_NAME_MATCH_TYPE,
+            COLUMN_NAME_MATCH_NUMBER,
+            COLUMN_NAME_MATCH_LOCATION,
+            COLUMN_NAME_RED_TEAM_ONE_ID,
+            COLUMN_NAME_RED_TEAM_TWO_ID,
+            COLUMN_NAME_RED_TEAM_THREE_ID,
+            COLUMN_NAME_BLUE_TEAM_ONE_ID,
+            COLUMN_NAME_BLUE_TEAM_TWO_ID,
+            COLUMN_NAME_BLUE_TEAM_THREE_ID,
+            COLUMN_NAME_MATCH_DATA_UPDATED
+    };
+
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
 
@@ -205,12 +223,8 @@ public class MatchDataDBAdapter implements BaseColumns {
      */
     public Cursor getMatchDataEntry(long matchID) throws SQLException {
     	FTSUtilities.printToConsole("MatchDataDBAdapter::getMatchDataEntry : matchID: " + matchID + "\n");
-		
-        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, new String[] { _ID, COLUMN_NAME_COMPETITION_ID,
-        		COLUMN_NAME_MATCH_TIME, COLUMN_NAME_MATCH_TYPE, COLUMN_NAME_MATCH_NUMBER, COLUMN_NAME_MATCH_LOCATION, 
-        		COLUMN_NAME_RED_TEAM_ONE_ID, COLUMN_NAME_RED_TEAM_TWO_ID, COLUMN_NAME_RED_TEAM_THREE_ID,
-        		COLUMN_NAME_BLUE_TEAM_ONE_ID, COLUMN_NAME_BLUE_TEAM_TWO_ID, COLUMN_NAME_BLUE_TEAM_THREE_ID, COLUMN_NAME_MATCH_DATA_UPDATED
-        		}, _ID + "=" + matchID, null, null, null, null, null);
+		String WHERE = _ID + "=" + matchID;
+        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns, WHERE, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
             FTSUtilities.printToConsole("MatchDataDBAdapter::getMatchDataEntry : numItems: " + mCursor.getCount() + "\n");
@@ -275,6 +289,7 @@ public class MatchDataDBAdapter implements BaseColumns {
     }
     
     public Cursor getTeamIDsForMatchByAlliancePosition(long competition_id, long matchID) {
+        /*
     	String SELECT_QUERY = "SELECT t1." + MatchDataDBAdapter._ID;
     	SELECT_QUERY += ", t1." + MatchDataDBAdapter.COLUMN_NAME_MATCH_NUMBER;
     	SELECT_QUERY += ", t1." + MatchDataDBAdapter.COLUMN_NAME_RED_TEAM_ONE_ID;
@@ -287,6 +302,9 @@ public class MatchDataDBAdapter implements BaseColumns {
     	SELECT_QUERY += " WHERE t1." + MatchDataDBAdapter._ID + "=" + matchID;
         SELECT_QUERY += " AND t1." + MatchDataDBAdapter.COLUMN_NAME_COMPETITION_ID + "=" + competition_id;
     	Cursor c = this.openForRead().mDb.rawQuery(SELECT_QUERY, null);
+        */
+        String WHERE = _ID + "=" + matchID;
+        Cursor c = this.openForRead().mDb.query(true, TABLE_NAME, allColumns, WHERE, null, null, null, null, null);
         if(c != null) c.moveToFirst();
     	
     	return c;

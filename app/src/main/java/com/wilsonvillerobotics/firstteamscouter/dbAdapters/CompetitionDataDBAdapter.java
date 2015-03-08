@@ -21,17 +21,17 @@ import java.util.ArrayList;
 
 public class CompetitionDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "competition_data";
+
+    // Columns
     public static final String COLUMN_NAME_COMPETITION_NAME = "competition_name";
     public static final String COLUMN_NAME_COMPETITION_LOCATION = "competition_location";
 
-    /*
-    public String[] Columns = {
-    		COLUMN_NAME_COMPETITION_ID,
+    public String[] allColumns = {
+    		_ID,
     		COLUMN_NAME_COMPETITION_NAME,
     		COLUMN_NAME_COMPETITION_LOCATION
     };
-    */
-    
+
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
 
@@ -95,7 +95,7 @@ public class CompetitionDataDBAdapter implements BaseColumns {
      * @throws SQLException
      *             if the database could be neither opened or created
      */
-    public CompetitionDataDBAdapter open() throws SQLException {
+    public CompetitionDataDBAdapter openForWrite() throws SQLException {
         this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
         this.mDb = this.mDbHelper.getWritableDatabase();
         return this;
@@ -111,7 +111,7 @@ public class CompetitionDataDBAdapter implements BaseColumns {
      * @throws SQLException
      *             if the database could be neither opened or created
      */
-    public CompetitionDataDBAdapter openToRead() throws SQLException {
+    public CompetitionDataDBAdapter openForRead() throws SQLException {
         this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
         this.mDb = this.mDbHelper.getReadableDatabase();
         return this;
@@ -122,6 +122,14 @@ public class CompetitionDataDBAdapter implements BaseColumns {
      */
     public void close() {
         this.mDbHelper.close();
+    }
+
+    public boolean dbIsClosed() {
+        if(this.mDb == null) {
+            return true;
+        } else {
+            return !this.mDb.isOpen();
+        }
     }
 
     /**
@@ -137,7 +145,9 @@ public class CompetitionDataDBAdapter implements BaseColumns {
         ContentValues initialValues = new ContentValues();
         initialValues.put(COLUMN_NAME_COMPETITION_NAME, name);
         initialValues.put(COLUMN_NAME_COMPETITION_LOCATION, location);
-        return this.mDb.insert(TABLE_NAME, null, initialValues);
+        long retVal = this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
     }
 
     /**
@@ -147,8 +157,9 @@ public class CompetitionDataDBAdapter implements BaseColumns {
      * @return true if deleted, false otherwise
      */
     public boolean deleteCompetitionDataEntry(long rowId) {
-
-        return this.mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
+        boolean retVal = this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
     }
 
     /**
@@ -157,9 +168,7 @@ public class CompetitionDataDBAdapter implements BaseColumns {
      * @return Cursor over all Competition Data entries
      */
     public Cursor getAllCompetitionDataEntries() {
-
-        return this.mDb.query(TABLE_NAME, new String[] {
-                _ID, COLUMN_NAME_COMPETITION_NAME, COLUMN_NAME_COMPETITION_LOCATION }, null, null, null, null, null);
+        return this.openForRead().mDb.query(TABLE_NAME, allColumns, null, null, null, null, null);
     }
 
     /**
@@ -169,14 +178,8 @@ public class CompetitionDataDBAdapter implements BaseColumns {
      * @throws SQLException if Competition Data Entry could not be found/retrieved
      */
     public Cursor getCompetitionDataEntry(long rowId) throws SQLException {
-
-        Cursor mCursor =
-
-        this.mDb.query(true, TABLE_NAME, new String[] {
-                _ID, COLUMN_NAME_COMPETITION_NAME, COLUMN_NAME_COMPETITION_LOCATION}, _ID + "=" + rowId, null, null, null, null, null);
-        if (mCursor != null) {
-            mCursor.moveToFirst();
-        }
+        String WHERE = _ID + "=" + rowId;
+        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns, WHERE, null, null, null, null, null);
         return mCursor;
     }
 
@@ -194,8 +197,9 @@ public class CompetitionDataDBAdapter implements BaseColumns {
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_COMPETITION_NAME, name);
         args.put(COLUMN_NAME_COMPETITION_LOCATION, location);
-
-        return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 
+        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
     }
 
 }

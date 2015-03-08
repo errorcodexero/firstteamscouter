@@ -38,7 +38,7 @@
 delete from sym_trigger_router;
 delete from sym_trigger;
 delete from sym_router;
---delete from sym_channel where channel_id in ('sale_transaction', 'item');
+delete from sym_channel where channel_id in ('master_data', 'node_data');
 delete from sym_node_group_link;
 delete from sym_node_group;
 delete from sym_node_host;
@@ -50,9 +50,13 @@ delete from sym_node;
 -- CHANNELS --
 insert into sym_channel 
 (channel_id, processing_order, max_batch_size, enabled, description)
-values('all_data', 1, 100000, 1, 'All data to and from fts nodes.');
+values('master_data', 1, 100000, 1, 'All data to fts nodes.');
 
---insert into sym_channel 
+insert into sym_channel
+(channel_id, processing_order, max_batch_size, enabled, description)
+values('node_data', 1, 100000, 1, 'All data from fts nodes.');
+
+--insert into sym_channel
 --(channel_id, processing_order, max_batch_size, enabled, description)
 --values('item', 1, 100000, 1, 'Item and pricing data');
 
@@ -90,20 +94,12 @@ values('fts_node_2_master', 'fts-node', 'fts-master', 'default',current_timestam
 -- TRIGGERS --
 insert into sym_trigger 
 (trigger_id,source_table_name,channel_id,last_update_time,create_time)
-values('all_data','*','all_data',current_timestamp,current_timestamp);
+values('all_data_2_nodes','*','master_data',current_timestamp,current_timestamp);
 
+insert into sym_trigger
+(trigger_id,source_table_name,channel_id,last_update_time,create_time)
+values('all_data_2_master','*','node_data',current_timestamp,current_timestamp);
 
---insert into sym_trigger 
---(trigger_id,source_table_name,channel_id,last_update_time,create_time)
---values('item','item','item',current_timestamp,current_timestamp);
-
---insert into sym_trigger 
---(trigger_id,source_table_name,channel_id,last_update_time,create_time)
---values('sale_transaction','sale_transaction','sale_transaction',current_timestamp,current_timestamp);
-
---insert into sym_trigger 
---(trigger_id,source_table_name,channel_id,last_update_time,create_time)
---values('sale_return_line_item','sale_return_line_item','sale_transaction',current_timestamp,current_timestamp);
 
 
 
@@ -112,45 +108,37 @@ values('all_data','*','all_data',current_timestamp,current_timestamp);
 -- TRIGGER ROUTERS --
 insert into sym_trigger_router 
 (trigger_id,router_id,initial_load_order,last_update_time,create_time)
-values('all_data','fts_master_2_nodes', 100, current_timestamp, current_timestamp);
-
---insert into sym_trigger_router 
---(trigger_id,router_id,initial_load_order,initial_load_select,last_update_time,create_time)
---values('item_selling_price','corp_2_one_store',100,'store_id=''$(externalId)''',current_timestamp,current_timestamp);
+values('all_data_2_nodes','fts_master_2_nodes', 100, current_timestamp, current_timestamp);
 
 insert into sym_trigger_router 
 (trigger_id,router_id,initial_load_order,last_update_time,create_time)
-values('all_data','fts_node_2_master', 200, current_timestamp, current_timestamp);
-
---insert into sym_trigger_router 
---(trigger_id,router_id,initial_load_order,last_update_time,create_time)
---values('sale_return_line_item','store_2_corp', 200, current_timestamp, current_timestamp);
+values('all_data_2_master','fts_node_2_master', 200, current_timestamp, current_timestamp);
 
 
 
 -- NODES --
 insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('000','fts-master','000',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('000','fts-master','master',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
 insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('001','fts-node','001',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('001','fts-node','Scout1',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
 insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('002','fts-node','002',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('002','fts-node','Scout2',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
  insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('003','fts-node','003',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('003','fts-node','Scout3',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
  insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('004','fts-node','004',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('004','fts-node','Scout4',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
  insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('005','fts-node','005',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('005','fts-node','Scout5',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
  insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('006','fts-node','006',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('006','fts-node','Scout6',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
  insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('007','fts-node','007',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('007','fts-node','Scout7',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
  insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('008','fts-node','008',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('008','fts-node','Scout8',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
  insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('009','fts-node','009',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('009','fts-node','Scout9',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
  insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('010','fts-node','010',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('010','fts-node','Scout10',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
 
 
  

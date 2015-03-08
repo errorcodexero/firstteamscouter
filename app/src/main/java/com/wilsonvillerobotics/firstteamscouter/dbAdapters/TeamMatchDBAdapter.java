@@ -16,6 +16,8 @@ import android.provider.BaseColumns;
 
 public class TeamMatchDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "team_match";
+
+    // Columns
     public static final String COLUMN_NAME_TEAM_ID = "team_id";
     public static final String COLUMN_NAME_MATCH_ID = "match_id";
     public static final String COLUMN_NAME_COMPETITION_ID = "competition_id";
@@ -44,34 +46,34 @@ public class TeamMatchDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y = "auto_tote_2_location_Y";
     public static final String COLUMN_NAME_AUTO_TOTE_3_LOCATION_X = "auto_tote_3_location_X";
     public static final String COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y = "auto_tote_3_location_Y";
-    public static final String COLUMN_NAME_AUTO_CAN_1_LOCATION_X = "auto_can_1_location_X";
-    public static final String COLUMN_NAME_AUTO_CAN_1_LOCATION_Y = "auto_can_1_location_Y";
-    public static final String COLUMN_NAME_AUTO_CAN_2_LOCATION_X = "auto_can_2_location_X";
-    public static final String COLUMN_NAME_AUTO_CAN_2_LOCATION_Y = "auto_can_2_location_Y";
-    public static final String COLUMN_NAME_AUTO_CAN_3_LOCATION_X = "auto_can_3_location_X";
-    public static final String COLUMN_NAME_AUTO_CAN_3_LOCATION_Y = "auto_can_3_location_Y";
-    public static final String COLUMN_NAME_AUTO_CAN_4_LOCATION_X = "auto_can_4_location_X";
-    public static final String COLUMN_NAME_AUTO_CAN_4_LOCATION_Y = "auto_can_4_location_Y";
-    public static final String COLUMN_NAME_AUTO_CAN_5_LOCATION_X = "auto_can_5_location_X";
-    public static final String COLUMN_NAME_AUTO_CAN_5_LOCATION_Y = "auto_can_5_location_Y";
-    public static final String COLUMN_NAME_AUTO_CAN_6_LOCATION_X = "auto_can_6_location_X";
-    public static final String COLUMN_NAME_AUTO_CAN_6_LOCATION_Y = "auto_can_6_location_Y";
-    public static final String COLUMN_NAME_AUTO_CAN_7_LOCATION_X = "auto_can_7_location_X";
-    public static final String COLUMN_NAME_AUTO_CAN_7_LOCATION_Y = "auto_can_7_location_Y";
-    public static final String COLUMN_NAME_AUTO_ROBOT_VISIBLE = "auto_robot_visible";
-    public static final String COLUMN_NAME_AUTO_TOTE1_VISIBLE = "auto_tote1_visible";
-    public static final String COLUMN_NAME_AUTO_TOTE2_VISIBLE = "auto_tote2_visible";
-    public static final String COLUMN_NAME_AUTO_TOTE3_VISIBLE = "auto_tote3_visible";
-    public static final String COLUMN_NAME_AUTO_CAN1_VISIBLE = "auto_can1_visible";
-    public static final String COLUMN_NAME_AUTO_CAN2_VISIBLE = "auto_can2_visible";
-    public static final String COLUMN_NAME_AUTO_CAN3_VISIBLE = "auto_can3_visible";
-    public static final String COLUMN_NAME_AUTO_CAN4_VISIBLE = "auto_can4_visible";
-    public static final String COLUMN_NAME_AUTO_CAN5_VISIBLE = "auto_can5_visible";
-    public static final String COLUMN_NAME_AUTO_CAN6_VISIBLE = "auto_can6_visible";
-    public static final String COLUMN_NAME_AUTO_CAN7_VISIBLE = "auto_can7_visible";
-    public static final String COLUMN_NAME_AUTO_ROBOT_STACK_LIST = "auto_robot_stack_list";
+    public static final String COLUMN_NAME_AUTO_CAN_1_LOCATION_X  = "auto_can_1_location_X";
+    public static final String COLUMN_NAME_AUTO_CAN_1_LOCATION_Y  = "auto_can_1_location_Y";
+    public static final String COLUMN_NAME_AUTO_CAN_2_LOCATION_X  = "auto_can_2_location_X";
+    public static final String COLUMN_NAME_AUTO_CAN_2_LOCATION_Y  = "auto_can_2_location_Y";
+    public static final String COLUMN_NAME_AUTO_CAN_3_LOCATION_X  = "auto_can_3_location_X";
+    public static final String COLUMN_NAME_AUTO_CAN_3_LOCATION_Y  = "auto_can_3_location_Y";
+    public static final String COLUMN_NAME_AUTO_CAN_4_LOCATION_X  = "auto_can_4_location_X";
+    public static final String COLUMN_NAME_AUTO_CAN_4_LOCATION_Y  = "auto_can_4_location_Y";
+    public static final String COLUMN_NAME_AUTO_CAN_5_LOCATION_X  = "auto_can_5_location_X";
+    public static final String COLUMN_NAME_AUTO_CAN_5_LOCATION_Y  = "auto_can_5_location_Y";
+    public static final String COLUMN_NAME_AUTO_CAN_6_LOCATION_X  = "auto_can_6_location_X";
+    public static final String COLUMN_NAME_AUTO_CAN_6_LOCATION_Y  = "auto_can_6_location_Y";
+    public static final String COLUMN_NAME_AUTO_CAN_7_LOCATION_X  = "auto_can_7_location_X";
+    public static final String COLUMN_NAME_AUTO_CAN_7_LOCATION_Y  = "auto_can_7_location_Y";
+    public static final String COLUMN_NAME_AUTO_ROBOT_VISIBLE     = "auto_robot_visible";
+    public static final String COLUMN_NAME_AUTO_TOTE1_VISIBLE     = "auto_tote1_visible";
+    public static final String COLUMN_NAME_AUTO_TOTE2_VISIBLE     = "auto_tote2_visible";
+    public static final String COLUMN_NAME_AUTO_TOTE3_VISIBLE     = "auto_tote3_visible";
+    public static final String COLUMN_NAME_AUTO_CAN1_VISIBLE      = "auto_can1_visible";
+    public static final String COLUMN_NAME_AUTO_CAN2_VISIBLE      = "auto_can2_visible";
+    public static final String COLUMN_NAME_AUTO_CAN3_VISIBLE      = "auto_can3_visible";
+    public static final String COLUMN_NAME_AUTO_CAN4_VISIBLE      = "auto_can4_visible";
+    public static final String COLUMN_NAME_AUTO_CAN5_VISIBLE      = "auto_can5_visible";
+    public static final String COLUMN_NAME_AUTO_CAN6_VISIBLE      = "auto_can6_visible";
+    public static final String COLUMN_NAME_AUTO_CAN7_VISIBLE      = "auto_can7_visible";
+    public static final String COLUMN_NAME_AUTO_ROBOT_STACK_LIST  = "auto_robot_stack_list";
 
-    // This needs to be moved to the team_match_notes_data
+    // This needs to be moved to the notes_data table
     public static final String COLUMN_NAME_TEAM_MATCH_NOTES = "team_match_notes";
 
 
@@ -342,11 +344,14 @@ public class TeamMatchDBAdapter implements BaseColumns {
      * @return Cursor over all Match Data entries
      */
     public Cursor getAllTeamMatches() {
-
-        return this.openForRead().mDb.query(TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_TEAM_ID, COLUMN_NAME_MATCH_ID, COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION,
-        		COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA
-        		}, null, null, null, null, null);
+        String cols[] = {
+                _ID,
+                COLUMN_NAME_TEAM_ID,
+                COLUMN_NAME_MATCH_ID,
+                COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION,
+                COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA
+        };
+        return this.openForRead().mDb.query(TABLE_NAME, cols, null, null, null, null, null);
     }
 
     /**
@@ -356,7 +361,6 @@ public class TeamMatchDBAdapter implements BaseColumns {
      */
     public Cursor getTeamMatchesWithDataToExport() {
         String WHERE = TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
-
         return this.openForRead().mDb.query(TABLE_NAME, this.allColumnNames, WHERE, null, null, null, null);
     }
 

@@ -23,10 +23,21 @@ public class TeamDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_TEAM_NAME = "team_name";
     public static final String COLUMN_NAME_TEAM_LOCATION = "team_location";
     public static final String COLUMN_NAME_TEAM_NUM_MEMBERS = "num_team_members";
-    public static final String COLUMN_NAME_TEAM_DATA_UPDATED = "team_data_updated";
     public static final String COLUMN_NAME_TEAM_YEAR_CREATED = "team_creation_year";
+    public static final String COLUMN_NAME_TEAM_DATA_UPDATED = "team_data_updated";
 
     public static final String PRIMARY_KEY = " PRIMARY KEY ( " + TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER + ", " + TeamDataDBAdapter.COLUMN_NAME_TEAM_SUB_NUMBER + " )";
+
+    public String[] allColumns = {
+            _ID,
+            COLUMN_NAME_TEAM_NUMBER,
+            COLUMN_NAME_TEAM_SUB_NUMBER,
+            COLUMN_NAME_TEAM_NAME,
+            COLUMN_NAME_TEAM_LOCATION,
+            COLUMN_NAME_TEAM_NUM_MEMBERS,
+            COLUMN_NAME_TEAM_YEAR_CREATED,
+            COLUMN_NAME_TEAM_DATA_UPDATED
+    };
 
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -197,7 +208,7 @@ public class TeamDataDBAdapter implements BaseColumns {
         args.put(COLUMN_NAME_TEAM_LOCATION, team_location);
         args.put(COLUMN_NAME_TEAM_NUM_MEMBERS, num_team_members);
         args.put(COLUMN_NAME_TEAM_DATA_UPDATED, Boolean.TRUE.toString());
-        boolean retVal = this.mDb.update(TABLE_NAME, args,COLUMN_NAME_TEAM_NUMBER + "=" + team_number, null) > 0;
+        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args,COLUMN_NAME_TEAM_NUMBER + "=" + team_number, null) > 0;
         if(!this.dbIsClosed()) this.close();
         return retVal;
     }
@@ -220,11 +231,8 @@ public class TeamDataDBAdapter implements BaseColumns {
      * @return Cursor over all Match Data entries
      */
     public Cursor getAllTeamDataEntries() {
-
-        Cursor mCursor = this.openForRead().mDb.query(TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_TEAM_NUMBER, COLUMN_NAME_TEAM_SUB_NUMBER, COLUMN_NAME_TEAM_NAME,
-        		COLUMN_NAME_TEAM_LOCATION, COLUMN_NAME_TEAM_NUM_MEMBERS, COLUMN_NAME_TEAM_DATA_UPDATED
-        		}, null, null, null, null, COLUMN_NAME_TEAM_NUMBER + " ASC");
+        String SORT = COLUMN_NAME_TEAM_NUMBER + " ASC";
+        Cursor mCursor = this.openForRead().mDb.query(TABLE_NAME, allColumns, null, null, null, null, SORT);
         FTSUtilities.printToConsole("TeamDataDBAdapter::getAllTeamDataEntries : Cursor Size : " + mCursor.getCount() + "\n");
         return mCursor;
     }
@@ -235,11 +243,9 @@ public class TeamDataDBAdapter implements BaseColumns {
      * @return Cursor over all Match Data entries
      */
     public Cursor getUpdatedTeamDataEntries() {
-
-        Cursor mCursor = this.openForRead().mDb.query(TABLE_NAME, new String[] {
-        		COLUMN_NAME_TEAM_NUMBER, COLUMN_NAME_TEAM_SUB_NUMBER, COLUMN_NAME_TEAM_NAME,
-        		COLUMN_NAME_TEAM_LOCATION, COLUMN_NAME_TEAM_NUM_MEMBERS, COLUMN_NAME_TEAM_DATA_UPDATED
-        		}, COLUMN_NAME_TEAM_DATA_UPDATED + "=" + Boolean.TRUE.toString(), null, null, null, COLUMN_NAME_TEAM_NUMBER + " ASC");
+        String WHERE = COLUMN_NAME_TEAM_DATA_UPDATED + "=" + Boolean.TRUE.toString();
+        String SORT = COLUMN_NAME_TEAM_NUMBER + " ASC";
+        Cursor mCursor = this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, SORT);
         FTSUtilities.printToConsole("TeamDataDBAdapter::getAllTeamDataEntries : Cursor Size : " + mCursor.getCount() + "\n");
         return mCursor;
     }
@@ -251,11 +257,8 @@ public class TeamDataDBAdapter implements BaseColumns {
      * @throws SQLException if entry could not be found/retrieved
      */
     public Cursor getTeamDataEntry(long teamNumber, long team_sub_number) throws SQLException {
-
-        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, new String[] { _ID,
-        		COLUMN_NAME_TEAM_NUMBER, COLUMN_NAME_TEAM_SUB_NUMBER, COLUMN_NAME_TEAM_NAME,
-        		COLUMN_NAME_TEAM_LOCATION, COLUMN_NAME_TEAM_NUM_MEMBERS, COLUMN_NAME_TEAM_DATA_UPDATED
-        		}, COLUMN_NAME_TEAM_NUMBER + "=" + teamNumber, null, null, null, null, null);
+        String WHERE = COLUMN_NAME_TEAM_NUMBER + "=" + teamNumber;
+        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns, WHERE, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
@@ -272,7 +275,7 @@ public class TeamDataDBAdapter implements BaseColumns {
     public int getTeamNumberFromID(long teamID) throws SQLException {
     	int teamNum = -1;
 
-    	Cursor mCursor = this.mDb.query(true, TABLE_NAME, new String[] { COLUMN_NAME_TEAM_NUMBER},
+    	Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, new String[] { COLUMN_NAME_TEAM_NUMBER},
         		_ID + "=" + teamID, null, null, null, null, null);
         if (mCursor != null && mCursor.moveToFirst()) {
             teamNum = mCursor.getInt(mCursor.getColumnIndex(COLUMN_NAME_TEAM_NUMBER));

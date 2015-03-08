@@ -15,6 +15,8 @@ import java.util.HashMap;
 
 public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "team_match_transaction";
+
+    // Columns
     public static final String COLUMN_NAME_TEAM_ID = "team_id";
     public static final String COLUMN_NAME_MATCH_ID = "match_id";
     public static final String COLUMN_NAME_TIMESTAMP = "timestamp";

@@ -10,7 +10,14 @@ import android.provider.BaseColumns;
 
 public class PitDataDBAdapter implements BaseColumns {
 	public static final String TABLE_NAME = "pit_data";
+
+    // Columns
     public static final String COLUMN_NAME_PIT_INFO = "pit_info";
+
+    public String[] allColumns = {
+            _ID,
+            COLUMN_NAME_PIT_INFO
+    };
 
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -100,16 +107,26 @@ public class PitDataDBAdapter implements BaseColumns {
         this.mDbHelper.close();
     }
 
+    public boolean dbIsClosed() {
+        if(this.mDb == null) {
+            return true;
+        } else {
+            return !this.mDb.isOpen();
+        }
+    }
+
     /**
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
      * 
      * @return rowId or -1 if failed
      */
-    public long createPitDataEntry(){
+    public long createPitDataEntry(String pitInfo){
         ContentValues initialValues = new ContentValues();
-        //initialValues.put(COLUMN_NAME_PIT_ID, pit_id);
-        return this.mDb.insert(TABLE_NAME, null, initialValues);
+        initialValues.put(COLUMN_NAME_PIT_INFO, pitInfo);
+        long id = this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
+        if(!this.dbIsClosed()) this.close();
+        return id;
     }
 
     /**
@@ -119,8 +136,9 @@ public class PitDataDBAdapter implements BaseColumns {
      * @return true if deleted, false otherwise
      */
     public boolean deletePitDataEntry(long rowId) {
-
-        return this.mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
+        boolean retVal = this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
     }
 
     /**
@@ -129,10 +147,7 @@ public class PitDataDBAdapter implements BaseColumns {
      * @return Cursor over all Match Data entries
      */
     public Cursor getAllPitDataEntries() {
-
-        return this.mDb.query(TABLE_NAME, new String[] {
-                _ID, //COLUMN_NAME_PIT_ID
-        		}, null, null, null, null, null);
+        return this.openForRead().mDb.query(TABLE_NAME, allColumns, null, null, null, null, null);
     }
 
     /**
@@ -142,12 +157,8 @@ public class PitDataDBAdapter implements BaseColumns {
      * @throws SQLException if entry could not be found/retrieved
      */
     public Cursor getPitDataEntry(long rowId) throws SQLException {
-
-        Cursor mCursor =
-
-        this.mDb.query(true, TABLE_NAME, new String[] {
-                _ID, //COLUMN_NAME_PIT_ID
-        		}, _ID + "=" + rowId, null, null, null, null, null);
+        String WHERE = _ID + "=" + rowId;
+        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns, WHERE, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
@@ -159,10 +170,13 @@ public class PitDataDBAdapter implements BaseColumns {
      * 
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updatePitDataEntry(int rowId, int pit_id){
+    public boolean updatePitDataEntry(int rowId, String pitInfo){
         ContentValues args = new ContentValues();
-        //args.put(COLUMN_NAME_PIT_ID, pit_id);
-        return this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0; 
+        args.put(COLUMN_NAME_PIT_INFO, pitInfo);
+        String WHERE = _ID + "=" + rowId;
+        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, WHERE, null) >0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
     }
 
 }
