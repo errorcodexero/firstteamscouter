@@ -42,4 +42,5 @@ dependencies {
     compile files('libs/symmetric-db-3.7.8.jar')
     compile files('libs/symmetric-io-3.7.8.jar')
     compile files('libs/symmetric-util-3.7.8.jar')
+    compile files('libs/slf4j-android-1.6.1-RC1.jar')
 }

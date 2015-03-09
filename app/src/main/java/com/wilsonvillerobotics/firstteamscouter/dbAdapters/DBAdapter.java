@@ -352,7 +352,7 @@ public class DBAdapter {
 
         // Notify the service of the database helper key
         intent.putExtra(SymmetricService.INTENTKEY_SQLITEOPENHELPER_REGISTRY_KEY, HELPER_KEY);
-        intent.putExtra(SymmetricService.INTENTKEY_REGISTRATION_URL, "http://10.0.0.100:32665/sync/fts-master");
+        intent.putExtra(SymmetricService.INTENTKEY_REGISTRATION_URL, "http://10.0.0.191:32665/sync/fts-master");
         intent.putExtra(SymmetricService.INTENTKEY_EXTERNAL_ID, "Scout1");
         intent.putExtra(SymmetricService.INTENTKEY_NODE_GROUP_ID, "fts-node");
         intent.putExtra(SymmetricService.INTENTKEY_START_IN_BACKGROUND, true);
@@ -360,7 +360,6 @@ public class DBAdapter {
         // initial load existing notes from the Client to the Server
         Properties properties = new Properties();
         properties.setProperty(ParameterConstants.AUTO_RELOAD_REVERSE_ENABLED, "true");
-        properties.setProperty(ParameterConstants.SYNC_URL, "http://10.0.0.100:32665/sync/fts-master");
         intent.putExtra(SymmetricService.INTENTKEY_PROPERTIES, properties);
 
         ctx.startService(intent);
