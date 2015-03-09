@@ -14,6 +14,7 @@ import com.wilsonvillerobotics.firstteamscouter.TeamMatchData.ZONE;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ContentValues;
 import android.content.Context;
@@ -22,6 +23,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
 import android.widget.Button;
+
+import org.jumpmind.symmetric.android.SymmetricService;
 
 public class FTSUtilities {
 
@@ -144,6 +147,17 @@ public class FTSUtilities {
             return AP;
         }
 	}
+
+    public static boolean isMyServiceRunning(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (SymmetricService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public static String getTabletID(ALLIANCE_POSITION ap) {
         return ap.myAlliancePosition();

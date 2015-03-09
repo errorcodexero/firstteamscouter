@@ -2,6 +2,7 @@ package com.wilsonvillerobotics.firstteamscouter.dbAdapters;
 
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
+import android.app.ActivityManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -352,16 +353,22 @@ public class DBAdapter {
         // Notify the service of the database helper key
         intent.putExtra(SymmetricService.INTENTKEY_SQLITEOPENHELPER_REGISTRY_KEY, HELPER_KEY);
         intent.putExtra(SymmetricService.INTENTKEY_REGISTRATION_URL, "http://10.0.0.100:32665/sync/fts-master");
-        intent.putExtra(SymmetricService.INTENTKEY_EXTERNAL_ID, "001");
+        intent.putExtra(SymmetricService.INTENTKEY_EXTERNAL_ID, "Scout1");
         intent.putExtra(SymmetricService.INTENTKEY_NODE_GROUP_ID, "fts-node");
         intent.putExtra(SymmetricService.INTENTKEY_START_IN_BACKGROUND, true);
 
         // initial load existing notes from the Client to the Server
         Properties properties = new Properties();
         properties.setProperty(ParameterConstants.AUTO_RELOAD_REVERSE_ENABLED, "true");
+        properties.setProperty(ParameterConstants.SYNC_URL, "http://10.0.0.100:32665/sync/fts-master");
         intent.putExtra(SymmetricService.INTENTKEY_PROPERTIES, properties);
 
         ctx.startService(intent);
+
+        String run = (FTSUtilities.isMyServiceRunning(this.context)) ? " IS " : "IS NOT ";
+        FTSUtilities.printToConsole("SymmetricDS Service" + run + "running\n");
+
+
     }
 
     private static class DatabaseHelper extends SQLiteOpenHelper 
@@ -498,7 +505,10 @@ public class DBAdapter {
      */
     public void close() 
     {
-        this.DBHelper.close();
+        if(this.db != null && this.db.isOpen()) {
+            this.DBHelper.close();
+        }
+        this.db = null;
     }
 
     public void deleteTableData() {

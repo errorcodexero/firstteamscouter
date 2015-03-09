@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.jumpmind.symmetric.android.SymmetricService;
+
 public class MainActivity extends Activity {
 
 	private Button btnViewTeamData;
@@ -127,6 +129,13 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
     	FTSUtilities.printToConsole("Destroying MainActivity");
+
+        if(FTSUtilities.isMyServiceRunning(this.getApplicationContext())) {
+            FTSUtilities.printToConsole("Stopping SymmetricDS Service");
+            stopService(new Intent(this.getApplicationContext(), SymmetricService.class));
+        } else {
+            FTSUtilities.printToConsole("SymmetricDS Service was NOT running");
+        }
     	mDBAdapter.close();
         super.onDestroy();
     }

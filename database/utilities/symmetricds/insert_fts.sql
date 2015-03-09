@@ -118,55 +118,55 @@ values('all_data_2_master','fts_node_2_master', 200, current_timestamp, current_
 
 -- NODES --
 insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('000','fts-master','master',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('master','fts-master','master',1,null,null,null,null,null,current_timestamp,null,0,0,'master');
 insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('001','fts-node','Scout1',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('Scout1','fts-node','Scout1',1,null,null,null,null,null,current_timestamp,null,0,0,'master');
 insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('002','fts-node','Scout2',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('Scout2','fts-node','Scout2',1,null,null,null,null,null,current_timestamp,null,0,0,'master');
  insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('003','fts-node','Scout3',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('Scout3','fts-node','Scout3',1,null,null,null,null,null,current_timestamp,null,0,0,'master');
  insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('004','fts-node','Scout4',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('Scout4','fts-node','Scout4',1,null,null,null,null,null,current_timestamp,null,0,0,'master');
  insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('005','fts-node','Scout5',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('Scout5','fts-node','Scout5',1,null,null,null,null,null,current_timestamp,null,0,0,'master');
  insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('006','fts-node','Scout6',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('Scout6','fts-node','Scout6',1,null,null,null,null,null,current_timestamp,null,0,0,'master');
  insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('007','fts-node','Scout7',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('Scout7','fts-node','Scout7',1,null,null,null,null,null,current_timestamp,null,0,0,'master');
  insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('008','fts-node','Scout8',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('Scout8','fts-node','Scout8',1,null,null,null,null,null,current_timestamp,null,0,0,'master');
  insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('009','fts-node','Scout9',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('Scout9','fts-node','Scout9',1,null,null,null,null,null,current_timestamp,null,0,0,'master');
  insert into sym_node (node_id,node_group_id,external_id,sync_enabled,sync_url,schema_version,symmetric_version,database_type,database_version,heartbeat_time,timezone_offset,batch_to_send_count,batch_in_error_count,created_at_node_id) 
- values ('010','fts-node','Scout10',1,null,null,null,null,null,current_timestamp,null,0,0,'000');
+ values ('Scout10','fts-node','Scout10',1,null,null,null,null,null,current_timestamp,null,0,0,'master');
 
 
  
 -- PASSWORDS --
 insert into sym_node_security (node_id,node_password,registration_enabled,registration_time,initial_load_enabled,initial_load_time,created_at_node_id) 
- values ('000','5d1c92bbacbe2edb9e1ca5dbb0e481',0,current_timestamp,0,current_timestamp,'000');
+ values ('master','5d1c92bbacbe2edb9e1ca5dbb0e481',0,current_timestamp,0,current_timestamp,'master');
 insert into sym_node_security (node_id,node_password,registration_enabled,registration_time,initial_load_enabled,initial_load_time,created_at_node_id) 
- values ('001','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'000');
+ values ('Scout1','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'master');
 insert into sym_node_security (node_id,node_password,registration_enabled,registration_time,initial_load_enabled,initial_load_time,created_at_node_id) 
- values ('002','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'000');
+ values ('Scout2','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'master');
  insert into sym_node_security (node_id,node_password,registration_enabled,registration_time,initial_load_enabled,initial_load_time,created_at_node_id) 
- values ('003','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'000');
+ values ('Scout3','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'master');
  insert into sym_node_security (node_id,node_password,registration_enabled,registration_time,initial_load_enabled,initial_load_time,created_at_node_id) 
- values ('004','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'000');
+ values ('Scout4','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'master');
  insert into sym_node_security (node_id,node_password,registration_enabled,registration_time,initial_load_enabled,initial_load_time,created_at_node_id) 
- values ('005','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'000');
+ values ('Scout5','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'master');
  insert into sym_node_security (node_id,node_password,registration_enabled,registration_time,initial_load_enabled,initial_load_time,created_at_node_id) 
- values ('006','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'000');
+ values ('Scout6','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'master');
  insert into sym_node_security (node_id,node_password,registration_enabled,registration_time,initial_load_enabled,initial_load_time,created_at_node_id) 
- values ('007','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'000');
+ values ('Scout7','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'master');
  insert into sym_node_security (node_id,node_password,registration_enabled,registration_time,initial_load_enabled,initial_load_time,created_at_node_id) 
- values ('008','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'000');
+ values ('Scout8','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'master');
  insert into sym_node_security (node_id,node_password,registration_enabled,registration_time,initial_load_enabled,initial_load_time,created_at_node_id) 
- values ('009','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'000');
+ values ('Scout9','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'master');
  insert into sym_node_security (node_id,node_password,registration_enabled,registration_time,initial_load_enabled,initial_load_time,created_at_node_id) 
- values ('010','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'000');
+ values ('Scout10','5d1c92bbacbe2edb9e1ca5dbb0e481',1,null,1,null,'master');
 
  
  
  -- IDENTITIES --
-insert into sym_node_identity values ('000');
+insert into sym_node_identity values ('master');

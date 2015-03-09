@@ -132,7 +132,10 @@ public class TeamDataDBAdapter implements BaseColumns {
      */
     public void close() {
     	FTSUtilities.printToConsole("Closing TeamDataDBAdapter Database");
-        this.mDbHelper.close();
+        if(this.mDb != null && this.mDb.isOpen()) {
+            this.mDbHelper.close();
+        }
+        this.mDb = null;
     }
 
     public boolean dbIsClosed() {

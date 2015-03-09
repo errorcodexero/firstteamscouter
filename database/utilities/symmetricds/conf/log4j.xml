@@ -119,18 +119,14 @@
     -->
     
     <!-- Enable this to see debug messages in JMS publishing extensions -->
-    <!--
     <category name="org.jumpmind.symmetric.integrate">
         <priority value="DEBUG" />
     </category>        
-    -->
         
     <!-- Enable this to see debug messages for why SymmetricDS tables are being altered -->
-    <!--    
     <category name="org.jumpmind.db.alter">
         <priority value="DEBUG" />
     </category>        
-    -->
 
     <!-- Change the "CONSOLE" to "ROLLING" to log to a file instead -->
     <root>

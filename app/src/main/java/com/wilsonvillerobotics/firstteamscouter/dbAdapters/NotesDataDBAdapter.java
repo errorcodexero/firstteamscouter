@@ -110,7 +110,10 @@ public class NotesDataDBAdapter implements BaseColumns {
      * close return type: void
      */
     public void close() {
-        this.mDbHelper.close();
+        if(this.mDb != null && this.mDb.isOpen()) {
+            this.mDbHelper.close();
+        }
+        this.mDb = null;
     }
 
     public boolean dbIsClosed() {
