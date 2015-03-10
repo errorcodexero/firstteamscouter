@@ -28,7 +28,7 @@ public class TeamDataDBAdapter implements BaseColumns {
 
     public static final String PRIMARY_KEY = " PRIMARY KEY ( " + TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER + ", " + TeamDataDBAdapter.COLUMN_NAME_TEAM_SUB_NUMBER + " )";
 
-    public String[] allColumns = {
+    public static String[] allColumns = {
             _ID,
             COLUMN_NAME_TEAM_NUMBER,
             COLUMN_NAME_TEAM_SUB_NUMBER,

@@ -32,7 +32,7 @@ public class RobotDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_COOPERTITION = "team_does_coopertition";
     public static final String COLUMN_NAME_ROBOT_STACKS_FROM = "robot_stacks_from";
 
-    public String[] allColumns = {
+    public static String[] allColumns = {
             _ID,
             COLUMN_NAME_TEAM_ID,
             COLUMN_NAME_COMPETITION_ID,

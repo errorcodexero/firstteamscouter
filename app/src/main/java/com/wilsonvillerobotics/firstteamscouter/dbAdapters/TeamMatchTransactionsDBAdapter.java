@@ -19,7 +19,7 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_TEAM_MATCH_ID = "team_match_id";
     public static final String COLUMN_NAME_TRANSACTION_ID = "transaction_id";
 
-    private String[] allColumnNames = new String[]{
+    public static String[] allColumns = new String[]{
     		_ID,
             COLUMN_NAME_TEAM_MATCH_ID,
             COLUMN_NAME_TRANSACTION_ID
@@ -175,7 +175,7 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
      * @return Cursor over all Match Data entries
      */
     public Cursor getAllTeamMatchTransactions() {
-        return this.openForRead().mDb.query(TABLE_NAME, this.allColumnNames, null, null, null, null, _ID);
+        return this.openForRead().mDb.query(TABLE_NAME, this.allColumns, null, null, null, null, _ID);
     }
 
     /**
@@ -188,7 +188,7 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
         Cursor mCursor = null;
         Long transactionId = -1l;
         try {
-            mCursor = this.openForRead().mDb.query(true, TABLE_NAME, this.allColumnNames,
+            mCursor = this.openForRead().mDb.query(true, TABLE_NAME, this.allColumns,
                     _ID + "=" + rowId, null, null, null, null, null);
             mCursor.moveToFirst();
             transactionId = mCursor.getLong(mCursor.getColumnIndex(COLUMN_NAME_TRANSACTION_ID));
@@ -213,7 +213,7 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
         Cursor mCursor = null;
         ArrayList<Long> transactionIds = new ArrayList<Long>();
         try {
-            mCursor = this.openForRead().mDb.query(TABLE_NAME, this.allColumnNames, selection, null, null, null, _ID);
+            mCursor = this.openForRead().mDb.query(TABLE_NAME, this.allColumns, selection, null, null, null, _ID);
             while(mCursor.moveToNext()) {
                 transactionIds.add(mCursor.getLong(mCursor.getColumnIndex(COLUMN_NAME_TRANSACTION_ID)));
             }
@@ -238,9 +238,9 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
         String selection = _ID + "=" + String.valueOf(teamMatchID);
         Cursor mCursor = null;
         try {
-            //mCursor = this.mDb.query(TABLE_NAME, this.allColumnNames, selection, null, null, null, _ID);
+            //mCursor = this.mDb.query(TABLE_NAME, this.allColumns, selection, null, null, null, _ID);
             //mCursor.moveToFirst();
-            String SELECT_QUERY = "SELECT DISTINCT t2." + TeamMatchTransactionDataDBAdapter.allColumnNames;
+            String SELECT_QUERY = "SELECT DISTINCT t2." + TeamMatchTransactionDataDBAdapter.allColumns;
             SELECT_QUERY += " FROM " + TeamMatchTransactionsDBAdapter.TABLE_NAME + " AS t1";
             SELECT_QUERY += " INNER JOIN " + TeamMatchTransactionDataDBAdapter.TABLE_NAME + " AS t2";
             SELECT_QUERY += " ON t1." + TeamMatchTransactionsDBAdapter.COLUMN_NAME_TRANSACTION_ID + " = t2." + TeamMatchTransactionDataDBAdapter._ID;

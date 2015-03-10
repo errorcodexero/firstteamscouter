@@ -77,7 +77,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_TEAM_MATCH_NOTES = "team_match_notes";
 
 
-    private String[] allColumnNames = new String[]{
+    public static String[] allColumns = new String[]{
     		_ID,
     	    COLUMN_NAME_TEAM_ID,
     	    COLUMN_NAME_MATCH_ID,
@@ -363,7 +363,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
      */
     public Cursor getTeamMatchesWithDataToExport() {
         String WHERE = TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
-        return this.openForRead().mDb.query(TABLE_NAME, this.allColumnNames, WHERE, null, null, null, null);
+        return this.openForRead().mDb.query(TABLE_NAME, this.allColumns, WHERE, null, null, null, null);
     }
 
     /**
@@ -434,7 +434,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
     public Cursor getMatchesForTeam(long teamID, long competition_id) {
     	String WHERE = COLUMN_NAME_TEAM_ID + "=" + String.valueOf(teamID);
         WHERE += COLUMN_NAME_COMPETITION_ID + "=" + String.valueOf(competition_id);
-    	Cursor mCursor = this.openForRead().mDb.query(TABLE_NAME, this.allColumnNames, WHERE, null, null, null, COLUMN_NAME_MATCH_ID);
+    	Cursor mCursor = this.openForRead().mDb.query(TABLE_NAME, this.allColumns, WHERE, null, null, null, COLUMN_NAME_MATCH_ID);
     	if(mCursor != null) {
     		mCursor.moveToFirst();
     	}
@@ -449,7 +449,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
      */
     public Cursor getTeamMatch(long rowId) throws SQLException {
 
-        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, this.allColumnNames,
+        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, this.allColumns,
         		_ID + "=" + rowId, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -466,7 +466,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
 
     	String WHERE = TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID + "=" + matchID;
     	WHERE += " AND " + TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID + "=" + teamID;
-        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, this.allColumnNames, WHERE, null, null, null, null, null);
+        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, this.allColumns, WHERE, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
@@ -483,7 +483,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
      */
     public Cursor getTeamMatch(int tmID) throws SQLException {
 
-        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, this.allColumnNames,
+        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, this.allColumns,
         		_ID + "=" + tmID, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();

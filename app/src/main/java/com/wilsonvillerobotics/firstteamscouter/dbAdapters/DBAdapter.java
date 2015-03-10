@@ -2,6 +2,7 @@ package com.wilsonvillerobotics.firstteamscouter.dbAdapters;
 
 import com.wilsonvillerobotics.firstteamscouter.utilities.DataXmlExporter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
+import com.wilsonvillerobotics.firstteamscouter.utilities.MySQLXmlExportParser;
 
 import android.app.ActivityManager;
 import android.content.ContentValues;
@@ -16,6 +17,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 //import org.jumpmind.symmetric.android.SymmetricService;
 //import org.jumpmind.symmetric.common.ParameterConstants;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,23 +44,26 @@ public class DBAdapter {
     private static final String COMMA_SEP = ",";
 
     public static enum TABLE_NAMES {
-    	COMPETITION_DATA(0, CompetitionDataDBAdapter.class.getCanonicalName()),
-    	MATCH_DATA(1, MatchDataDBAdapter.class.getCanonicalName()),
-    	NOTES_DATA(2, NotesDataDBAdapter.class.getCanonicalName()),
-    	PICTURE_DATA(3, PictureDataDBAdapter.class.getCanonicalName()),
-    	PIT_DATA(4, PitDataDBAdapter.class.getCanonicalName()),
-    	ROBOT_DATA(5, RobotDataDBAdapter.class.getCanonicalName()),
-    	TEAM_DATA(6, TeamDataDBAdapter.class.getCanonicalName()),
-    	TEAM_MATCH_DATA(7, TeamMatchDBAdapter.class.getCanonicalName()),
-        TEAM_MATCH_TRANSACTION_DATA(8, TeamMatchTransactionDataDBAdapter.class.getCanonicalName()),
-        TEAM_MATCH_TRANSACTIONS(9, TeamMatchTransactionsDBAdapter.class.getCanonicalName());
+    	COMPETITION_DATA(0, CompetitionDataDBAdapter.TABLE_NAME, CompetitionDataDBAdapter.class.getCanonicalName()),
+    	MATCH_DATA(1, MatchDataDBAdapter.TABLE_NAME, MatchDataDBAdapter.class.getCanonicalName()),
+    	NOTES_DATA(2, NotesDataDBAdapter.TABLE_NAME, NotesDataDBAdapter.class.getCanonicalName()),
+    	PICTURE_DATA(3,PictureDataDBAdapter.TABLE_NAME, PictureDataDBAdapter.class.getCanonicalName()),
+    	PIT_DATA(4, PitDataDBAdapter.TABLE_NAME, PitDataDBAdapter.class.getCanonicalName()),
+    	ROBOT_DATA(5, RobotDataDBAdapter.TABLE_NAME, RobotDataDBAdapter.class.getCanonicalName()),
+    	TEAM_DATA(6, TeamDataDBAdapter.TABLE_NAME, TeamDataDBAdapter.class.getCanonicalName()),
+    	TEAM_MATCH_DATA(7, TeamMatchDBAdapter.TABLE_NAME, TeamMatchDBAdapter.class.getCanonicalName()),
+        TEAM_MATCH_TRANSACTION_DATA(8, TeamMatchTransactionDataDBAdapter.TABLE_NAME, TeamMatchTransactionDataDBAdapter.class.getCanonicalName()),
+        TEAM_MATCH_TRANSACTIONS(9, TeamMatchTransactionsDBAdapter.TABLE_NAME, TeamMatchTransactionsDBAdapter.class.getCanonicalName());
     	
     	private int index;
         private String className;
-    	private TABLE_NAMES(int i, String aClass) {
+        private String tableName;
+    	private TABLE_NAMES(int i, String tName, String aClass) {
     		index = i;
+            tableName = tName;
             className = aClass;
     	}
+
     	public int getIndex() {
     		return index;
     	}
@@ -72,7 +77,92 @@ public class DBAdapter {
             }
             return c;
         }
-    };
+
+        public String getTableName() {
+            return this.tableName;
+        }
+
+        public static TABLE_NAMES getTableByTableName(String tableName) {
+            for(TABLE_NAMES tn : TABLE_NAMES.values()) {
+                if(tn.getTableName().matches(tableName)) return tn;
+            }
+            return null;
+        }
+    }
+
+    public static String getFirstColumnName(TABLE_NAMES tName) {
+        String col = "";
+        switch (tName) {
+            case COMPETITION_DATA:
+                col = CompetitionDataDBAdapter.allColumns[0];
+                break;
+            case MATCH_DATA:
+                col = MatchDataDBAdapter.allColumns[0];
+                break;
+            case NOTES_DATA:
+                col = NotesDataDBAdapter.allColumns[0];
+                break;
+            case PICTURE_DATA:
+                col = PictureDataDBAdapter.allColumns[0];
+                break;
+            case PIT_DATA:
+                col = PitDataDBAdapter.allColumns[0];
+                break;
+            case ROBOT_DATA:
+                col = RobotDataDBAdapter.allColumns[0];
+                break;
+            case TEAM_DATA:
+                col = TeamDataDBAdapter.allColumns[0];
+                break;
+            case TEAM_MATCH_DATA:
+                col = TeamMatchDBAdapter.allColumns[0];
+                break;
+            case TEAM_MATCH_TRANSACTION_DATA:
+                col = TeamMatchTransactionDataDBAdapter.allColumns[0];
+                break;
+            case TEAM_MATCH_TRANSACTIONS:
+                col = TeamMatchTransactionsDBAdapter.allColumns[0];
+                break;
+        }
+        return col;
+    }
+
+    public static String getLastColumnName(TABLE_NAMES tName) {
+        String col = "";
+        switch (tName) {
+            case COMPETITION_DATA:
+                col = CompetitionDataDBAdapter.allColumns[CompetitionDataDBAdapter.allColumns.length - 1];
+                break;
+            case MATCH_DATA:
+                col = MatchDataDBAdapter.allColumns[MatchDataDBAdapter.allColumns.length - 1];
+                break;
+            case NOTES_DATA:
+                col = NotesDataDBAdapter.allColumns[NotesDataDBAdapter.allColumns.length - 1];
+                break;
+            case PICTURE_DATA:
+                col = PictureDataDBAdapter.allColumns[PictureDataDBAdapter.allColumns.length - 1];
+                break;
+            case PIT_DATA:
+                col = PitDataDBAdapter.allColumns[PitDataDBAdapter.allColumns.length - 1];
+                break;
+            case ROBOT_DATA:
+                col = RobotDataDBAdapter.allColumns[RobotDataDBAdapter.allColumns.length - 1];
+                break;
+            case TEAM_DATA:
+                col = TeamDataDBAdapter.allColumns[TeamDataDBAdapter.allColumns.length - 1];
+                break;
+            case TEAM_MATCH_DATA:
+                col = TeamMatchDBAdapter.allColumns[TeamMatchDBAdapter.allColumns.length - 1];
+                break;
+            case TEAM_MATCH_TRANSACTION_DATA:
+                col = TeamMatchTransactionDataDBAdapter.allColumns[TeamMatchTransactionDataDBAdapter.allColumns.length - 1];
+                break;
+            case TEAM_MATCH_TRANSACTIONS:
+                col = TeamMatchTransactionsDBAdapter.allColumns[TeamMatchTransactionsDBAdapter.allColumns.length - 1];
+                break;
+        }
+        return col;
+    }
 
     private static final String[][] TABLE_LIST = {
     	{
@@ -536,18 +626,32 @@ public class DBAdapter {
         }
     }
 
-    public String exportDatabase() {
-        boolean exported = false;
-        final String exportFileNamePrefix = "fts_data_export" + "_" + String.valueOf(System.nanoTime());
+    public int exportDatabase() {
+        int exportCount = 0;
+        final String exportFileNamePrefix = "ftsDataExport";
+        final String exportTimestamp = String.valueOf(System.nanoTime());
         try {
             this.openForRead();
             DataXmlExporter dataXmlExporter = new DataXmlExporter(this.db);
-            exported = dataXmlExporter.export(DATABASE_NAME, exportFileNamePrefix);
+            exportCount = dataXmlExporter.export(DATABASE_NAME, exportFileNamePrefix, exportTimestamp);
         } catch (Exception e) {
             e.printStackTrace();
         }
         if(this.db.isOpen()) this.db.close();
-        if(exported) return exportFileNamePrefix + ".xml";
-        return null;
+        return exportCount;
+    }
+
+    public String getInsertStatementFromXmlTable(File xmlFile, String tableName, String firstColumn, String lastColumn) {
+        String insertStatement = "";
+
+        MySQLXmlExportParser parser = null;
+        try {
+            parser = new MySQLXmlExportParser(xmlFile.getCanonicalPath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        insertStatement = parser.parseXML(this.context, tableName, firstColumn, lastColumn);
+        return insertStatement;
     }
 }

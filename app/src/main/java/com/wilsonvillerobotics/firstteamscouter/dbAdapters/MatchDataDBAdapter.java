@@ -29,7 +29,7 @@ public class MatchDataDBAdapter implements BaseColumns {
     
     public static final String COLUMN_NAME_MATCH_DATA_UPDATED	= "match_data_updated";
 
-    public String[] allColumns = {
+    public static String[] allColumns = {
             _ID,
             COLUMN_NAME_COMPETITION_ID,
             COLUMN_NAME_MATCH_TIME,

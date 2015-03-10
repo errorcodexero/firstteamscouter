@@ -53,15 +53,34 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/white" />
 
-        <Button
-            android:id="@+id/btnImportMatchData"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="75dp"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:text="@string/label_import_data"
-            android:textSize="20sp"
-            android:background="@drawable/custom_btn_shakespeare" />
+            android:gravity="center_vertical|center_horizontal">
+
+            <Button
+                android:id="@+id/btnImportFromXml"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="@string/label_import_from_xml"
+                android:textSize="20sp"
+                android:background="@drawable/custom_btn_shakespeare"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp" />
+
+            <Button
+                android:id="@+id/btnImportMatchData"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/label_import_data"
+                android:textSize="20sp"
+                android:background="@drawable/custom_btn_shakespeare"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp" />
+        </LinearLayout>
 
     </LinearLayout>
 

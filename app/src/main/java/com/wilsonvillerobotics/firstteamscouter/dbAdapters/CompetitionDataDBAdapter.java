@@ -26,7 +26,7 @@ public class CompetitionDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_COMPETITION_NAME = "competition_name";
     public static final String COLUMN_NAME_COMPETITION_LOCATION = "competition_location";
 
-    public String[] allColumns = {
+    public static String[] allColumns = {
     		_ID,
     		COLUMN_NAME_COMPETITION_NAME,
     		COLUMN_NAME_COMPETITION_LOCATION

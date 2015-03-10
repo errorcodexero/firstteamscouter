@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.channels.FileChannel;
@@ -14,6 +15,7 @@ import com.wilsonvillerobotics.firstteamscouter.dbAdapters.RobotDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
+import com.wilsonvillerobotics.firstteamscouter.utilities.MySQLXmlExportParser;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -39,9 +41,7 @@ public class DataImportActivity extends Activity {
 	private TeamDataDBAdapter teamDataDBAdapter;
     private RobotDataDBAdapter robotDataDBAdapter;
 
-	private Button btnOK;
-    private Button btnDisplayMetrics;
-	private TextView txtStatus;
+    private TextView txtStatus;
 	private TextView txtTestDataAlert;
 	protected ProgressBar mProgressBar;
 	protected String tabletID;
@@ -136,7 +136,7 @@ public class DataImportActivity extends Activity {
 	    
 	    mProgressBar = (ProgressBar)findViewById(R.id.progressBar1);
 
-        btnDisplayMetrics = (Button) findViewById(R.id.btnDisplayMetrics);
+        Button btnDisplayMetrics = (Button) findViewById(R.id.btnDisplayMetrics);
         btnDisplayMetrics.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,59 +144,96 @@ public class DataImportActivity extends Activity {
             }
         });
 
-		btnOK = (Button) findViewById(R.id.btnImportMatchData);
-		btnOK.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				String importStatusMessage = "";
-				try {
-					if(FTSUtilities.POPULATE_TEST_DATA) {
-                        dbAdapter.deleteTableData();
-						teamMatchDBAdapter.populateTestData(competition_id, matchDataDBAdapter.populateTestData(numTestMatches), teamDataDBAdapter.populateTestData());
-						importStatusMessage = "Test data import complete";
-					} else {
-					    String storageState = Environment.getExternalStorageState();
-					    if (storageState.equals(Environment.MEDIA_MOUNTED)) {
-					    	FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : getting file\n");
-					        File file = new File(getExternalFilesDir(null), "match_list_data.csv");
-					        FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : file " + ((file.exists()) ? "EXISTS" : "IS MISSING") + "\n");
+        Button btnImportFromXml = (Button) findViewById(R.id.btnImportFromXml);
+        btnImportFromXml.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FTSUtilities.printToConsole("ImportMatchDataActivity::btnImportFromXml.onClick");
+                txtStatus.setText("Importing from XML");
 
-					        if(file.exists() && file.isFile()) {
-					        	txtStatus.setText("File Found, Import Commencing\n");
+                String filePrefix = "ftsDataExport";
+                File externalFilesDir = new File(Environment.getExternalStorageDirectory(), "files");
+
+                if (!externalFilesDir.exists()) {
+                    externalFilesDir.mkdirs();
+                }
+
+                File[] xmlFileList = externalFilesDir.listFiles(new XmlDataFilenameFilter(filePrefix, ".xml"));
+
+                // Expected file name pattern: ftsDataExport-table-timestamp.xml
+                String storageState = Environment.getExternalStorageState();
+                if (storageState.equals(Environment.MEDIA_MOUNTED)) {
+                    for (File f : xmlFileList) {
+                        if (f.exists() && f.isFile()) {
+                            String parts[] = f.getName().split("-");
+                            String tableName = (parts.length > 2) ? parts[1] : "UNKNOWN-TABLE";
+
+                            txtStatus.setText("File Found for table " + tableName + ", Import Commencing\n");
+                            DBAdapter.TABLE_NAMES table = DBAdapter.TABLE_NAMES.getTableByTableName(tableName);
+                            String firstColumn = DBAdapter.getFirstColumnName(table);
+                            String lastColumn = DBAdapter.getLastColumnName(table);
+                            String insertStatement = dbAdapter.getInsertStatementFromXmlTable(f, tableName, firstColumn, lastColumn);
+                            txtStatus.setText(insertStatement);
+                            //dbAdapter.getInsertStatementFromXmlTable();
+                        }
+                    }
+                }
+            }
+        });
+
+        Button btnOK = (Button) findViewById(R.id.btnImportMatchData);
+		btnOK.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                String importStatusMessage = "";
+                try {
+                    if (FTSUtilities.POPULATE_TEST_DATA) {
+                        dbAdapter.deleteTableData();
+                        teamMatchDBAdapter.populateTestData(competition_id, matchDataDBAdapter.populateTestData(numTestMatches), teamDataDBAdapter.populateTestData());
+                        importStatusMessage = "Test data import complete";
+                    } else {
+                        String storageState = Environment.getExternalStorageState();
+                        if (storageState.equals(Environment.MEDIA_MOUNTED)) {
+                            FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : getting file\n");
+                            File file = new File(getExternalFilesDir(null), "match_list_data.csv");
+                            FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : file " + ((file.exists()) ? "EXISTS" : "IS MISSING") + "\n");
+
+                            if (file.exists() && file.isFile()) {
+                                txtStatus.setText("File Found, Import Commencing\n");
                                 //teamDataDBAdapter.deleteAllData();
                                 //matchDataDBAdapter.deleteAllData();
                                 //teamMatchDBAdapter.deleteAllData();
                                 //robotDataDBAdapter.getAllRobotDataEntries();
 
-						        BufferedReader inputReader = new BufferedReader(
-						                new InputStreamReader(new FileInputStream(file)));
-						        String line;
-						        int lineCount = 0;
-						        int matchCount = 0;
-						        int teamCount = 0;
-						        String lineArray[];
-						        inputReader.mark((int)file.length());
-						        line = inputReader.readLine();
-						        lineArray = line.split(",");
-						        //String headerArray[] = {"CompetitionID", "Time", "Type", "#", FTSUtilities.alliancePositions[0], FTSUtilities.alliancePositions[1], FTSUtilities.alliancePositions[2],
-						        //		FTSUtilities.alliancePositions[3], FTSUtilities.alliancePositions[4], FTSUtilities.alliancePositions[5]};
+                                BufferedReader inputReader = new BufferedReader(
+                                        new InputStreamReader(new FileInputStream(file)));
+                                String line;
+                                int lineCount = 0;
+                                int matchCount = 0;
+                                int teamCount = 0;
+                                String lineArray[];
+                                inputReader.mark((int) file.length());
+                                line = inputReader.readLine();
+                                lineArray = line.split(",");
+                                //String headerArray[] = {"CompetitionID", "Time", "Type", "#", FTSUtilities.alliancePositions[0], FTSUtilities.alliancePositions[1], FTSUtilities.alliancePositions[2],
+                                //		FTSUtilities.alliancePositions[3], FTSUtilities.alliancePositions[4], FTSUtilities.alliancePositions[5]};
 
-						        if(lineArray[2].startsWith("Type")) {
-						        	FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : Header Row Detected");
-						        } else {
-						        	FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : NO Header Row Detected");
-						        	inputReader.reset();
-						        }
+                                if (lineArray[2].startsWith("Type")) {
+                                    FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : Header Row Detected");
+                                } else {
+                                    FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : NO Header Row Detected");
+                                    inputReader.reset();
+                                }
 
-						        while((line = inputReader.readLine()) != null) {
-						        	lineCount += 1;
-						        	lineArray = line.split(",");
+                                while ((line = inputReader.readLine()) != null) {
+                                    lineCount += 1;
+                                    lineArray = line.split(",");
 
-						        	if(lineArray.length > 8) {
-						        		//FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : " + lineArray[0] + ":" + lineArray[1] + ":" + lineArray[2] + ":" + lineArray[3] + ":" + lineArray[4] + ":" + lineArray[5] + ":" + lineArray[6] + ":" + lineArray[7]);
-						        		//CompetitionID : Time : Type : MatchNum : Red1 : Red2 : Red3 : Blue1 : Blue2 : Blue3
-						        		long teamIDs[] = {-1, -1, -1, -1, -1, -1};
+                                    if (lineArray.length > 8) {
+                                        //FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : " + lineArray[0] + ":" + lineArray[1] + ":" + lineArray[2] + ":" + lineArray[3] + ":" + lineArray[4] + ":" + lineArray[5] + ":" + lineArray[6] + ":" + lineArray[7]);
+                                        //CompetitionID : Time : Type : MatchNum : Red1 : Red2 : Red3 : Blue1 : Blue2 : Blue3
+                                        long teamIDs[] = {-1, -1, -1, -1, -1, -1};
                                         try {
                                             teamDataDBAdapter.openForWrite();
                                             for (int i = 0; i < 6; i++) {
@@ -205,24 +242,26 @@ public class DataImportActivity extends Activity {
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         } finally {
-                                            if(teamDataDBAdapter != null && !teamDataDBAdapter.dbIsClosed()) teamDataDBAdapter.close();
+                                            if (teamDataDBAdapter != null && !teamDataDBAdapter.dbIsClosed())
+                                                teamDataDBAdapter.close();
                                         }
 
                                         long matchID;
                                         try {
                                             long compID = Long.parseLong(lineArray[0]);
                                             matchID = matchDataDBAdapter.createMatchData(compID, lineArray[1], lineArray[2], lineArray[3], teamIDs[0], teamIDs[1], teamIDs[2], teamIDs[3], teamIDs[4], teamIDs[5]);
-                                            if(matchID >= 0) {
+                                            if (matchID >= 0) {
                                                 matchCount += 1;
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                             matchID = -1;
                                         } finally {
-                                            if(matchDataDBAdapter != null && !matchDataDBAdapter.dbIsClosed()) matchDataDBAdapter.close();
+                                            if (matchDataDBAdapter != null && !matchDataDBAdapter.dbIsClosed())
+                                                matchDataDBAdapter.close();
                                         }
 
-						        		long teamMatchID;
+                                        long teamMatchID;
                                         try {
                                             for (int i = 0; i < FTSUtilities.ALLIANCE_POSITION.NOT_SET.allianceIndex(); i++) {
                                                 teamMatchID = teamMatchDBAdapter.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForIndex(i) /*.alliancePositions[i]*/, teamIDs[i], matchID);
@@ -234,32 +273,32 @@ public class DataImportActivity extends Activity {
                                             e.printStackTrace();
                                             matchID = -1;
                                         } finally {
-                                            if(teamMatchDBAdapter != null && !teamMatchDBAdapter.dbIsClosed()) teamMatchDBAdapter.close();
+                                            if (teamMatchDBAdapter != null && !teamMatchDBAdapter.dbIsClosed())
+                                                teamMatchDBAdapter.close();
                                         }
-						        	} else {
-						        		FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : line not in proper format: " + line);
-						        	}
-						        }
-						        inputReader.close();
+                                    } else {
+                                        FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : line not in proper format: " + line);
+                                    }
+                                }
+                                inputReader.close();
 
-						        importStatusMessage = txtStatus.getText() + "\nLines Parsed: " + lineCount + "\nMatches Created: " + matchCount + "\nTeamMatch Records Created: " + teamCount;
-					        } else {
-					        	importStatusMessage = "ERROR: could not find file:\n" + file.toString();
-					        }
+                                importStatusMessage = txtStatus.getText() + "\nLines Parsed: " + lineCount + "\nMatches Created: " + matchCount + "\nTeamMatch Records Created: " + teamCount;
+                            } else {
+                                importStatusMessage = "ERROR: could not find file:\n" + file.toString();
+                            }
 
 
-
-					        file.renameTo(new File(file.getAbsolutePath() + ".bak"));
-					    }
-					}
-				} catch (Exception e) {
-					FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : ERROR");
-					importStatusMessage = "ERROR importing data";
-				    e.printStackTrace();
-				}
-				txtStatus.setText(importStatusMessage);
-			}
-		});
+                            file.renameTo(new File(file.getAbsolutePath() + ".bak"));
+                        }
+                    }
+                } catch (Exception e) {
+                    FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : ERROR");
+                    importStatusMessage = "ERROR importing data";
+                    e.printStackTrace();
+                }
+                txtStatus.setText(importStatusMessage);
+            }
+        });
 	}
 	
 	@Override
@@ -397,5 +436,25 @@ public class DataImportActivity extends Activity {
         msg += "X-DPI: " + metrics.xdpi + "Y-DPI: " + metrics.ydpi + "\n";
         msg += "Density: " + metrics.density;
         Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
+    }
+
+    public class XmlDataFilenameFilter implements FilenameFilter {
+        String filePrefix;
+        String ext;
+
+        public XmlDataFilenameFilter(String filePrefix, String ext) {
+            this.filePrefix = filePrefix;
+            this.ext = ext;
+
+        }
+
+        @SuppressLint("DefaultLocale")
+        @Override
+        public boolean accept(File dir, String filename) {
+            //If you want to perform a case-insensitive search
+            boolean matches = filename.toLowerCase().startsWith(filePrefix.toLowerCase());
+            matches &= filename.toLowerCase().endsWith(ext.toLowerCase());
+            return matches;
+        }
     }
 }

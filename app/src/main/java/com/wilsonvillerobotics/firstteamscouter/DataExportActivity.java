@@ -133,12 +133,8 @@ public class DataExportActivity extends Activity {
     }
 
     private void exportAllDataToXml() {
-        String filename = dbAdapter.exportDatabase();
-        if(filename != null) {
-            updateStatus("File exported: " + filename);
-        } else {
-            updateStatus("NO File exported");
-        }
+        int fileCount = dbAdapter.exportDatabase();
+        updateStatus("Files exported: " + String.valueOf(fileCount));
     }
 
     private void exportMatchData() {

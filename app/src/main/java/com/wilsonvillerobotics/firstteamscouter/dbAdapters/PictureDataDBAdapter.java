@@ -16,7 +16,7 @@ public class PictureDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_PICTURE_TYPE = "picture_type"; // robot, team, pit, etc.
     public static final String COLUMN_NAME_PICTURE_URI = "picture_uri";
 
-    public String[] allColumns = {
+    public static String[] allColumns = {
             _ID,
             COLUMN_NAME_OWNER_ID,
             COLUMN_NAME_PICTURE_TYPE,

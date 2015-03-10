@@ -32,7 +32,7 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_ELEMENT_STATES = "element_states";
     public static final String COLUMN_NAME_TRANSACTION_READY_TO_EXPORT = "transaction_ready_to_export";
 
-    public static String[] allColumnNames = new String[]{
+    public static String[] allColumns = new String[]{
     		_ID,
     	    COLUMN_NAME_TEAM_ID,
     	    COLUMN_NAME_MATCH_ID,
@@ -214,7 +214,7 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
     public Cursor getTransaction(long rowId) throws SQLException {
         Cursor mCursor = null;
         try {
-            mCursor = this.openForRead().mDb.query(true, TABLE_NAME, this.allColumnNames,
+            mCursor = this.openForRead().mDb.query(true, TABLE_NAME, this.allColumns,
                     _ID + "=" + rowId, null, null, null, null, null);
             mCursor.moveToFirst();
         }
@@ -235,7 +235,7 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
         Cursor mCursor = null;
         ArrayList<Long> transactionIDs = new ArrayList<Long>();
         try {
-            mCursor = this.openForRead().mDb.query(true, TABLE_NAME, this.allColumnNames, WHERE, null, null, null, null, _ID);
+            mCursor = this.openForRead().mDb.query(true, TABLE_NAME, this.allColumns, WHERE, null, null, null, null, _ID);
             while(mCursor.moveToNext()) {
                 transactionIDs.add(mCursor.getLong(mCursor.getColumnIndex(_ID)));
             }

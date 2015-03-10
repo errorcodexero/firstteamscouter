@@ -14,7 +14,7 @@ public class PitDataDBAdapter implements BaseColumns {
     // Columns
     public static final String COLUMN_NAME_PIT_INFO = "pit_info";
 
-    public String[] allColumns = {
+    public static String[] allColumns = {
             _ID,
             COLUMN_NAME_PIT_INFO
     };

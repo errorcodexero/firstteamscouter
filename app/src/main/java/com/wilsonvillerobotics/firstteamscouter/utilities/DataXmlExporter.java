@@ -55,11 +55,11 @@ public class DataXmlExporter {
         this.db = db;
     }
 
-    public boolean export(final String dbName, final String exportFileNamePrefix) throws IOException {
-        Log.i(LOG_TAG, "exporting database - " + dbName + " exportFileNamePrefix=" + exportFileNamePrefix);
+    public int export(final String dbName, final String exportFileNamePrefix, final String timestamp) throws IOException {
+        Log.i(LOG_TAG, "exporting database - " + dbName + " exportFileNamePrefix=" + exportFileNamePrefix + "  timestamp=" + timestamp);
 
-        xmlBuilder = new XmlBuilder();
-        xmlBuilder.start(dbName);
+        //xmlBuilder = new XmlBuilder();
+        //xmlBuilder.start(dbName);
 
         // get the tables
         //String sql = "select * from sqlite_master";
@@ -76,32 +76,29 @@ public class DataXmlExporter {
                 }
             } while (c.moveToNext());
         }*/
-        String table_names[] = {
-                CompetitionDataDBAdapter.TABLE_NAME,
-                MatchDataDBAdapter.TABLE_NAME,
-                NotesDataDBAdapter.TABLE_NAME,
-                PictureDataDBAdapter.TABLE_NAME,
-                PitDataDBAdapter.TABLE_NAME,
-                RobotDataDBAdapter.TABLE_NAME,
-                TeamDataDBAdapter.TABLE_NAME,
-                TeamMatchDBAdapter.TABLE_NAME,
-                TeamMatchTransactionDataDBAdapter.TABLE_NAME,
-                TeamMatchTransactionsDBAdapter.TABLE_NAME
-        };
 
-        for(String tableName : table_names) {
+        int exportCount = 0;
+        for(DBAdapter.TABLE_NAMES tn : DBAdapter.TABLE_NAMES.values()) {
+            xmlBuilder = new XmlBuilder();
+            xmlBuilder.start(dbName);
+            String tableName = tn.getTableName();
+
             try {
-                exportTable(tableName);
+                exportTable(tn.getTableName());
             } catch(Exception e) {
                 e.printStackTrace();
             }
+            String xmlString = xmlBuilder.end();
+            String xmlFileName = exportFileNamePrefix + "-" + tableName + "-" + timestamp + ".xml";
+            if(writeToFile(xmlString, xmlFileName)) exportCount++;
+            Log.i(LOG_TAG, "exporting table complete: " + tableName);
         }
-        String xmlString = xmlBuilder.end();
+        //String xmlString = xmlBuilder.end();
         //if(!c.isClosed()) c.close();
-        String xmlFileName = exportFileNamePrefix + ".xml";
-        boolean exported = writeToFile(xmlString, xmlFileName);
+        //String xmlFileName = exportFileNamePrefix + ".xml";
+        //boolean exported = writeToFile(xmlString, xmlFileName);
         Log.i(LOG_TAG, "exporting database complete");
-        return exported;
+        return exportCount;
     }
 
     private void exportTable(final String tableName) throws IOException {
@@ -168,6 +165,9 @@ public class DataXmlExporter {
      */
     static class XmlBuilder {
         private static final String OPEN_XML_STANZA = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
+        private static final String OPEN = "<";
+        private static final String CLOSE = ">";
+        private static final String CLOSE_START = "</";
         private static final String CLOSE_WITH_TICK = "'>";
         private static final String DB_OPEN = "<database name='";
         private static final String DB_CLOSE = "</database>";
@@ -211,7 +211,7 @@ public class DataXmlExporter {
         }
 
         void addColumn(final String name, final String val) throws IOException {
-            sb.append(XmlBuilder.COL_OPEN + name + XmlBuilder.CLOSE_WITH_TICK + val + XmlBuilder.COL_CLOSE);
+            sb.append(XmlBuilder.OPEN + name + XmlBuilder.CLOSE + val + XmlBuilder.CLOSE_START + name + XmlBuilder.CLOSE);
         }
     }
 
