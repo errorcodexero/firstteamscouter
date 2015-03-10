@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.DBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.MatchDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.RobotDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
@@ -35,7 +36,7 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class MatchDataExportActivity extends Activity {
+public class DataExportActivity extends Activity {
 
 	protected static final int TIMER_RUNTIME = 10000; // in ms --> 10s
 
@@ -45,6 +46,7 @@ public class MatchDataExportActivity extends Activity {
     private TeamMatchTransactionDataDBAdapter tmtdDBAdapter;
 	private TeamDataDBAdapter teamDataDBAdapter;
     private RobotDataDBAdapter robotDataDBAdapter;
+    private DBAdapter dbAdapter;
 
 	protected ProgressBar mProgressBar;
 	protected String tabletID;
@@ -106,26 +108,37 @@ public class MatchDataExportActivity extends Activity {
     private void openDatabase() {
         try {
             FTSUtilities.printToConsole("ImportMatchDataActivity::onCreate : OPENING DB\n");
-            matchDataDBAdapter = new MatchDataDBAdapter(this).openForWrite();
-            teamMatchDBAdapter = new TeamMatchDBAdapter(this).openForWrite();
-            teamDataDBAdapter = new TeamDataDBAdapter(this).openForWrite();
-            tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this).openForWrite();
-            tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this).openForWrite();
-robotDataDBAdapter = new RobotDataDBAdapter(this).openForWrite();
+            dbAdapter = new DBAdapter(this);
+            matchDataDBAdapter = new MatchDataDBAdapter(this);
+            teamMatchDBAdapter = new TeamMatchDBAdapter(this);
+            teamDataDBAdapter = new TeamDataDBAdapter(this);
+            tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this);
+            tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this);
+            robotDataDBAdapter = new RobotDataDBAdapter(this);
         } catch(SQLException e) {
             e.printStackTrace();
+            dbAdapter = null;
             matchDataDBAdapter = null;
             teamMatchDBAdapter = null;
             teamDataDBAdapter = null;
             tmtDBAdapter = null;
             tmtdDBAdapter = null;
-robotDataDBAdapter = null;
+            robotDataDBAdapter = null;
         }
     }
 
     private void updateStatus(String statusMessage) {
         TextView txtDataExportStatus = (TextView) findViewById(R.id.txtDataExportStatus);
         txtDataExportStatus.setText(statusMessage);
+    }
+
+    private void exportAllDataToXml() {
+        String filename = dbAdapter.exportDatabase();
+        if(filename != null) {
+            updateStatus("File exported: " + filename);
+        } else {
+            updateStatus("NO File exported");
+        }
     }
 
     private void exportMatchData() {
@@ -194,6 +207,14 @@ robotDataDBAdapter = null;
 				}
 			}
 		});
+
+        Button btnExportDataXML = (Button)findViewById(R.id.btnExportDataXML);
+        btnExportDataXML.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exportAllDataToXml();
+            }
+        });
 
         Button btnExportDataBluetooth = (Button) findViewById(R.id.btnExportDataBluetooth);
         btnExportDataBluetooth.setOnClickListener(new View.OnClickListener() {

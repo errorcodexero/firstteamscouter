@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.jumpmind.symmetric.android.SymmetricService;
+//import org.jumpmind.symmetric.android.SymmetricService;
 
 public class MainActivity extends Activity {
 
@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), MatchDataManagementActivity.class);
+                Intent intent = new Intent(v.getContext(), DataManagementActivity.class);
                 intent.putExtra("tablet_id", FTSUtilities.getTabletID(tabletAlliancePosition));
                 startActivity(intent);
             }
@@ -130,13 +130,15 @@ public class MainActivity extends Activity {
     protected void onDestroy() {
     	FTSUtilities.printToConsole("Destroying MainActivity");
 
-        if(FTSUtilities.isMyServiceRunning(this.getApplicationContext())) {
+        /*
+        if(FTSUtilities.isMyServiceRunning(this.getApplicationContext(), SymmetricService.class).getName()) {
             FTSUtilities.printToConsole("Stopping SymmetricDS Service");
             stopService(new Intent(this.getApplicationContext(), SymmetricService.class));
         } else {
             FTSUtilities.printToConsole("SymmetricDS Service was NOT running");
         }
-    	mDBAdapter.close();
+        */
+        mDBAdapter.close();
         super.onDestroy();
     }
 

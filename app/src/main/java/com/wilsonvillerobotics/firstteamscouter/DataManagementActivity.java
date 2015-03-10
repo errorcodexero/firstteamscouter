@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities.ALLIANCE_POSITION;
 
-public class MatchDataManagementActivity extends Activity {
+public class DataManagementActivity extends Activity {
 
     private ALLIANCE_POSITION tabletAlliancePosition;
 	public Boolean fieldOrientRedOnRight;
@@ -34,7 +34,7 @@ public class MatchDataManagementActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(v.getContext(), MatchDataImportActivity.class);
+				Intent intent = new Intent(v.getContext(), DataImportActivity.class);
 				intent.putExtra("tablet_id", FTSUtilities.getTabletID(tabletAlliancePosition));
 				startActivity(intent);
 			}
@@ -44,7 +44,7 @@ public class MatchDataManagementActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(v.getContext(), MatchDataExportActivity.class);
+				Intent intent = new Intent(v.getContext(), DataExportActivity.class);
 				intent.putExtra("tablet_id", FTSUtilities.getTabletID(tabletAlliancePosition));
 				startActivity(intent);
 			}

@@ -73,4 +73,6 @@
     <string name="label_import_data">Import Data</string>
     <string name="label_show_screen_metrics">Show Screen Metrics</string>
     <string name="label_to_starting_position">To Starting Position</string>
+    <string name="label_export_to_xml">Export To XML</string>
+    <string name="label_export_via_bluetooth">Export Via Bluetooth</string>
 </resources>

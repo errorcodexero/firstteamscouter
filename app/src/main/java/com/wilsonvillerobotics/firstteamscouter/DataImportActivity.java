@@ -29,7 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MatchDataImportActivity extends Activity {
+public class DataImportActivity extends Activity {
 
 	protected static final int TIMER_RUNTIME = 10000; // in ms --> 10s
 

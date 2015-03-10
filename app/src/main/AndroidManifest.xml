@@ -76,12 +76,12 @@
             android:screenOrientation="landscape" />
         <activity android:name=".SetPreferenceActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".MatchDataManagementActivity"
+        <activity android:name=".DataManagementActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".MatchDataImportActivity"
+        <activity android:name=".DataImportActivity"
             android:label="@string/title_activity_import_match_data"
             android:screenOrientation="landscape" />
-        <activity android:name=".MatchDataExportActivity"
+        <activity android:name=".DataExportActivity"
             android:screenOrientation="landscape" />
 
         <service android:name="org.jumpmind.symmetric.android.SymmetricService"

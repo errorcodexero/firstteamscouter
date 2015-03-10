@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.wilsonvillerobotics.firstteamscouter.TeamMatchData.BALL_CONTROL;
 import com.wilsonvillerobotics.firstteamscouter.TeamMatchData.ROBOT_ROLE;
 import com.wilsonvillerobotics.firstteamscouter.TeamMatchData.ZONE;
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.DBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 
 import android.app.Activity;
@@ -24,7 +25,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.widget.Button;
 
-import org.jumpmind.symmetric.android.SymmetricService;
+//import org.jumpmind.symmetric.android.SymmetricService;
 
 public class FTSUtilities {
 
@@ -148,10 +149,11 @@ public class FTSUtilities {
         }
 	}
 
-    public static boolean isMyServiceRunning(Context context) {
+    public static boolean isMyServiceRunning(Context context, String serviceName) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (SymmetricService.class.getName().equals(service.service.getClassName())) {
+            // get class name string: <CLASS>.class.getName()
+            if (serviceName.equals(service.service.getClassName())) {
                 return true;
             }
         }

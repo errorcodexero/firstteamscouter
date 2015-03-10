@@ -1,5 +1,6 @@
 package com.wilsonvillerobotics.firstteamscouter.dbAdapters;
 
+import com.wilsonvillerobotics.firstteamscouter.utilities.DataXmlExporter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
 import android.app.ActivityManager;
@@ -11,9 +12,9 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import org.jumpmind.symmetric.android.SQLiteOpenHelperRegistry;
-import org.jumpmind.symmetric.android.SymmetricService;
-import org.jumpmind.symmetric.common.ParameterConstants;
+//import org.jumpmind.symmetric.android.SQLiteOpenHelperRegistry;
+//import org.jumpmind.symmetric.android.SymmetricService;
+//import org.jumpmind.symmetric.common.ParameterConstants;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class DBAdapter {
     private static final String BOOL_TYPE = " TEXT";
     private static final String COMMA_SEP = ",";
 
-    private enum TABLE_NAMES {
+    public static enum TABLE_NAMES {
     	COMPETITION_DATA(0, CompetitionDataDBAdapter.class.getCanonicalName()),
     	MATCH_DATA(1, MatchDataDBAdapter.class.getCanonicalName()),
     	NOTES_DATA(2, NotesDataDBAdapter.class.getCanonicalName()),
@@ -344,6 +345,7 @@ public class DBAdapter {
         this.context = ctx.getApplicationContext();
         this.DBHelper = DatabaseHelper.getInstance(this.context);
 
+        /*
         final String HELPER_KEY = "FTSHelperKey";
 
         // Register the database helper, so it can be shared with the SymmetricService
@@ -366,6 +368,7 @@ public class DBAdapter {
 
         String run = (FTSUtilities.isMyServiceRunning(this.context)) ? " IS " : "IS NOT ";
         FTSUtilities.printToConsole("SymmetricDS Service" + run + "running\n");
+        */
 
 
     }
@@ -531,5 +534,20 @@ public class DBAdapter {
         } finally {
             this.close();
         }
+    }
+
+    public String exportDatabase() {
+        boolean exported = false;
+        final String exportFileNamePrefix = "fts_data_export" + "_" + String.valueOf(System.nanoTime());
+        try {
+            this.openForRead();
+            DataXmlExporter dataXmlExporter = new DataXmlExporter(this.db);
+            exported = dataXmlExporter.export(DATABASE_NAME, exportFileNamePrefix);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(this.db.isOpen()) this.db.close();
+        if(exported) return exportFileNamePrefix + ".xml";
+        return null;
     }
 }

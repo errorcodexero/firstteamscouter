@@ -1,0 +1,1 @@
+FTP: http://stackoverflow.com/questions/7202987/uploading-a-file-from-android-to-a-server-through-ftp

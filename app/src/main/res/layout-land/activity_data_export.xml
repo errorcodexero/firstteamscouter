@@ -19,18 +19,28 @@
             android:textColor="@android:color/white" />
 
         <LinearLayout
-            android:layout_width="275dp"
+            android:layout_width="400dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:orientation="horizontal"
             android:layout_marginTop="40dp">
 
             <Button
+                android:id="@+id/btnExportDataXML"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:text="@string/label_export_to_xml"
+                android:layout_weight="0.33"
+                android:layout_margin="10dp"
+                android:textSize="20sp"
+                android:background="@drawable/custom_btn_shakespeare" />
+
+            <Button
                 android:id="@+id/btnExportDataBluetooth"
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:text="Export Via Bluetooth"
-                android:layout_weight="0.50"
+                android:layout_weight="0.34"
                 android:layout_margin="10dp"
                 android:textSize="20sp"
                 android:background="@drawable/custom_btn_shakespeare" />
@@ -41,7 +51,7 @@
                 android:layout_height="fill_parent"
                 android:text="@string/lbl_repeat_data_export"
                 android:layout_margin="10dp"
-                android:layout_weight="0.50"
+                android:layout_weight="0.33"
                 android:textSize="20sp"
                 android:singleLine="false"
                 android:background="@drawable/custom_btn_shakespeare" />
