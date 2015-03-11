@@ -4,4 +4,5 @@ import android.app.Application;
 
 public class FIRSTTeamScouter extends Application {
 
+    public final static String TAG = "FIRSTTeamScouter";
 }

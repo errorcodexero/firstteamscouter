@@ -45,7 +45,7 @@ import java.nio.channels.FileChannel;
  */
 public class DataXmlExporter {
 
-    private static final String DATASUBDIRECTORY = "files";
+    public static final String DATASUBDIRECTORY = "files";
     private final String LOG_TAG = "FTS_XmlExporter";
 
     private final SQLiteDatabase db;
@@ -57,25 +57,6 @@ public class DataXmlExporter {
 
     public int export(final String dbName, final String exportFileNamePrefix, final String timestamp) throws IOException {
         Log.i(LOG_TAG, "exporting database - " + dbName + " exportFileNamePrefix=" + exportFileNamePrefix + "  timestamp=" + timestamp);
-
-        //xmlBuilder = new XmlBuilder();
-        //xmlBuilder.start(dbName);
-
-        // get the tables
-        //String sql = "select * from sqlite_master";
-        /*String sql = "select * from sqlite_temp_master";
-        Cursor c = db.rawQuery(sql, new String[0]);
-        if (c.moveToFirst()) {
-            do {
-                String tableName = c.getString(c.getColumnIndex("name"));
-
-                // skip metadata, sequence, and uidx (unique indexes)
-                if (!tableName.equals("android_metadata") && !tableName.equals("sqlite_sequence")
-                        && !tableName.startsWith("uidx")) {
-                    exportTable(tableName);
-                }
-            } while (c.moveToNext());
-        }*/
 
         int exportCount = 0;
         for(DBAdapter.TABLE_NAMES tn : DBAdapter.TABLE_NAMES.values()) {

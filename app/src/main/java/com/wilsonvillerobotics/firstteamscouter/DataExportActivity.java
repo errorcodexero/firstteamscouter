@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +23,8 @@ import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionsDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.utilities.DataXmlExporter;
+import com.wilsonvillerobotics.firstteamscouter.utilities.FTPFileUploader;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
 import java.io.BufferedReader;
@@ -135,6 +138,10 @@ public class DataExportActivity extends Activity {
     private void exportAllDataToXml() {
         int fileCount = dbAdapter.exportDatabase();
         updateStatus("Files exported: " + String.valueOf(fileCount));
+
+        FTPFileUploader ftpUL = new FTPFileUploader();
+        File dir = new File(Environment.getExternalStorageDirectory(), DataXmlExporter.DATASUBDIRECTORY);
+        ftpUL.execute(dir.listFiles());
     }
 
     private void exportMatchData() {

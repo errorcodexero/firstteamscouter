@@ -26,13 +26,17 @@ public class TeamListActivity extends ListActivity {
 		super.onCreate(savedInstance);
         setContentView(R.layout.activity_list_team_data);
 
-        this.teamDataDBAdapter = new TeamDataDBAdapter(this).openForWrite();
+        this.teamDataDBAdapter = new TeamDataDBAdapter(this);
 
-        Cursor cursor = this.teamDataDBAdapter.getAllTeamDataEntries();
-        startManagingCursor(cursor);
+        configureListView();
+    }
 
-        FTSUtilities.printToConsole("TeamListActivity::onCreate : Cursor Size: " + cursor.getCount() + "\n");
+    private void configureListView() {
+        Cursor cursor = initCursor();
+        setListViewAdapter(cursor);
+    }
 
+    private void setListViewAdapter(Cursor cursor) {
         // THE DESIRED COLUMNS TO BE BOUND
         String[] columns = new String[] { TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER, TeamDataDBAdapter.COLUMN_NAME_TEAM_NAME };
         // THE XML DEFINED VIEWS WHICH THE DATA WILL BE BOUND TO
@@ -63,16 +67,33 @@ public class TeamListActivity extends ListActivity {
         // SET THIS ADAPTER AS YOUR LISTACTIVITY'S ADAPTER
         this.setListAdapter(mAdapter);
     }
-	
-	@Override
+
+    private Cursor initCursor() {
+        Cursor cursor = this.teamDataDBAdapter.getAllTeamDataEntries();
+        startManagingCursor(cursor);
+
+        FTSUtilities.printToConsole("TeamListActivity::onCreate : Cursor Size: " + cursor.getCount() + "\n");
+        return cursor;
+    }
+
+    @Override
 	protected void onPause() {
 		super.onPause();
+        ListView lv = this.getListView();
+        stopManagingCursor(((SimpleCursorAdapter)lv.getAdapter()).getCursor());
 		this.teamDataDBAdapter.close();
 	}
 	
 	@Override
     protected void onResume() {
         super.onResume();
-        this.teamDataDBAdapter.openForWrite();
+        //configureListView();
+        //this.teamDataDBAdapter.openForWrite();
 	}
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        configureListView();
+    }
 }
