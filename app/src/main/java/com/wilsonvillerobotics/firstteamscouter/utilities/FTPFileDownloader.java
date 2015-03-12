@@ -1,0 +1,122 @@
+package com.wilsonvillerobotics.firstteamscouter.utilities;
+
+
+import android.os.AsyncTask;
+import android.util.Log;
+
+import com.wilsonvillerobotics.firstteamscouter.FIRSTTeamScouter;
+
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+
+/**
+ * Created by TomS on 3/11/2015.
+ *
+ * http://stackoverflow.com/questions/7202987/uploading-a-file-from-android-to-a-server-through-ftp
+ */
+public class FTPFileDownloader extends AsyncTask<Void, Void, FTPFile[]> {
+
+    private final String defaultUserName = "ftsscout", defaultPassword = "ftsscouter";
+    private final String remotePath = "./download";
+    private final byte defaultIP[] = {(byte)10, (byte)0, (byte)0, (byte)191};
+    private final int defaultFileType = FTP.ASCII_FILE_TYPE;
+
+    private byte serverIP[];
+    private int fileType;
+    private String userName;
+    private String password;
+
+    public FTPFileDownloader() {
+        this.serverIP = defaultIP;
+        this.fileType = defaultFileType;
+        this.userName = defaultUserName;
+        this.password = defaultPassword;
+    }
+
+    public FTPFileDownloader setServerIP(byte ipv4[]) {
+        this.serverIP = ipv4;
+        return this; // allow chaining commands
+    }
+
+    public FTPFileDownloader setFileType(int fileType) {
+        this.fileType = fileType;
+        return this;
+    }
+
+    @Override
+    protected FTPFile[] doInBackground(Void... filesToSend) {
+        FTPClient ftpClient = new FTPClient();
+        FTPFile[] receivedFiles = null;
+        boolean result = false;
+        try {
+            //ftpClient.connect(InetAddress.getByName(serverName));
+            InetAddress ipv4 = Inet4Address.getByAddress(defaultIP);
+            ftpClient.connect(ipv4);
+            result = ftpClient.login(userName, password);
+            Log.e("isFTPConnected", String.valueOf(result));
+            ftpClient.changeWorkingDirectory(remotePath);
+
+            if (ftpClient.getReplyString().contains("250")) {
+                File downloadPath = FTSUtilities.getFileDirectory("download");
+                if(downloadPath != null) {
+                    BufferedInputStream buffIn = null;
+                    ftpClient.setFileType(this.fileType);
+                    ftpClient.enterLocalPassiveMode();
+
+                    Log.d(ftpClient.printWorkingDirectory(), "is working directory");
+                    FTPFile[] files = null;
+                    files=ftpClient.listFiles();
+                    receivedFiles = new FTPFile[files.length];
+                    int i = 0;
+
+                    for(FTPFile ff : files) {
+                        String ffName = ff.getName();
+                        File downloadFile1 = new File(downloadPath, ffName);
+                        OutputStream outputStream1 = new BufferedOutputStream(new FileOutputStream(downloadFile1));
+                        boolean success = ftpClient.retrieveFile(ffName, outputStream1);
+                        outputStream1.close();
+
+                        if(success) {
+                            receivedFiles[i++] = ff;
+                        }
+                    }
+                }
+
+                /*for(File fileToSend : filesToSend) {
+                    buffIn = new BufferedInputStream(new FileInputStream(fileToSend));
+                    //ProgressInputStream progressInput = new ProgressInputStream(buffIn, new Handler(Looper.myLooper()));
+                    //result = ftpClient.storeFile(remotePath, progressInput);
+                    result = ftpClient.storeFile(fileToSend.getAbsoluteFile().getName(), buffIn);
+                    buffIn.close();
+
+                    if(result) {
+
+                    }
+                }*/
+                ftpClient.logout();
+                ftpClient.disconnect();
+            }
+
+        } catch (SocketException e) {
+            Log.e(FIRSTTeamScouter.TAG, e.getStackTrace().toString());
+        } catch (UnknownHostException e) {
+            Log.e(FIRSTTeamScouter.TAG, e.getStackTrace().toString());
+        } catch (IOException e) {
+            Log.e(FIRSTTeamScouter.TAG, e.getStackTrace().toString());
+        }
+        return receivedFiles;
+    }
+}

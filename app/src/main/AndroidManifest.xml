@@ -13,9 +13,12 @@
     <uses-permission android:name="android.permission.ACCESS_BLUETOOTH_SHARE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    
-	
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -30,15 +33,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".EnterTeamMatchDataActivity"
-            android:label="@string/title_activity_enter_team_match_data"
-            android:screenOrientation="landscape" />
         <activity android:name=".SelectMatchTeamActivity"
             android:label="@string/title_activity_team_match_list"
-            android:screenOrientation="landscape" >
-        </activity>
-        <activity android:name=".OldTeamInformationActivity"
-            android:label="@string/title_activity_team_information"
             android:screenOrientation="landscape" >
         </activity>
         <activity android:name=".ViewDataActivity"
@@ -84,12 +80,6 @@
         <activity android:name=".DataExportActivity"
             android:screenOrientation="landscape" />
 
-        <service android:name="org.jumpmind.symmetric.android.SymmetricService"
-            android:enabled="true" >
-            <intent-filter>
-                <action android:name="org.jumpmind.symmetric.android.SymmetricService" />
-            </intent-filter>
-        </service>
     </application>
 
 </manifest>

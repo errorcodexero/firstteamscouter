@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.Hashtable;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.wilsonvillerobotics.firstteamscouter.MainActivity;
 import com.wilsonvillerobotics.firstteamscouter.TeamMatchData.BALL_CONTROL;
 import com.wilsonvillerobotics.firstteamscouter.TeamMatchData.ROBOT_ROLE;
 import com.wilsonvillerobotics.firstteamscouter.TeamMatchData.ZONE;
@@ -32,6 +34,7 @@ public class FTSUtilities {
 	public static Boolean DEBUG = true;
 	public static Boolean POPULATE_TEST_DATA = true;
 	public static String alliancePositions[] = {"Red1","Red2","Red3","Blue1","Blue2","Blue3",};
+    public static String strUuid = "";
 
     public enum ItemType {
         ROBOT(0, "Robot"),
@@ -163,6 +166,54 @@ public class FTSUtilities {
 
     public static String getTabletID(ALLIANCE_POSITION ap) {
         return ap.myAlliancePosition();
+    }
+
+    public static void generateDeviceID(Context context) {
+        // DeviceUuidFactory loads or generates the static uuid in its constructor
+        DeviceUuidFactory duf = new DeviceUuidFactory(context);
+        strUuid = duf.getDeviceUuid().toString();
+    }
+
+    public static String getShortDeviceID(Context context) {
+        if(strUuid == "") {
+            if(context == null) {
+                return "";
+            }
+            DeviceUuidFactory duf = new DeviceUuidFactory(context);
+            strUuid = duf.getDeviceUuid().toString();
+        }
+        String parts[] = strUuid.split("-");
+        if(parts.length == 5) {
+            return parts[4];
+        }
+        return parts[parts.length - 1];
+    }
+
+    public static File getFileDirectory(String subDirectory) {
+        if(subDirectory == null || subDirectory == "") {
+            subDirectory = DataXmlExporter.DATASUBDIRECTORY;
+        } else {
+            subDirectory = DataXmlExporter.DATASUBDIRECTORY + "/" + subDirectory;
+        }
+        File fileDir = new File(Environment.getExternalStorageDirectory(), subDirectory);
+        if (!fileDir.exists()) {
+            fileDir.mkdirs();
+        }
+        return fileDir;
+    }
+
+    public static String getXmlDataFileNameForTable(String tableName) {
+        // expected format: ftsData-<uuid>-<table_name>-<timestamp>.xml
+        final String exportFileNamePrefix = "ftsData";
+        final String exportTimestamp = String.valueOf(System.nanoTime());
+
+        String dataFileName = exportFileNamePrefix + "-";
+        dataFileName += getShortDeviceID(null) + "-";
+        dataFileName += tableName + "-";
+        dataFileName += exportTimestamp;
+        dataFileName += ".xml";
+
+        return dataFileName;
     }
 
     private static Hashtable<Integer, String> testTeamData = new Hashtable<Integer, String>(){

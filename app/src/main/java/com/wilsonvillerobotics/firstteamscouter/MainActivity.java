@@ -16,17 +16,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-//import org.jumpmind.symmetric.android.SymmetricService;
-
 public class MainActivity extends Activity {
 
 	private Button btnViewTeamData;
-	private Button btnManageMatchData;
-	private Button btnMatchScouting;
-    private Button btnPitScouting;
-	private DBAdapter mDBAdapter;
+    private DBAdapter mDBAdapter;
 	private TextView txtTabletID;
-	//private String tabletID;
     private FTSUtilities.ALLIANCE_POSITION tabletAlliancePosition;
 	public Boolean fieldOrientRedOnRight;
 	
@@ -38,27 +32,14 @@ public class MainActivity extends Activity {
 
         this.txtTabletID = (TextView) findViewById(R.id.txtTabletID);
         this.loadPref();
+        FTSUtilities.generateDeviceID(getApplicationContext());
 
-        this.mDBAdapter = new DBAdapter(this).openForWrite();
+        this.mDBAdapter = new DBAdapter(getApplicationContext());
         
-        //btnViewTeamData = (Button) findViewById(R.id.btnViewTeamData);
-        btnManageMatchData = (Button) findViewById(R.id.btnManageMatchData);
-        btnMatchScouting = (Button) findViewById(R.id.btnMatchScouting);
-        btnPitScouting = (Button) findViewById(R.id.btnPitScouting);
+        Button btnManageMatchData = (Button) findViewById(R.id.btnManageMatchData);
+        Button btnMatchScouting = (Button) findViewById(R.id.btnMatchScouting);
+        Button btnPitScouting = (Button) findViewById(R.id.btnPitScouting);
 
-        /*
-        btnViewTeamData.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(v.getContext(), TeamDataListActivity.class);
-				intent.putExtra("tablet_id", FTSUtilities.getTabletID(tabletAlliancePosition));
-				intent.putExtra("field_orientation", fieldOrientRedOnRight);
-				startActivity(intent);
-			}
-		});
-		*/
-        
         btnManageMatchData.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -91,39 +72,9 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
         //mDBAdapter.openForWrite();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
     @Override

@@ -56,6 +56,10 @@ public class FTPFileUploader extends AsyncTask<File, Void, Void> {
                     //result = ftpClient.storeFile(remotePath, progressInput);
                     result = ftpClient.storeFile(fileToSend.getAbsoluteFile().getName(), buffIn);
                     buffIn.close();
+
+                    if(result) {
+
+                    }
                 }
                 ftpClient.logout();
                 ftpClient.disconnect();

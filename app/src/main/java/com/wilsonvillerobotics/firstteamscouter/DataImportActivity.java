@@ -14,8 +14,8 @@ import com.wilsonvillerobotics.firstteamscouter.dbAdapters.MatchDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.RobotDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.utilities.FTPFileDownloader;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
-import com.wilsonvillerobotics.firstteamscouter.utilities.MySQLXmlExportParser;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -30,6 +30,8 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.apache.commons.net.ftp.FTPFile;
 
 public class DataImportActivity extends Activity {
 
@@ -144,6 +146,24 @@ public class DataImportActivity extends Activity {
             }
         });
 
+        Button btnDownloadDataFiles = (Button) findViewById(R.id.btnDownloadDataFiles);
+        btnDownloadDataFiles.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FTPFileDownloader ftpDL = new FTPFileDownloader();
+                try {
+                    FTPFile[] files = ftpDL.execute().get();
+                    String stat = "File(s) Downloaded:\n";
+                    for(FTPFile f : files) {
+                        if(f != null) stat += "\t" + f.getName() + "\n";
+                    }
+                    txtStatus.setText(stat);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         Button btnImportFromXml = (Button) findViewById(R.id.btnImportFromXml);
         btnImportFromXml.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,12 +171,8 @@ public class DataImportActivity extends Activity {
                 FTSUtilities.printToConsole("ImportMatchDataActivity::btnImportFromXml.onClick");
                 txtStatus.setText("Importing from XML");
 
-                String filePrefix = "ftsDataExport";
-                File externalFilesDir = new File(Environment.getExternalStorageDirectory(), "files");
-
-                if (!externalFilesDir.exists()) {
-                    externalFilesDir.mkdirs();
-                }
+                String filePrefix = "ftsData";
+                File externalFilesDir = FTSUtilities.getFileDirectory(null);
 
                 File[] xmlFileList = externalFilesDir.listFiles(new XmlDataFilenameFilter(filePrefix, ".xml"));
 

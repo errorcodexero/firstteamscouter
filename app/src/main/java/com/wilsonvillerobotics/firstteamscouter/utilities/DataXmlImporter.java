@@ -20,14 +20,14 @@ import java.net.URL;
  * MySQLPullParser spp = new MySQLPullParser();
  * db.execSQL( spp.parseXML(mContext) );
  */
-public class MySQLXmlExportParser {
+public class DataXmlImporter {
 
     private String currTag = null;
     private boolean firstTag = true;
     private String currName = "";
     private String fileName;
 
-    public MySQLXmlExportParser(String filename) {
+    public DataXmlImporter(String filename) {
         this.fileName = filename;
     }
 
@@ -58,7 +58,6 @@ public class MySQLXmlExportParser {
                     currTag = null;
                 }
                 else if (e == XmlPullParser.TEXT) {
-                    //currName = (String)xpp.getProperty("name");
                     xmlText = xpp.getText();
                     if (currTag.equals(firstCol) ) {    // first table column
                         if (firstTag) {

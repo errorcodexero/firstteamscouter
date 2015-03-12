@@ -61,8 +61,18 @@
             android:gravity="center_vertical|center_horizontal">
 
             <Button
+                android:id="@+id/btnDownloadDataFiles"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:text="@string/label_download_data"
+                android:textSize="20sp"
+                android:background="@drawable/custom_btn_shakespeare"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp" />
+
+            <Button
                 android:id="@+id/btnImportFromXml"
-                android:layout_width="150dp"
+                android:layout_width="175dp"
                 android:layout_height="wrap_content"
                 android:text="@string/label_import_from_xml"
                 android:textSize="20sp"
@@ -72,7 +82,7 @@
 
             <Button
                 android:id="@+id/btnImportMatchData"
-                android:layout_width="150dp"
+                android:layout_width="175dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/label_import_data"

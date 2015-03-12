@@ -55,8 +55,10 @@ public class DataXmlExporter {
         this.db = db;
     }
 
-    public int export(final String dbName, final String exportFileNamePrefix, final String timestamp) throws IOException {
-        Log.i(LOG_TAG, "exporting database - " + dbName + " exportFileNamePrefix=" + exportFileNamePrefix + "  timestamp=" + timestamp);
+    //public int export(final String dbName, final String exportFileNamePrefix, final String uuid, final String timestamp) throws IOException {
+    public int export(final String dbName) throws IOException {
+        //Log.i(LOG_TAG, "exporting database - " + dbName + " exportFileNamePrefix=" + exportFileNamePrefix + "   uuid=" + uuid + "  timestamp=" + timestamp);
+        Log.i(LOG_TAG, "exporting database - " + dbName);
 
         int exportCount = 0;
         for(DBAdapter.TABLE_NAMES tn : DBAdapter.TABLE_NAMES.values()) {
@@ -70,7 +72,8 @@ public class DataXmlExporter {
                 e.printStackTrace();
             }
             String xmlString = xmlBuilder.end();
-            String xmlFileName = exportFileNamePrefix + "-" + tableName + "-" + timestamp + ".xml";
+
+            String xmlFileName = FTSUtilities.getXmlDataFileNameForTable(tableName); // exportFileNamePrefix + "-" + uuid + "-" + tableName + "-" + timestamp + ".xml";
             if(writeToFile(xmlString, xmlFileName)) exportCount++;
             Log.i(LOG_TAG, "exporting table complete: " + tableName);
         }

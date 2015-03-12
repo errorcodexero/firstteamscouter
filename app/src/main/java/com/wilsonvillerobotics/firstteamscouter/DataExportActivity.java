@@ -24,6 +24,7 @@ import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionsDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.DataXmlExporter;
+import com.wilsonvillerobotics.firstteamscouter.utilities.DeviceUuidFactory;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTPFileUploader;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
@@ -38,6 +39,9 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.UUID;
+
+import static com.wilsonvillerobotics.firstteamscouter.utilities.INetUtils.getMACAddress;
 
 public class DataExportActivity extends Activity {
 
@@ -137,11 +141,18 @@ public class DataExportActivity extends Activity {
 
     private void exportAllDataToXml() {
         int fileCount = dbAdapter.exportDatabase();
-        updateStatus("Files exported: " + String.valueOf(fileCount));
+        //String deviceEthMAC = getMACAddress("eth0");
+        //String deviceWiFiMAC = getMACAddress("wlan0");
+        String uuid = FTSUtilities.getShortDeviceID(getApplicationContext()).toString();
+        String status = "Device \n\tUUID: " + uuid + "\n";
+        //status += "\tEth0 MAC: " + deviceEthMAC + "\n";
+        //status += "\tWlan0 MAC: " + deviceWiFiMAC + "\n";
+        status += "Files exported: " + String.valueOf(fileCount);
+        updateStatus(status);
 
         FTPFileUploader ftpUL = new FTPFileUploader();
-        File dir = new File(Environment.getExternalStorageDirectory(), DataXmlExporter.DATASUBDIRECTORY);
-        ftpUL.execute(dir.listFiles());
+        File dir = FTSUtilities.getFileDirectory("");
+        if(dir != null && dir.exists()) ftpUL.execute(dir.listFiles());
     }
 
     private void exportMatchData() {
@@ -377,11 +388,6 @@ public class DataExportActivity extends Activity {
    }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }
-
-    @Override
     protected void onRestart() {
         super.onRestart();
         if(matchDataDBAdapter == null) {
@@ -401,26 +407,6 @@ public class DataExportActivity extends Activity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
         if(myTeamMatchDataTempFile.exists()) myTeamMatchDataTempFile.delete();
@@ -428,11 +414,6 @@ public class DataExportActivity extends Activity {
         matchDataDBAdapter.close();
         teamMatchDBAdapter.close();
         teamDataDBAdapter.close();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
 	@Override

@@ -2,12 +2,10 @@ package com.wilsonvillerobotics.firstteamscouter.dbAdapters;
 
 import com.wilsonvillerobotics.firstteamscouter.utilities.DataXmlExporter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
-import com.wilsonvillerobotics.firstteamscouter.utilities.MySQLXmlExportParser;
+import com.wilsonvillerobotics.firstteamscouter.utilities.DataXmlImporter;
 
-import android.app.ActivityManager;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -21,7 +19,6 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Properties;
 
 public class DBAdapter {
 
@@ -628,12 +625,11 @@ public class DBAdapter {
 
     public int exportDatabase() {
         int exportCount = 0;
-        final String exportFileNamePrefix = "ftsDataExport";
-        final String exportTimestamp = String.valueOf(System.nanoTime());
+
         try {
             this.openForRead();
             DataXmlExporter dataXmlExporter = new DataXmlExporter(this.db);
-            exportCount = dataXmlExporter.export(DATABASE_NAME, exportFileNamePrefix, exportTimestamp);
+            exportCount = dataXmlExporter.export(DATABASE_NAME);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -644,9 +640,9 @@ public class DBAdapter {
     public String getInsertStatementFromXmlTable(File xmlFile, String tableName, String firstColumn, String lastColumn) {
         String insertStatement = "";
 
-        MySQLXmlExportParser parser = null;
+        DataXmlImporter parser = null;
         try {
-            parser = new MySQLXmlExportParser(xmlFile.getCanonicalPath());
+            parser = new DataXmlImporter(xmlFile.getCanonicalPath());
         } catch (Exception e) {
             e.printStackTrace();
         }
