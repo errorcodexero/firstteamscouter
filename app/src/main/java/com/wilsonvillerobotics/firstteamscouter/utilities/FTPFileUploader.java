@@ -27,7 +27,7 @@ public class FTPFileUploader extends AsyncTask<File, Void, Void> {
 
     private final String user = "ftsscout", pwd = "ftsscouter";
     private final String remotePath = "./upload";
-    private final byte serverIP[] = {(byte)10, (byte)0, (byte)0, (byte)191};
+    private final byte serverIP[] = {(byte)10, (byte)0, (byte)0, (byte)100};
 
     public FTPFileUploader() {
 

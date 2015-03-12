@@ -31,7 +31,8 @@ public class FTPFileDownloader extends AsyncTask<Void, Void, FTPFile[]> {
 
     private final String defaultUserName = "ftsscout", defaultPassword = "ftsscouter";
     private final String remotePath = "./download";
-    private final byte defaultIP[] = {(byte)10, (byte)0, (byte)0, (byte)191};
+    private final byte defaultIP[] = {(byte)10, (byte)0, (byte)0, (byte)100
+    };
     private final int defaultFileType = FTP.ASCII_FILE_TYPE;
 
     private byte serverIP[];
