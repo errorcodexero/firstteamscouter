@@ -20,7 +20,7 @@
     <TextView
         android:id="@+id/txtTeamNumberDisplay"
         android:layout_width="wrap_content"
-        android:layout_height="200dp"
+        android:layout_height="175dp"
         android:layout_gravity="center"
         android:gravity="top|center_horizontal"
         android:textColor="@android:color/white"
@@ -31,9 +31,9 @@
         android:layout_marginTop="50dp" />
 
     <Button
-        android:layout_width="150dp"
-        android:layout_height="100dp"
-        android:text="To Starting Position"
+        android:layout_width="250dp"
+        android:layout_height="75dp"
+        android:text="@string/label_to_starting_position"
         android:id="@+id/btnSubmitTeamNumber"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/custom_btn_shakespeare"

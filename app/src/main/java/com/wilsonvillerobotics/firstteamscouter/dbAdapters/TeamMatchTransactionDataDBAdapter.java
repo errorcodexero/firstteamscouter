@@ -30,7 +30,7 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_ACTION_END_LOCATION_Y = "action_end_location_Y";
     public static final String COLUMN_NAME_ELEMENT_TYPES = "element_types";
     public static final String COLUMN_NAME_ELEMENT_STATES = "element_states";
-    public static final String COLUMN_NAME_TRANSACTION_READY_TO_EXPORT = "transaction_ready_to_export";
+    public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     public static String[] allColumns = new String[]{
     		_ID,
@@ -47,7 +47,7 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
             COLUMN_NAME_ACTION_END_LOCATION_Y,
             COLUMN_NAME_ELEMENT_TYPES,
             COLUMN_NAME_ELEMENT_STATES,
-            COLUMN_NAME_TRANSACTION_READY_TO_EXPORT
+            COLUMN_NAME_READY_TO_EXPORT
     };
 
     private DatabaseHelper mDbHelper;
@@ -199,7 +199,7 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
         args.put(COLUMN_NAME_ACTION_END_LOCATION_Y, String.valueOf(values.get(COLUMN_NAME_ACTION_END_LOCATION_Y)));
         args.put(COLUMN_NAME_ELEMENT_TYPES, String.valueOf(values.get(COLUMN_NAME_ELEMENT_TYPES)));
         args.put(COLUMN_NAME_ELEMENT_STATES, String.valueOf(values.get(COLUMN_NAME_ELEMENT_STATES)));
-        args.put(COLUMN_NAME_TRANSACTION_READY_TO_EXPORT, String.valueOf(values.get(COLUMN_NAME_TRANSACTION_READY_TO_EXPORT)));
+        args.put(COLUMN_NAME_READY_TO_EXPORT, String.valueOf(values.get(COLUMN_NAME_READY_TO_EXPORT)));
         long id = this.openForWrite().mDb.insert(TABLE_NAME, null, args);
         if(!this.dbIsClosed()) this.close();
         return id;
@@ -259,7 +259,20 @@ public class TeamMatchTransactionDataDBAdapter implements BaseColumns {
 
         return this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
     }
-    
+
+    public boolean setDataEntryExported(long rowId) {
+        ContentValues args = new ContentValues();
+        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
+        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
+    }
+
+    public Cursor getAllEntriesToExport() {
+        String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
+        return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
+    }
+
     public void deleteAllData()
     {
         this.openForWrite().mDb.delete(TABLE_NAME, null, null);

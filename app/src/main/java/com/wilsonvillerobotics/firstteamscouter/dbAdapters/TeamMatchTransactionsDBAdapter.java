@@ -18,11 +18,13 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
     // Columns
     public static final String COLUMN_NAME_TEAM_MATCH_ID = "team_match_id";
     public static final String COLUMN_NAME_TRANSACTION_ID = "transaction_id";
+    public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     public static String[] allColumns = new String[]{
     		_ID,
             COLUMN_NAME_TEAM_MATCH_ID,
-            COLUMN_NAME_TRANSACTION_ID
+            COLUMN_NAME_TRANSACTION_ID,
+            COLUMN_NAME_READY_TO_EXPORT
     };
 
     private DatabaseHelper mDbHelper;
@@ -164,6 +166,7 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_TEAM_MATCH_ID, teamMatchId);
         args.put(COLUMN_NAME_TRANSACTION_ID, transactionId);
+        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
         long id = this.openForWrite().mDb.insert(TABLE_NAME, null, args);
         if(!this.dbIsClosed()) this.close();
         return id;
@@ -269,6 +272,19 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
     public void deleteAllData()
     {
         this.openForWrite().mDb.delete(TABLE_NAME, null, null);
+    }
+
+    public boolean setDataEntryExported(long rowId) {
+        ContentValues args = new ContentValues();
+        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
+        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
+    }
+
+    public Cursor getAllEntriesToExport() {
+        String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
+        return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
     }
 
     public boolean populateTestData(long[] matchIDs, long[] teamIDs) {

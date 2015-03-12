@@ -15,12 +15,14 @@ public class PictureDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_OWNER_ID = "owner_id";
     public static final String COLUMN_NAME_PICTURE_TYPE = "picture_type"; // robot, team, pit, etc.
     public static final String COLUMN_NAME_PICTURE_URI = "picture_uri";
+    public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     public static String[] allColumns = {
             _ID,
             COLUMN_NAME_OWNER_ID,
             COLUMN_NAME_PICTURE_TYPE,
-            COLUMN_NAME_PICTURE_URI
+            COLUMN_NAME_PICTURE_URI,
+            COLUMN_NAME_READY_TO_EXPORT
     };
 
     private DatabaseHelper mDbHelper;
@@ -135,6 +137,7 @@ public class PictureDataDBAdapter implements BaseColumns {
         initialValues.put(COLUMN_NAME_OWNER_ID, owner_id);
         initialValues.put(COLUMN_NAME_PICTURE_TYPE, picture_type);
         initialValues.put(COLUMN_NAME_PICTURE_URI, picture_uri);
+        initialValues.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
         return this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
     }
 
@@ -182,14 +185,26 @@ public class PictureDataDBAdapter implements BaseColumns {
      * @param picture_uri
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updatePictureDataEntry(int rowId, long owner_id, int picture_id, String picture_type, String picture_uri){
+    public boolean updatePictureDataEntry(int rowId, long owner_id, int picture_id, String picture_type, String picture_uri, Boolean export){
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_OWNER_ID, owner_id);
         args.put(COLUMN_NAME_PICTURE_TYPE, picture_type);
         args.put(COLUMN_NAME_PICTURE_URI, picture_uri);
+        args.put(COLUMN_NAME_READY_TO_EXPORT, String.valueOf(export));
         boolean retVal = this.mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0;
         if(!this.dbIsClosed()) this.close();
         return retVal;
     }
+    public boolean setDataEntryExported(long rowId) {
+        ContentValues args = new ContentValues();
+        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
+        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
+    }
 
+    public Cursor getAllEntriesToExport() {
+        String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
+        return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
+    }
 }

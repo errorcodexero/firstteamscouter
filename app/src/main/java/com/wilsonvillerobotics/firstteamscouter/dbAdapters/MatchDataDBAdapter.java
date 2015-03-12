@@ -28,6 +28,7 @@ public class MatchDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_BLUE_TEAM_THREE_ID   = "blue_team_three_id";
     
     public static final String COLUMN_NAME_MATCH_DATA_UPDATED	= "match_data_updated";
+    public static final String COLUMN_NAME_READY_TO_EXPORT      = "ready_to_export";
 
     public static String[] allColumns = {
             _ID,
@@ -42,7 +43,8 @@ public class MatchDataDBAdapter implements BaseColumns {
             COLUMN_NAME_BLUE_TEAM_ONE_ID,
             COLUMN_NAME_BLUE_TEAM_TWO_ID,
             COLUMN_NAME_BLUE_TEAM_THREE_ID,
-            COLUMN_NAME_MATCH_DATA_UPDATED
+            COLUMN_NAME_MATCH_DATA_UPDATED,
+            COLUMN_NAME_READY_TO_EXPORT
     };
 
     private DatabaseHelper mDbHelper;
@@ -174,6 +176,7 @@ public class MatchDataDBAdapter implements BaseColumns {
         initialValues.put(COLUMN_NAME_BLUE_TEAM_TWO_ID, blue_two_id);
         initialValues.put(COLUMN_NAME_BLUE_TEAM_THREE_ID, blue_three_id);
         initialValues.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
+        initialValues.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
 
         long id = this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
         if(!this.dbIsClosed()) this.close();
@@ -185,6 +188,7 @@ public class MatchDataDBAdapter implements BaseColumns {
         initialValues.put(COLUMN_NAME_COMPETITION_ID, competition_id);
         initialValues.put(COLUMN_NAME_MATCH_NUMBER, match_num);
         initialValues.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
+        initialValues.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
 
         return this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
     }
@@ -272,7 +276,7 @@ public class MatchDataDBAdapter implements BaseColumns {
      * @return true if the entry was successfully updated, false otherwise
      */
     public boolean updateMatchDataEntry(long rowId, long competition_id, String match_time, String match_type, int match_num, int red_one_id, int red_two_id, int red_three_id,
-    		int blue_one_id, int blue_two_id, int blue_three_id){
+    		int blue_one_id, int blue_two_id, int blue_three_id, Boolean export){
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_COMPETITION_ID, competition_id);
     	args.put(COLUMN_NAME_MATCH_TIME, match_time);
@@ -285,10 +289,23 @@ public class MatchDataDBAdapter implements BaseColumns {
     	args.put(COLUMN_NAME_BLUE_TEAM_TWO_ID, blue_two_id);
     	args.put(COLUMN_NAME_BLUE_TEAM_THREE_ID, blue_three_id);
     	args.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_READY_TO_EXPORT, String.valueOf(export));
 
         boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0;
         if(!this.dbIsClosed()) this.close();
         return retVal;
+    }
+    public boolean setDataEntryExported(long rowId) {
+        ContentValues args = new ContentValues();
+        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
+        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
+    }
+
+    public Cursor getAllEntriesToExport() {
+        String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
+        return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
     }
     
     public Cursor getTeamIDsForMatchByAlliancePosition(long competition_id, long matchID) {

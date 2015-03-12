@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionDataDBAdapter;
@@ -84,7 +85,7 @@ public class MatchAutoModeActivity extends Activity {
     protected long teamMatchID;
 	protected long teamID;
 	protected long matchID;
-    protected String teamNumber;
+    protected int teamNumber;
 	protected Button btnSubmit;
 	private ALLIANCE_POSITION tabletAlliancePosition;
     private int matchNumber;
@@ -139,6 +140,13 @@ public class MatchAutoModeActivity extends Activity {
         setBackground(automodeParentLayout);
         configureTotesAndCans();
 
+        TextView lblTeamNum = (TextView) findViewById(R.id.txtAutoTeamNumber);
+        if(lblTeamNum != null) {
+            String label = getResources().getString(R.string.label_team_number) + " " + String.valueOf(teamNumber);
+            lblTeamNum.setText(label);
+
+        }
+
         lastGameElementTouched = null;
         lastElementCollided = null;
 		teamID = -1;
@@ -154,7 +162,7 @@ public class MatchAutoModeActivity extends Activity {
         this.fieldOrientationRedOnRight = intent.getBooleanExtra("field_orientation", false);
         this.matchNumber = intent.getIntExtra("match_number", 0);
         this.teamMatchID = intent.getLongExtra("tmID", -1);
-        this.teamNumber  = intent.getStringExtra("team_number");
+        this.teamNumber  = intent.getIntExtra("team_number", -1);
         this.autoRobotStartingLocation.x = intent.getIntExtra("robot_x", 25);
         this.autoRobotStartingLocation.y = intent.getIntExtra("robot_y", 25);
     }

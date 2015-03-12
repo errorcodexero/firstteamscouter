@@ -31,6 +31,7 @@ public class RobotDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_ROBOT_DRIVE_RANGE = "robot_drive_range";
     public static final String COLUMN_NAME_COOPERTITION = "team_does_coopertition";
     public static final String COLUMN_NAME_ROBOT_STACKS_FROM = "robot_stacks_from";
+    public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     public static String[] allColumns = {
             _ID,
@@ -49,7 +50,8 @@ public class RobotDataDBAdapter implements BaseColumns {
             COLUMN_NAME_CAN_MANIPULATOR_TYPE,
             COLUMN_NAME_ROBOT_DRIVE_RANGE,
             COLUMN_NAME_COOPERTITION,
-            COLUMN_NAME_ROBOT_STACKS_FROM
+            COLUMN_NAME_ROBOT_STACKS_FROM,
+            COLUMN_NAME_READY_TO_EXPORT
     };
 
     private DatabaseHelper mDbHelper;
@@ -177,6 +179,7 @@ public class RobotDataDBAdapter implements BaseColumns {
             initialValues.put(COLUMN_NAME_ROBOT_DRIVE_RANGE, values.get(COLUMN_NAME_ROBOT_DRIVE_RANGE));
             initialValues.put(COLUMN_NAME_COOPERTITION, values.get(COLUMN_NAME_COOPERTITION));
             initialValues.put(COLUMN_NAME_ROBOT_STACKS_FROM, values.get(COLUMN_NAME_ROBOT_STACKS_FROM));
+            initialValues.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
         }
         long id = this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
         if(!this.dbIsClosed()) this.close();
@@ -298,16 +301,28 @@ public class RobotDataDBAdapter implements BaseColumns {
      * @param values
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updateRobotDataEntry(long rowId, long team_id, long competition_id, HashMap<String, String> values){
+    public boolean updateRobotDataEntry(long rowId, long team_id, long competition_id, HashMap<String, String> values, Boolean export){
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_TEAM_ID, team_id);
         args.put(COLUMN_NAME_COMPETITION_ID, competition_id);
         for(String k : values.keySet()) {
             args.put(k, values.get(k));
         }
+        args.put(COLUMN_NAME_READY_TO_EXPORT, String.valueOf(export));
         boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0;
         if(!this.dbIsClosed()) this.close();
         return retVal;
     }
+    public boolean setDataEntryExported(long rowId) {
+        ContentValues args = new ContentValues();
+        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
+        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
+    }
 
+    public Cursor getAllEntriesToExport() {
+        String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
+        return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
+    }
 }

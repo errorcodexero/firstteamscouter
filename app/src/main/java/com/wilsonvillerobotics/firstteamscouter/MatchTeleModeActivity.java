@@ -71,7 +71,7 @@ public class MatchTeleModeActivity extends Activity {
     protected long teamMatchID;
 	protected long teamID;
 	protected long matchID;
-    protected String teamNumber;
+    protected int teamNumber;
 	protected Button btnSubmit, btnRotateElements;
     private ALLIANCE_POSITION tabletAlliancePosition;
     private int matchNumber;
@@ -111,7 +111,7 @@ public class MatchTeleModeActivity extends Activity {
         this.fieldOrientationRedOnRight = intent.getBooleanExtra("field_orientation", false);
         this.matchNumber = intent.getIntExtra("match_number", 0);
         this.teamMatchID = intent.getLongExtra("tmID", -1);
-        this.teamNumber  = intent.getStringExtra("team_number");
+        this.teamNumber  = intent.getIntExtra("team_number", -1);
     }
 
     private void buildIntent(Intent intent) {

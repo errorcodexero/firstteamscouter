@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 
 /**
  * Android DataExporter that allows the passed in SQLiteDatabase
@@ -65,9 +66,11 @@ public class DataXmlExporter {
             xmlBuilder = new XmlBuilder();
             xmlBuilder.start(dbName);
             String tableName = tn.getTableName();
+            ArrayList<Long> exportedIDs;
 
             try {
-                exportTable(tn.getTableName());
+                exportedIDs = exportTable(tn.getTableName());
+                setDataExported(tableName, exportedIDs);
             } catch(Exception e) {
                 e.printStackTrace();
             }
@@ -85,13 +88,36 @@ public class DataXmlExporter {
         return exportCount;
     }
 
-    private void exportTable(final String tableName) throws IOException {
+    private void setDataExported(String tableName, ArrayList<Long> exportedIDs) {
+        if(exportedIDs.size() < 1) return;
+
+        String sqlUpdate = "UPDATE " + tableName;
+        sqlUpdate += " SET ready_to_export = '" + Boolean.FALSE.toString() + "'";
+        sqlUpdate += " WHERE ";
+
+        long id = -1;
+        for(int i = 0; i < exportedIDs.size(); i++) {
+            id = exportedIDs.get(i);
+            sqlUpdate += "_id=" + id;
+            if(i < exportedIDs.size() - 1) {
+                sqlUpdate += " OR ";
+            }
+        }
+        db.execSQL(sqlUpdate);
+        Log.i(LOG_TAG, "Table data set to exported: " + tableName);
+    }
+
+    private ArrayList<Long> exportTable(final String tableName) throws IOException {
         xmlBuilder.openTable(tableName);
         String sql = "select * from " + tableName;
+        sql += " where ready_to_export='" + Boolean.TRUE.toString() + "'";
         Cursor c = db.rawQuery(sql, new String[0]);
+        ArrayList<Long> exportedIDs = new ArrayList<Long>();
         if (c.moveToFirst()) {
             int cols = c.getColumnCount();
             do {
+                long id = c.getLong(c.getColumnIndex("_id"));
+                if(id != -1) exportedIDs.add(id);
                 xmlBuilder.openRow();
                 for (int i = 0; i < cols; i++) {
                     xmlBuilder.addColumn(c.getColumnName(i), c.getString(i));
@@ -101,6 +127,7 @@ public class DataXmlExporter {
         }
         c.close();
         xmlBuilder.closeTable();
+        return exportedIDs;
     }
 
     private boolean writeToFile(final String xmlString, final String exportFileName) throws IOException {

@@ -2,6 +2,7 @@ package com.wilsonvillerobotics.firstteamscouter.dbAdapters;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
@@ -22,7 +23,6 @@ public class TeamMatchDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_MATCH_ID = "match_id";
     public static final String COLUMN_NAME_COMPETITION_ID = "competition_id";
     public static final String COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION = "alliance_position";
-    public static final String COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT = "data_ready_to_export";
     public static final String COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA = "team_match_has_saved_data";
     public static final String COLUMN_NAME_BROKE_DOWN = "broke_down";
     public static final String COLUMN_NAME_NO_MOVE = "no_move";
@@ -72,6 +72,18 @@ public class TeamMatchDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_AUTO_CAN6_VISIBLE      = "auto_can6_visible";
     public static final String COLUMN_NAME_AUTO_CAN7_VISIBLE      = "auto_can7_visible";
     public static final String COLUMN_NAME_AUTO_ROBOT_STACK_LIST  = "auto_robot_stack_list";
+    public static final String COLUMN_NAME_TOTE_STACKER           = "tote_stacker";
+    public static final String COLUMN_NAME_CAN_KINGER             = "can_kinger";
+    public static final String COLUMN_NAME_COOPERATIVE            = "cooperative";
+    public static final String COLUMN_NAME_NOODLER                = "noodler";
+    public static final String COLUMN_NAME_NI_SAYER               = "ni";
+    public static final String COLUMN_NAME_TOTE_CONTROL_INSIDE    = "tote_control_inside_robot";
+    public static final String COLUMN_NAME_TOTE_CONTROL_FORK_LIFT = "tote_control_fork_lift";
+    public static final String COLUMN_NAME_TOTE_CONTROL_HANDLE_GRABBER = "tote_control_handle_grabber";
+    public static final String COLUMN_NAME_TOTE_CONTROL_DROP_ALOT = "tote_control_drop_alot";
+    public static final String COLUMN_NAME_TOTE_CONTROL_GREAT_CONTROL = "tote_control_great_control";
+    public static final String COLUMN_NAME_READY_TO_EXPORT        = "ready_to_export";
+
 
     // This needs to be moved to the notes_data table
     public static final String COLUMN_NAME_TEAM_MATCH_NOTES = "team_match_notes";
@@ -83,11 +95,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
     	    COLUMN_NAME_MATCH_ID,
             COLUMN_NAME_COMPETITION_ID,
     	    COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION,
-    	    COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT,
     	    COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA,
-    	    COLUMN_NAME_BROKE_DOWN,
-    	    COLUMN_NAME_NO_MOVE,
-    	    COLUMN_NAME_LOST_CONNECTION,
     	    COLUMN_NAME_START_LOCATION,
             COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X,
             COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y,
@@ -133,7 +141,39 @@ public class TeamMatchDBAdapter implements BaseColumns {
             COLUMN_NAME_AUTO_CANS_SCORED,
             COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP,
             COLUMN_NAME_START_LOCATION_ON_FIELD,
-    	    COLUMN_NAME_TEAM_MATCH_NOTES
+            COLUMN_NAME_BROKE_DOWN,
+            COLUMN_NAME_NO_MOVE,
+            COLUMN_NAME_LOST_CONNECTION,
+    	    COLUMN_NAME_TEAM_MATCH_NOTES,
+            COLUMN_NAME_TOTE_STACKER,
+            COLUMN_NAME_CAN_KINGER,
+            COLUMN_NAME_COOPERATIVE,
+            COLUMN_NAME_NOODLER,
+            COLUMN_NAME_NI_SAYER,
+            COLUMN_NAME_TOTE_CONTROL_INSIDE,
+            COLUMN_NAME_TOTE_CONTROL_FORK_LIFT,
+            COLUMN_NAME_TOTE_CONTROL_HANDLE_GRABBER,
+            COLUMN_NAME_TOTE_CONTROL_DROP_ALOT,
+            COLUMN_NAME_TOTE_CONTROL_GREAT_CONTROL,
+            COLUMN_NAME_READY_TO_EXPORT
+    };
+
+    public static String[] noteFields = {
+            COLUMN_NAME_BROKE_DOWN,
+            COLUMN_NAME_NO_MOVE,
+            COLUMN_NAME_LOST_CONNECTION,
+            COLUMN_NAME_TEAM_MATCH_NOTES,
+            COLUMN_NAME_TOTE_STACKER,
+            COLUMN_NAME_CAN_KINGER,
+            COLUMN_NAME_COOPERATIVE,
+            COLUMN_NAME_NOODLER,
+            COLUMN_NAME_NI_SAYER,
+            COLUMN_NAME_TOTE_CONTROL_INSIDE,
+            COLUMN_NAME_TOTE_CONTROL_FORK_LIFT,
+            COLUMN_NAME_TOTE_CONTROL_HANDLE_GRABBER,
+            COLUMN_NAME_TOTE_CONTROL_DROP_ALOT,
+            COLUMN_NAME_TOTE_CONTROL_GREAT_CONTROL,
+            COLUMN_NAME_READY_TO_EXPORT
     };
     
     private DatabaseHelper mDbHelper;
@@ -279,6 +319,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
         args.put(COLUMN_NAME_MATCH_ID, String.valueOf(match_id));
         args.put(COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA, Boolean.TRUE.toString());
         args.put(COLUMN_NAME_AUTO_MODE_SAVED, Boolean.FALSE.toString());
+        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
         long id = this.openForWrite().mDb.insert(TABLE_NAME, null, args);
         if(!this.dbIsClosed()) this.close();
         return id;
@@ -297,7 +338,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
         args.put(COLUMN_NAME_TEAM_ID, team_id);
         args.put(COLUMN_NAME_MATCH_ID, match_id);
         args.put(COLUMN_NAME_TEAM_MATCH_NOTES, tmNotes);
-        args.put(COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
         
         Enumeration<String> boolKeys = boolVals.keys();
         while(boolKeys.hasMoreElements()) {
@@ -329,7 +370,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
     		rowID = exportedData.getLong(exportedData.getColumnIndex(TeamMatchDBAdapter._ID));
 
     		ContentValues args = new ContentValues();
-            args.put(COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT, Boolean.FALSE.toString());
+            args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
             
             String WHERE = TeamMatchDBAdapter._ID + "=" + rowID;
 
@@ -357,23 +398,13 @@ public class TeamMatchDBAdapter implements BaseColumns {
     }
 
     /**
-     * Return a Cursor over the list of all entries in the database
-     * 
-     * @return Cursor over all Match Data entries that have data ready to export
-     */
-    public Cursor getTeamMatchesWithDataToExport() {
-        String WHERE = TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
-        return this.openForRead().mDb.query(TABLE_NAME, this.allColumns, WHERE, null, null, null, null);
-    }
-
-    /**
      * Set the Data Ready To Export field for a list of elements in the DB
      * @param exportedItems IDs of the entries to set to exported
      * @return A boolean denoting status
      */
     public boolean setItemsExported(ArrayList<Long> exportedItems) {
         ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT, Boolean.FALSE.toString());
+        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
 
         String WHERE = "";
         for(int i = 0; i < exportedItems.size(); i++) {
@@ -621,7 +652,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
         FTSUtilities.printToConsole("TeamMatchDBAdapter::setStartingPosition\n");
         ContentValues args = new ContentValues();
         args.put(_ID, teamMatchID);
-        args.put(COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
         args.put(COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X, startingPositionX);
         args.put(COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y, startingPositionY);
         args.put(COLUMN_NAME_START_LOCATION_ON_FIELD, String.valueOf(robotOnField));
@@ -645,7 +676,7 @@ public class TeamMatchDBAdapter implements BaseColumns {
         FTSUtilities.printToConsole("TeamMatchDBAdapter::setAutoModeActions\n");
         ContentValues args = new ContentValues();
         args.put(_ID, teamMatchID);
-        args.put(COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
         args.put(COLUMN_NAME_AUTO_MODE_SAVED, Boolean.TRUE.toString());
         args.put(COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, finalAutoModePositionX);
         args.put(COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y, finalAutoModePositionY);
@@ -695,6 +726,35 @@ public class TeamMatchDBAdapter implements BaseColumns {
         return retVal;
     }
 
+    public boolean updateNotesFields(long teamMatchID, HashMap<String, String> values) {
+        ContentValues args = new ContentValues();
+
+        for(String key : values.keySet()) {
+            args.put(key, values.get(key));
+        }
+
+        String WHERE = _ID + "=" + teamMatchID;
+
+        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, WHERE, null) >0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
+    }
+
+    public HashMap<String, String> getNotesData(long teamMatchId) {
+        HashMap<String, String> values = new HashMap<String, String>();
+        String WHERE = _ID + "=" + teamMatchId;
+        Cursor c = this.openForRead().mDb.query(TABLE_NAME, noteFields, WHERE, null, null, null, null);
+        if(c != null){
+            if(c.moveToNext()) {
+                values.put(_ID, String.valueOf(teamMatchId));
+                for (String column : noteFields) {
+                    values.put(column, c.getString(c.getColumnIndex(column)));
+                }
+            }
+        }
+        return values;
+    }
+
     public String getTeamAllianceForMatch(long teamMatchID) {
         String columns[] = {
                 COLUMN_NAME_TEAM_ID,
@@ -719,6 +779,18 @@ public class TeamMatchDBAdapter implements BaseColumns {
         if(!mCursor.isClosed()) mCursor.close();
         if(!this.dbIsClosed()) this.close();
         return matchAlliance;
+    }
+    public boolean setDataEntryExported(long rowId) {
+        ContentValues args = new ContentValues();
+        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
+        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
+    }
+
+    public Cursor getAllEntriesToExport() {
+        String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
+        return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
     }
 }
 

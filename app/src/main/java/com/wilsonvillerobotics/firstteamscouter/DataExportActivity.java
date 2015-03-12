@@ -160,7 +160,7 @@ public class DataExportActivity extends Activity {
         // track list of last data exported to enable easy repeat of send if BT fails
 
         // Get data for matches that have not been exported
-        Cursor c = teamMatchDBAdapter.getTeamMatchesWithDataToExport();
+        Cursor c = teamMatchDBAdapter.getAllEntriesToExport();
         if(c != null && c.getCount() > 0) {
             lastMatchDataExportList.clear();
             while (c.moveToNext()) {

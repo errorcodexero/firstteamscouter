@@ -18,7 +18,7 @@ public class MatchTeamNumberDisplayActivity extends Activity {
     private String tabletID;
     private boolean fieldOrientationRedOnRight;
     private int matchNumber;
-    private String teamNumber;
+    private int teamNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class MatchTeamNumberDisplayActivity extends Activity {
         this.processIntent(getIntent());
 
         TextView txtTeamNumberDisplay = (TextView)findViewById(R.id.txtTeamNumberDisplay);
-        txtTeamNumberDisplay.setText(this.teamNumber);
+        txtTeamNumberDisplay.setText(String.valueOf(this.teamNumber));
         
         int backgroundColor = Color.WHITE;
         if(this.tabletID.startsWith("Red")) {
@@ -36,8 +36,6 @@ public class MatchTeamNumberDisplayActivity extends Activity {
         } else if(this.tabletID.startsWith("Blue")) {
         	backgroundColor = Color.BLUE;
         }
-        //LinearLayout parentView = (LinearLayout)txtTeamNumberDisplay.getParent();
-        //parentView.setBackgroundColor(backgroundColor);
         txtTeamNumberDisplay.setBackgroundColor(backgroundColor);
 
         configureSubmitButton();
@@ -65,7 +63,7 @@ public class MatchTeamNumberDisplayActivity extends Activity {
         this.fieldOrientationRedOnRight = intent.getBooleanExtra("field_orientation", false);
         this.matchNumber = intent.getIntExtra("match_number", 0);
         this.teamMatchID = intent.getLongExtra("tmID", -1);
-        this.teamNumber = intent.getStringExtra("team_number");
+        this.teamNumber = intent.getIntExtra("team_number", -1);
     }
 
     private void buildIntent(Intent intent) {

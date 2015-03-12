@@ -13,10 +13,12 @@ public class PitDataDBAdapter implements BaseColumns {
 
     // Columns
     public static final String COLUMN_NAME_PIT_INFO = "pit_info";
+    public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     public static String[] allColumns = {
             _ID,
-            COLUMN_NAME_PIT_INFO
+            COLUMN_NAME_PIT_INFO,
+            COLUMN_NAME_READY_TO_EXPORT
     };
 
     private DatabaseHelper mDbHelper;
@@ -127,6 +129,7 @@ public class PitDataDBAdapter implements BaseColumns {
     public long createPitDataEntry(String pitInfo){
         ContentValues initialValues = new ContentValues();
         initialValues.put(COLUMN_NAME_PIT_INFO, pitInfo);
+        initialValues.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
         long id = this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
         if(!this.dbIsClosed()) this.close();
         return id;
@@ -173,13 +176,25 @@ public class PitDataDBAdapter implements BaseColumns {
      * 
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updatePitDataEntry(int rowId, String pitInfo){
+    public boolean updatePitDataEntry(int rowId, String pitInfo, Boolean export){
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_PIT_INFO, pitInfo);
+        args.put(COLUMN_NAME_READY_TO_EXPORT, String.valueOf(export));
         String WHERE = _ID + "=" + rowId;
         boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, WHERE, null) >0;
         if(!this.dbIsClosed()) this.close();
         return retVal;
     }
+    public boolean setDataEntryExported(long rowId) {
+        ContentValues args = new ContentValues();
+        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
+        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
+    }
 
+    public Cursor getAllEntriesToExport() {
+        String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
+        return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
+    }
 }

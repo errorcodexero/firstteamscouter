@@ -26,7 +26,7 @@ public class MatchStartingPositionActivity extends Activity {
     protected Long teamMatchID;
 	protected long teamID;
 	protected long matchID;
-    protected String teamNumber;
+    protected int teamNumber;
 	protected Button btnSubmit;
     private ALLIANCE_POSITION tabletAlliancePosition;
     private int matchNumber;
@@ -56,6 +56,13 @@ public class MatchStartingPositionActivity extends Activity {
         startingPositionRobotGutterLayout.setOnDragListener(new MyDragListener());
         startingPositionFieldLayout.setOnDragListener(new MyFieldDragListener());
 
+        TextView lblTeamNum = (TextView) findViewById(R.id.txtStartTeamNumber);
+        if(lblTeamNum != null) {
+            String label = getResources().getString(R.string.label_team_number) + " " + String.valueOf(teamNumber);
+            lblTeamNum.setText(label);
+
+        }
+
         imgRobot = (ImageView) findViewById(R.id.imgRobot);
         imgRobot.setOnTouchListener(new MyRobotTouchListener());
 
@@ -72,7 +79,7 @@ public class MatchStartingPositionActivity extends Activity {
         this.fieldOrientationRedOnRight = intent.getBooleanExtra("field_orientation", false);
         this.matchNumber = intent.getIntExtra("match_number", 0);
         this.teamMatchID = intent.getLongExtra("tmID", -1);
-        this.teamNumber  = intent.getStringExtra("team_number");
+        this.teamNumber  = intent.getIntExtra("team_number", -1);
     }
 
     private void setBackground(RelativeLayout startingPositionParentLayout) {

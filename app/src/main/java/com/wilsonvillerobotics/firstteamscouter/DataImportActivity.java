@@ -253,7 +253,7 @@ public class DataImportActivity extends Activity {
                                         try {
                                             teamDataDBAdapter.openForWrite();
                                             for (int i = 0; i < 6; i++) {
-                                                teamIDs[i] = teamDataDBAdapter.createTeamDataEntry(Integer.parseInt(lineArray[i + 4]), 0)[0];
+                                                teamIDs[i] = teamDataDBAdapter.createTeamDataEntryIfNotExist(Integer.parseInt(lineArray[i + 4]), 0)[0];
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();

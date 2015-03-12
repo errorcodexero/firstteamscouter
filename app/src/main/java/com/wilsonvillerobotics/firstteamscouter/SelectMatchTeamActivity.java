@@ -259,7 +259,7 @@ public class SelectMatchTeamActivity extends Activity {
                 teamMatchIntent.putExtra("field_orientation", fieldOrientationRedOnRight);
                 teamMatchIntent.putExtra("match_number", matchNumber);
                 teamMatchIntent.putExtra("tmID", tmID);
-                teamMatchIntent.putExtra("team_number", strCurrTeamNum);
+                teamMatchIntent.putExtra("team_number", Integer.valueOf(strCurrTeamNum));
             }
 
             public void onNothingSelected(AdapterView<?> arg0) {

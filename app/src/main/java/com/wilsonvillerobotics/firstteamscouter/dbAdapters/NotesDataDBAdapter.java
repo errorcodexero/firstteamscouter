@@ -17,12 +17,14 @@ public class NotesDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_OWNER_ID = "owner_id";
     public static final String COLUMN_NAME_NOTE_TYPE = "note_type"; // robot, team, pit, etc.
     public static final String COLUMN_NAME_NOTE_TEXT = "note_text";
+    public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     public static String[] allColumns = {
             _ID,
             COLUMN_NAME_OWNER_ID,
             COLUMN_NAME_NOTE_TYPE,
-            COLUMN_NAME_NOTE_TEXT
+            COLUMN_NAME_NOTE_TEXT,
+            COLUMN_NAME_READY_TO_EXPORT
     };
 
     private DatabaseHelper mDbHelper;
@@ -137,6 +139,7 @@ public class NotesDataDBAdapter implements BaseColumns {
         initialValues.put(COLUMN_NAME_OWNER_ID, owner_id);
         initialValues.put(COLUMN_NAME_NOTE_TYPE, note_type);
         initialValues.put(COLUMN_NAME_NOTE_TEXT, note_text);
+        initialValues.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
         long id = this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
         if(!this.dbIsClosed()) this.close();
         return id;
@@ -171,7 +174,7 @@ public class NotesDataDBAdapter implements BaseColumns {
     public ArrayList<Long> getAllNotesDataEntriesForOwner(long owner_id, String owner_type) {
         ArrayList<Long> noteIDs = new ArrayList<Long>();
         String WHERE = COLUMN_NAME_OWNER_ID + "=" + String.valueOf(owner_id);
-        WHERE += " AND " + COLUMN_NAME_NOTE_TYPE + "=" + owner_type;
+        WHERE += " AND " + COLUMN_NAME_NOTE_TYPE + "='" + owner_type + "'";
 
         Cursor c = this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
 
@@ -209,14 +212,26 @@ public class NotesDataDBAdapter implements BaseColumns {
      * @param note_text
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updateNotesDataEntry(int rowId, long owner_id, String note_type, String note_text){
+    public boolean updateNotesDataEntry(int rowId, long owner_id, String note_type, String note_text, Boolean export){
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_OWNER_ID, owner_id);
         args.put(COLUMN_NAME_NOTE_TYPE, note_type);
         args.put(COLUMN_NAME_NOTE_TEXT, note_text);
+        args.put(COLUMN_NAME_READY_TO_EXPORT, String.valueOf(export));
         boolean retVal = this.openForRead().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0;
         if(!this.dbIsClosed()) this.close();
         return  retVal;
     }
+    public boolean setDataEntryExported(long rowId) {
+        ContentValues args = new ContentValues();
+        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
+        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
+    }
 
+    public Cursor getAllEntriesToExport() {
+        String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
+        return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
+    }
 }

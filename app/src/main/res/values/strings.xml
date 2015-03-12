@@ -77,4 +77,18 @@
     <string name="label_export_via_bluetooth">Export Via Bluetooth</string>
     <string name="label_import_from_xml">Import XML</string>
     <string name="label_download_data">Download Data</string>
+    <string name="label_stacker">Stacker</string>
+    <string name="label_can_kinger">Can King</string>
+    <string name="label_cooperative">Cooperative</string>
+    <string name="label_noodler">Noodler</string>
+    <string name="label_knight_that_says_ni">Ni-sayer</string>
+    <string name="label_stack_tote_inside_robot">Inside Robot</string>
+    <string name="label_fork_lift">Fork Lift</string>
+    <string name="label_handle_grabber">Handle Grabber</string>
+    <string name="label_tote_dropper">Sir Drops-A-Lot</string>
+    <string name="label_great_tote_control">Totes Adorbs</string>
+    <string name="label_robot_role">Robot Role</string>
+    <string name="label_tote_control">Tote Control</string>
+    <string name="label_submit">Submit</string>
+    <string name="label_bluetooth_export">Export Via Bluetooth</string>
 </resources>

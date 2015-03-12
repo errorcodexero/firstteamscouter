@@ -156,7 +156,7 @@
         android:paddingRight="25dp" >
 
         <TextView
-            android:id="@+id/lblTeamNotes"
+            android:id="@+id/lblTMNotes"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -171,7 +171,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="false"
-            android:layout_below="@+id/lblTeamNotes"
+            android:layout_below="@+id/lblTMNotes"
             android:background="@drawable/edittext_bg"
             android:ems="10"
             android:gravity="top|left|fill_horizontal"

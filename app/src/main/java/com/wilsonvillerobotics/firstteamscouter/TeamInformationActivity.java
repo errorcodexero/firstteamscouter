@@ -447,7 +447,8 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
             String strWheelArray[] = getResources().getStringArray(R.array.Wheels);
             int index = 0;
 
-            this.robotID = Long.parseLong(hmRobotData.get(RobotDataDBAdapter._ID));
+            String tempId =hmRobotData.get(RobotDataDBAdapter._ID);
+            if(tempId != null) this.robotID = Long.parseLong(tempId);
 
             int numStacks = Integer.parseInt(hmRobotData.get(RobotDataDBAdapter.COLUMN_NAME_NUMBER_TOTE_STACKS));
             if(sbNumToteStacks != null) sbNumToteStacks.setProgress(Integer.parseInt(hmRobotData.get(RobotDataDBAdapter.COLUMN_NAME_NUMBER_TOTE_STACKS)));
@@ -470,6 +471,8 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
         if(this.hmRobotData != null) {
             String strDriveTrainArray[] = getResources().getStringArray(R.array.DriveTrains);
             String strWheelArray[] = getResources().getStringArray(R.array.Wheels);
+
+            hmRobotData.put(RobotDataDBAdapter._ID, String.valueOf(this.robotID));
 
             if(sbNumToteStacks != null) hmRobotData.put(RobotDataDBAdapter.COLUMN_NAME_NUMBER_TOTE_STACKS, String.valueOf(sbNumToteStacks.getProgress()));
             if(sbNumWheels != null) hmRobotData.put(RobotDataDBAdapter.COLUMN_NAME_NUMBER_WHEELS, String.valueOf(sbNumWheels.getProgress()));
@@ -498,7 +501,7 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
 
             try {
                 if(this.robotID >= 0) {
-                    rdDBAdapter.openForWrite().updateRobotDataEntry(robotID, teamID, competition_id, hmRobotData);
+                    rdDBAdapter.openForWrite().updateRobotDataEntry(robotID, teamID, competition_id, hmRobotData, true);
                 } else {
                     this.robotID = rdDBAdapter.openForWrite().createRobotDataEntry(teamID, competition_id, hmRobotData);
                 }

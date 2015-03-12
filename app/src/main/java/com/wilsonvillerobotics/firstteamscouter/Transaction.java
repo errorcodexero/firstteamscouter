@@ -205,7 +205,7 @@ public class Transaction {
             }
         }
         values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_ELEMENT_STATES, states);
-        values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TRANSACTION_READY_TO_EXPORT, this.readyToExport);
+        values.put(TeamMatchTransactionDataDBAdapter.COLUMN_NAME_READY_TO_EXPORT, this.readyToExport);
 
         return values;
     }
