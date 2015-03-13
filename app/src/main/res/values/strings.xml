@@ -16,7 +16,8 @@
     <string name="label_scouting_team">You Are Scouting Team #</string>
     <string name="label_team_number">Team #: </string>
     <string name="label_team_name">Team Name: </string>
-    <string name="label_team_location">Team Location: </string>
+    <string name="label_team_city">Team City: </string>
+    <string name="label_team_state">Team State: </string>
     <string name="label_number_team_members"># Members: </string>
     <string name="label_match_list">Match List</string>
     <string name="label_match_number">Match #: </string>

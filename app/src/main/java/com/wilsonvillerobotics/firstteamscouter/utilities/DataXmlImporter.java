@@ -2,6 +2,8 @@ package com.wilsonvillerobotics.firstteamscouter.utilities;
 
 import android.content.Context;
 
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.DBAdapter;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;

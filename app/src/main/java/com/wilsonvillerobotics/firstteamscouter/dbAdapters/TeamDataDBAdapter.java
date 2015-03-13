@@ -21,7 +21,8 @@ public class TeamDataDBAdapter implements BaseColumns {
 
 
     public static final String COLUMN_NAME_TEAM_NAME = "team_name";
-    public static final String COLUMN_NAME_TEAM_LOCATION = "team_location";
+    public static final String COLUMN_NAME_TEAM_CITY = "team_city";
+    public static final String COLUMN_NAME_TEAM_STATE = "team_state";
     public static final String COLUMN_NAME_TEAM_NUM_MEMBERS = "num_team_members";
     public static final String COLUMN_NAME_TEAM_YEAR_CREATED = "team_creation_year";
     public static final String COLUMN_NAME_TEAM_DATA_UPDATED = "team_data_updated";
@@ -34,7 +35,8 @@ public class TeamDataDBAdapter implements BaseColumns {
             COLUMN_NAME_TEAM_NUMBER,
             COLUMN_NAME_TEAM_SUB_NUMBER,
             COLUMN_NAME_TEAM_NAME,
-            COLUMN_NAME_TEAM_LOCATION,
+            COLUMN_NAME_TEAM_CITY,
+            COLUMN_NAME_TEAM_STATE,
             COLUMN_NAME_TEAM_NUM_MEMBERS,
             COLUMN_NAME_TEAM_YEAR_CREATED,
             COLUMN_NAME_TEAM_DATA_UPDATED,
@@ -154,17 +156,18 @@ public class TeamDataDBAdapter implements BaseColumns {
      * 
      * @param team_number
      * @param team_name
-     * @param team_location
+     * @param team_city
      * @param num_team_members
      * @return rowId or -1 if failed
      */
-    public long createTeamDataEntry(int team_number, int team_sub_number, String team_name, String team_location, int num_team_members){
+    public long createTeamDataEntry(int team_number, int team_sub_number, String team_name, String team_city, String team_state, int num_team_members){
         long retVal = -1;
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_TEAM_NUMBER, team_number);
         args.put(COLUMN_NAME_TEAM_SUB_NUMBER, team_sub_number);
         args.put(COLUMN_NAME_TEAM_NAME, team_name);
-        args.put(COLUMN_NAME_TEAM_LOCATION, team_location);
+        args.put(COLUMN_NAME_TEAM_CITY, team_city);
+        args.put(COLUMN_NAME_TEAM_STATE, team_state);
         args.put(COLUMN_NAME_TEAM_NUM_MEMBERS, num_team_members);
         args.put(COLUMN_NAME_TEAM_DATA_UPDATED, Boolean.TRUE.toString());
         args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
@@ -202,17 +205,18 @@ public class TeamDataDBAdapter implements BaseColumns {
      * @param team_number
      * @param team_sub_number
      * @param team_name
-     * @param team_location
+     * @param team_city
      * @param num_team_members
      * @return true if the entry was successfully updated, false otherwise
      */
     public boolean updateTeamDataEntry(int team_number, int team_sub_number, String team_name,
-    		String team_location, int num_team_members, Boolean export){
+    		String team_city, String team_state, int num_team_members, Boolean export){
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_TEAM_NUMBER, team_number);
         args.put(COLUMN_NAME_TEAM_SUB_NUMBER, team_sub_number);
         args.put(COLUMN_NAME_TEAM_NAME, team_name);
-        args.put(COLUMN_NAME_TEAM_LOCATION, team_location);
+        args.put(COLUMN_NAME_TEAM_CITY, team_city);
+        args.put(COLUMN_NAME_TEAM_STATE, team_state);
         args.put(COLUMN_NAME_TEAM_NUM_MEMBERS, num_team_members);
         args.put(COLUMN_NAME_TEAM_DATA_UPDATED, Boolean.TRUE.toString());
         args.put(COLUMN_NAME_READY_TO_EXPORT, String.valueOf(export));
@@ -318,7 +322,7 @@ public class TeamDataDBAdapter implements BaseColumns {
     	int i = 0;
     	
     	for(int teamNum : teamNums) {
-    		teamIDs[i++] = this.createTeamDataEntry(teamNum, 0, FTSUtilities.getTeamName(teamNum), "Location", 42);
+    		teamIDs[i++] = this.createTeamDataEntry(teamNum, 0, FTSUtilities.getTeamName(teamNum), "City", "State", 42);
     	}
     	return teamIDs;
     }

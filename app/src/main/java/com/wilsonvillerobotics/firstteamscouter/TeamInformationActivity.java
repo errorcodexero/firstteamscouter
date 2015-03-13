@@ -358,7 +358,7 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
 
                 if (this.hmTeamInfoTextViews.get(R.id.txtPitTeamLocation) != null) {
                     this.hmTeamInfoTextViews.get(R.id.txtPitTeamLocation).setText(
-                            tdData.getString(tdData.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_LOCATION)));
+                            tdData.getString(tdData.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_CITY)));
                 }
 
                 if (this.hmTeamInfoTextViews.get(R.id.txtTeamNumMembers) != null) {

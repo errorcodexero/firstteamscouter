@@ -1,6 +1,5 @@
 package com.wilsonvillerobotics.firstteamscouter.dbAdapters;
 
-import com.wilsonvillerobotics.firstteamscouter.FIRSTTeamScouter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.DataXmlExporter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 import com.wilsonvillerobotics.firstteamscouter.utilities.DataXmlImporter;
@@ -11,7 +10,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 //import org.jumpmind.symmetric.android.SQLiteOpenHelperRegistry;
 //import org.jumpmind.symmetric.android.SymmetricService;
@@ -26,7 +24,7 @@ public class DBAdapter {
 
     public static final String DATABASE_NAME = "FIRSTTeamScouter.sqlite"; //$NON-NLS-1$
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     private static final int TABLE_NAME        = 0;
     private static final int CREATE_TABLE_SQL  = 1;
@@ -302,7 +300,8 @@ public class DBAdapter {
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER + INT_TYPE + NOT_NULL + COMMA_SEP +
             TeamDataDBAdapter.COLUMN_NAME_TEAM_SUB_NUMBER + INT_TYPE + NOT_NULL + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_NAME + TEXT_TYPE + COMMA_SEP +
-	        TeamDataDBAdapter.COLUMN_NAME_TEAM_LOCATION + TEXT_TYPE + COMMA_SEP +
+	        TeamDataDBAdapter.COLUMN_NAME_TEAM_CITY + TEXT_TYPE + COMMA_SEP +
+            TeamDataDBAdapter.COLUMN_NAME_TEAM_STATE + TEXT_TYPE + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_NUM_MEMBERS + INT_TYPE + COMMA_SEP +
             TeamDataDBAdapter.COLUMN_NAME_TEAM_YEAR_CREATED + TEXT_TYPE + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_DATA_UPDATED + BOOL_TYPE + COMMA_SEP +
@@ -672,6 +671,10 @@ public class DBAdapter {
         }
 
         insertStatement = parser.parseXML(this.context, tableName, firstColumn, lastColumn);
+
+        this.openForRead().db.execSQL(insertStatement);
+        if(this.db.isOpen()) this.close();
+        
         return insertStatement;
     }
 }

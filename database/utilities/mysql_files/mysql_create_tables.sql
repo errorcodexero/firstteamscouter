@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS competition_data (
 _id integer primary key auto_increment,
 competition_name varchar(255),
-competition_location varchar(255));
+competition_location varchar(255),
+ready_to_export varchar(5));
 
 
 CREATE TABLE IF NOT EXISTS match_data (
@@ -17,26 +18,30 @@ red_team_three_id integer,
 blue_team_one_id integer,
 blue_team_two_id integer,
 blue_team_three_id integer,
-match_data_updated varchar(5));
+match_data_updated varchar(5),
+ready_to_export varchar(5));
 
 
 CREATE TABLE IF NOT EXISTS notes_data (
 _id integer primary key auto_increment,
 owner_id integer,
 note_type varchar(20),
-note_text varchar(255));
+note_text varchar(255),
+ready_to_export varchar(5));
 
 
 CREATE TABLE IF NOT EXISTS picture_data (
 _id integer primary key auto_increment,
 owner_id integer,
 picture_type varchar(20),
-picture_uri varchar(255));
+picture_uri varchar(255),
+ready_to_export varchar(5));
 
 
 CREATE TABLE IF NOT EXISTS pit_data (
 _id integer primary key auto_increment,
-pit_info varchar(255));
+pit_info varchar(255),
+ready_to_export varchar(5));
 
 
 CREATE TABLE IF NOT EXISTS robot_data (
@@ -56,7 +61,8 @@ tote_manipulator_type varchar(20),
 can_manipulator_type varchar(20),
 robot_drive_range varchar(20),
 team_does_coopertition char(5),
-robot_stacks_from varchar(255));
+robot_stacks_from varchar(255),
+ready_to_export varchar(5));
 
 
 CREATE TABLE IF NOT EXISTS team_data (
@@ -64,10 +70,12 @@ _id integer,
 team_number integer,
 team_sub_number integer,
 team_name varchar(255),
-team_location varchar(255),
+team_city varchar(255),
+team_state varchar(255),
 num_team_members integer,
 team_creation_year integer,
 team_data_updated varchar(5),
+ready_to_export varchar(5),
 primary key ( team_number, team_sub_number ));
 
 
@@ -77,7 +85,6 @@ team_id integer,
 match_id integer,
 competition_id integer,
 alliance_position varchar(20),
-data_ready_to_export varchar(5),
 team_match_has_saved_data varchar(5),
 broke_down char(5),
 no_move char(5),
@@ -127,7 +134,8 @@ auto_can5_visible varchar(5),
 auto_can6_visible varchar(5),
 auto_can7_visible varchar(5),
 auto_robot_stack_list varchar(255),
-team_match_notes varchar(255));
+team_match_notes varchar(255),
+ready_to_export varchar(5));
 
 
 CREATE TABLE IF NOT EXISTS team_match_transaction (
@@ -145,11 +153,12 @@ action_end_location_X integer,
 action_end_location_Y integer,
 element_types varchar(255),
 element_states varchar(255),
-transaction_ready_to_export varchar(5));
+ready_to_export varchar(5));
 
 
 CREATE TABLE IF NOT EXISTS team_match_transactions (
 _id integer primary key auto_increment,
 team_match_id integer,
-transaction_id integer);
+transaction_id integer,
+ready_to_export varchar(5));
 
