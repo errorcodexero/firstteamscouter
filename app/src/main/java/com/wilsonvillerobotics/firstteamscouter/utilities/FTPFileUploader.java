@@ -23,25 +23,30 @@ import java.net.UnknownHostException;
  *
  * http://stackoverflow.com/questions/7202987/uploading-a-file-from-android-to-a-server-through-ftp
  */
-public class FTPFileUploader extends AsyncTask<File, Void, Void> {
+public class FTPFileUploader extends AsyncTask<File, Void, Boolean> {
 
-    private final String user = "ftsscout", pwd = "ftsscouter";
-    private final String remotePath = "./upload";
-    private final byte serverIP[] = {(byte)10, (byte)0, (byte)0, (byte)100};
+    private String userName;
+    private String password;
+    private String remotePath;
+    private byte serverIP[];
 
     public FTPFileUploader() {
-
+        this.userName = FTSUtilities.user;
+        this.password = FTSUtilities.pwd;
+        this.remotePath = FTSUtilities.remoteUploadPath;
+        this.serverIP = FTSUtilities.defaultServerIP;
     }
 
     @Override
-    protected Void doInBackground(File... filesToSend) {
+    protected Boolean doInBackground(File... filesToSend) {
         FTPClient ftpClient = new FTPClient();
         boolean result = false;
+        boolean backupSuccess = false;
         try {
             //ftpClient.connect(InetAddress.getByName(serverName));
             InetAddress ipv4 = Inet4Address.getByAddress(serverIP);
             ftpClient.connect(ipv4);
-            result = ftpClient.login(user, pwd);
+            result = ftpClient.login(userName, password);
             Log.e("isFTPConnected", String.valueOf(result));
             ftpClient.changeWorkingDirectory(remotePath);
 
@@ -53,12 +58,19 @@ public class FTPFileUploader extends AsyncTask<File, Void, Void> {
                 for(File fileToSend : filesToSend) {
                     buffIn = new BufferedInputStream(new FileInputStream(fileToSend));
                     //ProgressInputStream progressInput = new ProgressInputStream(buffIn, new Handler(Looper.myLooper()));
-                    //result = ftpClient.storeFile(remotePath, progressInput);
-                    result = ftpClient.storeFile(fileToSend.getAbsoluteFile().getName(), buffIn);
+                    //result = ftpClient.storeFile(remoteUploadPath, progressInput);
+                    String fName = fileToSend.getAbsoluteFile().getName();
+                    result = ftpClient.storeFile(fName, buffIn);
                     buffIn.close();
 
                     if(result) {
+                        File backupDir = FTSUtilities.getFileDirectory("exported");
+                        if (!backupDir.exists()) {
+                            backupDir.mkdirs();
+                        }
 
+                        File backupFile = new File(backupDir, fName);
+                        backupSuccess |= fileToSend.renameTo(backupFile);
                     }
                 }
                 ftpClient.logout();
@@ -71,7 +83,9 @@ public class FTPFileUploader extends AsyncTask<File, Void, Void> {
             Log.e(FIRSTTeamScouter.TAG, e.getStackTrace().toString());
         } catch (IOException e) {
             Log.e(FIRSTTeamScouter.TAG, e.getStackTrace().toString());
+        } catch (Exception e) {
+            Log.e(FIRSTTeamScouter.TAG, e.getStackTrace().toString());
         }
-        return null;
+        return result && backupSuccess;
     }
 }

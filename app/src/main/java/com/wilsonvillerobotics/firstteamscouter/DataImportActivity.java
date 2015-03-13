@@ -211,8 +211,11 @@ public class DataImportActivity extends Activity {
                     } else {
                         String storageState = Environment.getExternalStorageState();
                         if (storageState.equals(Environment.MEDIA_MOUNTED)) {
+                            FTPFileDownloader ftpDL = new FTPFileDownloader();
+                            FTPFile[] files = ftpDL.execute().get();
+
                             FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : getting file\n");
-                            File file = new File(getExternalFilesDir(null), "match_list_data.csv");
+                            File file = new File(FTSUtilities.getFileDirectory("download"), "match_list_data.csv");
                             FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : file " + ((file.exists()) ? "EXISTS" : "IS MISSING") + "\n");
 
                             if (file.exists() && file.isFile()) {
@@ -246,7 +249,7 @@ public class DataImportActivity extends Activity {
                                     lineCount += 1;
                                     lineArray = line.split(",");
 
-                                    if (lineArray.length > 8) {
+                                    if (lineArray.length > 9) {
                                         //FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : " + lineArray[0] + ":" + lineArray[1] + ":" + lineArray[2] + ":" + lineArray[3] + ":" + lineArray[4] + ":" + lineArray[5] + ":" + lineArray[6] + ":" + lineArray[7]);
                                         //CompetitionID : Time : Type : MatchNum : Red1 : Red2 : Red3 : Blue1 : Blue2 : Blue3
                                         long teamIDs[] = {-1, -1, -1, -1, -1, -1};

@@ -132,7 +132,7 @@ public class DataXmlExporter {
 
     private boolean writeToFile(final String xmlString, final String exportFileName) throws IOException {
         boolean exportSuccess = true;
-        File dir = new File(Environment.getExternalStorageDirectory(), DataXmlExporter.DATASUBDIRECTORY);
+        File dir = FTSUtilities.getFileDirectory(null); //new File(Environment.getExternalStorageDirectory(), DataXmlExporter.DATASUBDIRECTORY);
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -151,18 +151,6 @@ public class DataXmlExporter {
                 channel.close();
             }
         }
-
-      /*
-      FileWriter fw = new FileWriter(file);
-      if (fw != null) {
-         try {
-            fw.write(xmlString);
-            fw.flush();
-         } finally {
-            fw.close();
-         }
-      }
-      */
 
         return exportSuccess;
     }

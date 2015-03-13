@@ -191,8 +191,11 @@ public class TeamDataDBAdapter implements BaseColumns {
             args.put(COLUMN_NAME_TEAM_SUB_NUMBER, team_sub_number);
             args.put(COLUMN_NAME_TEAM_DATA_UPDATED, Boolean.TRUE.toString());
             args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
-            retVal[0] = this.openForWrite().mDb.insert(TABLE_NAME, null, args);
-            retVal[1] = team_sub_number;
+            long id = this.openForWrite().mDb.insert(TABLE_NAME, null, args);
+            if(id != -1) {
+                retVal[0] = team_number;
+                retVal[1] = team_sub_number;
+            }
     	}
         if(c != null && !c.isClosed()) c.close();
         if(!this.dbIsClosed()) this.close();

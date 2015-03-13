@@ -16,7 +16,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 //import org.jumpmind.symmetric.common.ParameterConstants;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -24,7 +23,7 @@ public class DBAdapter {
 
     public static final String DATABASE_NAME = "FIRSTTeamScouter.sqlite"; //$NON-NLS-1$
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 50;
 
     private static final int TABLE_NAME        = 0;
     private static final int CREATE_TABLE_SQL  = 1;
@@ -512,6 +511,15 @@ public class DBAdapter {
         		query = TABLE_LIST[table.getIndex()][CREATE_TABLE_SQL];
         		db.execSQL(query);
         	}
+
+            // ImportTransactions table - special case
+            query = "CREATE TABLE " + ImportTransactionsDBAdapter.TABLE_NAME + " (" +
+                    AUTO_INC_ID +
+                    ImportTransactionsDBAdapter.COLUMN_NAME_IMPORTED_FILE_NAME + TEXT_TYPE +
+                    ")";
+            db.execSQL(query);
+
+            setSequenceIDs(db);
         }
 
         @Override
@@ -520,24 +528,20 @@ public class DBAdapter {
         	String query = "";
         	FTSUtilities.printToConsole("Upgrading tables in DBAdapter::DatabaseHelper -- Old DB Version: " + oldVersion + " - New DB Version: " + newVersion);
 
+            //String seqQuery = "DELETE FROM sqlite_sequence";
+            //db.execSQL(seqQuery);
+
         	for(TABLE_NAMES table : TABLE_NAMES.values()) {
                 FTSUtilities.printToConsole("Backing up data from table: " + table + "\n\n");
                 query = TABLE_LIST[table.getIndex()][BACKUP_TABLE_SQL];
-                try {
+                /*try {
                     Method m = table.CLASS().getMethod("restoreTableData", ArrayList.class);
                 }catch (Exception e) {
                     FTSUtilities.printToConsole("**** restoreTableData not found for: " + table.className);
-                }
-                Cursor c = db.rawQuery(query, null);
-
+                }*/
                 ArrayList<HashMap<String, String>> data = new ArrayList<HashMap<String, String>>();
-                while(c.moveToNext()) {
-                    HashMap<String, String> datum = new HashMap<String, String>();
-                    for(String column : c.getColumnNames()) {
-                        datum.put(column, c.getString(c.getColumnIndex(column)));
-                    }
-                    data.add(datum);
-                }
+                backupTable(db, query, data);
+                Cursor c;
 
                 FTSUtilities.printToConsole("Deleting/Re-Creating table: " + table + "\n\n");
         		query = TABLE_LIST[table.getIndex()][DELETE_TABLE_SQL];
@@ -551,33 +555,191 @@ public class DBAdapter {
                 FTSUtilities.printToConsole("Restoring data to table: " + table + "\n\n");
                 query = TABLE_LIST[table.getIndex()][RESTORE_TABLE_SQL];
 
-                c = db.rawQuery(query, null);
-                //TODO Restore the values in 'data' List
-                int index;
-                for(HashMap<String, String> datum : data) {
-                    ContentValues initialValues = new ContentValues();
-                    for(String col : datum.keySet()) {
-                        try {
-                            index = c.getColumnIndexOrThrow(col);
-                            if(index > 0) {
-                                initialValues.put(col, datum.get(col));
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    if(initialValues.size() > 0) {
-                        try {
-                            db.insert(TABLE_LIST[table.getIndex()][TABLE_NAME], null, initialValues);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                String tableName = TABLE_LIST[table.getIndex()][TABLE_NAME];
+                restoreTable(db, query, tableName, data);
+        	}
+
+            ArrayList<HashMap<String, String>> data = new ArrayList<HashMap<String, String>>();
+            try {
+                // Import Transactions - special case
+                query = "SELECT * FROM " + ImportTransactionsDBAdapter.TABLE_NAME;
+
+                backupTable(db, query, data);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                query = "DROP TABLE IF EXISTS " + ImportTransactionsDBAdapter.TABLE_NAME;
+                db.execSQL(query);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                query = "CREATE TABLE " + ImportTransactionsDBAdapter.TABLE_NAME + " (" +
+                        AUTO_INC_ID +
+                        ImportTransactionsDBAdapter.COLUMN_NAME_IMPORTED_FILE_NAME + TEXT_TYPE +
+                        ")";
+                db.execSQL(query);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                query = "SELECT * FROM " + ImportTransactionsDBAdapter.TABLE_NAME;
+                data.clear();
+                restoreTable(db, query, "import_transactions", data);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            setSequenceIDs(db);
+        }
+
+        private void setSequenceIDs(SQLiteDatabase db) {
+            String seqQuery;
+            long seqNum = Long.parseLong(FTSUtilities.getShortDeviceID(ctx), 16);
+
+            // INSERT INTO TABLE_NAME (column1, column2, column3,...columnN)]
+            // VALUES (value1, value2, value3,...valueN);
+
+            try {
+                //getWritableDatabase();
+                Cursor c = db.query(NotesDataDBAdapter.TABLE_NAME, NotesDataDBAdapter.allColumns, null, null, null, null, NotesDataDBAdapter._ID + " DESC");
+                if (c == null || c.getCount() == 0 || (c.moveToNext() && c.getLong(c.getColumnIndex(NotesDataDBAdapter._ID)) < seqNum)) {
+                    ContentValues values = new ContentValues();
+                    values.put(NotesDataDBAdapter._ID, seqNum);
+                    long id = db.insert(NotesDataDBAdapter.TABLE_NAME, null, values);
+                    if(id != -1) {
+                        String WHERE = NotesDataDBAdapter._ID + "=" + String.valueOf(seqNum);
+                        db.delete(NotesDataDBAdapter.TABLE_NAME, WHERE, null);
                     }
                 }
-                //c = db.rawQuery(query, null);
-        	}
+
+                c = db.query(PictureDataDBAdapter.TABLE_NAME, PictureDataDBAdapter.allColumns, null, null, null, null, PictureDataDBAdapter._ID + " DESC");
+                if (c == null || c.getCount() == 0 || (c.moveToNext() && c.getLong(c.getColumnIndex(PictureDataDBAdapter._ID)) < seqNum)) {
+                    ContentValues values = new ContentValues();
+                    values.put(PictureDataDBAdapter._ID, seqNum);
+                    long id = db.insert(PictureDataDBAdapter.TABLE_NAME, null, values);
+                    if(id != -1) {
+                        String WHERE = PictureDataDBAdapter._ID + "=" + String.valueOf(seqNum);
+                        db.delete(PictureDataDBAdapter.TABLE_NAME, WHERE, null);
+                    }
+                }
+
+                c = db.query(PitDataDBAdapter.TABLE_NAME, PitDataDBAdapter.allColumns, null, null, null, null, PitDataDBAdapter._ID + " DESC");
+                if (c == null || c.getCount() == 0 || (c.moveToNext() && c.getLong(c.getColumnIndex(PitDataDBAdapter._ID)) < seqNum)) {
+                    ContentValues values = new ContentValues();
+                    values.put(PitDataDBAdapter._ID, seqNum);
+                    long id = db.insert(PitDataDBAdapter.TABLE_NAME, null, values);
+                    if(id != -1) {
+                        String WHERE = PitDataDBAdapter._ID + "=" + String.valueOf(seqNum);
+                        db.delete(PitDataDBAdapter.TABLE_NAME, WHERE, null);
+                    }
+                }
+
+                c = db.query(RobotDataDBAdapter.TABLE_NAME, RobotDataDBAdapter.allColumns, null, null, null, null, RobotDataDBAdapter._ID + " DESC");
+                if (c == null || c.getCount() == 0 || (c.moveToNext() && c.getLong(c.getColumnIndex(RobotDataDBAdapter._ID)) < seqNum)) {
+                    ContentValues values = new ContentValues();
+                    values.put(RobotDataDBAdapter._ID, seqNum);
+                    long id = db.insert(RobotDataDBAdapter.TABLE_NAME, null, values);
+                    if(id != -1) {
+                        String WHERE = RobotDataDBAdapter._ID + "=" + String.valueOf(seqNum);
+                        db.delete(RobotDataDBAdapter.TABLE_NAME, WHERE, null);
+                    }
+                }
+
+                c = db.query(TeamMatchTransactionDataDBAdapter.TABLE_NAME, TeamMatchTransactionDataDBAdapter.allColumns, null, null, null, null, TeamMatchTransactionDataDBAdapter._ID + " DESC");
+                if (c == null || c.getCount() == 0 || (c.moveToNext() && c.getLong(c.getColumnIndex(TeamMatchTransactionDataDBAdapter._ID)) < seqNum)) {
+                    ContentValues values = new ContentValues();
+                    values.put(TeamMatchTransactionDataDBAdapter._ID, seqNum);
+                    long id = db.insert(TeamMatchTransactionDataDBAdapter.TABLE_NAME, null, values);
+                    if(id != -1) {
+                        String WHERE = TeamMatchTransactionDataDBAdapter._ID + "=" + String.valueOf(seqNum);
+                        db.delete(TeamMatchTransactionDataDBAdapter.TABLE_NAME, WHERE, null);
+                    }
+                }
+
+                c = db.query(TeamMatchTransactionsDBAdapter.TABLE_NAME, TeamMatchTransactionsDBAdapter.allColumns, null, null, null, null, TeamMatchTransactionsDBAdapter._ID + " DESC");
+                if (c == null || c.getCount() == 0 || (c.moveToNext() && c.getLong(c.getColumnIndex(TeamMatchTransactionsDBAdapter._ID)) < seqNum)) {
+                    ContentValues values = new ContentValues();
+                    values.put(TeamMatchTransactionsDBAdapter._ID, seqNum);
+                    long id = db.insert(TeamMatchTransactionsDBAdapter.TABLE_NAME, null, values);
+                    if(id != -1) {
+                        String WHERE = TeamMatchTransactionsDBAdapter._ID + "=" + String.valueOf(seqNum);
+                        db.delete(TeamMatchTransactionsDBAdapter.TABLE_NAME, WHERE, null);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            /*
+            seqQuery = "UPDATE sqlite_sequence SET seq=" + seqNum + " WHERE name=" + NotesDataDBAdapter.TABLE_NAME;
+            db.execSQL(seqQuery);
+
+            seqQuery = "UPDATE sqlite_sequence SET seq=" + seqNum + " WHERE name=" + PictureDataDBAdapter.TABLE_NAME;
+            db.execSQL(seqQuery);
+
+            seqQuery = "UPDATE sqlite_sequence SET seq=" + seqNum + " WHERE name=" + PitDataDBAdapter.TABLE_NAME;
+            db.execSQL(seqQuery);
+
+            seqQuery = "UPDATE sqlite_sequence SET seq=" + seqNum + " WHERE name=" + RobotDataDBAdapter.TABLE_NAME;
+            db.execSQL(seqQuery);
+
+            seqQuery = "UPDATE sqlite_sequence SET seq=" + seqNum + " WHERE name=" + TeamMatchTransactionDataDBAdapter.TABLE_NAME;
+            db.execSQL(seqQuery);
+
+            seqQuery = "UPDATE sqlite_sequence SET seq=" + seqNum + " WHERE name=" + TeamMatchTransactionsDBAdapter.TABLE_NAME;
+            db.execSQL(seqQuery);
+            */
         }
-        
+
+        private void restoreTable(SQLiteDatabase db, String query, String table, ArrayList<HashMap<String, String>> data) {
+            Cursor c;
+            c = db.rawQuery(query, null);
+            //TODO Restore the values in 'data' List
+            int index;
+            for(HashMap<String, String> datum : data) {
+                ContentValues initialValues = new ContentValues();
+                for(String col : datum.keySet()) {
+                    try {
+                        index = c.getColumnIndexOrThrow(col);
+                        if(index > 0) {
+                            initialValues.put(col, datum.get(col));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(initialValues.size() > 0) {
+                    try {
+                        db.insert(table, null, initialValues);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        private void backupTable(SQLiteDatabase db, String query, ArrayList<HashMap<String, String>> data) {
+            try {
+                Cursor c = db.rawQuery(query, null);
+
+                while (c.moveToNext()) {
+                    HashMap<String, String> datum = new HashMap<String, String>();
+                    for (String column : c.getColumnNames()) {
+                        datum.put(column, c.getString(c.getColumnIndex(column)));
+                    }
+                    data.add(datum);
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         @Override
     	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         	FTSUtilities.printToConsole("Downgrading tables in DBAdapter::DatabaseHelper -- Old DB Version: " + oldVersion + " - New DB Version: " + newVersion);
@@ -663,18 +825,29 @@ public class DBAdapter {
     public String getInsertStatementFromXmlTable(File xmlFile, String tableName, String firstColumn, String lastColumn) {
         String insertStatement = "";
 
-        DataXmlImporter parser = null;
-        try {
-            parser = new DataXmlImporter(xmlFile.getCanonicalPath());
-        } catch (Exception e) {
-            e.printStackTrace();
+        String fileName = xmlFile.getAbsoluteFile().getName();
+        ImportTransactionsDBAdapter itDBAdapter = new ImportTransactionsDBAdapter(context);
+        if(itDBAdapter.fileHasNotBeenImported(fileName)) {
+
+            DataXmlImporter parser = null;
+            try {
+                parser = new DataXmlImporter(xmlFile.getCanonicalPath());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            insertStatement = parser.parseXML(this.context, tableName, firstColumn, lastColumn);
+
+            if(insertStatement != null && !insertStatement.equals("")) {
+                try {
+                    this.openForRead().db.execSQL(insertStatement);
+                    itDBAdapter.fileWasImported(fileName);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (this.db.isOpen()) this.close();
         }
-
-        insertStatement = parser.parseXML(this.context, tableName, firstColumn, lastColumn);
-
-        this.openForRead().db.execSQL(insertStatement);
-        if(this.db.isOpen()) this.close();
-        
         return insertStatement;
     }
 }

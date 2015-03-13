@@ -13,7 +13,6 @@ import org.apache.commons.net.ftp.FTPFile;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,10 +28,6 @@ import java.net.UnknownHostException;
  */
 public class FTPFileDownloader extends AsyncTask<Void, Void, FTPFile[]> {
 
-    private final String defaultUserName = "ftsscout", defaultPassword = "ftsscouter";
-    private final String remotePath = "./download";
-    private final byte defaultIP[] = {(byte)10, (byte)0, (byte)0, (byte)100
-    };
     private final int defaultFileType = FTP.ASCII_FILE_TYPE;
 
     private byte serverIP[];
@@ -41,10 +36,10 @@ public class FTPFileDownloader extends AsyncTask<Void, Void, FTPFile[]> {
     private String password;
 
     public FTPFileDownloader() {
-        this.serverIP = defaultIP;
+        this.serverIP = FTSUtilities.defaultServerIP;
         this.fileType = defaultFileType;
-        this.userName = defaultUserName;
-        this.password = defaultPassword;
+        this.userName = FTSUtilities.user;
+        this.password = FTSUtilities.pwd;
     }
 
     public FTPFileDownloader setServerIP(byte ipv4[]) {
@@ -58,17 +53,17 @@ public class FTPFileDownloader extends AsyncTask<Void, Void, FTPFile[]> {
     }
 
     @Override
-    protected FTPFile[] doInBackground(Void... filesToSend) {
+    protected FTPFile[] doInBackground(Void... filesToGet) {
         FTPClient ftpClient = new FTPClient();
         FTPFile[] receivedFiles = null;
         boolean result = false;
         try {
             //ftpClient.connect(InetAddress.getByName(serverName));
-            InetAddress ipv4 = Inet4Address.getByAddress(defaultIP);
+            InetAddress ipv4 = Inet4Address.getByAddress(serverIP);
             ftpClient.connect(ipv4);
             result = ftpClient.login(userName, password);
             Log.e("isFTPConnected", String.valueOf(result));
-            ftpClient.changeWorkingDirectory(remotePath);
+            ftpClient.changeWorkingDirectory(FTSUtilities.remoteDownloadPath);
 
             if (ftpClient.getReplyString().contains("250")) {
                 File downloadPath = FTSUtilities.getFileDirectory("download");
@@ -99,7 +94,7 @@ public class FTPFileDownloader extends AsyncTask<Void, Void, FTPFile[]> {
                 /*for(File fileToSend : filesToSend) {
                     buffIn = new BufferedInputStream(new FileInputStream(fileToSend));
                     //ProgressInputStream progressInput = new ProgressInputStream(buffIn, new Handler(Looper.myLooper()));
-                    //result = ftpClient.storeFile(remotePath, progressInput);
+                    //result = ftpClient.storeFile(remoteDownloadPath, progressInput);
                     result = ftpClient.storeFile(fileToSend.getAbsoluteFile().getName(), buffIn);
                     buffIn.close();
 

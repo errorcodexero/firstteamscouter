@@ -308,7 +308,8 @@ public class RobotDataDBAdapter implements BaseColumns {
         for(String k : values.keySet()) {
             args.put(k, values.get(k));
         }
-        args.put(COLUMN_NAME_READY_TO_EXPORT, String.valueOf(export));
+        String exp = String.valueOf(export);
+        args.put(COLUMN_NAME_READY_TO_EXPORT, exp);
         boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0;
         if(!this.dbIsClosed()) this.close();
         return retVal;

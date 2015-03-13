@@ -4,6 +4,7 @@ import com.wilsonvillerobotics.firstteamscouter.dbAdapters.DBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities.ALLIANCE_POSITION;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
 import android.preference.PreferenceFragment;
@@ -31,10 +32,14 @@ public class MainActivity extends Activity {
         FTSUtilities.printToConsole("Creating MainActivity");
 
         this.txtTabletID = (TextView) findViewById(R.id.txtTabletID);
+        this.txtTabletID.setTextColor(Color.WHITE);
         this.loadPref();
         FTSUtilities.generateDeviceID(getApplicationContext());
 
-        this.mDBAdapter = new DBAdapter(getApplicationContext());
+        this.mDBAdapter = new DBAdapter(this).openForWrite();
+        //this.mDBAdapter = new DBAdapter(getApplicationContext());
+        //this.mDBAdapter.openForRead();
+        //this.mDBAdapter.close();
         
         Button btnManageMatchData = (Button) findViewById(R.id.btnManageMatchData);
         Button btnMatchScouting = (Button) findViewById(R.id.btnMatchScouting);

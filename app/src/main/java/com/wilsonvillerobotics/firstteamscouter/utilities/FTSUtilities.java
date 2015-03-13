@@ -32,9 +32,14 @@ import android.widget.Button;
 public class FTSUtilities {
 
 	public static Boolean DEBUG = true;
-	public static Boolean POPULATE_TEST_DATA = true;
+	public static Boolean POPULATE_TEST_DATA = false;
 	public static String alliancePositions[] = {"Red1","Red2","Red3","Blue1","Blue2","Blue3",};
     public static String strUuid = "";
+
+    public static final String user = "ftsscout", pwd = "ftsscouter";
+    public static final String remoteUploadPath = "./upload";
+    public static final String remoteDownloadPath = "./download";
+    public static final byte defaultServerIP[] = {(byte)10, (byte)0, (byte)0, (byte)191};
 
     public enum ItemType {
         ROBOT(0, "Robot"),

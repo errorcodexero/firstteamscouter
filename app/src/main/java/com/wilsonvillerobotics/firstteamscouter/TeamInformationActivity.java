@@ -500,7 +500,7 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
 
 
             try {
-                if(this.robotID >= 0) {
+                if(this.robotID > 0) {
                     rdDBAdapter.openForWrite().updateRobotDataEntry(robotID, teamID, competition_id, hmRobotData, true);
                 } else {
                     this.robotID = rdDBAdapter.openForWrite().createRobotDataEntry(teamID, competition_id, hmRobotData);
