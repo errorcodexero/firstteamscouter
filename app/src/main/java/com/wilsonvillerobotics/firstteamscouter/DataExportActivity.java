@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.UUID;
 
-import static com.wilsonvillerobotics.firstteamscouter.utilities.INetUtils.getMACAddress;
+//import static com.wilsonvillerobotics.firstteamscouter.utilities.INetUtils.getMACAddress;
 
 public class DataExportActivity extends Activity {
 

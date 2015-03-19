@@ -1,5 +1,8 @@
 package com.wilsonvillerobotics.firstteamscouter.utilities;
 
+import android.content.Context;
+import android.net.wifi.WifiManager;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -94,6 +97,60 @@ public class INetUtils {
         } catch (IOException ex) {
             return null;
         }*/
+    }
+
+    /**
+     * Returns MAC address of the given interface name.
+     * @param interfaceName eth0, wlan0 or NULL=use first interface
+     * @return  mac address or empty string
+     */
+    public static Long getMACAddressNumeric(String interfaceName) {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                if (interfaceName != null) {
+                    if (!intf.getName().equalsIgnoreCase(interfaceName)) continue;
+                }
+                byte[] mac = intf.getHardwareAddress();
+                if (mac==null) return -1l;
+
+                Long macAddr = 0l;
+                for (int idx=0; idx<mac.length; idx++)
+                    macAddr = (macAddr << 8) + mac[idx];
+                return macAddr;
+            }
+        } catch (Exception ex) { } // for now eat exceptions
+        return -1l;
+    }
+
+    /**
+     * Returns MAC address of the given interface name.
+     * @param interfaceName eth0, wlan0 or NULL=use first interface
+     * @return  mac address or empty string
+     */
+    public static boolean interfaceIsUp(String interfaceName) {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                if (interfaceName != null) {
+                    if (!intf.getName().equalsIgnoreCase(interfaceName)) continue;
+                }
+                return intf.isUp();
+            }
+        } catch (Exception ex) { } // for now eat exceptions
+        return false;
+    }
+
+    public static boolean isWifiUp(Context context) {
+        WifiManager wManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        return wManager.isWifiEnabled();
+    }
+
+    public static boolean toggleWifi(Context context) {
+        WifiManager wManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        boolean enabled = wManager.isWifiEnabled();
+        wManager.setWifiEnabled(!enabled);
+        return wManager.isWifiEnabled() != enabled;
     }
 
     /**

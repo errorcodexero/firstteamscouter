@@ -1,21 +1,5 @@
 package com.wilsonvillerobotics.firstteamscouter.utilities;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.util.Hashtable;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import com.wilsonvillerobotics.firstteamscouter.MainActivity;
-import com.wilsonvillerobotics.firstteamscouter.TeamMatchData.BALL_CONTROL;
-import com.wilsonvillerobotics.firstteamscouter.TeamMatchData.ROBOT_ROLE;
-import com.wilsonvillerobotics.firstteamscouter.TeamMatchData.ZONE;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.DBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
-
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
@@ -26,6 +10,16 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
 import android.widget.Button;
+
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.util.Hashtable;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 //import org.jumpmind.symmetric.android.SymmetricService;
 
@@ -39,7 +33,7 @@ public class FTSUtilities {
     public static final String user = "ftsscout", pwd = "ftsscouter";
     public static final String remoteUploadPath = "./upload";
     public static final String remoteDownloadPath = "./download";
-    public static final byte defaultServerIP[] = {(byte)10, (byte)0, (byte)0, (byte)191};
+    public static final byte defaultServerIP[] = {(byte)10, (byte)0, (byte)0, (byte)100};
 
     public enum ItemType {
         ROBOT(0, "Robot"),
@@ -177,6 +171,29 @@ public class FTSUtilities {
         // DeviceUuidFactory loads or generates the static uuid in its constructor
         DeviceUuidFactory duf = new DeviceUuidFactory(context);
         strUuid = duf.getDeviceUuid().toString();
+
+        String deviceWiFiMAC = "";
+        Long deviceWifiMACNumeric = 0l;
+        boolean wifiUp = INetUtils.isWifiUp(context);
+        FTSUtilities.printToConsole("WIFI Adapter " + (wifiUp ? "IS" : "IS NOT") + " up");
+
+        if(!wifiUp) {
+            wifiUp = INetUtils.toggleWifi(context);
+            FTSUtilities.printToConsole("WIFI Adapter " + (wifiUp ? "IS" : "IS NOT") + " up");
+        }
+
+        int timeout = 100;
+        if(wifiUp) {
+            deviceWiFiMAC = INetUtils.getMACAddress("wlan0");
+            deviceWifiMACNumeric = INetUtils.getMACAddressNumeric("wlan0");
+
+            while(wifiUp && timeout > 0) {
+                wifiUp = INetUtils.toggleWifi(context);
+                timeout--;
+            }
+        }
+
+        FTSUtilities.printToConsole("WIFI Adapter MAC: " + deviceWiFiMAC + "\nMAC Numeric Value: " + String.valueOf(deviceWifiMACNumeric));
     }
 
     public static String getShortDeviceID(Context context) {
