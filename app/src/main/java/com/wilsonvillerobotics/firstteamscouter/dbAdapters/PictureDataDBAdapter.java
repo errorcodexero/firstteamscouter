@@ -8,59 +8,29 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-public class PictureDataDBAdapter implements BaseColumns {
+import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
+
+public class PictureDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTSTable {
 	public static final String TABLE_NAME = "picture_data";
 
     // Columns
     public static final String COLUMN_NAME_OWNER_ID = "owner_id";
     public static final String COLUMN_NAME_PICTURE_TYPE = "picture_type"; // robot, team, pit, etc.
     public static final String COLUMN_NAME_PICTURE_URI = "picture_uri";
-    public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
+    //public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     public static String[] allColumns = {
             _ID,
+            COLUMN_NAME_TABLET_ID,
             COLUMN_NAME_OWNER_ID,
             COLUMN_NAME_PICTURE_TYPE,
             COLUMN_NAME_PICTURE_URI,
             COLUMN_NAME_READY_TO_EXPORT
     };
 
-    private DatabaseHelper mDbHelper;
-    private SQLiteDatabase mDb;
-
-    private final Context mCtx;
-
-    private static class DatabaseHelper extends SQLiteOpenHelper {
-
-        private static DatabaseHelper mInstance = null;
-
-        private DatabaseHelper(Context context) {
-            super(context, DBAdapter.DATABASE_NAME, null, DBAdapter.DATABASE_VERSION);
-        }
-
-        public static DatabaseHelper getInstance(Context ctx) {
-
-            // Use the application context, which will ensure that you
-            // don't accidentally leak an Activity's context.
-            // See this article for more information: http://bit.ly/6LRzfx
-            if (mInstance == null) {
-                mInstance = new DatabaseHelper(ctx.getApplicationContext());
-            }
-            return mInstance;
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        }
-        
-        @Override
-    	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            onUpgrade(db, oldVersion, newVersion);
-        }
+    @Override
+    public String[] getAllColumns() {
+        return allColumns;
     }
 
     /**
@@ -71,7 +41,8 @@ public class PictureDataDBAdapter implements BaseColumns {
      *            the Context within which to work
      */
     public PictureDataDBAdapter(Context ctx) {
-        this.mCtx = ctx;
+        super(ctx);
+        //this.mCtx = ctx;
     }
 
     /**
@@ -85,9 +56,7 @@ public class PictureDataDBAdapter implements BaseColumns {
      *             if the database could be neither opened or created
      */
     public PictureDataDBAdapter openForWrite() throws SQLException {
-        this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
-        this.mDb = this.mDbHelper.getWritableDatabase();
-        return this;
+        return (PictureDataDBAdapter)openDBForWrite();
     }
 
     /**
@@ -101,27 +70,7 @@ public class PictureDataDBAdapter implements BaseColumns {
      *             if the database could be neither opened or created
      */
     public PictureDataDBAdapter openForRead() throws SQLException {
-        this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
-        this.mDb = this.mDbHelper.getReadableDatabase();
-        return this;
-    }
-
-    /**
-     * close return type: void
-     */
-    public void close() {
-        if(this.mDb != null && this.mDb.isOpen()) {
-            this.mDbHelper.close();
-        }
-        this.mDb = null;
-    }
-
-    public boolean dbIsClosed() {
-        if(this.mDb == null) {
-            return true;
-        } else {
-            return !this.mDb.isOpen();
-        }
+        return (PictureDataDBAdapter)openDBForRead();
     }
 
     /**
@@ -134,6 +83,7 @@ public class PictureDataDBAdapter implements BaseColumns {
      */
     public long createPictureDataEntry(long owner_id, String picture_type, String picture_uri){
         ContentValues initialValues = new ContentValues();
+        initialValues.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
         initialValues.put(COLUMN_NAME_OWNER_ID, owner_id);
         initialValues.put(COLUMN_NAME_PICTURE_TYPE, picture_type);
         initialValues.put(COLUMN_NAME_PICTURE_URI, picture_uri);
@@ -147,9 +97,17 @@ public class PictureDataDBAdapter implements BaseColumns {
      * @param rowId
      * @return true if deleted, false otherwise
      */
-    public boolean deletePictureDataEntry(long rowId) {
-
+    @Override
+    public boolean deleteEntry(long rowId) {
+        return super.deleteEntry(rowId, TABLE_NAME);
+        /*
         return this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
+        */
+    }
+
+    @Override
+    public boolean deleteAllEntries() {
+        return super.deleteAllEntries(TABLE_NAME);
     }
 
     /**
@@ -157,8 +115,10 @@ public class PictureDataDBAdapter implements BaseColumns {
      * 
      * @return Cursor over all Match Data entries
      */
-    public Cursor getAllPictureDataEntries() {
-        return this.openForRead().mDb.query(TABLE_NAME, allColumns, null, null, null, null, null);
+    @Override
+    public Cursor getAllEntries() {
+        return super.getAllEntries(TABLE_NAME, allColumns);
+        //return this.openForRead().mDb.query(TABLE_NAME, allColumns, null, null, null, null, null);
     }
 
     /**
@@ -167,13 +127,16 @@ public class PictureDataDBAdapter implements BaseColumns {
      * @return Cursor positioned to matching entry, if found
      * @throws SQLException if entry could not be found/retrieved
      */
-    public Cursor getPictureDataEntry(long rowId) throws SQLException {
+    public Cursor getEntry(long rowId) throws SQLException {
+        return super.getEntry(rowId, TABLE_NAME, allColumns);
+        /*
         String WHERE = _ID + "=" + rowId;
         Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns, WHERE, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
         return mCursor;
+        */
     }
 
     /**
@@ -195,16 +158,25 @@ public class PictureDataDBAdapter implements BaseColumns {
         if(!this.dbIsClosed()) this.close();
         return retVal;
     }
-    public boolean setDataEntryExported(long rowId) {
+
+    @Override
+    public boolean setEntryExported(long rowId) {
+        return super.setEntryExported(rowId, TABLE_NAME);
+        /*
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
         boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
         if(!this.dbIsClosed()) this.close();
         return retVal;
+        */
     }
 
+    @Override
     public Cursor getAllEntriesToExport() {
+        return super.getAllEntriesToExport(TABLE_NAME, allColumns);
+        /*
         String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
         return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
+        */
     }
 }

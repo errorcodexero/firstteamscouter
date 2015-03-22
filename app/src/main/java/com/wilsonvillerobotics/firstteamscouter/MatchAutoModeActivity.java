@@ -378,7 +378,7 @@ public class MatchAutoModeActivity extends Activity {
             tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this).openForWrite();
             tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this).openForWrite();
 
-            Cursor c = tmDBAdapter.getTeamMatch(this.teamMatchID);
+            Cursor c = tmDBAdapter.getEntry(this.teamMatchID);
             if(c.moveToFirst()) {
                 this.teamID = c.getLong(c.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID));
                 this.matchID = c.getLong(c.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID));

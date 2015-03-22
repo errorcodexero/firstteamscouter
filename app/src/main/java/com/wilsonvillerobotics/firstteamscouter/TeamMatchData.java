@@ -550,7 +550,7 @@ public class TeamMatchData {
 		//this.statHash.put("autoHiScore", 0);
 		 */
 		try {
-			tmCursor = this.tmDBAdapter.getTeamMatch(this.teamMatchID);
+			tmCursor = this.tmDBAdapter.getEntry(this.teamMatchID);
 			FTSUtilities.printToConsole("TeamMatchData::loadTeamMatchData : tmCursor Count: " + tmCursor.getCount());
 			
 			this.matchID = tmCursor.getLong(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID));

@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-public class MatchDataDBAdapter implements BaseColumns {
+public class MatchDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTSTable {
 	public static final String TABLE_NAME                       = "match_data";
 
     // Columns
@@ -28,10 +28,11 @@ public class MatchDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_BLUE_TEAM_THREE_ID   = "blue_team_three_id";
     
     public static final String COLUMN_NAME_MATCH_DATA_UPDATED	= "match_data_updated";
-    public static final String COLUMN_NAME_READY_TO_EXPORT      = "ready_to_export";
+    //public static final String COLUMN_NAME_READY_TO_EXPORT      = "ready_to_export";
 
     public static String[] allColumns = {
             _ID,
+            COLUMN_NAME_TABLET_ID,
             COLUMN_NAME_COMPETITION_ID,
             COLUMN_NAME_MATCH_TIME,
             COLUMN_NAME_MATCH_TYPE,
@@ -47,42 +48,8 @@ public class MatchDataDBAdapter implements BaseColumns {
             COLUMN_NAME_READY_TO_EXPORT
     };
 
-    private DatabaseHelper mDbHelper;
-    private SQLiteDatabase mDb;
-
-    private final Context mCtx;
-
-    private static class DatabaseHelper extends SQLiteOpenHelper {
-
-        private static DatabaseHelper mInstance = null;
-
-        private DatabaseHelper(Context context) {
-            super(context, DBAdapter.DATABASE_NAME, null, DBAdapter.DATABASE_VERSION);
-        }
-
-        public static DatabaseHelper getInstance(Context ctx) {
-
-            // Use the application context, which will ensure that you
-            // don't accidentally leak an Activity's context.
-            // See this article for more information: http://bit.ly/6LRzfx
-            if (mInstance == null) {
-                mInstance = new DatabaseHelper(ctx.getApplicationContext());
-            }
-            return mInstance;
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        }
-        
-        @Override
-    	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            onUpgrade(db, oldVersion, newVersion);
-        }
+    public String[] getAllColumns() {
+        return allColumns;
     }
 
     /**
@@ -93,57 +60,16 @@ public class MatchDataDBAdapter implements BaseColumns {
      *            the Context within which to work
      */
     public MatchDataDBAdapter(Context ctx) {
-        this.mCtx = ctx;
+        super(ctx);
+//        this.mCtx = ctx;
     }
 
-    /**
-     * Open the FirstTeamScouter database. If it cannot be opened, try to create a new
-     * instance of the database. If it cannot be created, throw an exception to
-     * signal the failure
-     * 
-     * @return this (self reference, allowing this to be chained in an
-     *         initialization call)
-     * @throws SQLException
-     *             if the database could be neither opened or created
-     */
-    public MatchDataDBAdapter openForWrite() throws SQLException {
-        this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
-        this.mDb = this.mDbHelper.getWritableDatabase();
-        return this;
-    }
-
-    /**
-     * Open the FirstTeamScouter database. If it cannot be opened, try to create a new
-     * instance of the database. If it cannot be created, throw an exception to
-     * signal the failure
-     *
-     * @return this (self reference, allowing this to be chained in an
-     *         initialization call)
-     * @throws SQLException
-     *             if the database could be neither opened or created
-     */
     public MatchDataDBAdapter openForRead() throws SQLException {
-        this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
-        this.mDb = this.mDbHelper.getReadableDatabase();
-        return this;
+        return (MatchDataDBAdapter)openDBForRead();
     }
 
-    /**
-     * close return type: void
-     */
-    public void close() {
-        if(this.mDb != null && this.mDb.isOpen()) {
-            this.mDbHelper.close();
-        }
-        this.mDb = null;
-    }
-
-    public boolean dbIsClosed() {
-        if(this.mDb == null) {
-            return true;
-        } else {
-            return !this.mDb.isOpen();
-        }
+    public MatchDataDBAdapter openForWrite() throws SQLException {
+        return (MatchDataDBAdapter)openDBForWrite();
     }
 
     /**
@@ -165,6 +91,7 @@ public class MatchDataDBAdapter implements BaseColumns {
     public long createMatchData(long competition_id, String match_time, String match_type, String match_num, long red_one_id, long red_two_id, long red_three_id,
     		long blue_one_id, long blue_two_id, long blue_three_id){
         ContentValues initialValues = new ContentValues();
+        initialValues.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
         initialValues.put(COLUMN_NAME_COMPETITION_ID, competition_id);
         initialValues.put(COLUMN_NAME_MATCH_TIME, match_time);
         initialValues.put(COLUMN_NAME_MATCH_TYPE, match_type);
@@ -185,6 +112,7 @@ public class MatchDataDBAdapter implements BaseColumns {
 
     public long createMatchData(long competition_id, int match_num){
         ContentValues initialValues = new ContentValues();
+        initialValues.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
         initialValues.put(COLUMN_NAME_COMPETITION_ID, competition_id);
         initialValues.put(COLUMN_NAME_MATCH_NUMBER, match_num);
         initialValues.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
@@ -199,13 +127,18 @@ public class MatchDataDBAdapter implements BaseColumns {
      * @param matchId
      * @return true if deleted, false otherwise
      */
-    public boolean deleteMatchDataEntry(long matchId) {
-
+    @Override
+    public boolean deleteEntry(long rowId) {
+        return super.deleteEntry(rowId, TABLE_NAME);
+        /*
         return this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + matchId, null) > 0;
+        */
     }
 
-    public boolean deleteAllData() {
-        return this.openForWrite().mDb.delete(TABLE_NAME, null, null) > 0;
+    @Override
+    public boolean deleteAllEntries() {
+        return super.deleteAllEntries(TABLE_NAME);
+        //return this.openForWrite().mDb.delete(TABLE_NAME, null, null) > 0;
     }
 
     /**
@@ -213,13 +146,10 @@ public class MatchDataDBAdapter implements BaseColumns {
      * 
      * @return Cursor over all Match Data entries
      */
-    public Cursor getAllMatchDataEntries() {
-
-        return this.openForRead().mDb.query(TABLE_NAME, new String[] { _ID, COLUMN_NAME_COMPETITION_ID,
-        		COLUMN_NAME_MATCH_TIME, COLUMN_NAME_MATCH_TYPE, COLUMN_NAME_MATCH_NUMBER, COLUMN_NAME_MATCH_LOCATION, 
-        		COLUMN_NAME_RED_TEAM_ONE_ID, COLUMN_NAME_RED_TEAM_TWO_ID, COLUMN_NAME_RED_TEAM_THREE_ID,
-        		COLUMN_NAME_BLUE_TEAM_ONE_ID, COLUMN_NAME_BLUE_TEAM_TWO_ID, COLUMN_NAME_BLUE_TEAM_THREE_ID, COLUMN_NAME_MATCH_DATA_UPDATED
-        		}, null, null, null, null, null);
+    @Override
+    public Cursor getAllEntries() {
+        return super.getAllEntries(TABLE_NAME, allColumns);
+        //return this.openForRead().mDb.query(TABLE_NAME, allColumns , null, null, null, null, null);
     }
 
     /**
@@ -228,17 +158,21 @@ public class MatchDataDBAdapter implements BaseColumns {
      * @return Cursor positioned to matching entry, if found
      * @throws SQLException if entry could not be found/retrieved
      */
-    public Cursor getMatchDataEntry(long matchID) throws SQLException {
-    	FTSUtilities.printToConsole("MatchDataDBAdapter::getMatchDataEntry : matchID: " + matchID + "\n");
+    @Override
+    public Cursor getEntry(long iD) throws SQLException {
+        return super.getEntry(iD, TABLE_NAME, allColumns);
+        /*
+    	FTSUtilities.printToConsole("MatchDataDBAdapter::getEntry : matchID: " + matchID + "\n");
 		String WHERE = _ID + "=" + matchID;
         Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns, WHERE, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
-            FTSUtilities.printToConsole("MatchDataDBAdapter::getMatchDataEntry : numItems: " + mCursor.getCount() + "\n");
+            FTSUtilities.printToConsole("MatchDataDBAdapter::getEntry : numItems: " + mCursor.getCount() + "\n");
         } else {
-        	FTSUtilities.printToConsole("MatchDataDBAdapter::getMatchDataEntry : Cursor is NULL\n");
+        	FTSUtilities.printToConsole("MatchDataDBAdapter::getEntry : Cursor is NULL\n");
         }
         return mCursor;
+        */
     }
 
     /**
@@ -295,17 +229,26 @@ public class MatchDataDBAdapter implements BaseColumns {
         if(!this.dbIsClosed()) this.close();
         return retVal;
     }
-    public boolean setDataEntryExported(long rowId) {
+
+    @Override
+    public boolean setEntryExported(long rowId) {
+        return super.setEntryExported(rowId, TABLE_NAME);
+        /*
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
         boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
         if(!this.dbIsClosed()) this.close();
         return retVal;
+        */
     }
 
+    @Override
     public Cursor getAllEntriesToExport() {
+        return super.getAllEntriesToExport(TABLE_NAME, allColumns);
+        /*
         String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
         return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
+        */
     }
     
     public Cursor getTeamIDsForMatchByAlliancePosition(long competition_id, long matchID) {
@@ -341,7 +284,7 @@ public class MatchDataDBAdapter implements BaseColumns {
     	args.put(COLUMN_NAME_BLUE_TEAM_THREE_ID, teamIDs[5]);
     	args.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
     	
-    	Cursor c = getMatchDataEntry(matchID);
+    	Cursor c = getEntry(matchID);
     	if(c.getCount() > 0) {
     		FTSUtilities.printToConsole("MatchDataDBAdapter::setTeamIDsForMatchID : Found " + c.getCount() + " record(s) for matchID: " + matchID + "\n");
             String WHERE = _ID + "=" + matchID;
@@ -359,7 +302,7 @@ public class MatchDataDBAdapter implements BaseColumns {
 	public long[] populateTestData(int numMatches) {
     	FTSUtilities.printToConsole("MatchDataDBAdapter::populateTestData\n");
 
-    	//this.deleteAllData();
+    	//this.deleteAllEntries();
     	
     	long matchIDs[] = new long[numMatches];
 

@@ -8,55 +8,25 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-public class PitDataDBAdapter implements BaseColumns {
+import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
+
+public class PitDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTSTable {
 	public static final String TABLE_NAME = "pit_data";
 
     // Columns
     public static final String COLUMN_NAME_PIT_INFO = "pit_info";
-    public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
+    //public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     public static String[] allColumns = {
             _ID,
+            COLUMN_NAME_TABLET_ID,
             COLUMN_NAME_PIT_INFO,
             COLUMN_NAME_READY_TO_EXPORT
     };
 
-    private DatabaseHelper mDbHelper;
-    private SQLiteDatabase mDb;
-
-    private final Context mCtx;
-
-    private static class DatabaseHelper extends SQLiteOpenHelper {
-
-        private static DatabaseHelper mInstance = null;
-
-        DatabaseHelper(Context context) {
-            super(context, DBAdapter.DATABASE_NAME, null, DBAdapter.DATABASE_VERSION);
-        }
-
-        public static DatabaseHelper getInstance(Context ctx) {
-
-            // Use the application context, which will ensure that you
-            // don't accidentally leak an Activity's context.
-            // See this article for more information: http://bit.ly/6LRzfx
-            if (mInstance == null) {
-                mInstance = new DatabaseHelper(ctx.getApplicationContext());
-            }
-            return mInstance;
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        }
-        
-        @Override
-    	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            onUpgrade(db, oldVersion, newVersion);
-        }
+    @Override
+    public String[] getAllColumns() {
+        return allColumns;
     }
 
     /**
@@ -67,7 +37,8 @@ public class PitDataDBAdapter implements BaseColumns {
      *            the Context within which to work
      */
     public PitDataDBAdapter(Context ctx) {
-        this.mCtx = ctx;
+        super(ctx);
+        //this.mCtx = ctx;
     }
 
     /**
@@ -81,9 +52,7 @@ public class PitDataDBAdapter implements BaseColumns {
      *             if the database could be neither opened or created
      */
     public PitDataDBAdapter openForWrite() throws SQLException {
-        this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
-        this.mDb = this.mDbHelper.getWritableDatabase();
-        return this;
+        return (PitDataDBAdapter)openDBForWrite();
     }
 
     /**
@@ -97,27 +66,7 @@ public class PitDataDBAdapter implements BaseColumns {
      *             if the database could be neither opened or created
      */
     public PitDataDBAdapter openForRead() throws SQLException {
-        this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
-        this.mDb = this.mDbHelper.getReadableDatabase();
-        return this;
-    }
-
-    /**
-     * close return type: void
-     */
-    public void close() {
-        if(this.mDb != null && this.mDb.isOpen()) {
-            this.mDbHelper.close();
-        }
-        this.mDb = null;
-    }
-
-    public boolean dbIsClosed() {
-        if(this.mDb == null) {
-            return true;
-        } else {
-            return !this.mDb.isOpen();
-        }
+        return (PitDataDBAdapter)openDBForRead();
     }
 
     /**
@@ -128,6 +77,7 @@ public class PitDataDBAdapter implements BaseColumns {
      */
     public long createPitDataEntry(String pitInfo){
         ContentValues initialValues = new ContentValues();
+        initialValues.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
         initialValues.put(COLUMN_NAME_PIT_INFO, pitInfo);
         initialValues.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
         long id = this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
@@ -136,44 +86,80 @@ public class PitDataDBAdapter implements BaseColumns {
     }
 
     /**
-     * Delete the entry with the given rowId
-     * 
-     * @param rowId
-     * @return true if deleted, false otherwise
-     */
-    public boolean deletePitDataEntry(long rowId) {
-        boolean retVal = this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
-        if(!this.dbIsClosed()) this.close();
-        return retVal;
-    }
-
-    /**
-     * Return a Cursor over the list of all entries in the database
-     * 
-     * @return Cursor over all Match Data entries
-     */
-    public Cursor getAllPitDataEntries() {
-        return this.openForRead().mDb.query(TABLE_NAME, allColumns, null, null, null, null, null);
-    }
-
-    /**
      * Return a Cursor positioned at the entry that matches the given rowId
      * @param rowId
      * @return Cursor positioned to matching entry, if found
      * @throws SQLException if entry could not be found/retrieved
      */
-    public Cursor getPitDataEntry(long rowId) throws SQLException {
+    @Override
+    public Cursor getEntry(long rowId) throws SQLException {
+        return super.getEntry(rowId, TABLE_NAME, allColumns);
+        /*
         String WHERE = _ID + "=" + rowId;
         Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns, WHERE, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
         return mCursor;
+        */
+    }
+
+    /**
+     * Return a Cursor over the list of all entries in the database
+     *
+     * @return Cursor over all Match Data entries
+     */
+    @Override
+    public Cursor getAllEntries() {
+        return super.getAllEntries(TABLE_NAME, allColumns);
+        //return this.openForRead().mDb.query(TABLE_NAME, allColumns, null, null, null, null, null);
+    }
+
+    /**
+     * Delete the entry with the given rowId
+     * 
+     * @param rowId
+     * @return true if deleted, false otherwise
+     */
+    @Override
+    public boolean deleteEntry(long rowId) {
+        return super.deleteEntry(rowId, TABLE_NAME);
+        /*
+        boolean retVal = this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
+        */
+    }
+
+    @Override
+    public boolean deleteAllEntries() {
+        return super.deleteAllEntries(TABLE_NAME);
+    }
+
+    @Override
+    public boolean setEntryExported(long rowId) {
+        return super.setEntryExported(rowId, TABLE_NAME);
+        /*
+        ContentValues args = new ContentValues();
+        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
+        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
+        */
+    }
+
+    @Override
+    public Cursor getAllEntriesToExport() {
+        return super.getAllEntriesToExport(TABLE_NAME, allColumns);
+        /*
+        String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
+        return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
+        */
     }
 
     /**
      * Update the entry.
-     * 
+     *
      * @return true if the entry was successfully updated, false otherwise
      */
     public boolean updatePitDataEntry(int rowId, String pitInfo, Boolean export){
@@ -184,17 +170,5 @@ public class PitDataDBAdapter implements BaseColumns {
         boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, WHERE, null) >0;
         if(!this.dbIsClosed()) this.close();
         return retVal;
-    }
-    public boolean setDataEntryExported(long rowId) {
-        ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
-        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
-        if(!this.dbIsClosed()) this.close();
-        return retVal;
-    }
-
-    public Cursor getAllEntriesToExport() {
-        String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
-        return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
     }
 }

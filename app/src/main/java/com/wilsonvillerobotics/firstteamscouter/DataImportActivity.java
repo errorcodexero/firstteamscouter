@@ -220,9 +220,9 @@ public class DataImportActivity extends Activity {
 
                             if (file.exists() && file.isFile()) {
                                 txtStatus.setText("File Found, Import Commencing\n");
-                                //teamDataDBAdapter.deleteAllData();
-                                //matchDataDBAdapter.deleteAllData();
-                                //teamMatchDBAdapter.deleteAllData();
+                                //teamDataDBAdapter.deleteAllEntries();
+                                //matchDataDBAdapter.deleteAllEntries();
+                                //teamMatchDBAdapter.deleteAllEntries();
                                 //robotDataDBAdapter.getAllRobotDataEntries();
 
                                 BufferedReader inputReader = new BufferedReader(
@@ -252,11 +252,11 @@ public class DataImportActivity extends Activity {
                                     if (lineArray.length > 9) {
                                         //FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : " + lineArray[0] + ":" + lineArray[1] + ":" + lineArray[2] + ":" + lineArray[3] + ":" + lineArray[4] + ":" + lineArray[5] + ":" + lineArray[6] + ":" + lineArray[7]);
                                         //CompetitionID : Time : Type : MatchNum : Red1 : Red2 : Red3 : Blue1 : Blue2 : Blue3
-                                        long teamIDs[] = {-1, -1, -1, -1, -1, -1};
+                                        int teamNumbers[] = {-1, -1, -1, -1, -1, -1};
                                         try {
                                             teamDataDBAdapter.openForWrite();
                                             for (int i = 0; i < 6; i++) {
-                                                teamIDs[i] = teamDataDBAdapter.createTeamDataEntryIfNotExist(Integer.parseInt(lineArray[i + 4]), 0)[0];
+                                                teamNumbers[i] = teamDataDBAdapter.createTeamDataEntryIfNotExist(Integer.parseInt(lineArray[i + 4]), 0)[0];
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();
@@ -268,7 +268,7 @@ public class DataImportActivity extends Activity {
                                         long matchID;
                                         try {
                                             long compID = Long.parseLong(lineArray[0]);
-                                            matchID = matchDataDBAdapter.createMatchData(compID, lineArray[1], lineArray[2], lineArray[3], teamIDs[0], teamIDs[1], teamIDs[2], teamIDs[3], teamIDs[4], teamIDs[5]);
+                                            matchID = matchDataDBAdapter.createMatchData(compID, lineArray[1], lineArray[2], lineArray[3], teamNumbers[0], teamNumbers[1], teamNumbers[2], teamNumbers[3], teamNumbers[4], teamNumbers[5]);
                                             if (matchID >= 0) {
                                                 matchCount += 1;
                                             }
@@ -283,7 +283,7 @@ public class DataImportActivity extends Activity {
                                         long teamMatchID;
                                         try {
                                             for (int i = 0; i < FTSUtilities.ALLIANCE_POSITION.NOT_SET.allianceIndex(); i++) {
-                                                teamMatchID = teamMatchDBAdapter.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForIndex(i) /*.alliancePositions[i]*/, teamIDs[i], matchID);
+                                                teamMatchID = teamMatchDBAdapter.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForIndex(i) /*.alliancePositions[i]*/, teamNumbers[i], matchID);
                                                 if (teamMatchID >= 0) {
                                                     teamCount += 1;
                                                 }

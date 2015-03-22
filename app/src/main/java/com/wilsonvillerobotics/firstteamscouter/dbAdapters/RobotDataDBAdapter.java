@@ -8,10 +8,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class RobotDataDBAdapter implements BaseColumns {
+public class RobotDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTSTable {
 	public static final String TABLE_NAME = "robot_data";
 
     // Columns
@@ -31,10 +33,11 @@ public class RobotDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_ROBOT_DRIVE_RANGE = "robot_drive_range";
     public static final String COLUMN_NAME_COOPERTITION = "team_does_coopertition";
     public static final String COLUMN_NAME_ROBOT_STACKS_FROM = "robot_stacks_from";
-    public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
+    //public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     public static String[] allColumns = {
             _ID,
+            COLUMN_NAME_TABLET_ID,
             COLUMN_NAME_TEAM_ID,
             COLUMN_NAME_COMPETITION_ID,
             COLUMN_NAME_DRIVE_TRAIN_TYPE,
@@ -54,42 +57,9 @@ public class RobotDataDBAdapter implements BaseColumns {
             COLUMN_NAME_READY_TO_EXPORT
     };
 
-    private DatabaseHelper mDbHelper;
-    private SQLiteDatabase mDb;
-
-    private final Context mCtx;
-
-    private static class DatabaseHelper extends SQLiteOpenHelper {
-
-        private static DatabaseHelper mInstance = null;
-
-        private DatabaseHelper(Context context) {
-            super(context, DBAdapter.DATABASE_NAME, null, DBAdapter.DATABASE_VERSION);
-        }
-
-        public static DatabaseHelper getInstance(Context ctx) {
-
-            // Use the application context, which will ensure that you
-            // don't accidentally leak an Activity's context.
-            // See this article for more information: http://bit.ly/6LRzfx
-            if (mInstance == null) {
-                mInstance = new DatabaseHelper(ctx.getApplicationContext());
-            }
-            return mInstance;
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        }
-        
-        @Override
-    	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            onUpgrade(db, oldVersion, newVersion);
-        }
+    @Override
+    public String[] getAllColumns() {
+        return allColumns;
     }
 
     /**
@@ -100,7 +70,8 @@ public class RobotDataDBAdapter implements BaseColumns {
      *            the Context within which to work
      */
     public RobotDataDBAdapter(Context ctx) {
-        this.mCtx = ctx;
+        super(ctx);
+        //this.mCtx = ctx;
     }
 
     /**
@@ -114,9 +85,7 @@ public class RobotDataDBAdapter implements BaseColumns {
      *             if the database could be neither opened or created
      */
     public RobotDataDBAdapter openForWrite() throws SQLException {
-        this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
-        this.mDb = this.mDbHelper.getWritableDatabase();
-        return this;
+        return (RobotDataDBAdapter)openDBForWrite();
     }
 
     /**
@@ -130,27 +99,7 @@ public class RobotDataDBAdapter implements BaseColumns {
      *             if the database could be neither opened or created
      */
     public RobotDataDBAdapter openForRead() throws SQLException {
-        this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
-        this.mDb = this.mDbHelper.getReadableDatabase();
-        return this;
-    }
-
-    /**
-     * close return type: void
-     */
-    public void close() {
-        if(this.mDb != null && this.mDb.isOpen()) {
-            this.mDbHelper.close();
-        }
-        this.mDb = null;
-    }
-
-    public boolean dbIsClosed() {
-        if(this.mDb == null) {
-            return true;
-        } else {
-            return !this.mDb.isOpen();
-        }
+        return (RobotDataDBAdapter)openDBForRead();
     }
 
     /**
@@ -163,6 +112,7 @@ public class RobotDataDBAdapter implements BaseColumns {
     public long createRobotDataEntry(long team_id, long competition_id, HashMap<String, String> values){
         ContentValues initialValues = new ContentValues();
         if(values != null) {
+            initialValues.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
             initialValues.put(COLUMN_NAME_TEAM_ID, team_id);
             initialValues.put(COLUMN_NAME_COMPETITION_ID, competition_id);
             initialValues.put(COLUMN_NAME_DRIVE_TRAIN_TYPE, values.get(COLUMN_NAME_DRIVE_TRAIN_TYPE));
@@ -192,10 +142,15 @@ public class RobotDataDBAdapter implements BaseColumns {
      * @param rowId
      * @return true if deleted, false otherwise
      */
-    public boolean deleteRobotDataEntry(long rowId) {
+    public boolean deleteEntry(long rowId) {
         boolean retVal = this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
         if(!this.dbIsClosed()) this.close();
         return retVal;
+    }
+
+    @Override
+    public boolean deleteAllEntries() {
+        return super.deleteAllEntries(TABLE_NAME);
     }
 
     /**
@@ -207,12 +162,21 @@ public class RobotDataDBAdapter implements BaseColumns {
         return this.openForRead().mDb.query(TABLE_NAME, allColumns, null, null, null, null, null);
     }
 
+    @Override
+    public Cursor getEntry(long rowID) {
+        return super.getEntry(rowID, TABLE_NAME, allColumns);
+    }
+
     /**
-     * Return a Cursor positioned at the entry that matches the given rowId
-     * @param robotId
-     * @return Cursor positioned to matching entry, if found
-     * @throws SQLException if entry could not be found/retrieved
+     * Return a Cursor over the list of all entries in the database
+     *
+     * @return Cursor over all entries
      */
+    @Override
+    public Cursor getAllEntries() {
+        return super.getAllEntries(TABLE_NAME, allColumns);
+    }
+
     public HashMap<String, String> getRobotDataEntry(long robotId) throws SQLException {
         HashMap<String, String> values = new HashMap<String, String>();
         Cursor mCursor = null;
@@ -314,16 +278,25 @@ public class RobotDataDBAdapter implements BaseColumns {
         if(!this.dbIsClosed()) this.close();
         return retVal;
     }
-    public boolean setDataEntryExported(long rowId) {
+
+    @Override
+    public boolean setEntryExported(long rowId) {
+        return super.setEntryExported(rowId, TABLE_NAME);
+        /*
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
         boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
         if(!this.dbIsClosed()) this.close();
         return retVal;
+        */
     }
 
+    @Override
     public Cursor getAllEntriesToExport() {
+        return super.getAllEntriesToExport(TABLE_NAME, allColumns);
+        /*
         String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
         return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
+        */
     }
 }

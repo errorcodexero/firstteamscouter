@@ -56,9 +56,9 @@ public class DataXmlExporter {
         this.db = db;
     }
 
-    //public int export(final String dbName, final String exportFileNamePrefix, final String uuid, final String timestamp) throws IOException {
+    //public int export(final String dbName, final String exportFileNamePrefix, final String androidUuid, final String timestamp) throws IOException {
     public int export(final String dbName) throws IOException {
-        //Log.i(LOG_TAG, "exporting database - " + dbName + " exportFileNamePrefix=" + exportFileNamePrefix + "   uuid=" + uuid + "  timestamp=" + timestamp);
+        //Log.i(LOG_TAG, "exporting database - " + dbName + " exportFileNamePrefix=" + exportFileNamePrefix + "   androidUuid=" + androidUuid + "  timestamp=" + timestamp);
         Log.i(LOG_TAG, "exporting database - " + dbName);
 
         int exportCount = 0;
@@ -66,7 +66,7 @@ public class DataXmlExporter {
             xmlBuilder = new XmlBuilder();
             xmlBuilder.start(dbName);
             String tableName = tn.getTableName();
-            ArrayList<Long> exportedIDs;
+            ArrayList<Long> exportedIDs = new ArrayList<Long>();
 
             try {
                 exportedIDs = exportTable(tn.getTableName());
@@ -76,8 +76,8 @@ public class DataXmlExporter {
             }
             String xmlString = xmlBuilder.end();
 
-            String xmlFileName = FTSUtilities.getXmlDataFileNameForTable(tableName); // exportFileNamePrefix + "-" + uuid + "-" + tableName + "-" + timestamp + ".xml";
-            if(writeToFile(xmlString, xmlFileName)) exportCount++;
+            String xmlFileName = FTSUtilities.getXmlDataFileNameForTable(tableName); // exportFileNamePrefix + "-" + androidUuid + "-" + tableName + "-" + timestamp + ".xml";
+            if(exportedIDs.size() > 0 && writeToFile(xmlString, xmlFileName)) exportCount++;
             Log.i(LOG_TAG, "exporting table complete: " + tableName);
         }
         //String xmlString = xmlBuilder.end();

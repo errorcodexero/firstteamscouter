@@ -12,7 +12,7 @@ import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
 import java.util.ArrayList;
 
-public class ImportTransactionsDBAdapter implements BaseColumns {
+public class ImportTransactionsDBAdapter extends FTSDBAdapter implements BaseColumns, FTSTable {
 	public static final String TABLE_NAME = "import_transactions";
 
     // Columns
@@ -20,46 +20,13 @@ public class ImportTransactionsDBAdapter implements BaseColumns {
 
     public static String[] allColumns = new String[]{
     		_ID,
+            COLUMN_NAME_TABLET_ID,
             COLUMN_NAME_IMPORTED_FILE_NAME
     };
 
-    private DatabaseHelper mDbHelper;
-    private SQLiteDatabase mDb;
-
-    private final Context mCtx;
-
-    private static class DatabaseHelper extends SQLiteOpenHelper {
-
-        private static DatabaseHelper mInstance = null;
-
-        DatabaseHelper(Context context) {
-            super(context, DBAdapter.DATABASE_NAME, null, DBAdapter.DATABASE_VERSION);
-        }
-
-        public static DatabaseHelper getInstance(Context ctx) {
-
-            // Use the application context, which will ensure that you
-            // don't accidentally leak an Activity's context.
-            // See this article for more information: http://bit.ly/6LRzfx
-            if (mInstance == null) {
-                mInstance = new DatabaseHelper(ctx.getApplicationContext());
-            }
-            return mInstance;
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        	FTSUtilities.printToConsole("TeamMatchTransactionsDBAdapter::DatabaseHelper::onUpgrade : running onUpgrade\n");
-        }
-
-        @Override
-    	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            onUpgrade(db, oldVersion, newVersion);
-        }
+    @Override
+    public String[] getAllColumns() {
+        return allColumns;
     }
 
     /**
@@ -70,7 +37,8 @@ public class ImportTransactionsDBAdapter implements BaseColumns {
      *            the Context within which to work
      */
     public ImportTransactionsDBAdapter(Context ctx) {
-        this.mCtx = ctx;
+        super((ctx));
+        //this.mCtx = ctx;
     }
 
     /**
@@ -84,23 +52,7 @@ public class ImportTransactionsDBAdapter implements BaseColumns {
      *             if the database could be neither opened or created
      */
     public ImportTransactionsDBAdapter openForWrite() throws SQLException {
-    	if(this.dbIsClosed()) {
-    		if(this.mDbHelper == null) {
-    			this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
-    		}
-
-    		try {
-    			FTSUtilities.printToConsole("TeamMatchTransactionsDBAdapter::openForWrite : GETTING WRITABLE DB\n");
-    			this.mDb = this.mDbHelper.getWritableDatabase();
-    		}
-    		catch (SQLException e) {
-    			FTSUtilities.printToConsole("TeamMatchTransactionsDBAdapter::openForWrite : SQLException\n");
-    			this.mDb = null;
-    		}
-    	} else {
-    		FTSUtilities.printToConsole("TeamMatchTransactionsDBAdapter::openForWrite : DB ALREADY OPEN\n");
-    	}
-    	return this;
+    	return (ImportTransactionsDBAdapter)openDBForWrite();
     }
 
     /**
@@ -114,41 +66,7 @@ public class ImportTransactionsDBAdapter implements BaseColumns {
      *             if the database could be neither opened or created
      */
     public ImportTransactionsDBAdapter openForRead() throws SQLException {
-        if(this.dbIsClosed()) {
-            if(this.mDbHelper == null) {
-                this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
-            }
-
-            try {
-                FTSUtilities.printToConsole("TeamMatchTransactionsDBAdapter::openForWrite : GETTING WRITABLE DB\n");
-                this.mDb = this.mDbHelper.getReadableDatabase();
-            }
-            catch (SQLException e) {
-                FTSUtilities.printToConsole("TeamMatchTransactionsDBAdapter::openForWrite : SQLException\n");
-                this.mDb = null;
-            }
-        } else {
-            FTSUtilities.printToConsole("TeamMatchTransactionsDBAdapter::openForWrite : DB ALREADY OPEN\n");
-        }
-        return this;
-    }
-
-    public boolean dbIsClosed() {
-    	if(this.mDb == null) {
-    		return true;
-    	} else {
-    		return !this.mDb.isOpen();
-    	}
-    }
-
-    /**
-     * close return type: void
-     */
-    public void close() {
-        if(this.mDb != null && this.mDb.isOpen()) {
-            this.mDbHelper.close();
-        }
-        this.mDb = null;
+        return (ImportTransactionsDBAdapter)openDBForRead();
     }
 
     /**
@@ -170,8 +88,41 @@ public class ImportTransactionsDBAdapter implements BaseColumns {
      *
      * @return Cursor over all Match Data entries
      */
-    public Cursor getAllImportTransactions() {
+    public Cursor getAllEntries() {
         return this.openForRead().mDb.query(TABLE_NAME, this.allColumns, null, null, null, null, _ID);
+    }
+
+    /**
+     * Return a Cursor positioned at the entry that matches the given rowId
+     * @param matchID
+     * @return Cursor positioned to matching entry, if found
+     * @throws SQLException if entry could not be found/retrieved
+     */
+    @Override
+    public Cursor getEntry(long iD) throws SQLException {
+        FTSUtilities.printToConsole("MatchDataDBAdapter::getEntry : matchID: " + iD + "\n");
+        String WHERE = _ID + "=" + iD;
+        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns, WHERE, null, null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+    }
+
+    @Override
+    /**
+     * This table doesn't get exported
+     */
+    public boolean setEntryExported(long rowId) {
+        return false;
+    }
+
+    @Override
+    /**
+     * This table doesn't get exported
+     */
+    public Cursor getAllEntriesToExport() {
+        return null;
     }
 
     public boolean fileHasNotBeenImported(String fileName) {
@@ -190,14 +141,12 @@ public class ImportTransactionsDBAdapter implements BaseColumns {
      * @param rowId
      * @return true if deleted, false otherwise
      */
-    public boolean deleteImportTransaction(long rowId) {
-
+    public boolean deleteEntry(long rowId) {
         return this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
     }
-    
-    public void deleteAllData()
-    {
-        this.openForWrite().mDb.delete(TABLE_NAME, null, null);
+
+    public boolean deleteAllEntries() {
+        return this.openForWrite().mDb.delete(TABLE_NAME, null, null) > 0;
     }
 }
 

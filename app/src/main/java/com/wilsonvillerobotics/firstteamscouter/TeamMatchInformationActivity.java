@@ -82,7 +82,7 @@ public class TeamMatchInformationActivity extends Activity {
 	public void loadTeamMatchInfo(Long tmID) {
 		FTSUtilities.printToConsole("TeamMatchInformationActivity::loadTeamMatchInfo : loading data");
 		if(tmID >= 0) {
-			Cursor cursor = tmDBAdapter.getTeamMatch(tmID);
+			Cursor cursor = tmDBAdapter.getEntry(tmID);
 			
 			try{
 				TextView teamNumber = (TextView) findViewById(R.id.txt_TMInfo_TeamNum);

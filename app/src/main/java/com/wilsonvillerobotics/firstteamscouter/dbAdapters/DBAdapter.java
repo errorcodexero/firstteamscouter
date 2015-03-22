@@ -166,7 +166,8 @@ public class DBAdapter {
     		//COMPETITION_DATA
             CompetitionDataDBAdapter.TABLE_NAME,
 	    	"CREATE TABLE " + CompetitionDataDBAdapter.TABLE_NAME + " (" +
-	    	AUTO_INC_ID + 
+	    	AUTO_INC_ID +
+            CompetitionDataDBAdapter.COLUMN_NAME_TABLET_ID + INT_TYPE + COMMA_SEP +
 	        CompetitionDataDBAdapter.COLUMN_NAME_COMPETITION_NAME + TEXT_TYPE + COMMA_SEP +
 	        CompetitionDataDBAdapter.COLUMN_NAME_COMPETITION_LOCATION + TEXT_TYPE + COMMA_SEP +
             CompetitionDataDBAdapter.COLUMN_NAME_READY_TO_EXPORT + BOOL_TYPE +
@@ -182,6 +183,7 @@ public class DBAdapter {
             MatchDataDBAdapter.TABLE_NAME,
 			"CREATE TABLE " + MatchDataDBAdapter.TABLE_NAME + " (" +
 			AUTO_INC_ID +
+            MatchDataDBAdapter.COLUMN_NAME_TABLET_ID + INT_TYPE + COMMA_SEP +
             MatchDataDBAdapter.COLUMN_NAME_COMPETITION_ID + INT_TYPE + COMMA_SEP +
 	        MatchDataDBAdapter.COLUMN_NAME_MATCH_TIME + TEXT_TYPE + COMMA_SEP +
 	        MatchDataDBAdapter.COLUMN_NAME_MATCH_TYPE + TEXT_TYPE + COMMA_SEP +
@@ -208,6 +210,7 @@ public class DBAdapter {
             NotesDataDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + NotesDataDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID +
+            NotesDataDBAdapter.COLUMN_NAME_TABLET_ID + INT_TYPE + COMMA_SEP +
             NotesDataDBAdapter.COLUMN_NAME_OWNER_ID + INT_TYPE + COMMA_SEP +
 			NotesDataDBAdapter.COLUMN_NAME_NOTE_TYPE + TEXT_TYPE + COMMA_SEP +
 			NotesDataDBAdapter.COLUMN_NAME_NOTE_TEXT + TEXT_TYPE + COMMA_SEP +
@@ -225,6 +228,7 @@ public class DBAdapter {
             PictureDataDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + PictureDataDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID +
+            PictureDataDBAdapter.COLUMN_NAME_TABLET_ID + INT_TYPE + COMMA_SEP +
             PictureDataDBAdapter.COLUMN_NAME_OWNER_ID + INT_TYPE + COMMA_SEP +
     		PictureDataDBAdapter.COLUMN_NAME_PICTURE_TYPE + TEXT_TYPE + COMMA_SEP +
     		PictureDataDBAdapter.COLUMN_NAME_PICTURE_URI + TEXT_TYPE + COMMA_SEP +
@@ -241,7 +245,8 @@ public class DBAdapter {
     		//PIT_DATA
             PitDataDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + PitDataDBAdapter.TABLE_NAME + " (" +
-    		AUTO_INC_ID + 
+    		AUTO_INC_ID +
+            PitDataDBAdapter.COLUMN_NAME_TABLET_ID + INT_TYPE + COMMA_SEP +
     		PitDataDBAdapter.COLUMN_NAME_PIT_INFO + TEXT_TYPE + COMMA_SEP +
             PitDataDBAdapter.COLUMN_NAME_READY_TO_EXPORT + BOOL_TYPE +
     		");",
@@ -257,6 +262,7 @@ public class DBAdapter {
             RobotDataDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + RobotDataDBAdapter.TABLE_NAME + " (" +
     		AUTO_INC_ID +
+            RobotDataDBAdapter.COLUMN_NAME_TABLET_ID + INT_TYPE + COMMA_SEP +
             RobotDataDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
             RobotDataDBAdapter.COLUMN_NAME_COMPETITION_ID  + INT_TYPE + COMMA_SEP +
     		RobotDataDBAdapter.COLUMN_NAME_DRIVE_TRAIN_TYPE + TEXT_TYPE + COMMA_SEP +
@@ -294,8 +300,8 @@ public class DBAdapter {
              */
             TeamDataDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + TeamDataDBAdapter.TABLE_NAME + " (" +
-    		//AUTO_INC_ID +
-            "_id integer, " +
+    		AUTO_INC_ID +
+            TeamDataDBAdapter.COLUMN_NAME_TABLET_ID + INT_TYPE + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER + INT_TYPE + NOT_NULL + COMMA_SEP +
             TeamDataDBAdapter.COLUMN_NAME_TEAM_SUB_NUMBER + INT_TYPE + NOT_NULL + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_NAME + TEXT_TYPE + COMMA_SEP +
@@ -304,8 +310,8 @@ public class DBAdapter {
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_NUM_MEMBERS + INT_TYPE + COMMA_SEP +
             TeamDataDBAdapter.COLUMN_NAME_TEAM_YEAR_CREATED + TEXT_TYPE + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_DATA_UPDATED + BOOL_TYPE + COMMA_SEP +
-            RobotDataDBAdapter.COLUMN_NAME_READY_TO_EXPORT + BOOL_TYPE + COMMA_SEP +
-            TeamDataDBAdapter.PRIMARY_KEY +
+            TeamDataDBAdapter.COLUMN_NAME_READY_TO_EXPORT + BOOL_TYPE + //COMMA_SEP +
+            //TeamDataDBAdapter.PRIMARY_KEY +
     		");",
 
             "SELECT * FROM "  + TeamDataDBAdapter.TABLE_NAME,
@@ -318,7 +324,8 @@ public class DBAdapter {
     		//TEAM_MATCH_DATA
             TeamMatchDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + TeamMatchDBAdapter.TABLE_NAME + " (" +
-    		AUTO_INC_ID + 
+    		AUTO_INC_ID +
+            TeamMatchDBAdapter.COLUMN_NAME_TABLET_ID + INT_TYPE + COMMA_SEP +
     		TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
     		TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID + INT_TYPE + COMMA_SEP +
             TeamMatchDBAdapter.COLUMN_NAME_COMPETITION_ID + INT_TYPE + COMMA_SEP +
@@ -397,6 +404,7 @@ public class DBAdapter {
             TeamMatchTransactionDataDBAdapter.TABLE_NAME,
             "CREATE TABLE " + TeamMatchTransactionDataDBAdapter.TABLE_NAME + " (" +
                 AUTO_INC_ID +
+                TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TABLET_ID + INT_TYPE + COMMA_SEP +
                 TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
                 TeamMatchTransactionDataDBAdapter.COLUMN_NAME_MATCH_ID + INT_TYPE + COMMA_SEP +
                 TeamMatchTransactionDataDBAdapter.COLUMN_NAME_TIMESTAMP + INT_TYPE + COMMA_SEP +
@@ -424,6 +432,7 @@ public class DBAdapter {
                 TeamMatchTransactionsDBAdapter.TABLE_NAME,
                 "CREATE TABLE " + TeamMatchTransactionsDBAdapter.TABLE_NAME + " (" +
                     AUTO_INC_ID +
+                    TeamMatchTransactionsDBAdapter.COLUMN_NAME_TABLET_ID + INT_TYPE + COMMA_SEP +
                     TeamMatchTransactionsDBAdapter.COLUMN_NAME_TEAM_MATCH_ID + INT_TYPE + COMMA_SEP +
                     TeamMatchTransactionsDBAdapter.COLUMN_NAME_TRANSACTION_ID + INT_TYPE + COMMA_SEP +
                     TeamMatchTransactionsDBAdapter.COLUMN_NAME_READY_TO_EXPORT + BOOL_TYPE +

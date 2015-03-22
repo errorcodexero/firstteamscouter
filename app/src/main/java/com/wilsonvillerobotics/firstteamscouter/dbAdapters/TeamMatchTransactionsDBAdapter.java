@@ -12,58 +12,25 @@ import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
 import java.util.ArrayList;
 
-public class TeamMatchTransactionsDBAdapter implements BaseColumns {
+public class TeamMatchTransactionsDBAdapter extends FTSDBAdapter implements BaseColumns, FTSTable {
 	public static final String TABLE_NAME = "team_match_transactions";
 
     // Columns
     public static final String COLUMN_NAME_TEAM_MATCH_ID = "team_match_id";
     public static final String COLUMN_NAME_TRANSACTION_ID = "transaction_id";
-    public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
+    //public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     public static String[] allColumns = new String[]{
     		_ID,
+            COLUMN_NAME_TABLET_ID,
             COLUMN_NAME_TEAM_MATCH_ID,
             COLUMN_NAME_TRANSACTION_ID,
             COLUMN_NAME_READY_TO_EXPORT
     };
 
-    private DatabaseHelper mDbHelper;
-    private SQLiteDatabase mDb;
-
-    private final Context mCtx;
-
-    private static class DatabaseHelper extends SQLiteOpenHelper {
-
-        private static DatabaseHelper mInstance = null;
-
-        DatabaseHelper(Context context) {
-            super(context, DBAdapter.DATABASE_NAME, null, DBAdapter.DATABASE_VERSION);
-        }
-
-        public static DatabaseHelper getInstance(Context ctx) {
-
-            // Use the application context, which will ensure that you
-            // don't accidentally leak an Activity's context.
-            // See this article for more information: http://bit.ly/6LRzfx
-            if (mInstance == null) {
-                mInstance = new DatabaseHelper(ctx.getApplicationContext());
-            }
-            return mInstance;
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        	FTSUtilities.printToConsole("TeamMatchTransactionsDBAdapter::DatabaseHelper::onUpgrade : running onUpgrade\n");
-        }
-
-        @Override
-    	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            onUpgrade(db, oldVersion, newVersion);
-        }
+    @Override
+    public String[] getAllColumns() {
+        return allColumns;
     }
 
     /**
@@ -74,7 +41,8 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
      *            the Context within which to work
      */
     public TeamMatchTransactionsDBAdapter(Context ctx) {
-        this.mCtx = ctx;
+        super(ctx);
+        //this.mCtx = ctx;
     }
 
     /**
@@ -88,6 +56,8 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
      *             if the database could be neither opened or created
      */
     public TeamMatchTransactionsDBAdapter openForWrite() throws SQLException {
+        return (TeamMatchTransactionsDBAdapter)openDBForWrite();
+        /*
     	if(this.dbIsClosed()) {
     		if(this.mDbHelper == null) {
     			this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
@@ -105,6 +75,7 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
     		FTSUtilities.printToConsole("TeamMatchTransactionsDBAdapter::openForWrite : DB ALREADY OPEN\n");
     	}
     	return this;
+    	*/
     }
 
     /**
@@ -118,6 +89,8 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
      *             if the database could be neither opened or created
      */
     public TeamMatchTransactionsDBAdapter openForRead() throws SQLException {
+        return (TeamMatchTransactionsDBAdapter)openDBForRead();
+        /*
         if(this.dbIsClosed()) {
             if(this.mDbHelper == null) {
                 this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
@@ -135,24 +108,7 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
             FTSUtilities.printToConsole("TeamMatchTransactionsDBAdapter::openForWrite : DB ALREADY OPEN\n");
         }
         return this;
-    }
-
-    public boolean dbIsClosed() {
-    	if(this.mDb == null) {
-    		return true;
-    	} else {
-    		return !this.mDb.isOpen();
-    	}
-    }
-
-    /**
-     * close return type: void
-     */
-    public void close() {
-        if(this.mDb != null && this.mDb.isOpen()) {
-            this.mDbHelper.close();
-        }
-        this.mDb = null;
+        */
     }
 
     /**
@@ -164,6 +120,7 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
      */
     public long createTeamMatchTransaction(long teamMatchId, long transactionId) {
         ContentValues args = new ContentValues();
+        args.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
         args.put(COLUMN_NAME_TEAM_MATCH_ID, teamMatchId);
         args.put(COLUMN_NAME_TRANSACTION_ID, transactionId);
         args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
@@ -173,12 +130,30 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
     }
 
     /**
+     * Return a Cursor positioned at the Competition Data Entry that matches the given rowId
+     * @param rowId
+     * @return Cursor positioned to matching Competition Data Entry, if found
+     * @throws SQLException if Competition Data Entry could not be found/retrieved
+     */
+    @Override
+    public Cursor getEntry(long rowId) throws SQLException {
+        return super.getEntry(rowId, TABLE_NAME, allColumns);
+        /*
+        String WHERE = _ID + "=" + rowId;
+        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns, WHERE, null, null, null, null, null);
+        return mCursor;
+        */
+    }
+
+    /**
      * Return a Cursor over the list of all entries in the database
      *
      * @return Cursor over all Match Data entries
      */
-    public Cursor getAllTeamMatchTransactions() {
-        return this.openForRead().mDb.query(TABLE_NAME, this.allColumns, null, null, null, null, _ID);
+    @Override
+    public Cursor getAllEntries() {
+        return super.getAllEntries(TABLE_NAME, allColumns);
+        //return this.openForRead().mDb.query(TABLE_NAME, this.allColumns, null, null, null, null, _ID);
     }
 
     /**
@@ -264,32 +239,42 @@ public class TeamMatchTransactionsDBAdapter implements BaseColumns {
      * @param rowId
      * @return true if deleted, false otherwise
      */
-    public boolean deleteTeamMatchTransaction(long rowId) {
-
-        return this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
-    }
-    
-    public void deleteAllData()
-    {
-        this.openForWrite().mDb.delete(TABLE_NAME, null, null);
+    @Override
+    public boolean deleteEntry(long rowId) {
+        return super.deleteEntry(rowId, TABLE_NAME);
+        //return this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
     }
 
-    public boolean setDataEntryExported(long rowId) {
+    @Override
+    public boolean deleteAllEntries() {
+        return super.deleteAllEntries(TABLE_NAME);
+        //this.openForWrite().mDb.delete(TABLE_NAME, null, null);
+    }
+
+    @Override
+    public boolean setEntryExported(long rowId) {
+        return super.setEntryExported(rowId, TABLE_NAME);
+        /*
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
         boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
         if(!this.dbIsClosed()) this.close();
         return retVal;
+        */
     }
 
+    @Override
     public Cursor getAllEntriesToExport() {
+        return super.getAllEntriesToExport(TABLE_NAME, allColumns);
+        /*
         String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
         return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
+        */
     }
 
     public boolean populateTestData(long[] matchIDs, long[] teamIDs) {
     	FTSUtilities.printToConsole("TeamMatchTransactionsDBAdapter::populateTestData\n");
-    	//deleteAllData();
+    	//deleteAllEntries();
 
     	return false;
     }

@@ -306,7 +306,7 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
                         txtMatchNum.setMinimumHeight(100);
                         int matchNum = -1;
 
-                        mdData = mdDBAdapter.openForRead().getMatchDataEntry(matchId);
+                        mdData = mdDBAdapter.openForRead().getEntry(matchId);
                         matchNum = mdData.getInt(mdData.getColumnIndex(MatchDataDBAdapter.COLUMN_NAME_MATCH_NUMBER));
 
                         txtMatchNum.setText("Match# " + matchNum);
@@ -349,7 +349,7 @@ public class TeamInformationActivity extends Activity implements View.OnClickLis
         }
 
         try {
-            tdData = tdDBAdapter.openForRead().getTeamDataEntry(this.teamNumber, 0); // TODO - update this so it works with new team_sub_number
+            tdData = tdDBAdapter.openForRead().getEntry(this.teamID); // TODO - update this so it works with new team_sub_number
             if (tdData != null) {
                 if (this.hmTeamInfoTextViews.get(R.id.txtPitTeamName) != null) {
                     this.hmTeamInfoTextViews.get(R.id.txtPitTeamName).setText(

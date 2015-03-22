@@ -69,7 +69,7 @@ public class TeamListActivity extends ListActivity {
     }
 
     private Cursor initCursor() {
-        Cursor cursor = this.teamDataDBAdapter.getAllTeamDataEntries();
+        Cursor cursor = this.teamDataDBAdapter.getAllEntries();
         startManagingCursor(cursor);
 
         FTSUtilities.printToConsole("TeamListActivity::onCreate : Cursor Size: " + cursor.getCount() + "\n");

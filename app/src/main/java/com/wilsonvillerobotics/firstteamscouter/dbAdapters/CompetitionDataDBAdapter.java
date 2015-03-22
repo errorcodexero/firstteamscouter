@@ -17,22 +17,29 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
+
 import java.util.ArrayList;
 
-public class CompetitionDataDBAdapter implements BaseColumns {
+public class CompetitionDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTSTable {
 	public static final String TABLE_NAME = "competition_data";
 
     // Columns
     public static final String COLUMN_NAME_COMPETITION_NAME = "competition_name";
     public static final String COLUMN_NAME_COMPETITION_LOCATION = "competition_location";
-    public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
+    //public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     public static String[] allColumns = {
     		_ID,
+            COLUMN_NAME_TABLET_ID,
     		COLUMN_NAME_COMPETITION_NAME,
     		COLUMN_NAME_COMPETITION_LOCATION,
             COLUMN_NAME_READY_TO_EXPORT
     };
+
+    public String[] getAllColumns() {
+        return allColumns;
+    }
 
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
@@ -84,7 +91,8 @@ public class CompetitionDataDBAdapter implements BaseColumns {
      *            the Context within which to work
      */
     public CompetitionDataDBAdapter(Context ctx) {
-        this.mCtx = ctx;
+        super(ctx);
+        //this.mCtx = ctx;
     }
 
     /**
@@ -98,9 +106,7 @@ public class CompetitionDataDBAdapter implements BaseColumns {
      *             if the database could be neither opened or created
      */
     public CompetitionDataDBAdapter openForWrite() throws SQLException {
-        this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
-        this.mDb = this.mDbHelper.getWritableDatabase();
-        return this;
+        return (CompetitionDataDBAdapter)openDBForWrite();
     }
 
     /**
@@ -114,27 +120,7 @@ public class CompetitionDataDBAdapter implements BaseColumns {
      *             if the database could be neither opened or created
      */
     public CompetitionDataDBAdapter openForRead() throws SQLException {
-        this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
-        this.mDb = this.mDbHelper.getReadableDatabase();
-        return this;
-    }
-
-    /**
-     * close return type: void
-     */
-    public void close() {
-        if(this.mDb != null && this.mDb.isOpen()) {
-            this.mDbHelper.close();
-        }
-        this.mDb = null;
-    }
-
-    public boolean dbIsClosed() {
-        if(this.mDb == null) {
-            return true;
-        } else {
-            return !this.mDb.isOpen();
-        }
+        return (CompetitionDataDBAdapter)openDBForRead();
     }
 
     /**
@@ -148,6 +134,7 @@ public class CompetitionDataDBAdapter implements BaseColumns {
      */
     public long createCompetitionDataEntry(int id, String name, String location){
         ContentValues initialValues = new ContentValues();
+        initialValues.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
         initialValues.put(COLUMN_NAME_COMPETITION_NAME, name);
         initialValues.put(COLUMN_NAME_COMPETITION_LOCATION, location);
         initialValues.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
@@ -162,10 +149,14 @@ public class CompetitionDataDBAdapter implements BaseColumns {
      * @param rowId
      * @return true if deleted, false otherwise
      */
-    public boolean deleteCompetitionDataEntry(long rowId) {
+    @Override
+    public boolean deleteEntry(long rowId) {
+        return super.deleteEntry(rowId, TABLE_NAME);
+        /*
         boolean retVal = this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
         if(!this.dbIsClosed()) this.close();
         return retVal;
+        */
     }
 
     /**
@@ -173,8 +164,10 @@ public class CompetitionDataDBAdapter implements BaseColumns {
      * 
      * @return Cursor over all Competition Data entries
      */
-    public Cursor getAllCompetitionDataEntries() {
-        return this.openForRead().mDb.query(TABLE_NAME, allColumns, null, null, null, null, null);
+    @Override
+    public Cursor getAllEntries() {
+        return super.getAllEntries(TABLE_NAME, allColumns);
+        //return this.openForRead().mDb.query(TABLE_NAME, allColumns, null, null, null, null, null);
     }
 
     /**
@@ -183,10 +176,14 @@ public class CompetitionDataDBAdapter implements BaseColumns {
      * @return Cursor positioned to matching Competition Data Entry, if found
      * @throws SQLException if Competition Data Entry could not be found/retrieved
      */
-    public Cursor getCompetitionDataEntry(long rowId) throws SQLException {
+    @Override
+    public Cursor getEntry(long rowId) throws SQLException {
+        return super.getEntry(rowId, TABLE_NAME, allColumns);
+        /*
         String WHERE = _ID + "=" + rowId;
         Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns, WHERE, null, null, null, null, null);
         return mCursor;
+        */
     }
 
     /**
@@ -209,16 +206,30 @@ public class CompetitionDataDBAdapter implements BaseColumns {
         return retVal;
     }
 
-    public boolean setDataEntryExported(long rowId) {
+    @Override
+    public boolean setEntryExported(long rowId) {
+        return super.setEntryExported(rowId, TABLE_NAME);
+        /*
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
         boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
         if(!this.dbIsClosed()) this.close();
         return retVal;
+        */
     }
 
+    @Override
     public Cursor getAllEntriesToExport() {
+        return super.getAllEntriesToExport(TABLE_NAME, allColumns);
+        /*
         String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
         return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
+        */
+    }
+
+    @Override
+    public boolean deleteAllEntries() {
+        return super.deleteAllEntries(TABLE_NAME);
+        //return this.openForWrite().mDb.delete(TABLE_NAME, null, null) > 0;
     }
 }

@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
-public class TeamDataDBAdapter implements BaseColumns {
+public class TeamDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTSTable {
 	public static final String TABLE_NAME = "team_data";
 
     // Primary Key comprised of two columns
@@ -26,12 +26,13 @@ public class TeamDataDBAdapter implements BaseColumns {
     public static final String COLUMN_NAME_TEAM_NUM_MEMBERS = "num_team_members";
     public static final String COLUMN_NAME_TEAM_YEAR_CREATED = "team_creation_year";
     public static final String COLUMN_NAME_TEAM_DATA_UPDATED = "team_data_updated";
-    public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
+    //public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
-    public static final String PRIMARY_KEY = " PRIMARY KEY ( " + TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER + ", " + TeamDataDBAdapter.COLUMN_NAME_TEAM_SUB_NUMBER + " )";
+    //public static final String PRIMARY_KEY = " PRIMARY KEY ( " + TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER + ", " + TeamDataDBAdapter.COLUMN_NAME_TEAM_SUB_NUMBER + " )";
 
     public static String[] allColumns = {
             _ID,
+            COLUMN_NAME_TABLET_ID,
             COLUMN_NAME_TEAM_NUMBER,
             COLUMN_NAME_TEAM_SUB_NUMBER,
             COLUMN_NAME_TEAM_NAME,
@@ -43,44 +44,9 @@ public class TeamDataDBAdapter implements BaseColumns {
             COLUMN_NAME_READY_TO_EXPORT
     };
 
-    private DatabaseHelper mDbHelper;
-    private SQLiteDatabase mDb;
-
-    private final Context mCtx;
-
-    private static class DatabaseHelper extends SQLiteOpenHelper {
-
-        private static DatabaseHelper mInstance = null;
-
-        private DatabaseHelper(Context context) {
-            super(context, DBAdapter.DATABASE_NAME, null, DBAdapter.DATABASE_VERSION);
-            FTSUtilities.printToConsole("Constructor::TeamDataDBAdapter::DatabaseHelper");
-        }
-
-        public static DatabaseHelper getInstance(Context ctx) {
-
-            // Use the application context, which will ensure that you
-            // don't accidentally leak an Activity's context.
-            // See this article for more information: http://bit.ly/6LRzfx
-            if (mInstance == null) {
-                mInstance = new DatabaseHelper(ctx.getApplicationContext());
-            }
-            return mInstance;
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-        	FTSUtilities.printToConsole("Creating TeamDataDBAdapter::DatabaseHelper");
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        }
-        
-        @Override
-    	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            onUpgrade(db, oldVersion, newVersion);
-        }
+    @Override
+    public String[] getAllColumns() {
+        return allColumns;
     }
 
     /**
@@ -91,8 +57,9 @@ public class TeamDataDBAdapter implements BaseColumns {
      *            the Context within which to work
      */
     public TeamDataDBAdapter(Context ctx) {
+        super(ctx);
     	FTSUtilities.printToConsole("Constructor::TeamDataDBAdapter");
-        this.mCtx = ctx;
+        //this.mCtx = ctx;
     }
 
     /**
@@ -106,11 +73,14 @@ public class TeamDataDBAdapter implements BaseColumns {
      *             if the database could be neither opened or created
      */
     public TeamDataDBAdapter openForWrite() throws SQLException {
+        return (TeamDataDBAdapter)openDBForWrite();
+        /*
     	FTSUtilities.printToConsole("Opening TeamDataDBAdapter Database");
         this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
         this.mDb = this.mDbHelper.getWritableDatabase();
         FTSUtilities.printToConsole("TeamDataDBAdapter::openForWrite : DB " + ((mDb == null) ? "IS" : "Is Not") + " null");
         return this;
+        */
     }
 
     /**
@@ -124,30 +94,14 @@ public class TeamDataDBAdapter implements BaseColumns {
      *             if the database could be neither opened or created
      */
     public TeamDataDBAdapter openForRead() throws SQLException {
+        return (TeamDataDBAdapter)openDBForRead();
+        /*
         FTSUtilities.printToConsole("Opening TeamDataDBAdapter Database");
         this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
         this.mDb = this.mDbHelper.getReadableDatabase();
         FTSUtilities.printToConsole("TeamDataDBAdapter::openForRead : DB " + ((mDb == null) ? "IS" : "Is Not") + " null");
         return this;
-    }
-
-    /**
-     * close return type: void
-     */
-    public void close() {
-    	FTSUtilities.printToConsole("Closing TeamDataDBAdapter Database");
-        if(this.mDb != null && this.mDb.isOpen()) {
-            this.mDbHelper.close();
-        }
-        this.mDb = null;
-    }
-
-    public boolean dbIsClosed() {
-        if(this.mDb == null) {
-            return true;
-        } else {
-            return !this.mDb.isOpen();
-        }
+        */
     }
 
     /**
@@ -163,6 +117,7 @@ public class TeamDataDBAdapter implements BaseColumns {
     public long createTeamDataEntry(int team_number, int team_sub_number, String team_name, String team_city, String team_state, int num_team_members){
         long retVal = -1;
         ContentValues args = new ContentValues();
+        args.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
         args.put(COLUMN_NAME_TEAM_NUMBER, team_number);
         args.put(COLUMN_NAME_TEAM_SUB_NUMBER, team_sub_number);
         args.put(COLUMN_NAME_TEAM_NAME, team_name);
@@ -177,16 +132,18 @@ public class TeamDataDBAdapter implements BaseColumns {
         return retVal;
     }
 
-    public long[] createTeamDataEntryIfNotExist(int team_number, int team_sub_number) {
+    public int[] createTeamDataEntryIfNotExist(int team_number, int team_sub_number) {
     	Cursor c = null;
-    	long retVal[] = {-1,-1};
+    	int retVal[] = {-1,-1};
     	try {
-    		c = this.getTeamDataEntry(team_number, team_sub_number);
-    		retVal[0] = c.getLong(c.getColumnIndex(COLUMN_NAME_TEAM_NUMBER));
-            retVal[1] = c.getLong(c.getColumnIndex(COLUMN_NAME_TEAM_SUB_NUMBER));
-    	}
+    		c = this.getTeamEntry(team_number, team_sub_number);
+            if(c != null && c.moveToFirst()) {
+                retVal[0] = c.getInt(c.getColumnIndex(COLUMN_NAME_TEAM_NUMBER));
+                retVal[1] = c.getInt(c.getColumnIndex(COLUMN_NAME_TEAM_SUB_NUMBER));
+            }    	}
     	catch(Exception e) {
     		ContentValues args = new ContentValues();
+            args.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
             args.put(COLUMN_NAME_TEAM_NUMBER, team_number);
             args.put(COLUMN_NAME_TEAM_SUB_NUMBER, team_sub_number);
             args.put(COLUMN_NAME_TEAM_DATA_UPDATED, Boolean.TRUE.toString());
@@ -212,7 +169,7 @@ public class TeamDataDBAdapter implements BaseColumns {
      * @param num_team_members
      * @return true if the entry was successfully updated, false otherwise
      */
-    public boolean updateTeamDataEntry(int team_number, int team_sub_number, String team_name,
+    public boolean updateTeamDataEntry(long teamID, int team_number, int team_sub_number, String team_name,
     		String team_city, String team_state, int num_team_members, Boolean export){
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_TEAM_NUMBER, team_number);
@@ -223,21 +180,42 @@ public class TeamDataDBAdapter implements BaseColumns {
         args.put(COLUMN_NAME_TEAM_NUM_MEMBERS, num_team_members);
         args.put(COLUMN_NAME_TEAM_DATA_UPDATED, Boolean.TRUE.toString());
         args.put(COLUMN_NAME_READY_TO_EXPORT, String.valueOf(export));
-        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args,COLUMN_NAME_TEAM_NUMBER + "=" + team_number, null) > 0;
+        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + teamID, null) > 0;
         if(!this.dbIsClosed()) this.close();
         return retVal;
     }
 
     /**
      * Delete the entry with the given rowId
-     * 
-     * @param teamNumber
+     *
+     * @param rowID
      * @return true if deleted, false otherwise
      */
-    public boolean deleteTeamDataEntry(int teamNumber) {
-        boolean retVal = this.openForWrite().mDb.delete(TABLE_NAME, COLUMN_NAME_TEAM_NUMBER + "=" + teamNumber, null) > 0;
-        if(!this.dbIsClosed()) this.close();
-    	return retVal;
+    @Override
+    public boolean deleteEntry(long rowID) {
+        return super.deleteEntry(rowID, TABLE_NAME);
+    }
+
+    public boolean deleteAllEntries()
+    {
+        return super.deleteAllEntries(TABLE_NAME);
+        //this.openForWrite().mDb.delete(TABLE_NAME, null, null);
+    }
+
+    /**
+     * Return a Cursor positioned at the entry that matches the given rowId
+     * @param rowID
+     * @return Cursor positioned to matching entry, if found
+     * @throws SQLException if entry could not be found/retrieved
+     */
+    public Cursor getEntry(long rowID) throws SQLException {
+        return super.getEntry(rowID, TABLE_NAME, allColumns);
+    }
+
+    public Cursor getTeamEntry(int team_number, int team_sub_number) {
+        String WHERE = COLUMN_NAME_TEAM_NUMBER + "=" + String.valueOf(team_number);
+        WHERE += " AND " + COLUMN_NAME_TEAM_SUB_NUMBER + "=" + String.valueOf(team_sub_number);
+        return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
     }
 
     /**
@@ -245,11 +223,15 @@ public class TeamDataDBAdapter implements BaseColumns {
      * 
      * @return Cursor over all Match Data entries
      */
-    public Cursor getAllTeamDataEntries() {
+    @Override
+    public Cursor getAllEntries() {
+        return super.getAllEntries(TABLE_NAME, allColumns);
+        /*
         String SORT = COLUMN_NAME_TEAM_NUMBER + " ASC";
         Cursor mCursor = this.openForRead().mDb.query(TABLE_NAME, allColumns, null, null, null, null, SORT);
-        FTSUtilities.printToConsole("TeamDataDBAdapter::getAllTeamDataEntries : Cursor Size : " + mCursor.getCount() + "\n");
+        FTSUtilities.printToConsole("TeamDataDBAdapter::getAllEntries : Cursor Size : " + mCursor.getCount() + "\n");
         return mCursor;
+        */
     }
 
     /**
@@ -261,25 +243,10 @@ public class TeamDataDBAdapter implements BaseColumns {
         String WHERE = COLUMN_NAME_TEAM_DATA_UPDATED + "=" + Boolean.TRUE.toString();
         String SORT = COLUMN_NAME_TEAM_NUMBER + " ASC";
         Cursor mCursor = this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, SORT);
-        FTSUtilities.printToConsole("TeamDataDBAdapter::getAllTeamDataEntries : Cursor Size : " + mCursor.getCount() + "\n");
+        FTSUtilities.printToConsole("TeamDataDBAdapter::getAllEntries : Cursor Size : " + mCursor.getCount() + "\n");
         return mCursor;
     }
 
-    /**
-     * Return a Cursor positioned at the entry that matches the given rowId
-     * @param teamNumber
-     * @return Cursor positioned to matching entry, if found
-     * @throws SQLException if entry could not be found/retrieved
-     */
-    public Cursor getTeamDataEntry(long teamNumber, long team_sub_number) throws SQLException {
-        String WHERE = COLUMN_NAME_TEAM_NUMBER + "=" + teamNumber;
-        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns, WHERE, null, null, null, null, null);
-        if (mCursor != null) {
-            mCursor.moveToFirst();
-        }
-        return mCursor;
-    }
-    
     /**
      * Return a Cursor positioned at the entry that matches the given rowId
      * @param //teamID
@@ -298,27 +265,31 @@ public class TeamDataDBAdapter implements BaseColumns {
         return teamNum;
     }
     */
-    public boolean setDataEntryExported(long rowId) {
+
+    @Override
+    public boolean setEntryExported(long rowId) {
+        return super.setEntryExported(rowId, TABLE_NAME);
+        /*
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
         boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
         if(!this.dbIsClosed()) this.close();
         return retVal;
+        */
     }
 
+    @Override
     public Cursor getAllEntriesToExport() {
+        return super.getAllEntriesToExport(TABLE_NAME, allColumns);
+        /*
         String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
         return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
-    }
-    
-    public void deleteAllData()
-    {
-        this.openForWrite().mDb.delete(TABLE_NAME, null, null);
+        */
     }
     
     public long[] populateTestData() {
     	FTSUtilities.printToConsole("TeamDataDBAdapter::populateTestData\n");
-    	//deleteAllData();
+    	//deleteAllEntries();
     	
     	Set<Integer> teamNums = FTSUtilities.getTestTeamNumbers();
     	long teamIDs[] = new long[teamNums.size()];

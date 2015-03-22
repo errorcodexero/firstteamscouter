@@ -8,61 +8,31 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
+import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
+
 import java.util.ArrayList;
 
-public class NotesDataDBAdapter implements BaseColumns {
+public class NotesDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTSTable {
 	public static final String TABLE_NAME = "notes_data";
 
     // Columns
     public static final String COLUMN_NAME_OWNER_ID = "owner_id";
     public static final String COLUMN_NAME_NOTE_TYPE = "note_type"; // robot, team, pit, etc.
     public static final String COLUMN_NAME_NOTE_TEXT = "note_text";
-    public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
+    //public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     public static String[] allColumns = {
             _ID,
+            COLUMN_NAME_TABLET_ID,
             COLUMN_NAME_OWNER_ID,
             COLUMN_NAME_NOTE_TYPE,
             COLUMN_NAME_NOTE_TEXT,
             COLUMN_NAME_READY_TO_EXPORT
     };
 
-    private DatabaseHelper mDbHelper;
-    private SQLiteDatabase mDb;
-
-    private final Context mCtx;
-
-    private static class DatabaseHelper extends SQLiteOpenHelper {
-
-        private static DatabaseHelper mInstance = null;
-
-        private DatabaseHelper(Context context) {
-            super(context, DBAdapter.DATABASE_NAME, null, DBAdapter.DATABASE_VERSION);
-        }
-
-        public static DatabaseHelper getInstance(Context ctx) {
-
-            // Use the application context, which will ensure that you
-            // don't accidentally leak an Activity's context.
-            // See this article for more information: http://bit.ly/6LRzfx
-            if (mInstance == null) {
-                mInstance = new DatabaseHelper(ctx.getApplicationContext());
-            }
-            return mInstance;
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        }
-        
-        @Override
-    	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            onUpgrade(db, oldVersion, newVersion);
-        }
+    @Override
+    public String[] getAllColumns() {
+        return allColumns;
     }
 
     /**
@@ -73,7 +43,8 @@ public class NotesDataDBAdapter implements BaseColumns {
      *            the Context within which to work
      */
     public NotesDataDBAdapter(Context ctx) {
-        this.mCtx = ctx;
+        super(ctx);
+        //this.mCtx = ctx;
     }
 
     /**
@@ -87,9 +58,7 @@ public class NotesDataDBAdapter implements BaseColumns {
      *             if the database could be neither opened or created
      */
     public NotesDataDBAdapter openForWrite() throws SQLException {
-        this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
-        this.mDb = this.mDbHelper.getWritableDatabase();
-        return this;
+        return (NotesDataDBAdapter)openDBForWrite();
     }
 
     /**
@@ -103,27 +72,7 @@ public class NotesDataDBAdapter implements BaseColumns {
      *             if the database could be neither opened or created
      */
     public NotesDataDBAdapter openForRead() throws SQLException {
-        this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
-        this.mDb = this.mDbHelper.getReadableDatabase();
-        return this;
-    }
-
-    /**
-     * close return type: void
-     */
-    public void close() {
-        if(this.mDb != null && this.mDb.isOpen()) {
-            this.mDbHelper.close();
-        }
-        this.mDb = null;
-    }
-
-    public boolean dbIsClosed() {
-        if(this.mDb == null) {
-            return true;
-        } else {
-            return !this.mDb.isOpen();
-        }
+        return (NotesDataDBAdapter)openDBForRead();
     }
 
     /**
@@ -136,6 +85,7 @@ public class NotesDataDBAdapter implements BaseColumns {
      */
     public long createNotesDataEntry(long owner_id, String note_type, String note_text){
         ContentValues initialValues = new ContentValues();
+        initialValues.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
         initialValues.put(COLUMN_NAME_OWNER_ID, owner_id);
         initialValues.put(COLUMN_NAME_NOTE_TYPE, note_type);
         initialValues.put(COLUMN_NAME_NOTE_TEXT, note_text);
@@ -151,10 +101,20 @@ public class NotesDataDBAdapter implements BaseColumns {
      * @param rowId
      * @return true if deleted, false otherwise
      */
-    public boolean deleteNotesDataEntry(long rowId) {
+    @Override
+    public boolean deleteEntry(long rowId) {
+        return super.deleteEntry(rowId, TABLE_NAME);
+        /*
         boolean retVal = this.openForWrite().mDb.delete(TABLE_NAME, _ID + "=" + rowId, null) > 0;
         if(!this.dbIsClosed()) this.close();
         return retVal;
+        */
+    }
+
+    @Override
+    public boolean deleteAllEntries() {
+        return super.deleteAllEntries(TABLE_NAME);
+        //return this.openForWrite().mDb.delete(TABLE_NAME, null, null) > 0;
     }
 
     /**
@@ -162,8 +122,10 @@ public class NotesDataDBAdapter implements BaseColumns {
      * 
      * @return Cursor over all Match Data entries
      */
-    public Cursor getAllNotesDataEntries() {
-        return this.openForRead().mDb.query(TABLE_NAME, allColumns, null, null, null, null, null);
+    @Override
+    public Cursor getAllEntries() {
+        return super.getAllEntries(TABLE_NAME, allColumns);
+        //return this.openForRead().mDb.query(TABLE_NAME, allColumns, null, null, null, null, null);
     }
 
     /**
@@ -187,11 +149,30 @@ public class NotesDataDBAdapter implements BaseColumns {
 
     /**
      * Return a Cursor positioned at the entry that matches the given rowId
+     * @param iD
+     * @return Cursor positioned to matching entry, if found
+     * @throws SQLException if entry could not be found/retrieved
+     */
+    @Override
+    public Cursor getEntry(long iD) throws SQLException {
+        return super.getEntry(iD, TABLE_NAME, allColumns);
+        /*
+        String WHERE = _ID + "=" + iD;
+        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns, WHERE, null, null, null, null, null);
+        if (mCursor != null) {
+            mCursor.moveToFirst();
+        }
+        return mCursor;
+        */
+    }
+
+    /**
+     * Return a Cursor positioned at the entry that matches the given rowId
      * @param rowId
      * @return Cursor positioned to matching entry, if found
      * @throws SQLException if entry could not be found/retrieved
      */
-    public String getNotesDataEntry(long rowId) throws SQLException {
+    public String getNoteEntry(long rowId) throws SQLException {
         String note = "";
         String WHERE = _ID + "=" + rowId;
         Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns, WHERE, null, null, null, null, null);
@@ -222,16 +203,25 @@ public class NotesDataDBAdapter implements BaseColumns {
         if(!this.dbIsClosed()) this.close();
         return  retVal;
     }
-    public boolean setDataEntryExported(long rowId) {
+
+    @Override
+    public boolean setEntryExported(long rowId) {
+        return super.setEntryExported(rowId, TABLE_NAME);
+        /*
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
         boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
         if(!this.dbIsClosed()) this.close();
         return retVal;
+        */
     }
 
+    @Override
     public Cursor getAllEntriesToExport() {
+        return super.getAllEntriesToExport(TABLE_NAME, allColumns);
+        /*
         String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
         return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
+        */
     }
 }

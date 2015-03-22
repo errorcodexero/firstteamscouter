@@ -34,7 +34,7 @@ public class TeamMatchDataListActivity extends ListActivity {
         long teamID = intent.getLongExtra(TeamDataDBAdapter._ID, -1);
         long competition_id = intent.getLongExtra("competition_id", 0);
 
-        //Cursor cursor = this.teamDataDBAdapter.getAllTeamDataEntries();
+        //Cursor cursor = this.teamDataDBAdapter.getAllEntries();
         Cursor cursor = this.tmDataDBAdapter.getMatchesForTeam(teamID, competition_id);
         startManagingCursor(cursor);
           

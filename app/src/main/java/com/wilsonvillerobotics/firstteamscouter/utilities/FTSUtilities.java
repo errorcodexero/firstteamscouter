@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 
@@ -26,9 +27,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class FTSUtilities {
 
 	public static Boolean DEBUG = true;
-	public static Boolean POPULATE_TEST_DATA = false;
+	public static Boolean POPULATE_TEST_DATA = true;
 	public static String alliancePositions[] = {"Red1","Red2","Red3","Blue1","Blue2","Blue3",};
     public static String strUuid = "";
+    public static Long wifiID = -1l;
 
     public static final String user = "ftsscout", pwd = "ftsscouter";
     public static final String remoteUploadPath = "./upload";
@@ -167,23 +169,49 @@ public class FTSUtilities {
         return ap.myAlliancePosition();
     }
 
-    public static void generateDeviceID(Context context) {
-        // DeviceUuidFactory loads or generates the static uuid in its constructor
-        DeviceUuidFactory duf = new DeviceUuidFactory(context);
-        strUuid = duf.getDeviceUuid().toString();
+    private static long unsignedByteToLong(byte b) {
+        return (long) b & 0xFF;
+    }
 
-        String deviceWiFiMAC = "";
-        Long deviceWifiMACNumeric = 0l;
+    /**
+     * gets the long value from byte array
+     * @param byteArrayToConvert
+     */
+    public static long convertByteArrayToLong(byte byteArrayToConvert[]) {
+        long address = -1l;
+        if (byteArrayToConvert != null) {
+            if (byteArrayToConvert.length == 6) {
+                address = unsignedByteToLong(byteArrayToConvert[5]);
+                address |= (unsignedByteToLong(byteArrayToConvert[4]) << 8);
+                address |= (unsignedByteToLong(byteArrayToConvert[3]) << 16);
+                address |= (unsignedByteToLong(byteArrayToConvert[2]) << 24);
+                address |= (unsignedByteToLong(byteArrayToConvert[1]) << 32);
+                address |= (unsignedByteToLong(byteArrayToConvert[0]) << 40);
+            }
+        }
+        return address;
+    }
+
+    public static void generateDeviceID(Context context) {
+        // DeviceUuidFactory loads or generates the static androidUuid in its constructor
+        DeviceUuidFactory duf = new DeviceUuidFactory(context);
+        strUuid = duf.getDeviceAndroidUuid().toString();
+        wifiID = duf.getDeviceWiFiId();
+
+        String deviceWiFiMAC = String.valueOf(wifiID);
+/*        Long deviceWifiMACNumeric = 0l;
         boolean wifiUp = INetUtils.isWifiUp(context);
         FTSUtilities.printToConsole("WIFI Adapter " + (wifiUp ? "IS" : "IS NOT") + " up");
 
-        if(!wifiUp) {
+        int timeout = 500;
+        while(!wifiUp && timeout > 0) {
             wifiUp = INetUtils.toggleWifi(context);
-            FTSUtilities.printToConsole("WIFI Adapter " + (wifiUp ? "IS" : "IS NOT") + " up");
+            timeout--;
         }
 
-        int timeout = 100;
+        timeout = 500;
         if(wifiUp) {
+            FTSUtilities.printToConsole("WIFI Adapter " + (wifiUp ? "IS" : "IS NOT") + " up");
             deviceWiFiMAC = INetUtils.getMACAddress("wlan0");
             deviceWifiMACNumeric = INetUtils.getMACAddressNumeric("wlan0");
 
@@ -192,8 +220,11 @@ public class FTSUtilities {
                 timeout--;
             }
         }
+*/
+        String message = "WIFI Adapter MAC: " + deviceWiFiMAC + "\nMAC Numeric Value: " + deviceWiFiMAC;
+        FTSUtilities.printToConsole(message);
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
 
-        FTSUtilities.printToConsole("WIFI Adapter MAC: " + deviceWiFiMAC + "\nMAC Numeric Value: " + String.valueOf(deviceWifiMACNumeric));
     }
 
     public static String getShortDeviceID(Context context) {
@@ -202,7 +233,7 @@ public class FTSUtilities {
                 return "";
             }
             DeviceUuidFactory duf = new DeviceUuidFactory(context);
-            strUuid = duf.getDeviceUuid().toString();
+            strUuid = duf.getDeviceAndroidUuid().toString();
         }
         String parts[] = strUuid.split("-");
         if(parts.length == 5) {
@@ -225,7 +256,7 @@ public class FTSUtilities {
     }
 
     public static String getXmlDataFileNameForTable(String tableName) {
-        // expected format: ftsData-<uuid>-<table_name>-<timestamp>.xml
+        // expected format: ftsData-<androidUuid>-<table_name>-<timestamp>.xml
         final String exportFileNamePrefix = "ftsData";
         final String exportTimestamp = String.valueOf(System.nanoTime());
 

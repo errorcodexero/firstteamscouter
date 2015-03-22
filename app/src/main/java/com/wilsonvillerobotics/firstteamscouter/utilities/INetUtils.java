@@ -105,6 +105,7 @@ public class INetUtils {
      * @return  mac address or empty string
      */
     public static Long getMACAddressNumeric(String interfaceName) {
+        long macAddress = -1l;
         try {
             List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
             for (NetworkInterface intf : interfaces) {
@@ -112,15 +113,10 @@ public class INetUtils {
                     if (!intf.getName().equalsIgnoreCase(interfaceName)) continue;
                 }
                 byte[] mac = intf.getHardwareAddress();
-                if (mac==null) return -1l;
-
-                Long macAddr = 0l;
-                for (int idx=0; idx<mac.length; idx++)
-                    macAddr = (macAddr << 8) + mac[idx];
-                return macAddr;
+macAddress = FTSUtilities.convertByteArrayToLong(mac);
             }
         } catch (Exception ex) { } // for now eat exceptions
-        return -1l;
+        return macAddress;
     }
 
     /**

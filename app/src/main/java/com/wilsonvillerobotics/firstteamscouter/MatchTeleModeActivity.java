@@ -284,7 +284,7 @@ public class MatchTeleModeActivity extends Activity {
             tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this);
             tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this);
 
-            Cursor c = tmDBAdapter.getTeamMatch(this.teamMatchID);
+            Cursor c = tmDBAdapter.getEntry(this.teamMatchID);
             if(c.moveToFirst()) {
                 this.teamID = c.getLong(c.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID));
                 this.matchID = c.getLong(c.getColumnIndex(TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID));

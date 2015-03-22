@@ -92,7 +92,7 @@ public class NoteListActivity extends Activity implements OnClickListener {
                 if (noteIds.size() > 0 && this.ndDBAdapter != null) {
                     ArrayList<String> noteStringList = new ArrayList<String>();
                     for (Long l : noteIds) {
-                        noteStringList.add(ndDBAdapter.getNotesDataEntry(l));
+                        noteStringList.add(ndDBAdapter.getNoteEntry(l));
                     }
                     listOfNotes.clear();
                     listOfNotes.addAll(noteStringList);
