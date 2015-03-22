@@ -71,7 +71,7 @@
     <string name="lbl_repeat_data_export">Repeat Export</string>
     <string name="label_bluetooth_data_export">Export Via Bluetooth</string>
     <string name="text_export_status">Export Status:</string>
-    <string name="label_import_data">Import Data</string>
+    <string name="label_import_test_data">Import Test Data</string>
     <string name="label_show_screen_metrics">Show Screen Metrics</string>
     <string name="label_to_starting_position">To Starting Position</string>
     <string name="label_export_to_xml">Export To XML</string>

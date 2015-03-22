@@ -27,7 +27,7 @@ public class DataManagementActivity extends Activity {
     }
 
     private void configButtons() {
-        Button btnImportMatchData = (Button) findViewById(R.id.btnImportMatchData);
+        Button btnImportMatchData = (Button) findViewById(R.id.btnImportTestMatchData);
         Button btnExportMatchData = (Button) findViewById(R.id.btnExportMatchData);
 
         btnImportMatchData.setOnClickListener(new View.OnClickListener() {

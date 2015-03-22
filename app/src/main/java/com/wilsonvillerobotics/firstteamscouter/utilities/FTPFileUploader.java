@@ -37,6 +37,22 @@ public class FTPFileUploader extends AsyncTask<File, Void, Boolean> {
         this.serverIP = FTSUtilities.defaultServerIP;
     }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRemotePath(String remotePath) {
+        this.remotePath = remotePath;
+    }
+
+    public void setServerIP(byte ipArray[]) {
+        this.serverIP = ipArray;
+    }
+
     @Override
     protected Boolean doInBackground(File... filesToSend) {
         FTPClient ftpClient = new FTPClient();
@@ -47,7 +63,7 @@ public class FTPFileUploader extends AsyncTask<File, Void, Boolean> {
             InetAddress ipv4 = Inet4Address.getByAddress(serverIP);
             ftpClient.connect(ipv4);
             result = ftpClient.login(userName, password);
-            Log.e("isFTPConnected", String.valueOf(result));
+            Log.e("FTPConnected: ", String.valueOf(result));
             ftpClient.changeWorkingDirectory(remotePath);
 
             if (ftpClient.getReplyString().contains("250")) {

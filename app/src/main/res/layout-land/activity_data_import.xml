@@ -83,11 +83,11 @@
                 android:layout_weight="0.34" />
 
             <Button
-                android:id="@+id/btnImportMatchData"
+                android:id="@+id/btnImportTestMatchData"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/label_import_data"
+                android:text="@string/label_import_test_data"
                 android:textSize="20sp"
                 android:background="@drawable/custom_btn_shakespeare"
                 android:layout_marginLeft="20dp"

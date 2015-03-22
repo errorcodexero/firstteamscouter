@@ -60,6 +60,7 @@ public class FTPFileDownloader extends AsyncTask<Void, Void, FTPFile[]> {
         try {
             //ftpClient.connect(InetAddress.getByName(serverName));
             InetAddress ipv4 = Inet4Address.getByAddress(serverIP);
+            ftpClient.setDefaultTimeout(1000);
             ftpClient.connect(ipv4);
             result = ftpClient.login(userName, password);
             Log.e("isFTPConnected", String.valueOf(result));

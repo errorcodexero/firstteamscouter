@@ -79,7 +79,7 @@ public class DeviceUuidFactory {
                     final SharedPreferences prefs = context
                             .getSharedPreferences(PREFS_FILE, 0);
                     final String id = prefs.getString(PREFS_WIFI_ID, null);
-                    if (id != null) {
+                    if (id != null && !id.matches("-1")) {
                         // Use the ids previously computed and stored in the
                         // prefs file
                         wifiId = Long.parseLong(id);
@@ -96,7 +96,7 @@ public class DeviceUuidFactory {
                         }
                         if(!wifiUp) FTSUtilities.printToConsole("WIFI did not turn ON");
                         try {
-                            wifiId = INetUtils.getMACAddressNumeric("wlan0");
+                            wifiId = INetUtils.getWifiMACAddressNumeric(context);
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }

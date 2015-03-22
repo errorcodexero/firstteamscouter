@@ -33,7 +33,7 @@ import android.widget.Toast;
 
 import org.apache.commons.net.ftp.FTPFile;
 
-public class DataImportActivity extends Activity {
+public class DataImportActivity extends Activity implements View.OnClickListener {
 
 	protected static final int TIMER_RUNTIME = 10000; // in ms --> 10s
 
@@ -121,206 +121,46 @@ public class DataImportActivity extends Activity {
             robotDataDBAdapter = null;
 		}
 		
-		String statusMessage;
+		String statusMessage = "";
 		String testDataAlertMessage = "";
+        Button btnImportTestData = (Button)findViewById(R.id.btnImportTestMatchData);
 		if(FTSUtilities.POPULATE_TEST_DATA) {
-			statusMessage = "Press the import button to import test data for " + numTestMatches + " teams\n";
+			statusMessage += "Press the Import Test Data button to import test data for " + numTestMatches + " teams\n";
 			testDataAlertMessage = "TEST DATA MODE";
+            if(btnImportTestData != null) btnImportTestData.setEnabled(true);
 		} else {
-			statusMessage = "Press the 'Import' button to import matches from 'match_list_data.csv'\nExpected format is:\nCompetition ID : Time : Match Type : Match Number : Red1 : Red2 : Red3 : Blue1 : Blue2 : Blue3";
+            if(btnImportTestData != null) btnImportTestData.setEnabled(false);
 		}
-		
-		txtStatus = (TextView) findViewById(R.id.txtStatus);
-	    txtStatus.setText(statusMessage);
+
+        statusMessage += "Press the 'Download Data' button to download data files from the laptop\n";
+        statusMessage += "Once the download completes, press the Import Data to import the files";
+        //"Expected format is:\nCompetition ID : Time : Match Type : Match Number : Red1 : Red2 : Red3 : Blue1 : Blue2 : Blue3";
+
+        txtStatus = (TextView) findViewById(R.id.txtStatus);
+	    if(txtStatus != null) txtStatus.setText(statusMessage);
 	    
 	    txtTestDataAlert = (TextView) findViewById(R.id.txtTestDataAlert);
-	    txtTestDataAlert.setText(testDataAlertMessage);
+        if(txtTestDataAlert != null) txtTestDataAlert.setText(testDataAlertMessage);
 	    
 	    mProgressBar = (ProgressBar)findViewById(R.id.progressBar1);
-
-        Button btnDisplayMetrics = (Button) findViewById(R.id.btnDisplayMetrics);
-        btnDisplayMetrics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                displayScreenMetrics();
-            }
-        });
-
-        Button btnDownloadDataFiles = (Button) findViewById(R.id.btnDownloadDataFiles);
-        btnDownloadDataFiles.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FTPFileDownloader ftpDL = new FTPFileDownloader();
-                try {
-                    FTPFile[] files = ftpDL.execute().get();
-                    String stat = "File(s) Downloaded:\n";
-                    for(FTPFile f : files) {
-                        if(f != null) stat += "\t" + f.getName() + "\n";
-                    }
-                    txtStatus.setText(stat);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        Button btnImportFromXml = (Button) findViewById(R.id.btnImportFromXml);
-        btnImportFromXml.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FTSUtilities.printToConsole("ImportMatchDataActivity::btnImportFromXml.onClick");
-                txtStatus.setText("Importing from XML");
-
-                String filePrefix = "ftsData";
-                File externalFilesDir = FTSUtilities.getFileDirectory(null);
-
-                File[] xmlFileList = externalFilesDir.listFiles(new XmlDataFilenameFilter(filePrefix, ".xml"));
-
-                // Expected file name pattern: ftsDataExport-table-timestamp.xml
-                String storageState = Environment.getExternalStorageState();
-                if (storageState.equals(Environment.MEDIA_MOUNTED)) {
-                    for (File f : xmlFileList) {
-                        if (f.exists() && f.isFile()) {
-                            String parts[] = f.getName().split("-");
-                            String tableName = (parts.length > 2) ? parts[1] : "UNKNOWN-TABLE";
-
-                            txtStatus.setText("File Found for table " + tableName + ", Import Commencing\n");
-                            DBAdapter.TABLE_NAMES table = DBAdapter.TABLE_NAMES.getTableByTableName(tableName);
-                            String firstColumn = DBAdapter.getFirstColumnName(table);
-                            String lastColumn = DBAdapter.getLastColumnName(table);
-                            String insertStatement = dbAdapter.getInsertStatementFromXmlTable(f, tableName, firstColumn, lastColumn);
-                            txtStatus.setText(insertStatement);
-                            //dbAdapter.getInsertStatementFromXmlTable();
-                        }
-                    }
-                }
-            }
-        });
-
-        Button btnOK = (Button) findViewById(R.id.btnImportMatchData);
-		btnOK.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                String importStatusMessage = "";
-                try {
-                    if (FTSUtilities.POPULATE_TEST_DATA) {
-                        dbAdapter.deleteTableData();
-                        teamMatchDBAdapter.populateTestData(competition_id, matchDataDBAdapter.populateTestData(numTestMatches), teamDataDBAdapter.populateTestData());
-                        importStatusMessage = "Test data import complete";
-                    } else {
-                        String storageState = Environment.getExternalStorageState();
-                        if (storageState.equals(Environment.MEDIA_MOUNTED)) {
-                            FTPFileDownloader ftpDL = new FTPFileDownloader();
-                            FTPFile[] files = ftpDL.execute().get();
-
-                            FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : getting file\n");
-                            File file = new File(FTSUtilities.getFileDirectory("download"), "match_list_data.csv");
-                            FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : file " + ((file.exists()) ? "EXISTS" : "IS MISSING") + "\n");
-
-                            if (file.exists() && file.isFile()) {
-                                txtStatus.setText("File Found, Import Commencing\n");
-                                //teamDataDBAdapter.deleteAllEntries();
-                                //matchDataDBAdapter.deleteAllEntries();
-                                //teamMatchDBAdapter.deleteAllEntries();
-                                //robotDataDBAdapter.getAllRobotDataEntries();
-
-                                BufferedReader inputReader = new BufferedReader(
-                                        new InputStreamReader(new FileInputStream(file)));
-                                String line;
-                                int lineCount = 0;
-                                int matchCount = 0;
-                                int teamCount = 0;
-                                String lineArray[];
-                                inputReader.mark((int) file.length());
-                                line = inputReader.readLine();
-                                lineArray = line.split(",");
-                                //String headerArray[] = {"CompetitionID", "Time", "Type", "#", FTSUtilities.alliancePositions[0], FTSUtilities.alliancePositions[1], FTSUtilities.alliancePositions[2],
-                                //		FTSUtilities.alliancePositions[3], FTSUtilities.alliancePositions[4], FTSUtilities.alliancePositions[5]};
-
-                                if (lineArray[2].startsWith("Type")) {
-                                    FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : Header Row Detected");
-                                } else {
-                                    FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : NO Header Row Detected");
-                                    inputReader.reset();
-                                }
-
-                                while ((line = inputReader.readLine()) != null) {
-                                    lineCount += 1;
-                                    lineArray = line.split(",");
-
-                                    if (lineArray.length > 9) {
-                                        //FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : " + lineArray[0] + ":" + lineArray[1] + ":" + lineArray[2] + ":" + lineArray[3] + ":" + lineArray[4] + ":" + lineArray[5] + ":" + lineArray[6] + ":" + lineArray[7]);
-                                        //CompetitionID : Time : Type : MatchNum : Red1 : Red2 : Red3 : Blue1 : Blue2 : Blue3
-                                        int teamNumbers[] = {-1, -1, -1, -1, -1, -1};
-                                        try {
-                                            teamDataDBAdapter.openForWrite();
-                                            for (int i = 0; i < 6; i++) {
-                                                teamNumbers[i] = teamDataDBAdapter.createTeamDataEntryIfNotExist(Integer.parseInt(lineArray[i + 4]), 0)[0];
-                                            }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        } finally {
-                                            if (teamDataDBAdapter != null && !teamDataDBAdapter.dbIsClosed())
-                                                teamDataDBAdapter.close();
-                                        }
-
-                                        long matchID;
-                                        try {
-                                            long compID = Long.parseLong(lineArray[0]);
-                                            matchID = matchDataDBAdapter.createMatchData(compID, lineArray[1], lineArray[2], lineArray[3], teamNumbers[0], teamNumbers[1], teamNumbers[2], teamNumbers[3], teamNumbers[4], teamNumbers[5]);
-                                            if (matchID >= 0) {
-                                                matchCount += 1;
-                                            }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                            matchID = -1;
-                                        } finally {
-                                            if (matchDataDBAdapter != null && !matchDataDBAdapter.dbIsClosed())
-                                                matchDataDBAdapter.close();
-                                        }
-
-                                        long teamMatchID;
-                                        try {
-                                            for (int i = 0; i < FTSUtilities.ALLIANCE_POSITION.NOT_SET.allianceIndex(); i++) {
-                                                teamMatchID = teamMatchDBAdapter.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForIndex(i) /*.alliancePositions[i]*/, teamNumbers[i], matchID);
-                                                if (teamMatchID >= 0) {
-                                                    teamCount += 1;
-                                                }
-                                            }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                            matchID = -1;
-                                        } finally {
-                                            if (teamMatchDBAdapter != null && !teamMatchDBAdapter.dbIsClosed())
-                                                teamMatchDBAdapter.close();
-                                        }
-                                    } else {
-                                        FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : line not in proper format: " + line);
-                                    }
-                                }
-                                inputReader.close();
-
-                                importStatusMessage = txtStatus.getText() + "\nLines Parsed: " + lineCount + "\nMatches Created: " + matchCount + "\nTeamMatch Records Created: " + teamCount;
-                            } else {
-                                importStatusMessage = "ERROR: could not find file:\n" + file.toString();
-                            }
-
-
-                            file.renameTo(new File(file.getAbsolutePath() + ".bak"));
-                        }
-                    }
-                } catch (Exception e) {
-                    FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : ERROR");
-                    importStatusMessage = "ERROR importing data";
-                    e.printStackTrace();
-                }
-                txtStatus.setText(importStatusMessage);
-            }
-        });
+        configureButtons();
 	}
-	
-	@Override
+
+    private void configureButtons() {
+        Button btnImportTestMatchData = (Button)findViewById(R.id.btnImportTestMatchData);
+        if(btnImportTestMatchData != null) btnImportTestMatchData.setOnClickListener(this);
+
+        Button btnImportFromXml = (Button)findViewById(R.id.btnImportFromXml);
+        if(btnImportFromXml != null) btnImportFromXml.setOnClickListener(this);
+
+        Button btnDownloadDataFiles = (Button)findViewById(R.id.btnDownloadDataFiles);
+        if(btnDownloadDataFiles != null) btnDownloadDataFiles.setOnClickListener(this);
+
+        Button btnDisplayMetrics = (Button)findViewById(R.id.btnDisplayMetrics);
+        if(btnDisplayMetrics != null) btnDisplayMetrics.setOnClickListener(this);
+    }
+
+    @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		FTSUtilities.printToConsole("ImportMatchDataActivity::onActivityResult : requestCode: " + requestCode);
 	    // Check which request we're responding to
@@ -348,16 +188,6 @@ public class DataImportActivity extends Activity {
 	    inStream.close();
 	    outStream.close();
 	}
-
-    /*
-	public void updateProgress(final int timePassed) {
-       if(null != mProgressBar) {
-           // Ignore rounding error here
-           final int progress = mProgressBar.getMax() * timePassed / TIMER_RUNTIME;
-           mProgressBar.setProgress(progress);
-       }
-   }
-   */
 
 	public void onContinue() {
 	     // perform any final actions here
@@ -430,7 +260,189 @@ public class DataImportActivity extends Activity {
 		return true;
 	}
 
-    private void displayScreenMetrics() {
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnImportTestMatchData:
+                btnImportDataOnClick();
+                break;
+            case R.id.btnImportFromXml:
+                btnImportFromXmlOnClick();
+                break;
+            case R.id.btnDownloadDataFiles:
+                btnDownloadFilesOnClick();
+                break;
+            case R.id.btnDisplayMetrics:
+                btnDisplayScreenMetrics();
+                break;
+        }
+    }
+
+    private void btnImportDataOnClick() {
+        String importStatusMessage = "";
+        try {
+            if (FTSUtilities.POPULATE_TEST_DATA) {
+                dbAdapter.deleteTableData();
+                teamMatchDBAdapter.populateTestData(competition_id, matchDataDBAdapter.populateTestData(numTestMatches), teamDataDBAdapter.populateTestData());
+                importStatusMessage = "Test data import complete";
+            } else {
+                String storageState = Environment.getExternalStorageState();
+                if (storageState.equals(Environment.MEDIA_MOUNTED)) {
+                    FTPFileDownloader ftpDL = new FTPFileDownloader();
+                    FTPFile[] files = ftpDL.execute().get();
+
+                    FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : getting file\n");
+                    File file = new File(FTSUtilities.getFileDirectory("download"), "match_list_data.csv");
+                    FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : file " + ((file.exists()) ? "EXISTS" : "IS MISSING") + "\n");
+
+                    if (file.exists() && file.isFile()) {
+                        txtStatus.setText("File Found, Import Commencing\n");
+                        //teamDataDBAdapter.deleteAllEntries();
+                        //matchDataDBAdapter.deleteAllEntries();
+                        //teamMatchDBAdapter.deleteAllEntries();
+                        //robotDataDBAdapter.getAllRobotDataEntries();
+
+                        BufferedReader inputReader = new BufferedReader(
+                                new InputStreamReader(new FileInputStream(file)));
+                        String line;
+                        int lineCount = 0;
+                        int matchCount = 0;
+                        int teamCount = 0;
+                        String lineArray[];
+                        inputReader.mark((int) file.length());
+                        line = inputReader.readLine();
+                        lineArray = line.split(",");
+                        //String headerArray[] = {"CompetitionID", "Time", "Type", "#", FTSUtilities.alliancePositions[0], FTSUtilities.alliancePositions[1], FTSUtilities.alliancePositions[2],
+                        //		FTSUtilities.alliancePositions[3], FTSUtilities.alliancePositions[4], FTSUtilities.alliancePositions[5]};
+
+                        if (lineArray[2].startsWith("Type")) {
+                            FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : Header Row Detected");
+                        } else {
+                            FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : NO Header Row Detected");
+                            inputReader.reset();
+                        }
+
+                        while ((line = inputReader.readLine()) != null) {
+                            lineCount += 1;
+                            lineArray = line.split(",");
+
+                            if (lineArray.length > 9) {
+                                //FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : " + lineArray[0] + ":" + lineArray[1] + ":" + lineArray[2] + ":" + lineArray[3] + ":" + lineArray[4] + ":" + lineArray[5] + ":" + lineArray[6] + ":" + lineArray[7]);
+                                //CompetitionID : Time : Type : MatchNum : Red1 : Red2 : Red3 : Blue1 : Blue2 : Blue3
+                                int teamNumbers[] = {-1, -1, -1, -1, -1, -1};
+                                try {
+                                    teamDataDBAdapter.openForWrite();
+                                    for (int i = 0; i < 6; i++) {
+                                        teamNumbers[i] = teamDataDBAdapter.createTeamDataEntryIfNotExist(Integer.parseInt(lineArray[i + 4]), 0)[0];
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                } finally {
+                                    if (teamDataDBAdapter != null && !teamDataDBAdapter.dbIsClosed())
+                                        teamDataDBAdapter.close();
+                                }
+
+                                long matchID;
+                                try {
+                                    long compID = Long.parseLong(lineArray[0]);
+                                    matchID = matchDataDBAdapter.createMatchData(compID, lineArray[1], lineArray[2], lineArray[3], teamNumbers[0], teamNumbers[1], teamNumbers[2], teamNumbers[3], teamNumbers[4], teamNumbers[5]);
+                                    if (matchID >= 0) {
+                                        matchCount += 1;
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    matchID = -1;
+                                } finally {
+                                    if (matchDataDBAdapter != null && !matchDataDBAdapter.dbIsClosed())
+                                        matchDataDBAdapter.close();
+                                }
+
+                                long teamMatchID;
+                                try {
+                                    for (int i = 0; i < FTSUtilities.ALLIANCE_POSITION.NOT_SET.allianceIndex(); i++) {
+                                        teamMatchID = teamMatchDBAdapter.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForIndex(i) /*.alliancePositions[i]*/, teamNumbers[i], matchID);
+                                        if (teamMatchID >= 0) {
+                                            teamCount += 1;
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    matchID = -1;
+                                } finally {
+                                    if (teamMatchDBAdapter != null && !teamMatchDBAdapter.dbIsClosed())
+                                        teamMatchDBAdapter.close();
+                                }
+                            } else {
+                                FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : line not in proper format: " + line);
+                            }
+                        }
+                        inputReader.close();
+
+                        importStatusMessage = txtStatus.getText() + "\nLines Parsed: " + lineCount + "\nMatches Created: " + matchCount + "\nTeamMatch Records Created: " + teamCount;
+                    } else {
+                        importStatusMessage = "ERROR: could not find file:\n" + file.toString();
+                    }
+
+
+                    file.renameTo(new File(file.getAbsolutePath() + ".bak"));
+                }
+            }
+        } catch (Exception e) {
+            FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : ERROR");
+            importStatusMessage = "ERROR importing data";
+            e.printStackTrace();
+        }
+        txtStatus.setText(importStatusMessage);
+    }
+
+    private void btnImportFromXmlOnClick() {
+        FTSUtilities.printToConsole("ImportMatchDataActivity::btnImportFromXml.onClick");
+        txtStatus.setText("Importing from XML");
+
+        String filePrefix = "ftsData";
+        File externalFilesDir = FTSUtilities.getFileDirectory(null);
+
+        File[] xmlFileList = externalFilesDir.listFiles(new XmlDataFilenameFilter(filePrefix, ".xml"));
+
+        // Expected file name pattern: ftsDataExport-table-timestamp.xml
+        String storageState = Environment.getExternalStorageState();
+        if (storageState.equals(Environment.MEDIA_MOUNTED)) {
+            for (File f : xmlFileList) {
+                if (f.exists() && f.isFile()) {
+                    String parts[] = f.getName().split("-");
+                    String tableName = (parts.length > 2) ? parts[1] : "UNKNOWN-TABLE";
+
+                    txtStatus.setText("File Found for table " + tableName + ", Import Commencing\n");
+                    DBAdapter.TABLE_NAMES table = DBAdapter.TABLE_NAMES.getTableByTableName(tableName);
+                    String firstColumn = DBAdapter.getFirstColumnName(table);
+                    String lastColumn = DBAdapter.getLastColumnName(table);
+                    String insertStatement = dbAdapter.getInsertStatementFromXmlTable(f, tableName, firstColumn, lastColumn);
+                    txtStatus.setText(insertStatement);
+                    //dbAdapter.getInsertStatementFromXmlTable();
+                }
+            }
+        }
+    }
+
+    private void btnDownloadFilesOnClick() {
+        FTPFileDownloader ftpDL = new FTPFileDownloader();
+        String stat = "";
+        try {
+            FTPFile[] files = ftpDL.execute().get();
+            stat = "File(s) Downloaded:";
+            for (FTPFile f : files) {
+                if (f != null) stat += "\n\t" + f.getName();
+            }
+        } catch (NullPointerException npe) {
+            FTSUtilities.printToConsole("No files downloaded via FTP");
+            stat += " 0\n";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        txtStatus.setText(stat);
+    }
+
+    private void btnDisplayScreenMetrics() {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         String msg = "";

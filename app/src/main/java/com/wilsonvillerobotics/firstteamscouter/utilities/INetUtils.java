@@ -1,6 +1,7 @@
 package com.wilsonvillerobotics.firstteamscouter.utilities;
 
 import android.content.Context;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 
 import java.io.*;
@@ -69,6 +70,42 @@ public class INetUtils {
         }
     }
 
+    public static Byte[] getByteArrayFromMACAddressString(String macAddress) {
+        ArrayList<Byte> bytes = new ArrayList<Byte>();
+        String[] addressBlocks = macAddress.split(":");
+        for(int i = addressBlocks.length - 1; i >= 0 ; i--) {
+            Integer temp = Integer.parseInt(addressBlocks[i], 16);
+            byte b = (byte)(temp & 0xFF);
+            bytes.add(b);
+        }
+        return bytes.toArray(new Byte[6]);
+    }
+
+    public static String getWifiMACAddress(Context context) {
+        String macAddress = "";
+        try {
+            WifiManager wManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            WifiInfo wInfo = wManager.getConnectionInfo();
+            macAddress = wInfo.getMacAddress();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return macAddress;
+    }
+
+    public static Long getWifiMACAddressNumeric(Context context) {
+        Long macAddress = -1l;
+        try {
+            String mac = getWifiMACAddress(context);
+            Byte[] macBytes = getByteArrayFromMACAddressString(mac);
+            macAddress = FTSUtilities.convertByteArrayToLong(macBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  macAddress;
+    }
+
     /**
      * Returns MAC address of the given interface name.
      * @param interfaceName eth0, wlan0 or NULL=use first interface
@@ -91,12 +128,6 @@ public class INetUtils {
             }
         } catch (Exception ex) { } // for now eat exceptions
         return "";
-        /*try {
-            // this is so Linux hack
-            return loadFileAsString("/sys/class/net/" +interfaceName + "/address").toUpperCase().trim();
-        } catch (IOException ex) {
-            return null;
-        }*/
     }
 
     /**
@@ -109,11 +140,12 @@ public class INetUtils {
         try {
             List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
             for (NetworkInterface intf : interfaces) {
-                if (interfaceName != null) {
+                byte[] mac = {};
+                if (intf != null) {
                     if (!intf.getName().equalsIgnoreCase(interfaceName)) continue;
+                    mac = intf.getHardwareAddress();
                 }
-                byte[] mac = intf.getHardwareAddress();
-macAddress = FTSUtilities.convertByteArrayToLong(mac);
+                macAddress = FTSUtilities.convertByteArrayToLong(mac);
             }
         } catch (Exception ex) { } // for now eat exceptions
         return macAddress;

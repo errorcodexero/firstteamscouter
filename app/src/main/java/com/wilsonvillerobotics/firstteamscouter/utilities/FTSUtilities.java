@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class FTSUtilities {
 
 	public static Boolean DEBUG = true;
-	public static Boolean POPULATE_TEST_DATA = true;
+	public static Boolean POPULATE_TEST_DATA = false;
 	public static String alliancePositions[] = {"Red1","Red2","Red3","Blue1","Blue2","Blue3",};
     public static String strUuid = "";
     public static Long wifiID = -1l;
@@ -170,14 +170,34 @@ public class FTSUtilities {
     }
 
     private static long unsignedByteToLong(byte b) {
-        return (long) b & 0xFF;
+        long temp = (long) b & 0xFF;
+        return temp;
     }
 
     /**
      * gets the long value from byte array
      * @param byteArrayToConvert
      */
-    public static long convertByteArrayToLong(byte byteArrayToConvert[]) {
+    public static long convertByteArrayToLong(byte[] byteArrayToConvert) {
+        long address = -1l;
+        if (byteArrayToConvert != null) {
+            if (byteArrayToConvert.length == 6) {
+                address = unsignedByteToLong(byteArrayToConvert[5]);
+                address |= (unsignedByteToLong(byteArrayToConvert[4]) << 8);
+                address |= (unsignedByteToLong(byteArrayToConvert[3]) << 16);
+                address |= (unsignedByteToLong(byteArrayToConvert[2]) << 24);
+                address |= (unsignedByteToLong(byteArrayToConvert[1]) << 32);
+                address |= (unsignedByteToLong(byteArrayToConvert[0]) << 40);
+            }
+        }
+        return address;
+    }
+
+    /**
+     * gets the long value from byte array
+     * @param byteArrayToConvert
+     */
+    public static long convertByteArrayToLong(Byte[] byteArrayToConvert) {
         long address = -1l;
         if (byteArrayToConvert != null) {
             if (byteArrayToConvert.length == 6) {
