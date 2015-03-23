@@ -41,7 +41,7 @@ public class TeamMatchDataListActivity extends ListActivity {
         FTSUtilities.printToConsole("TeamDataListActivity::onCreate : Cursor Size: " + cursor.getCount() + "\n");
 
         // THE DESIRED COLUMNS TO BE BOUND
-        String[] columns = new String[] { TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID, TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA };
+        String[] columns = new String[] { TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID, TeamMatchDBAdapter.COLUMN_NAME_READY_TO_EXPORT};
         // THE XML DEFINED VIEWS WHICH THE DATA WILL BE BOUND TO
         int[] to = new int[] { R.id.match_number_entry, R.id.match_data_saved_entry };
 

@@ -368,7 +368,7 @@ public class TeamMatchData {
 	
 	private Hashtable<String, Boolean> getBoolValueHash() {
 		Hashtable<String, Boolean> htBoolValues = new Hashtable<String, Boolean>();
-		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA, this.tmDBHasSavedData);
+		//htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA, this.tmDBHasSavedData);
 		//htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT, this.tmDBHasDataToExport);
 		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_BROKE_DOWN, this.brokeDown);
 		htBoolValues.put(TeamMatchDBAdapter.COLUMN_NAME_NO_MOVE, this.noMove);
@@ -379,7 +379,7 @@ public class TeamMatchData {
 
 	private String getBoolCSVHeader() {
 		String retVal = "";
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA + COMMA;
+		//retVal += TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA + COMMA;
 		//retVal += TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_DATA_READY_TO_EXPORT + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_BROKE_DOWN + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_NO_MOVE + COMMA;
@@ -556,7 +556,7 @@ public class TeamMatchData {
 			this.matchID = tmCursor.getLong(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID));
 			this.teamID = tmCursor.getLong(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID));
 			//this.tmDBHasDataToExport = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA)));
-			this.tmDBHasSavedData = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA)));
+			//this.tmDBHasSavedData = Boolean.parseBoolean(tmCursor.getString(tmCursor.getColumnIndexOrThrow(TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA)));
 			
 			Hashtable<String, Integer> nums = this.tmDBAdapter.getTeamAndMatchNumbersForTeamMatchID(teamMatchID);
 			

@@ -27,7 +27,7 @@ public class MatchDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
     public static final String COLUMN_NAME_BLUE_TEAM_TWO_ID     = "blue_team_two_id";
     public static final String COLUMN_NAME_BLUE_TEAM_THREE_ID   = "blue_team_three_id";
     
-    public static final String COLUMN_NAME_MATCH_DATA_UPDATED	= "match_data_updated";
+    //public static final String COLUMN_NAME_MATCH_DATA_UPDATED	= "match_data_updated";
     //public static final String COLUMN_NAME_READY_TO_EXPORT      = "ready_to_export";
 
     public static String[] allColumns = {
@@ -44,7 +44,7 @@ public class MatchDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
             COLUMN_NAME_BLUE_TEAM_ONE_ID,
             COLUMN_NAME_BLUE_TEAM_TWO_ID,
             COLUMN_NAME_BLUE_TEAM_THREE_ID,
-            COLUMN_NAME_MATCH_DATA_UPDATED,
+            //COLUMN_NAME_MATCH_DATA_UPDATED,
             COLUMN_NAME_READY_TO_EXPORT
     };
 
@@ -102,7 +102,7 @@ public class MatchDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
         initialValues.put(COLUMN_NAME_BLUE_TEAM_ONE_ID, blue_one_id);
         initialValues.put(COLUMN_NAME_BLUE_TEAM_TWO_ID, blue_two_id);
         initialValues.put(COLUMN_NAME_BLUE_TEAM_THREE_ID, blue_three_id);
-        initialValues.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
+        //initialValues.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
         initialValues.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
 
         long id = this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
@@ -115,7 +115,7 @@ public class MatchDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
         initialValues.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
         initialValues.put(COLUMN_NAME_COMPETITION_ID, competition_id);
         initialValues.put(COLUMN_NAME_MATCH_NUMBER, match_num);
-        initialValues.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
+        //initialValues.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
         initialValues.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
 
         return this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
@@ -182,11 +182,9 @@ public class MatchDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
      */
     public Cursor getUpdatedMatchDataEntries() throws SQLException {
 
-        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, new String[] { _ID, COLUMN_NAME_COMPETITION_ID,
-        		COLUMN_NAME_MATCH_TIME, COLUMN_NAME_MATCH_TYPE, COLUMN_NAME_MATCH_NUMBER, COLUMN_NAME_MATCH_LOCATION, 
-        		COLUMN_NAME_RED_TEAM_ONE_ID, COLUMN_NAME_RED_TEAM_TWO_ID, COLUMN_NAME_RED_TEAM_THREE_ID,
-        		COLUMN_NAME_BLUE_TEAM_ONE_ID, COLUMN_NAME_BLUE_TEAM_TWO_ID, COLUMN_NAME_BLUE_TEAM_THREE_ID, COLUMN_NAME_MATCH_DATA_UPDATED
-        		}, COLUMN_NAME_MATCH_DATA_UPDATED + "=" + Boolean.TRUE.toString(), null, null, null, null, null);
+        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns,
+        		//COLUMN_NAME_MATCH_DATA_UPDATED + "=" + Boolean.TRUE.toString(), null, null, null, null, null);
+                COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString(), null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
@@ -222,7 +220,7 @@ public class MatchDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
     	args.put(COLUMN_NAME_BLUE_TEAM_ONE_ID, blue_one_id);
     	args.put(COLUMN_NAME_BLUE_TEAM_TWO_ID, blue_two_id);
     	args.put(COLUMN_NAME_BLUE_TEAM_THREE_ID, blue_three_id);
-    	args.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
+    	//args.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
         args.put(COLUMN_NAME_READY_TO_EXPORT, String.valueOf(export));
 
         boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) >0;
@@ -282,7 +280,8 @@ public class MatchDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
     	args.put(COLUMN_NAME_BLUE_TEAM_ONE_ID, teamIDs[3]);
     	args.put(COLUMN_NAME_BLUE_TEAM_TWO_ID, teamIDs[4]);
     	args.put(COLUMN_NAME_BLUE_TEAM_THREE_ID, teamIDs[5]);
-    	args.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
+    	//args.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
     	
     	Cursor c = getEntry(matchID);
     	if(c.getCount() > 0) {

@@ -403,7 +403,7 @@ public class FTSUtilities {
 	private static String getBoolCSVHeader() {
 		String COMMA = ", ";
 		String retVal = "";
-		retVal += TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA + COMMA;
+		//retVal += TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_BROKE_DOWN + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_NO_MOVE + COMMA;
 		retVal += TeamMatchDBAdapter.COLUMN_NAME_LOST_CONNECTION + COMMA;

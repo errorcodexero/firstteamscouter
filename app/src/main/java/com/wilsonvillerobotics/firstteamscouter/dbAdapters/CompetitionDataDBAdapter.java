@@ -27,7 +27,6 @@ public class CompetitionDataDBAdapter extends FTSDBAdapter implements BaseColumn
     // Columns
     public static final String COLUMN_NAME_COMPETITION_NAME = "competition_name";
     public static final String COLUMN_NAME_COMPETITION_LOCATION = "competition_location";
-    //public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     public static String[] allColumns = {
     		_ID,

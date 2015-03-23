@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionDataDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionsDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities.ALLIANCE_POSITION;
 import com.wilsonvillerobotics.firstteamscouter.GameElement.GameElementType;
@@ -79,7 +78,6 @@ public class MatchAutoModeActivity extends Activity {
 
 	protected TeamMatchDBAdapter tmDBAdapter;
     protected TeamMatchTransactionDataDBAdapter tmtdDBAdapter;
-    protected TeamMatchTransactionsDBAdapter    tmtDBAdapter;
 
 	protected String[] teamNumberArray;
     protected long teamMatchID;
@@ -376,7 +374,6 @@ public class MatchAutoModeActivity extends Activity {
             FTSUtilities.printToConsole("MatchAutoModeActivity::onCreate : OPENING DB\n");
             tmDBAdapter = new TeamMatchDBAdapter(this).openForWrite();
             tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this).openForWrite();
-            tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this).openForWrite();
 
             Cursor c = tmDBAdapter.getEntry(this.teamMatchID);
             if(c.moveToFirst()) {
@@ -387,7 +384,6 @@ public class MatchAutoModeActivity extends Activity {
             e.printStackTrace();
             tmDBAdapter = null;
             tmtdDBAdapter = null;
-            tmtDBAdapter = null;
         }
     }
 
@@ -488,8 +484,8 @@ public class MatchAutoModeActivity extends Activity {
     private boolean saveTransactions() {
         for(Transaction t : transactionList) {
             HashMap<String, Object> values = t.getValuesHashMap();
-            long id = tmtdDBAdapter.createTeamMatchTransaction(values);
-            if(id != -1) tmtDBAdapter.createTeamMatchTransaction(teamMatchID, id);
+            long id = tmtdDBAdapter.createTeamMatchDataTransaction(values);
+            //if(id != -1) tmtDBAdapter.createTeamMatchTransaction(teamMatchID, id);
         }
         return false;
     }
@@ -612,7 +608,6 @@ public class MatchAutoModeActivity extends Activity {
         saveData();
         saveTransactions();
         tmDBAdapter.close();
-        tmtDBAdapter.close();
         tmtdDBAdapter.close();
     }
 
@@ -621,7 +616,6 @@ public class MatchAutoModeActivity extends Activity {
         super.onStop();
         FTSUtilities.printToConsole("SelectTeamMatchActivity::onStop : CLOSING DB\n");
 		tmDBAdapter.close();
-        tmtDBAdapter.close();
         tmtdDBAdapter.close();
     }
 

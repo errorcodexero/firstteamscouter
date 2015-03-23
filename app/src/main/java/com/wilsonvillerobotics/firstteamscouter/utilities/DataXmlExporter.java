@@ -15,7 +15,6 @@ import com.wilsonvillerobotics.firstteamscouter.dbAdapters.RobotDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionDataDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionsDBAdapter;
 
 import java.io.File;
 import java.io.FileOutputStream;

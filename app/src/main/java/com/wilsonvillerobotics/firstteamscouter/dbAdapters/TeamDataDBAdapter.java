@@ -25,7 +25,7 @@ public class TeamDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTST
     public static final String COLUMN_NAME_TEAM_STATE = "team_state";
     public static final String COLUMN_NAME_TEAM_NUM_MEMBERS = "num_team_members";
     public static final String COLUMN_NAME_TEAM_YEAR_CREATED = "team_creation_year";
-    public static final String COLUMN_NAME_TEAM_DATA_UPDATED = "team_data_updated";
+    //public static final String COLUMN_NAME_TEAM_DATA_UPDATED = "team_data_updated";
     //public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     //public static final String PRIMARY_KEY = " PRIMARY KEY ( " + TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER + ", " + TeamDataDBAdapter.COLUMN_NAME_TEAM_SUB_NUMBER + " )";
@@ -40,7 +40,7 @@ public class TeamDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTST
             COLUMN_NAME_TEAM_STATE,
             COLUMN_NAME_TEAM_NUM_MEMBERS,
             COLUMN_NAME_TEAM_YEAR_CREATED,
-            COLUMN_NAME_TEAM_DATA_UPDATED,
+            //COLUMN_NAME_TEAM_DATA_UPDATED,
             COLUMN_NAME_READY_TO_EXPORT
     };
 
@@ -124,7 +124,7 @@ public class TeamDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTST
         args.put(COLUMN_NAME_TEAM_CITY, team_city);
         args.put(COLUMN_NAME_TEAM_STATE, team_state);
         args.put(COLUMN_NAME_TEAM_NUM_MEMBERS, num_team_members);
-        args.put(COLUMN_NAME_TEAM_DATA_UPDATED, Boolean.TRUE.toString());
+        //args.put(COLUMN_NAME_TEAM_DATA_UPDATED, Boolean.TRUE.toString());
         args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
         boolean success = this.openForWrite().mDb.insert(TABLE_NAME, null, args) > 0;
         if(success) retVal = team_number;
@@ -146,7 +146,7 @@ public class TeamDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTST
             args.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
             args.put(COLUMN_NAME_TEAM_NUMBER, team_number);
             args.put(COLUMN_NAME_TEAM_SUB_NUMBER, team_sub_number);
-            args.put(COLUMN_NAME_TEAM_DATA_UPDATED, Boolean.TRUE.toString());
+            //args.put(COLUMN_NAME_TEAM_DATA_UPDATED, Boolean.TRUE.toString());
             args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
             long id = this.openForWrite().mDb.insert(TABLE_NAME, null, args);
             if(id != -1) {
@@ -178,7 +178,7 @@ public class TeamDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTST
         args.put(COLUMN_NAME_TEAM_CITY, team_city);
         args.put(COLUMN_NAME_TEAM_STATE, team_state);
         args.put(COLUMN_NAME_TEAM_NUM_MEMBERS, num_team_members);
-        args.put(COLUMN_NAME_TEAM_DATA_UPDATED, Boolean.TRUE.toString());
+        //args.put(COLUMN_NAME_TEAM_DATA_UPDATED, Boolean.TRUE.toString());
         args.put(COLUMN_NAME_READY_TO_EXPORT, String.valueOf(export));
         boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + teamID, null) > 0;
         if(!this.dbIsClosed()) this.close();
@@ -232,19 +232,6 @@ public class TeamDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTST
         FTSUtilities.printToConsole("TeamDataDBAdapter::getAllEntries : Cursor Size : " + mCursor.getCount() + "\n");
         return mCursor;
         */
-    }
-
-    /**
-     * Return a Cursor over the list of all entries in the database
-     * 
-     * @return Cursor over all Match Data entries
-     */
-    public Cursor getUpdatedTeamDataEntries() {
-        String WHERE = COLUMN_NAME_TEAM_DATA_UPDATED + "=" + Boolean.TRUE.toString();
-        String SORT = COLUMN_NAME_TEAM_NUMBER + " ASC";
-        Cursor mCursor = this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, SORT);
-        FTSUtilities.printToConsole("TeamDataDBAdapter::getAllEntries : Cursor Size : " + mCursor.getCount() + "\n");
-        return mCursor;
     }
 
     /**

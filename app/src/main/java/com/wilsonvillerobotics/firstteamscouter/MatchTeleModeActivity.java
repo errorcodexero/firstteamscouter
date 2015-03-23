@@ -18,7 +18,6 @@ import android.widget.RelativeLayout;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionDataDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionsDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities.ALLIANCE_POSITION;
 import com.wilsonvillerobotics.firstteamscouter.GaugeLayout.GaugeType;
@@ -67,7 +66,6 @@ public class MatchTeleModeActivity extends Activity {
 
 	protected TeamMatchDBAdapter tmDBAdapter;
     protected TeamMatchTransactionDataDBAdapter tmtdDBAdapter;
-    protected TeamMatchTransactionsDBAdapter tmtDBAdapter;
     protected long teamMatchID;
 	protected long teamID;
 	protected long matchID;
@@ -282,7 +280,6 @@ public class MatchTeleModeActivity extends Activity {
             FTSUtilities.printToConsole("MatchTeleModeActivity::openDatabase : OPENING DB\n");
             tmDBAdapter = new TeamMatchDBAdapter(this);
             tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this);
-            tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this);
 
             Cursor c = tmDBAdapter.getEntry(this.teamMatchID);
             if(c.moveToFirst()) {
@@ -293,15 +290,14 @@ public class MatchTeleModeActivity extends Activity {
             e.printStackTrace();
             tmDBAdapter = null;
             tmtdDBAdapter = null;
-            tmtDBAdapter = null;
         }
     }
 
     private void saveData() {
         for(Transaction t : transactionList) {
             HashMap<String, Object> values = t.getValuesHashMap();
-            long id = tmtdDBAdapter.createTeamMatchTransaction(values);
-            if(id != -1) tmtDBAdapter.createTeamMatchTransaction(teamMatchID, id);
+            long id = tmtdDBAdapter.createTeamMatchDataTransaction(values);
+            //if(id != -1) tmtDBAdapter.createTeamMatchTransaction(teamMatchID, id);
         }
     }
 
@@ -315,7 +311,6 @@ public class MatchTeleModeActivity extends Activity {
         super.onRestart();
         if(tmDBAdapter == null) tmDBAdapter = new TeamMatchDBAdapter(this);
         if(tmtdDBAdapter == null) tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this);
-        if(tmtDBAdapter == null) tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this);
     }
 
     @Override

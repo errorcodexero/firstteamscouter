@@ -4,8 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
@@ -19,7 +17,6 @@ public class NotesDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
     public static final String COLUMN_NAME_OWNER_ID = "owner_id";
     public static final String COLUMN_NAME_NOTE_TYPE = "note_type"; // robot, team, pit, etc.
     public static final String COLUMN_NAME_NOTE_TEXT = "note_text";
-    //public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     public static String[] allColumns = {
             _ID,

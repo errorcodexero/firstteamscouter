@@ -23,7 +23,7 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
     public static final String COLUMN_NAME_MATCH_ID = "match_id";
     public static final String COLUMN_NAME_COMPETITION_ID = "competition_id";
     public static final String COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION = "alliance_position";
-    public static final String COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA = "team_match_has_saved_data";
+    //public static final String COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA = "team_match_has_saved_data";
     public static final String COLUMN_NAME_BROKE_DOWN = "broke_down";
     public static final String COLUMN_NAME_NO_MOVE = "no_move";
     public static final String COLUMN_NAME_LOST_CONNECTION = "lost_connection";
@@ -82,12 +82,10 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
     public static final String COLUMN_NAME_TOTE_CONTROL_HANDLE_GRABBER = "tote_control_handle_grabber";
     public static final String COLUMN_NAME_TOTE_CONTROL_DROP_ALOT = "tote_control_drop_alot";
     public static final String COLUMN_NAME_TOTE_CONTROL_GREAT_CONTROL = "tote_control_great_control";
-    //public static final String COLUMN_NAME_READY_TO_EXPORT        = "ready_to_export";
 
 
     // This needs to be moved to the notes_data table
     public static final String COLUMN_NAME_TEAM_MATCH_NOTES = "team_match_notes";
-
 
     public static String[] allColumns = new String[]{
     		_ID,
@@ -96,10 +94,20 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
     	    COLUMN_NAME_MATCH_ID,
             COLUMN_NAME_COMPETITION_ID,
     	    COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION,
-    	    COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA,
+    	    //COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA,
+            COLUMN_NAME_BROKE_DOWN,
+            COLUMN_NAME_NO_MOVE,
+            COLUMN_NAME_LOST_CONNECTION,
     	    COLUMN_NAME_START_LOCATION,
             COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X,
             COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y,
+            COLUMN_NAME_START_LOCATION_ON_FIELD,
+            COLUMN_NAME_AUTO_TOTES_PICKED_UP,
+            COLUMN_NAME_AUTO_TOTES_STACKED,
+            COLUMN_NAME_AUTO_TOTES_SCORED,
+            COLUMN_NAME_AUTO_CANS_PICKED_UP,
+            COLUMN_NAME_AUTO_CANS_SCORED,
+            COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP,
             COLUMN_NAME_AUTO_MODE_SAVED,
             COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X,
             COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y,
@@ -135,16 +143,6 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
             COLUMN_NAME_AUTO_CAN6_VISIBLE,
             COLUMN_NAME_AUTO_CAN7_VISIBLE,
             COLUMN_NAME_AUTO_ROBOT_STACK_LIST,
-            COLUMN_NAME_AUTO_TOTES_PICKED_UP,
-            COLUMN_NAME_AUTO_TOTES_STACKED,
-            COLUMN_NAME_AUTO_TOTES_SCORED,
-            COLUMN_NAME_AUTO_CANS_PICKED_UP,
-            COLUMN_NAME_AUTO_CANS_SCORED,
-            COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP,
-            COLUMN_NAME_START_LOCATION_ON_FIELD,
-            COLUMN_NAME_BROKE_DOWN,
-            COLUMN_NAME_NO_MOVE,
-            COLUMN_NAME_LOST_CONNECTION,
     	    COLUMN_NAME_TEAM_MATCH_NOTES,
             COLUMN_NAME_TOTE_STACKER,
             COLUMN_NAME_CAN_KINGER,
@@ -274,7 +272,7 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
         args.put(COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION, alliancePosition);
         args.put(COLUMN_NAME_TEAM_ID, team_id);
         args.put(COLUMN_NAME_MATCH_ID, String.valueOf(match_id));
-        args.put(COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA, Boolean.TRUE.toString());
+        //args.put(COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA, Boolean.TRUE.toString());
         args.put(COLUMN_NAME_AUTO_MODE_SAVED, Boolean.FALSE.toString());
         args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
         long id = this.openForWrite().mDb.insert(TABLE_NAME, null, args);
@@ -352,7 +350,7 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
                 COLUMN_NAME_TEAM_ID,
                 COLUMN_NAME_MATCH_ID,
                 COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION,
-                COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA
+                //COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA
         };
         return this.openForRead().mDb.query(TABLE_NAME, cols, null, null, null, null, null);
         */

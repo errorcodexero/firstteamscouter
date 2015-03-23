@@ -48,9 +48,8 @@ public class DBAdapter {
     	ROBOT_DATA(5, RobotDataDBAdapter.TABLE_NAME, RobotDataDBAdapter.class.getCanonicalName()),
     	TEAM_DATA(6, TeamDataDBAdapter.TABLE_NAME, TeamDataDBAdapter.class.getCanonicalName()),
     	TEAM_MATCH_DATA(7, TeamMatchDBAdapter.TABLE_NAME, TeamMatchDBAdapter.class.getCanonicalName()),
-        TEAM_MATCH_TRANSACTION_DATA(8, TeamMatchTransactionDataDBAdapter.TABLE_NAME, TeamMatchTransactionDataDBAdapter.class.getCanonicalName()),
-        TEAM_MATCH_TRANSACTIONS(9, TeamMatchTransactionsDBAdapter.TABLE_NAME, TeamMatchTransactionsDBAdapter.class.getCanonicalName());
-    	
+        TEAM_MATCH_TRANSACTION_DATA(8, TeamMatchTransactionDataDBAdapter.TABLE_NAME, TeamMatchTransactionDataDBAdapter.class.getCanonicalName());
+
     	private int index;
         private String className;
         private String tableName;
@@ -116,9 +115,6 @@ public class DBAdapter {
             case TEAM_MATCH_TRANSACTION_DATA:
                 col = TeamMatchTransactionDataDBAdapter.allColumns[0];
                 break;
-            case TEAM_MATCH_TRANSACTIONS:
-                col = TeamMatchTransactionsDBAdapter.allColumns[0];
-                break;
         }
         return col;
     }
@@ -152,9 +148,6 @@ public class DBAdapter {
                 break;
             case TEAM_MATCH_TRANSACTION_DATA:
                 col = TeamMatchTransactionDataDBAdapter.allColumns[TeamMatchTransactionDataDBAdapter.allColumns.length - 1];
-                break;
-            case TEAM_MATCH_TRANSACTIONS:
-                col = TeamMatchTransactionsDBAdapter.allColumns[TeamMatchTransactionsDBAdapter.allColumns.length - 1];
                 break;
         }
         return col;
@@ -195,7 +188,7 @@ public class DBAdapter {
 	        MatchDataDBAdapter.COLUMN_NAME_BLUE_TEAM_ONE_ID + INT_TYPE + COMMA_SEP +
 	        MatchDataDBAdapter.COLUMN_NAME_BLUE_TEAM_TWO_ID + INT_TYPE + COMMA_SEP +
 	        MatchDataDBAdapter.COLUMN_NAME_BLUE_TEAM_THREE_ID + INT_TYPE + COMMA_SEP +
-	        MatchDataDBAdapter.COLUMN_NAME_MATCH_DATA_UPDATED + BOOL_TYPE + COMMA_SEP +
+	        //MatchDataDBAdapter.COLUMN_NAME_MATCH_DATA_UPDATED + BOOL_TYPE + COMMA_SEP +
             MatchDataDBAdapter.COLUMN_NAME_READY_TO_EXPORT + BOOL_TYPE +
 			");",
 
@@ -309,7 +302,7 @@ public class DBAdapter {
             TeamDataDBAdapter.COLUMN_NAME_TEAM_STATE + TEXT_TYPE + COMMA_SEP +
 	        TeamDataDBAdapter.COLUMN_NAME_TEAM_NUM_MEMBERS + INT_TYPE + COMMA_SEP +
             TeamDataDBAdapter.COLUMN_NAME_TEAM_YEAR_CREATED + TEXT_TYPE + COMMA_SEP +
-	        TeamDataDBAdapter.COLUMN_NAME_TEAM_DATA_UPDATED + BOOL_TYPE + COMMA_SEP +
+	        //TeamDataDBAdapter.COLUMN_NAME_TEAM_DATA_UPDATED + BOOL_TYPE + COMMA_SEP +
             TeamDataDBAdapter.COLUMN_NAME_READY_TO_EXPORT + BOOL_TYPE + //COMMA_SEP +
             //TeamDataDBAdapter.PRIMARY_KEY +
     		");",
@@ -324,73 +317,73 @@ public class DBAdapter {
     		//TEAM_MATCH_DATA
             TeamMatchDBAdapter.TABLE_NAME,
     		"CREATE TABLE " + TeamMatchDBAdapter.TABLE_NAME + " (" +
-    		AUTO_INC_ID +
-            TeamMatchDBAdapter.COLUMN_NAME_TABLET_ID + INT_TYPE + COMMA_SEP +
-    		TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
-    		TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_COMPETITION_ID + INT_TYPE + COMMA_SEP +
-    		TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION + TEXT_TYPE + COMMA_SEP +
-    		TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA + BOOL_TYPE + COMMA_SEP +
-    		TeamMatchDBAdapter.COLUMN_NAME_READY_TO_EXPORT + BOOL_TYPE + COMMA_SEP +
-    		TeamMatchDBAdapter.COLUMN_NAME_BROKE_DOWN + BOOL_TYPE + COMMA_SEP +
-    		TeamMatchDBAdapter.COLUMN_NAME_NO_MOVE + BOOL_TYPE + COMMA_SEP +
-    		TeamMatchDBAdapter.COLUMN_NAME_LOST_CONNECTION + BOOL_TYPE + COMMA_SEP +
-    		TeamMatchDBAdapter.COLUMN_NAME_START_LOCATION + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTES_PICKED_UP + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTES_STACKED + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTES_SCORED + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CANS_PICKED_UP + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CANS_SCORED + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_START_LOCATION_ON_FIELD + TEXT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_X + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_X + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_X + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_X + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_Y + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_X + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_Y + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_X + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_Y + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_X + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_Y + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_5_LOCATION_X + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_5_LOCATION_Y + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_6_LOCATION_X + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_6_LOCATION_Y + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_7_LOCATION_X + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_7_LOCATION_Y + INT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_VISIBLE + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE1_VISIBLE + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE2_VISIBLE + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE3_VISIBLE + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN1_VISIBLE + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN2_VISIBLE + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN3_VISIBLE + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN4_VISIBLE + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN5_VISIBLE + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN6_VISIBLE + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN7_VISIBLE + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_STACK_LIST + TEXT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_AUTO_MODE_SAVED + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_NOTES + TEXT_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_TOTE_STACKER + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_CAN_KINGER + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_COOPERATIVE + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_NOODLER + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_NI_SAYER + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_TOTE_CONTROL_INSIDE + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_TOTE_CONTROL_FORK_LIFT + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_TOTE_CONTROL_HANDLE_GRABBER + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_TOTE_CONTROL_DROP_ALOT + BOOL_TYPE + COMMA_SEP +
-            TeamMatchDBAdapter.COLUMN_NAME_TOTE_CONTROL_GREAT_CONTROL + BOOL_TYPE +
+                    AUTO_INC_ID +
+                    TeamMatchDBAdapter.COLUMN_NAME_TABLET_ID + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_COMPETITION_ID + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION + TEXT_TYPE + COMMA_SEP +
+                    //TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_BROKE_DOWN + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_NO_MOVE + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_LOST_CONNECTION + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_START_LOCATION + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_START_LOCATION_ON_FIELD + TEXT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTES_PICKED_UP + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTES_STACKED + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTES_SCORED + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CANS_PICKED_UP + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CANS_SCORED + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_MODE_SAVED + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_X + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_X + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_X + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_X + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_1_LOCATION_Y + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_X + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_2_LOCATION_Y + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_X + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_3_LOCATION_Y + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_X + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_4_LOCATION_Y + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_5_LOCATION_X + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_5_LOCATION_Y + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_6_LOCATION_X + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_6_LOCATION_Y + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_7_LOCATION_X + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN_7_LOCATION_Y + INT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_VISIBLE + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE1_VISIBLE + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE2_VISIBLE + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_TOTE3_VISIBLE + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN1_VISIBLE + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN2_VISIBLE + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN3_VISIBLE + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN4_VISIBLE + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN5_VISIBLE + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN6_VISIBLE + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_CAN7_VISIBLE + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_AUTO_ROBOT_STACK_LIST + TEXT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_TEAM_MATCH_NOTES + TEXT_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_TOTE_STACKER + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_CAN_KINGER + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_COOPERATIVE + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_NOODLER + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_NI_SAYER + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_TOTE_CONTROL_INSIDE + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_TOTE_CONTROL_FORK_LIFT + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_TOTE_CONTROL_HANDLE_GRABBER + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_TOTE_CONTROL_DROP_ALOT + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_TOTE_CONTROL_GREAT_CONTROL + BOOL_TYPE + COMMA_SEP +
+                    TeamMatchDBAdapter.COLUMN_NAME_READY_TO_EXPORT + BOOL_TYPE +
     		");",
 
             "SELECT * FROM "  + TeamMatchDBAdapter.TABLE_NAME,
@@ -424,24 +417,7 @@ public class DBAdapter {
             "SELECT * FROM "  + TeamMatchTransactionDataDBAdapter.TABLE_NAME,
             "DROP TABLE IF EXISTS " + TeamMatchTransactionDataDBAdapter.TABLE_NAME,
             "SELECT * FROM "  + TeamMatchTransactionDataDBAdapter.TABLE_NAME
-        },
-
-            {
-                //9
-                //TEAM_MATCH_TRANSACTIONS
-                TeamMatchTransactionsDBAdapter.TABLE_NAME,
-                "CREATE TABLE " + TeamMatchTransactionsDBAdapter.TABLE_NAME + " (" +
-                    AUTO_INC_ID +
-                    TeamMatchTransactionsDBAdapter.COLUMN_NAME_TABLET_ID + INT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionsDBAdapter.COLUMN_NAME_TEAM_MATCH_ID + INT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionsDBAdapter.COLUMN_NAME_TRANSACTION_ID + INT_TYPE + COMMA_SEP +
-                    TeamMatchTransactionsDBAdapter.COLUMN_NAME_READY_TO_EXPORT + BOOL_TYPE +
-               ");",
-
-                "SELECT * FROM "  + TeamMatchTransactionsDBAdapter.TABLE_NAME,
-                "DROP TABLE IF EXISTS " + TeamMatchTransactionsDBAdapter.TABLE_NAME,
-                "SELECT * FROM "  + TeamMatchTransactionsDBAdapter.TABLE_NAME
-            }
+        }
     };
 
     private final Context context; 
@@ -669,18 +645,6 @@ public class DBAdapter {
                         db.delete(TeamMatchTransactionDataDBAdapter.TABLE_NAME, WHERE, null);
                     }
                 }
-
-                c = db.query(TeamMatchTransactionsDBAdapter.TABLE_NAME, TeamMatchTransactionsDBAdapter.allColumns, null, null, null, null, TeamMatchTransactionsDBAdapter._ID + " DESC");
-                if (c == null || c.getCount() == 0 || (c.moveToNext() && c.getLong(c.getColumnIndex(TeamMatchTransactionsDBAdapter._ID)) < seqNum)) {
-                    ContentValues values = new ContentValues();
-                    values.put(TeamMatchTransactionsDBAdapter._ID, seqNum);
-                    long id = db.insert(TeamMatchTransactionsDBAdapter.TABLE_NAME, null, values);
-                    if(id != -1) {
-                        String WHERE = TeamMatchTransactionsDBAdapter._ID + "=" + String.valueOf(seqNum);
-                        db.delete(TeamMatchTransactionsDBAdapter.TABLE_NAME, WHERE, null);
-                    }
-                }
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -699,9 +663,6 @@ public class DBAdapter {
             db.execSQL(seqQuery);
 
             seqQuery = "UPDATE sqlite_sequence SET seq=" + seqNum + " WHERE name=" + TeamMatchTransactionDataDBAdapter.TABLE_NAME;
-            db.execSQL(seqQuery);
-
-            seqQuery = "UPDATE sqlite_sequence SET seq=" + seqNum + " WHERE name=" + TeamMatchTransactionsDBAdapter.TABLE_NAME;
             db.execSQL(seqQuery);
             */
         }

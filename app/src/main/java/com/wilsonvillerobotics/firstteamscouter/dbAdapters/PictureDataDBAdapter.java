@@ -17,7 +17,6 @@ public class PictureDataDBAdapter extends FTSDBAdapter implements BaseColumns, F
     public static final String COLUMN_NAME_OWNER_ID = "owner_id";
     public static final String COLUMN_NAME_PICTURE_TYPE = "picture_type"; // robot, team, pit, etc.
     public static final String COLUMN_NAME_PICTURE_URI = "picture_uri";
-    //public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     public static String[] allColumns = {
             _ID,

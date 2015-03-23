@@ -22,9 +22,6 @@ import com.wilsonvillerobotics.firstteamscouter.dbAdapters.RobotDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionDataDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionsDBAdapter;
-import com.wilsonvillerobotics.firstteamscouter.utilities.DataXmlExporter;
-import com.wilsonvillerobotics.firstteamscouter.utilities.DeviceUuidFactory;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTPFileUploader;
 import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities;
 
@@ -39,9 +36,6 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.UUID;
-
-//import static com.wilsonvillerobotics.firstteamscouter.utilities.INetUtils.getMACAddress;
 
 public class DataExportActivity extends Activity {
 
@@ -49,7 +43,6 @@ public class DataExportActivity extends Activity {
 
 	private MatchDataDBAdapter matchDataDBAdapter;
 	private TeamMatchDBAdapter teamMatchDBAdapter;
-    private TeamMatchTransactionsDBAdapter tmtDBAdapter;
     private TeamMatchTransactionDataDBAdapter tmtdDBAdapter;
 	private TeamDataDBAdapter teamDataDBAdapter;
     private RobotDataDBAdapter robotDataDBAdapter;
@@ -119,7 +112,6 @@ public class DataExportActivity extends Activity {
             matchDataDBAdapter = new MatchDataDBAdapter(this);
             teamMatchDBAdapter = new TeamMatchDBAdapter(this);
             teamDataDBAdapter = new TeamDataDBAdapter(this);
-            tmtDBAdapter = new TeamMatchTransactionsDBAdapter(this);
             tmtdDBAdapter = new TeamMatchTransactionDataDBAdapter(this);
             robotDataDBAdapter = new RobotDataDBAdapter(this);
         } catch(SQLException e) {
@@ -128,7 +120,6 @@ public class DataExportActivity extends Activity {
             matchDataDBAdapter = null;
             teamMatchDBAdapter = null;
             teamDataDBAdapter = null;
-            tmtDBAdapter = null;
             tmtdDBAdapter = null;
             robotDataDBAdapter = null;
         }

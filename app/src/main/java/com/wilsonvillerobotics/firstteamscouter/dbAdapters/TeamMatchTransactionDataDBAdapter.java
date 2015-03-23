@@ -19,7 +19,7 @@ public class TeamMatchTransactionDataDBAdapter extends FTSDBAdapter implements B
     // Columns
     public static final String COLUMN_NAME_TEAM_ID = "team_id";
     public static final String COLUMN_NAME_MATCH_ID = "match_id";
-    public static final String COLUMN_NAME_TIMESTAMP = "timestamp";
+    public static final String COLUMN_NAME_TIMESTAMP = "transaction_timestamp";
     public static final String COLUMN_NAME_ACTION = "action_name";
     public static final String COLUMN_NAME_ACTION_PHASE = "action_phase";
     public static final String COLUMN_NAME_ACTION_START_LOCATION_NAME = "action_start_location_name";
@@ -30,7 +30,6 @@ public class TeamMatchTransactionDataDBAdapter extends FTSDBAdapter implements B
     public static final String COLUMN_NAME_ACTION_END_LOCATION_Y = "action_end_location_Y";
     public static final String COLUMN_NAME_ELEMENT_TYPES = "element_types";
     public static final String COLUMN_NAME_ELEMENT_STATES = "element_states";
-    //public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     public static String[] allColumns = new String[]{
     		_ID,
@@ -140,7 +139,7 @@ public class TeamMatchTransactionDataDBAdapter extends FTSDBAdapter implements B
      * @param values A HashMap of Objects, inserted using column names as keys.
      * @return rowId or -1 if failed
      */
-    public long createTeamMatchTransaction(HashMap<String, Object> values) {
+    public long createTeamMatchDataTransaction(HashMap<String, Object> values) {
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
         args.put(COLUMN_NAME_TEAM_ID, String.valueOf(values.get(COLUMN_NAME_TEAM_ID)));
