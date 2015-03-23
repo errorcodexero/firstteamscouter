@@ -1,0 +1,4 @@
+XLODBC
+1
+Driver={MySQL ODBC 5.3 ANSI Driver};server=localhost;port=3306;uid=ftsscout;pwd=ftsscouter;database=firstteamscouter;
+SELECT * FROM team_data

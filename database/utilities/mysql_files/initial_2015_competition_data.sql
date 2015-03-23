@@ -1,0 +1,2 @@
+INSERT INTO `firstteamscouter`.`competition_data` (`_id`, `tablet_id`, `competition_name`, `competition_location`, `ready_to_export`) VALUES ('1', '0', 'Wilsonville District', 'Wilsonville High School', 'False');
+INSERT INTO `firstteamscouter`.`competition_data` (`_id`, `tablet_id`, `competition_name`, `competition_location`, `ready_to_export`) VALUES ('2', '0', 'Auburn District', 'Auburn High School', 'False');
