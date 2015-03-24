@@ -410,7 +410,7 @@ public class DataImportActivity extends Activity implements View.OnClickListener
             for (File f : xmlFileList) {
                 if (f.exists() && f.isFile()) {
                     String parts[] = f.getName().split("-");
-                    String tableName = (parts.length > 2) ? parts[1] : "UNKNOWN-TABLE";
+                    String tableName = (parts.length > 1) ? parts[1] : "UNKNOWN-TABLE";
 
                     txtStatus.setText("File Found for table " + tableName + ", Import Commencing\n");
                     DBAdapter.TABLE_NAMES table = DBAdapter.TABLE_NAMES.getTableByTableName(tableName);

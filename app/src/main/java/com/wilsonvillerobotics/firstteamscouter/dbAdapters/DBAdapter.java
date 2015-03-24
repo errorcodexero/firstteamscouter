@@ -810,8 +810,7 @@ public class DBAdapter {
 
             if(insertStatement != null && !insertStatement.equals("")) {
                 try {
-                    this.openForRead().db.execSQL(insertStatement);
-                    itDBAdapter.fileWasImported(fileName);
+                    //this.openForRead().db.execSQL(insertStatement);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

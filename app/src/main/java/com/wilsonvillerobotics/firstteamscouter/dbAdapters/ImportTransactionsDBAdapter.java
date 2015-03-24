@@ -75,11 +75,10 @@ public class ImportTransactionsDBAdapter extends FTSDBAdapter implements BaseCol
      * @param fileName
      * @return rowId or -1 if failed
      */
-    public long fileWasImported(String fileName) {
+    public long addImportedFile(String fileName) {
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_IMPORTED_FILE_NAME, fileName);
         long id = this.openForWrite().mDb.insert(TABLE_NAME, null, args);
-        if(!this.dbIsClosed()) this.close();
         return id;
     }
 
@@ -94,14 +93,14 @@ public class ImportTransactionsDBAdapter extends FTSDBAdapter implements BaseCol
 
     /**
      * Return a Cursor positioned at the entry that matches the given rowId
-     * @param matchID
+     * @param rowID
      * @return Cursor positioned to matching entry, if found
      * @throws SQLException if entry could not be found/retrieved
      */
     @Override
-    public Cursor getEntry(long iD) throws SQLException {
-        FTSUtilities.printToConsole("MatchDataDBAdapter::getEntry : matchID: " + iD + "\n");
-        String WHERE = _ID + "=" + iD;
+    public Cursor getEntry(long rowID) throws SQLException {
+        FTSUtilities.printToConsole("MatchDataDBAdapter::getEntry : matchID: " + rowID + "\n");
+        String WHERE = _ID + "=" + rowID;
         Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns, WHERE, null, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -129,7 +128,7 @@ public class ImportTransactionsDBAdapter extends FTSDBAdapter implements BaseCol
         boolean fileExists = false;
         String WHERE = COLUMN_NAME_IMPORTED_FILE_NAME + " = '" + fileName + "' ";
         Cursor c = this.openForRead().mDb.query(TABLE_NAME, this.allColumns, WHERE, null, null, null, null );
-        fileExists = (c != null && c.getCount() > 1);
+        fileExists = (c != null && c.getCount() > 0);
         if(!c.isClosed()) c.close();
         if(!this.dbIsClosed()) this.close();
         return !fileExists;
