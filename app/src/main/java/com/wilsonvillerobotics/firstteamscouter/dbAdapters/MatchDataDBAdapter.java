@@ -44,7 +44,6 @@ public class MatchDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
             COLUMN_NAME_BLUE_TEAM_ONE_ID,
             COLUMN_NAME_BLUE_TEAM_TWO_ID,
             COLUMN_NAME_BLUE_TEAM_THREE_ID,
-            //COLUMN_NAME_MATCH_DATA_UPDATED,
             COLUMN_NAME_READY_TO_EXPORT
     };
 

@@ -23,7 +23,7 @@ public class DBAdapter {
 
     public static final String DATABASE_NAME = "FIRSTTeamScouter.sqlite"; //$NON-NLS-1$
 
-    public static final int DATABASE_VERSION = 50;
+    public static final int DATABASE_VERSION = 54;
 
     private static final int TABLE_NAME        = 0;
     private static final int CREATE_TABLE_SQL  = 1;
@@ -545,7 +545,9 @@ public class DBAdapter {
         	}
 
             ArrayList<HashMap<String, String>> data = new ArrayList<HashMap<String, String>>();
+            String table = ImportTransactionsDBAdapter.TABLE_NAME;
             try {
+                FTSUtilities.printToConsole("Backing up data from table: " + table + "\n\n");
                 // Import Transactions - special case
                 query = "SELECT * FROM " + ImportTransactionsDBAdapter.TABLE_NAME;
 
@@ -555,6 +557,7 @@ public class DBAdapter {
             }
 
             try {
+                FTSUtilities.printToConsole("Deleting/Re-Creating table: " + table + "\n\n");
                 query = "DROP TABLE IF EXISTS " + ImportTransactionsDBAdapter.TABLE_NAME;
                 db.execSQL(query);
             } catch (Exception e) {
@@ -564,16 +567,20 @@ public class DBAdapter {
             try {
                 query = "CREATE TABLE " + ImportTransactionsDBAdapter.TABLE_NAME + " (" +
                         AUTO_INC_ID +
-                        ImportTransactionsDBAdapter.COLUMN_NAME_IMPORTED_FILE_NAME + TEXT_TYPE +
+                        ImportTransactionsDBAdapter.COLUMN_NAME_TABLET_ID + INT_TYPE + COMMA_SEP +
+                        ImportTransactionsDBAdapter.COLUMN_NAME_IMPORTED_FILE_NAME + TEXT_TYPE + COMMA_SEP +
+                        ImportTransactionsDBAdapter.COLUMN_NAME_READY_TO_EXPORT + BOOL_TYPE +
                         ")";
+                FTSUtilities.printToConsole("Create query: " + query + "\n\n");
                 db.execSQL(query);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             try {
+                FTSUtilities.printToConsole("Restoring data to table: " + table + "\n\n");
                 query = "SELECT * FROM " + ImportTransactionsDBAdapter.TABLE_NAME;
-                data.clear();
+                //data.clear();
                 restoreTable(db, query, "import_transactions", data);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -808,15 +815,31 @@ public class DBAdapter {
 
             insertStatement = parser.parseXML(this.context, tableName, firstColumn, lastColumn);
 
-            if(insertStatement != null && !insertStatement.equals("")) {
+            /*if(insertStatement != null && !insertStatement.equals("")) {
                 try {
                     //this.openForRead().db.execSQL(insertStatement);
                 } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
+                    if (this.db.isOpen()) this.close();
                 }
-            }
-            if (this.db.isOpen()) this.close();
+            }*/
         }
         return insertStatement;
+    }
+
+    public boolean importRecords(String insertStatement) {
+        boolean retVal = true;
+        if(insertStatement != null && !insertStatement.matches("")) {
+            try {
+                this.openForWrite().db.execSQL(insertStatement);
+            } catch(Exception e) {
+                e.printStackTrace();
+                retVal = false;
+            } finally {
+                if(this.db.isOpen()) this.close();
+            }
+        }
+        return true;
     }
 }

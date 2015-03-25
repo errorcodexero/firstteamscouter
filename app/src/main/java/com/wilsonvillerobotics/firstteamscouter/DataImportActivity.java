@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.nio.channels.FileChannel;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.DBAdapter;
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.ImportTransactionsDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.MatchDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.RobotDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamDataDBAdapter;
@@ -400,7 +401,7 @@ public class DataImportActivity extends Activity implements View.OnClickListener
         txtStatus.setText("Importing from XML");
 
         String filePrefix = "ftsData";
-        File externalFilesDir = FTSUtilities.getFileDirectory(null);
+        File externalFilesDir = FTSUtilities.getFileDirectory("download");
 
         File[] xmlFileList = externalFilesDir.listFiles(new XmlDataFilenameFilter(filePrefix, ".xml"));
 
@@ -412,13 +413,21 @@ public class DataImportActivity extends Activity implements View.OnClickListener
                     String parts[] = f.getName().split("-");
                     String tableName = (parts.length > 1) ? parts[1] : "UNKNOWN-TABLE";
 
-                    txtStatus.setText("File Found for table " + tableName + ", Import Commencing\n");
                     DBAdapter.TABLE_NAMES table = DBAdapter.TABLE_NAMES.getTableByTableName(tableName);
-                    String firstColumn = DBAdapter.getFirstColumnName(table);
-                    String lastColumn = DBAdapter.getLastColumnName(table);
-                    String insertStatement = dbAdapter.getInsertStatementFromXmlTable(f, tableName, firstColumn, lastColumn);
-                    txtStatus.setText(insertStatement);
-                    //dbAdapter.getInsertStatementFromXmlTable();
+
+                    if(table != null) {
+                        txtStatus.setText("File Found for table " + tableName + ", Import Commencing\n");
+                        String firstColumn = DBAdapter.getFirstColumnName(table);
+                        String lastColumn = DBAdapter.getLastColumnName(table);
+                        String insertStatement = dbAdapter.getInsertStatementFromXmlTable(f, tableName, firstColumn, lastColumn);
+                        txtStatus.setText(insertStatement);
+                        boolean imported = dbAdapter.importRecords(insertStatement);
+                        if(imported) {
+                            ImportTransactionsDBAdapter itDBAdapter = new ImportTransactionsDBAdapter(this);
+                            String filePath = f.getAbsoluteFile().getAbsolutePath();
+                            itDBAdapter.addImportedFile(filePath);
+                        }
+                    }
                 }
             }
         }

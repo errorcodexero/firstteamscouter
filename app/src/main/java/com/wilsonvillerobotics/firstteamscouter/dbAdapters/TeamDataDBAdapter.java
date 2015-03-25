@@ -25,8 +25,6 @@ public class TeamDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTST
     public static final String COLUMN_NAME_TEAM_STATE = "team_state";
     public static final String COLUMN_NAME_TEAM_NUM_MEMBERS = "num_team_members";
     public static final String COLUMN_NAME_TEAM_YEAR_CREATED = "team_creation_year";
-    //public static final String COLUMN_NAME_TEAM_DATA_UPDATED = "team_data_updated";
-    //public static final String COLUMN_NAME_READY_TO_EXPORT = "ready_to_export";
 
     //public static final String PRIMARY_KEY = " PRIMARY KEY ( " + TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER + ", " + TeamDataDBAdapter.COLUMN_NAME_TEAM_SUB_NUMBER + " )";
 

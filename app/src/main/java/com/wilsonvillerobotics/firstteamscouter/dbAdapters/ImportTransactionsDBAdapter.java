@@ -21,7 +21,8 @@ public class ImportTransactionsDBAdapter extends FTSDBAdapter implements BaseCol
     public static String[] allColumns = new String[]{
     		_ID,
             COLUMN_NAME_TABLET_ID,
-            COLUMN_NAME_IMPORTED_FILE_NAME
+            COLUMN_NAME_IMPORTED_FILE_NAME,
+            COLUMN_NAME_READY_TO_EXPORT
     };
 
     @Override
@@ -79,6 +80,7 @@ public class ImportTransactionsDBAdapter extends FTSDBAdapter implements BaseCol
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_IMPORTED_FILE_NAME, fileName);
         long id = this.openForWrite().mDb.insert(TABLE_NAME, null, args);
+        if(!this.dbIsClosed()) this.close();
         return id;
     }
 
@@ -127,7 +129,7 @@ public class ImportTransactionsDBAdapter extends FTSDBAdapter implements BaseCol
     public boolean fileHasNotBeenImported(String fileName) {
         boolean fileExists = false;
         String WHERE = COLUMN_NAME_IMPORTED_FILE_NAME + " = '" + fileName + "' ";
-        Cursor c = this.openForRead().mDb.query(TABLE_NAME, this.allColumns, WHERE, null, null, null, null );
+        Cursor c = this.openForRead().mDb.query(TABLE_NAME, new String[]{ImportTransactionsDBAdapter.COLUMN_NAME_IMPORTED_FILE_NAME}, WHERE, null, null, null, null );
         fileExists = (c != null && c.getCount() > 0);
         if(!c.isClosed()) c.close();
         if(!this.dbIsClosed()) this.close();

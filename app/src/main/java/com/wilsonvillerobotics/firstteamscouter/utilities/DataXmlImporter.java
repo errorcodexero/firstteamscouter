@@ -37,7 +37,7 @@ public class DataXmlImporter {
         StringBuilder sb = new StringBuilder(500);  // give sufficient length to start with
         String xmlText;
         try {
-            sb.append("INSERT INTO " + tableName + " VALUES (");
+            sb.append("INSERT INTO " + tableName + " VALUES "); //(");
 
             XmlPullParserFactory xppFactory = XmlPullParserFactory.newInstance();
             xppFactory.setNamespaceAware(true);
@@ -61,22 +61,24 @@ public class DataXmlImporter {
                 }
                 else if (e == XmlPullParser.TEXT) {
                     xmlText = xpp.getText();
-                    if (currTag.equals(firstCol) ) {    // first table column
-                        if (firstTag) {
-                            sb.append("(" + xmlText); // for first row insert
-                            firstTag = false;
-                        } else {
-                            sb.append(",(" + xmlText);
+                    if(currTag != null) {
+                        if (currTag.equals(firstCol)) {    // first table column
+                            if (firstTag) { // no single quotes for the _id field
+                                sb.append("(" + xmlText); // for first row insert
+                                firstTag = false;
+                            } else {
+                                sb.append(",(" + xmlText);
+                            }
+                        } else if (currTag.equals(lastCol)) {
+                            sb.append(", '" + xmlText + "')");  // last table column should have a closing paren ")"
+                        } else if(xmlText != null && !xmlText.startsWith("\n")) {
+                            sb.append(", '" + xmlText + "'");
                         }
-                    } else if (currTag.equals(lastCol) ){
-                        sb.append( xmlText + ")" );  // last table column should have a closing paren ")"
-                    } else {
-                        sb.append( xmlText + ", " );
                     }
                 }
                 e = xpp.next();
             }
-            sb.append(")");
+            //sb.append(")");
 
         }   catch (XmlPullParserException e) {
             e.printStackTrace();
