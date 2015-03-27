@@ -211,7 +211,7 @@ public class TeamDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTST
     }
 
     public Cursor getTeamEntry(int team_number, int team_sub_number) {
-        String WHERE = COLUMN_NAME_TEAM_NUMBER + "=" + String.valueOf(team_number);
+        String WHERE = _ID + "=" + String.valueOf(team_number);
         WHERE += " AND " + COLUMN_NAME_TEAM_SUB_NUMBER + "=" + String.valueOf(team_sub_number);
         return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
     }

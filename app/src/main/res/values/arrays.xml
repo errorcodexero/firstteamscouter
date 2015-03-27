@@ -24,6 +24,9 @@
         <item name="Blue1">Blue1</item>
         <item name="Blue2">Blue2</item>
         <item name="Blue3">Blue3</item>
+        <item name="Blue3">Pit1</item>
+        <item name="Blue3">Pit2</item>
+        <item name="Blue3">Pit3</item>
     </string-array>
 
     <string-array name="DriveTrains">

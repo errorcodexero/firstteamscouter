@@ -94,7 +94,6 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
     	    COLUMN_NAME_MATCH_ID,
             COLUMN_NAME_COMPETITION_ID,
     	    COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION,
-    	    //COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA,
             COLUMN_NAME_BROKE_DOWN,
             COLUMN_NAME_NO_MOVE,
             COLUMN_NAME_LOST_CONNECTION,
@@ -457,13 +456,14 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
      */
     public long getTeamMatchID(long matchID, long teamID) throws SQLException {
 
+        long id = -1;
     	String WHERE = TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID + "=" + matchID;
     	WHERE += " AND " + TeamMatchDBAdapter.COLUMN_NAME_TEAM_ID + "=" + teamID;
         Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, this.allColumns, WHERE, null, null, null, null, null);
-        if (mCursor != null) {
-            mCursor.moveToFirst();
+        if (mCursor.moveToFirst()) {
+            id = mCursor.getLong(mCursor.getColumnIndex(_ID));
         }
-        long id =mCursor.getLong(mCursor.getColumnIndex(_ID));
+
         if(!this.dbIsClosed()) this.close();
         return id;
     }

@@ -814,16 +814,6 @@ public class DBAdapter {
             }
 
             insertStatement = parser.parseXML(this.context, tableName, firstColumn, lastColumn);
-
-            /*if(insertStatement != null && !insertStatement.equals("")) {
-                try {
-                    //this.openForRead().db.execSQL(insertStatement);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if (this.db.isOpen()) this.close();
-                }
-            }*/
         }
         return insertStatement;
     }

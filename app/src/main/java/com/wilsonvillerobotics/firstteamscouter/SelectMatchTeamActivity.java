@@ -212,13 +212,21 @@ public class SelectMatchTeamActivity extends Activity {
             	
             	MatchDataDBAdapter mDBAdapter = new MatchDataDBAdapter(getBaseContext()).openForWrite();
             	Cursor teamIDs = mDBAdapter.getTeamIDsForMatchByAlliancePosition(competition_id, matchID);
-            	
-            	Hashtable<String, String> teamsForMatch = new Hashtable<String, String>();
+
+            	Hashtable<String, String> teamNumbersForMatch = new Hashtable<String, String>();
+                Hashtable<String, Long> teamIDsForMatch = new Hashtable<String, Long>();
+
+                TeamDataDBAdapter tdDBAdapter = new TeamDataDBAdapter(getBaseContext()).openForRead();
 
                 for(FTSUtilities.ALLIANCE_POSITION ap : FTSUtilities.ALLIANCE_POSITION.validPositions()) {
-                    teamsForMatch.put(ap.myAlliancePosition(), teamIDs.getString(teamIDs.getColumnIndexOrThrow(arrayMatchDBFields[ap.allianceIndex()])));
+                    Long teamID = Long.parseLong(teamIDs.getString(teamIDs.getColumnIndexOrThrow(arrayMatchDBFields[ap.allianceIndex()])));
+                    Cursor team = tdDBAdapter.getEntry(teamID);
+                    int teamNum = team.getInt(team.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER));
+                    teamNumbersForMatch.put(ap.myAlliancePosition(), String.valueOf(teamNum));
+                    teamIDsForMatch.put(ap.myAlliancePosition(), teamID);
                 }
 
+                tdDBAdapter.close();
             	mDBAdapter.close();
 
                 int c = tabletAlliancePosition.getColorForAlliancePosition();
@@ -234,7 +242,7 @@ public class SelectMatchTeamActivity extends Activity {
                 for(FTSUtilities.ALLIANCE_POSITION ap : FTSUtilities.ALLIANCE_POSITION.validPositions()) {
                     //strTeamNum = String.valueOf(tDBAdapter.getTeamNumberFromID(Long.valueOf(teamsForMatch.get(ap.myAlliancePosition()))));
                     // team ID is now the team number + a sub-number for teams with alternate designations (e.g. 1540a, 1540b, etc)
-                    strTeamNum = teamsForMatch.get(ap.myAlliancePosition());
+                    strTeamNum = teamNumbersForMatch.get(ap.myAlliancePosition());
                     txtTeamNumberField.get(ap.allianceIndex()).setText(strTeamNum);
                     if(ap == tabletAlliancePosition) {
                         strCurrTeamNum = strTeamNum;
@@ -243,10 +251,10 @@ public class SelectMatchTeamActivity extends Activity {
 
                 tDBAdapter.close();
 
-                String teamIDToScout = teamsForMatch.get(FTSUtilities.getTabletID(tabletAlliancePosition));
-                teamID = (teamIDToScout == null) ? -1 : Long.parseLong(teamIDToScout);
+                Long teamIDToScout = teamIDsForMatch.get(FTSUtilities.getTabletID(tabletAlliancePosition));
+                //teamID = (teamIDToScout == null) ? -1 : Long.parseLong(teamIDToScout);
 
-            	long tmID = tmDBAdapter.getTeamMatchID(matchID, teamID);
+            	long tmID = tmDBAdapter.getTeamMatchID(matchID, teamIDToScout);
             	
             	FTSUtilities.printToConsole("SelectTeamMatchActivity::spinTeamNum.onItemSelected : teamID: " + String.valueOf(teamID) + "  tmID: " + String.valueOf(tmID));
 
