@@ -1,8 +1,10 @@
 package com.wilsonvillerobotics.firstteamscouter.utilities;
 
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.wilsonvillerobotics.firstteamscouter.FIRSTTeamScouter;
 
@@ -29,12 +31,14 @@ public class FTPFileUploader extends AsyncTask<File, Void, Boolean> {
     private String password;
     private String remotePath;
     private byte serverIP[];
+    private Context context;
 
-    public FTPFileUploader() {
+    public FTPFileUploader(Context context) {
         this.userName = FTSUtilities.user;
         this.password = FTSUtilities.pwd;
         this.remotePath = FTSUtilities.remoteUploadPath;
         this.serverIP = FTSUtilities.defaultServerIP;
+        this.context = context;
     }
 
     public void setUserName(String userName) {
@@ -58,49 +62,68 @@ public class FTPFileUploader extends AsyncTask<File, Void, Boolean> {
         FTPClient ftpClient = new FTPClient();
         boolean result = false;
         boolean backupSuccess = false;
+        Log.e("FTP", "FTP upload start file count: " + String.valueOf(filesToSend.length));
         try {
             //ftpClient.connect(InetAddress.getByName(serverName));
             InetAddress ipv4 = Inet4Address.getByAddress(serverIP);
+            ftpClient.setDefaultTimeout(1000);
             ftpClient.connect(ipv4);
             result = ftpClient.login(userName, password);
             Log.e("FTPConnected: ", String.valueOf(result));
             ftpClient.changeWorkingDirectory(remotePath);
 
-            if (ftpClient.getReplyString().contains("250")) {
+            //if (ftpClient.getReplyString().contains("250")) {
                 BufferedInputStream buffIn = null;
                 ftpClient.setFileType(FTP.ASCII_FILE_TYPE);
                 ftpClient.enterLocalPassiveMode();
 
                 for(File fileToSend : filesToSend) {
-                    buffIn = new BufferedInputStream(new FileInputStream(fileToSend));
-                    //ProgressInputStream progressInput = new ProgressInputStream(buffIn, new Handler(Looper.myLooper()));
-                    //result = ftpClient.storeFile(remoteUploadPath, progressInput);
-                    String fName = fileToSend.getAbsoluteFile().getName();
-                    result = ftpClient.storeFile(fName, buffIn);
-                    buffIn.close();
+                    if(!fileToSend.isDirectory()) {
+                        Log.e(FIRSTTeamScouter.TAG, "File:  " + fileToSend.getName());
+                        buffIn = new BufferedInputStream(new FileInputStream(fileToSend));
+                        //ProgressInputStream progressInput = new ProgressInputStream(buffIn, new Handler(Looper.myLooper()));
+                        //result = ftpClient.storeFile(remoteUploadPath, progressInput);
+                        String fName = fileToSend.getAbsoluteFile().getName();
 
-                    if(result) {
-                        File backupDir = FTSUtilities.getFileDirectory("exported");
+                        result = ftpClient.storeFile(fName, buffIn);
+                        buffIn.close();
+
+                        if (result) {
+                            File backupDir = FTSUtilities.getFileDirectory("exported");
+                            if (!backupDir.exists()) {
+                                backupDir.mkdirs();
+                            }
+
+                            File backupFile = new File(backupDir, fName);
+                            backupSuccess |= fileToSend.renameTo(backupFile);
+                        } else {
+                        File backupDir = FTSUtilities.getFileDirectory("failedExport");
                         if (!backupDir.exists()) {
                             backupDir.mkdirs();
                         }
 
                         File backupFile = new File(backupDir, fName);
-                        backupSuccess |= fileToSend.renameTo(backupFile);
+                        fileToSend.renameTo(backupFile);
                     }
                 }
-                ftpClient.logout();
-                ftpClient.disconnect();
             }
-
+            ftpClient.logout();
+            ftpClient.disconnect();
+            //} else {
+            //    Log.e("FTP: ", "Upload Failed");
+            //}
         } catch (SocketException e) {
-            Log.e(FIRSTTeamScouter.TAG, e.getStackTrace().toString());
+            //Toast.makeText(context, "Socket", Toast.LENGTH_LONG).show();
+            Log.e(FIRSTTeamScouter.TAG, "Socket exception " + e.getStackTrace().toString());
         } catch (UnknownHostException e) {
-            Log.e(FIRSTTeamScouter.TAG, e.getStackTrace().toString());
+            //Toast.makeText(context, "Unknown Host Exception", Toast.LENGTH_LONG).show();
+            Log.e(FIRSTTeamScouter.TAG, "Unknown Host Exception " + e.getStackTrace().toString());
         } catch (IOException e) {
-            Log.e(FIRSTTeamScouter.TAG, e.getStackTrace().toString());
+            //Toast.makeText(context, "IO Exception", Toast.LENGTH_LONG).show();
+            Log.e(FIRSTTeamScouter.TAG, "IO Exception " + e.getStackTrace().toString());
         } catch (Exception e) {
-            Log.e(FIRSTTeamScouter.TAG, e.getStackTrace().toString());
+            //Toast.makeText(context, "General Exception", Toast.LENGTH_LONG).show();
+            Log.e(FIRSTTeamScouter.TAG, "General Exception " + e.getStackTrace().toString());
         }
         return result && backupSuccess;
     }

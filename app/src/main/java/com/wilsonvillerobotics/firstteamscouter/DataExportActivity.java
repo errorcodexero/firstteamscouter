@@ -141,9 +141,35 @@ public class DataExportActivity extends Activity {
         status += "Files exported: " + String.valueOf(fileCount);
         updateStatus(status);
 
-        FTPFileUploader ftpUL = new FTPFileUploader();
+        FTPFileUploader ftpUL = new FTPFileUploader(getApplicationContext());
         File dir = FTSUtilities.getFileDirectory("");
-        if(dir != null && dir.exists()) ftpUL.execute(dir.listFiles());
+        if(dir != null && dir.exists()) {
+            ftpUL.execute(dir.listFiles());
+            status = "Num Files: " + String.valueOf(dir.listFiles().length);
+        } else {
+            status = "File directory not  found";
+        }
+        updateStatus(status);
+    }
+
+    private void exportAllTransactionsToXML() {
+        int fileCount = dbAdapter.exportAllTransactions();
+        String uuid = FTSUtilities.getShortDeviceID(getApplicationContext()).toString();
+        String status = "Device \n\tUUID: " + uuid + "\n";
+        //status += "\tEth0 MAC: " + deviceEthMAC + "\n";
+        //status += "\tWlan0 MAC: " + deviceWiFiMAC + "\n";
+        status += "Files exported: " + String.valueOf(fileCount);
+        updateStatus(status);
+
+        FTPFileUploader ftpUL = new FTPFileUploader(getApplicationContext());
+        File dir = FTSUtilities.getFileDirectory("");
+        if(dir != null && dir.exists()) {
+            ftpUL.execute(dir.listFiles());
+            status = "Num Files: " + String.valueOf(dir.listFiles().length);
+        } else {
+            status = "File directory not  found";
+        }
+        updateStatus(status);
     }
 
     private void exportMatchData() {
@@ -190,6 +216,14 @@ public class DataExportActivity extends Activity {
     }
 
     private void configButtons() {
+        Button buttonbtnExportAllTransactions = (Button) findViewById(R.id.btnExportAllTransactions);
+        buttonbtnExportAllTransactions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exportAllTransactionsToXML();
+            }
+        });
+
         Button btnRepeatDataExport = (Button) findViewById(R.id.btnRepeatDataExport);
         btnRepeatDataExport.setOnClickListener(new View.OnClickListener() {
 

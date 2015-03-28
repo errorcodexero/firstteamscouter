@@ -87,6 +87,34 @@ public class DataXmlExporter {
         return exportCount;
     }
 
+    public int exportWholeTable(final String dbName, final String tableName) throws IOException {
+        //Log.i(LOG_TAG, "exporting database - " + dbName + " exportFileNamePrefix=" + exportFileNamePrefix + "   androidUuid=" + androidUuid + "  timestamp=" + timestamp);
+        Log.i(LOG_TAG, "exporting database - " + dbName);
+
+        int exportCount = 0;
+        xmlBuilder = new XmlBuilder();
+        xmlBuilder.start(dbName);
+        ArrayList<Long> exportedIDs = new ArrayList<Long>();
+
+        try {
+            exportedIDs = exportWholeTable(tableName);
+            setDataExported(tableName, exportedIDs);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        String xmlString = xmlBuilder.end();
+
+        String xmlFileName = FTSUtilities.getXmlDataFileNameForTable(tableName); // exportFileNamePrefix + "-" + androidUuid + "-" + tableName + "-" + timestamp + ".xml";
+        if(exportedIDs.size() > 0 && writeToFile(xmlString, xmlFileName)) exportCount++;
+        Log.i(LOG_TAG, "exporting table complete: " + tableName);
+        //String xmlString = xmlBuilder.end();
+        //if(!c.isClosed()) c.close();
+        //String xmlFileName = exportFileNamePrefix + ".xml";
+        //boolean exported = writeToFile(xmlString, xmlFileName);
+        Log.i(LOG_TAG, "exporting database complete");
+        return exportCount;
+    }
+
     private void setDataExported(String tableName, ArrayList<Long> exportedIDs) {
         if(exportedIDs.size() < 1) return;
 
@@ -129,9 +157,31 @@ public class DataXmlExporter {
         return exportedIDs;
     }
 
+    private ArrayList<Long> exportWholeTable(final String tableName) throws IOException {
+        xmlBuilder.openTable(tableName);
+        String sql = "select * from " + tableName;
+        Cursor c = db.rawQuery(sql, new String[0]);
+        ArrayList<Long> exportedIDs = new ArrayList<Long>();
+        if (c.moveToFirst()) {
+            int cols = c.getColumnCount();
+            do {
+                long id = c.getLong(c.getColumnIndex("_id"));
+                if(id != -1) exportedIDs.add(id);
+                xmlBuilder.openRow();
+                for (int i = 0; i < cols; i++) {
+                    xmlBuilder.addColumn(c.getColumnName(i), c.getString(i));
+                }
+                xmlBuilder.closeRow();
+            } while (c.moveToNext());
+        }
+        c.close();
+        xmlBuilder.closeTable();
+        return exportedIDs;
+    }
+
     private boolean writeToFile(final String xmlString, final String exportFileName) throws IOException {
         boolean exportSuccess = true;
-        File dir = FTSUtilities.getFileDirectory(null); //new File(Environment.getExternalStorageDirectory(), DataXmlExporter.DATASUBDIRECTORY);
+        File dir = FTSUtilities.getFileDirectory(""); //new File(Environment.getExternalStorageDirectory(), DataXmlExporter.DATASUBDIRECTORY);
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -142,7 +192,9 @@ public class DataXmlExporter {
         FileChannel channel = new FileOutputStream(file).getChannel();
         try {
             channel.write(buff);
+            Log.e(LOG_TAG, "File written: " + exportFileName);
         } catch (Exception e) {
+            Log.e(LOG_TAG, "File NOT written: " + exportFileName);
             e.printStackTrace();
             exportSuccess = false;
         } finally {

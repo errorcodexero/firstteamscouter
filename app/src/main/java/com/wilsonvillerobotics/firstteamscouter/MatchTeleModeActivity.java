@@ -295,6 +295,7 @@ public class MatchTeleModeActivity extends Activity {
 
     private void saveData() {
         for(Transaction t : transactionList) {
+            t.setReadyToExport(true);
             HashMap<String, Object> values = t.getValuesHashMap();
             long id = tmtdDBAdapter.createTeamMatchDataTransaction(values);
             //if(id != -1) tmtDBAdapter.createTeamMatchTransaction(teamMatchID, id);

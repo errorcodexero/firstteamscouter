@@ -799,6 +799,20 @@ public class DBAdapter {
         return exportCount;
     }
 
+    public int exportAllTransactions() {
+        int exportCount = 0;
+
+        try {
+            this.openForRead();
+            DataXmlExporter dataXmlExporter = new DataXmlExporter(this.db);
+            exportCount = dataXmlExporter.exportWholeTable(DATABASE_NAME, TeamMatchTransactionDataDBAdapter.TABLE_NAME);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(this.db.isOpen()) this.db.close();
+        return exportCount;
+    }
+
     public String getInsertStatementFromXmlTable(File xmlFile, String tableName, String firstColumn, String lastColumn) {
         String insertStatement = "";
 
