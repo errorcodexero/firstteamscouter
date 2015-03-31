@@ -31,11 +31,14 @@ public class MatchNotesActivity extends Activity {
     private int teamNumber;
 	
 	protected Boolean fieldOrientationRedOnRight;
+    private boolean dataChanged;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_match_notes);
+
+        this.dataChanged = false; //TODO Implement this for changed data on this page
 		
 		Intent intent = getIntent();
 		this.tabletID = intent.getStringExtra("tablet_id");

@@ -586,7 +586,7 @@ public class DBAdapter {
                 e.printStackTrace();
             }
 
-            setSequenceIDs(db);
+            //setSequenceIDs(db);
         }
 
         private void setSequenceIDs(SQLiteDatabase db) {
@@ -816,18 +816,12 @@ public class DBAdapter {
     public String getInsertStatementFromXmlTable(File xmlFile, String tableName, String firstColumn, String lastColumn) {
         String insertStatement = "";
 
-        String fileName = xmlFile.getAbsoluteFile().getName();
-        ImportTransactionsDBAdapter itDBAdapter = new ImportTransactionsDBAdapter(context);
-        if(itDBAdapter.fileHasNotBeenImported(fileName)) {
-
-            DataXmlImporter parser = null;
-            try {
-                parser = new DataXmlImporter(xmlFile.getCanonicalPath());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
+        DataXmlImporter parser = null;
+        try {
+            parser = new DataXmlImporter(xmlFile.getCanonicalPath());
             insertStatement = parser.parseXML(this.context, tableName, firstColumn, lastColumn);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return insertStatement;
     }

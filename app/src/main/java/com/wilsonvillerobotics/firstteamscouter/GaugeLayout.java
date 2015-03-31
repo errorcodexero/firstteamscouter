@@ -386,8 +386,19 @@ public class GaugeLayout extends TableLayout {
     }
 
     public void deactivateAllRows(OnDragListener dragger) {
-        for(GaugeRow gr : this.gaugeRows) {
-            gr.deactivate(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, dragger);
+        if(this.gaugeType == GaugeType.STEP) {
+            for(GaugeRow gr : this.gaugeRows) {
+                gr.deactivate(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, dragger);
+            }
+        } else {
+            int count = this.gaugeRows.size();
+            for (int i = 0; i < count; i++) {
+                if (i < count - 1) {
+                    this.gaugeRows.get(i).deactivate(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, dragger);
+                } else {
+                    this.gaugeRows.get(i).deactivate(GameElement.GameElementType.CAN, GameElement.GameElementState.UPRIGHT, dragger);
+                }
+            }
         }
     }
 

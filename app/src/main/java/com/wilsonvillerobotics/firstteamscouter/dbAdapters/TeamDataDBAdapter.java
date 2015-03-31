@@ -124,8 +124,7 @@ public class TeamDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTST
         args.put(COLUMN_NAME_TEAM_NUM_MEMBERS, num_team_members);
         //args.put(COLUMN_NAME_TEAM_DATA_UPDATED, Boolean.TRUE.toString());
         args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
-        boolean success = this.openForWrite().mDb.insert(TABLE_NAME, null, args) > 0;
-        if(success) retVal = team_number;
+        retVal = this.openForWrite().mDb.insert(TABLE_NAME, null, args);
         if(!this.dbIsClosed()) this.close();
         return retVal;
     }

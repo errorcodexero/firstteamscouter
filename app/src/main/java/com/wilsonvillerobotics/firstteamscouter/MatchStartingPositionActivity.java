@@ -40,11 +40,14 @@ public class MatchStartingPositionActivity extends Activity {
     TextView txtRobotX, txtRobotY;
 
     protected Boolean fieldOrientationRedOnRight;
+    private boolean dataChanged;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_match_starting_position);
+
+        dataChanged = false;
 
         RelativeLayout startingPositionRobotGutterLayout = (RelativeLayout) findViewById(R.id.StartingPosition_RobotGutter_RelativeLayout);
         RelativeLayout startingPositionFieldLayout       = (RelativeLayout) findViewById(R.id.StartingPosition_Field_LayoutRelative);
@@ -130,7 +133,7 @@ public class MatchStartingPositionActivity extends Activity {
     }
 
     private boolean saveData() {
-        if(this.tmDBAdapter != null) {
+        if(this.tmDBAdapter != null && dataChanged) {
             return this.tmDBAdapter.setStartingPosition(this.teamMatchID, this.robotX, this.robotY, this.robotOnField);
         }
         return false;
@@ -147,9 +150,6 @@ public class MatchStartingPositionActivity extends Activity {
             }
 
             private void btnSubmitOnClick(View v) {
-                //FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate::btnSubmitMatchAuto : CLOSING DB\n");
-                //tmDBAdapter.close();
-
                 Intent startingPositionIntent = new Intent(v.getContext(), MatchAutoModeActivity.class);
                 buildIntent(startingPositionIntent);
                 startActivity(startingPositionIntent);
@@ -392,6 +392,7 @@ public class MatchStartingPositionActivity extends Activity {
                     //FTSUtilities.printToConsole("TeamMatchStartingPositionFragment::DragEvent::ACTION_DROP\n");
                     dragging = false;
                     robotOnField = true;
+                    dataChanged = true;
                     View view = (View) event.getLocalState();
 
                     ViewGroup owner = (ViewGroup) view.getParent();

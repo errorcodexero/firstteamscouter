@@ -23,6 +23,7 @@ import com.wilsonvillerobotics.firstteamscouter.utilities.FTSUtilities.ALLIANCE_
 import com.wilsonvillerobotics.firstteamscouter.GaugeLayout.GaugeType;
 import com.wilsonvillerobotics.firstteamscouter.GameElement.GameElementType;
 import com.wilsonvillerobotics.firstteamscouter.GameElement.GameElementState;
+import com.wilsonvillerobotics.firstteamscouter.GameElement.GameElementLocation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,37 +31,43 @@ import java.util.HashMap;
 public class MatchTeleModeActivity extends Activity {
 
     public enum TeleFieldObject {
-        Robot(R.id.imgRobot, GameElementType.ROBOT, GameElementState.UPRIGHT),
-        GroundToteUp(R.id.imgGroundToteUp, GameElementType.GRAY_TOTE, GameElementState.UPRIGHT),
-        GroundToteDown(R.id.imgGroundToteDown, GameElementType.GRAY_TOTE, GameElementState.UPSIDEDOWN),
-        GroundToteYellow(R.id.imgGroundToteYellow, GameElementType.YELLOW_TOTE, GameElementState.UPRIGHT),
-        HumanTote(R.id.imgHumanTote, GameElementType.GRAY_TOTE, GameElementState.UPRIGHT),
-        StepTote(R.id.imgStepTote, GameElementType.GRAY_TOTE, GameElementState.UPRIGHT),
-        StepToteYellow(R.id.imgStepTote, GameElementType.YELLOW_TOTE, GameElementState.UPRIGHT),
-        CanUp(R.id.imgCanUp, GameElementType.CAN, GameElementState.UPRIGHT),
-        CanSide(R.id.imgCanSide, GameElementType.CAN, GameElementState.ONSIDE),
-        CanDown(R.id.imgCanDown, GameElementType.CAN, GameElementState.UPSIDEDOWN);
+        Robot(R.id.imgRobot, GameElementType.ROBOT, GameElementState.UPRIGHT, GameElementLocation.GROUND),
+        GroundToteUp(R.id.imgGroundToteUp, GameElementType.GRAY_TOTE, GameElementState.UPRIGHT, GameElementLocation.GROUND),
+        GroundToteDown(R.id.imgGroundToteDown, GameElementType.GRAY_TOTE, GameElementState.UPSIDEDOWN, GameElementLocation.GROUND),
+        GroundToteYellow(R.id.imgGroundToteYellow, GameElementType.YELLOW_TOTE, GameElementState.UPRIGHT, GameElementLocation.GROUND),
+        HumanTote(R.id.imgHumanTote, GameElementType.GRAY_TOTE, GameElementState.UPRIGHT, GameElementLocation.FEEDER),
+        StepTote(R.id.imgStepTote, GameElementType.GRAY_TOTE, GameElementState.UPRIGHT, GameElementLocation.STEP),
+        StepToteYellow(R.id.imgStepTote, GameElementType.YELLOW_TOTE, GameElementState.UPRIGHT, GameElementLocation.STEP),
+        CanUp(R.id.imgCanUp, GameElementType.CAN, GameElementState.UPRIGHT, GameElementLocation.GROUND),
+        CanSide(R.id.imgCanSide, GameElementType.CAN, GameElementState.ONSIDE, GameElementLocation.GROUND),
+        CanDown(R.id.imgCanDown, GameElementType.CAN, GameElementState.UPSIDEDOWN, GameElementLocation.GROUND);
 
         private int id;
-        private GameElement.GameElementType type;
-        private GameElement.GameElementState state;
+        private GameElementType type;
+        private GameElementState state;
+        private GameElementLocation location;
 
-        TeleFieldObject(int id, GameElement.GameElementType et, GameElement.GameElementState state) {
+        TeleFieldObject(int id, GameElementType et, GameElementState state, GameElementLocation loc) {
             this.id = id;
             this.type = et;
             this.state = state;
+            this.location = loc;
         }
 
         public int getId() {
             return this.id;
         }
 
-        public GameElement.GameElementType getType() {
+        public GameElementType getType() {
             return this.type;
         }
 
-        public GameElement.GameElementState getState() {
+        public GameElementState getState() {
             return this.state;
+        }
+
+        public GameElementLocation getLocation() {
+            return this.location;
         }
     }
 
@@ -77,6 +84,7 @@ public class MatchTeleModeActivity extends Activity {
     private View lastViewTouched;
 
 	protected Boolean fieldOrientationRedOnRight;
+    private boolean dataChanged;
 
     protected ArrayList<Transaction> transactionList;
 
@@ -89,6 +97,8 @@ public class MatchTeleModeActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_match_telemode);
+
+        this.dataChanged = false;
 		
 		this.processIntent(getIntent());
 
@@ -131,7 +141,7 @@ public class MatchTeleModeActivity extends Activity {
             }
             ge.setOnTouchListener(new MyViewTouchListener());
             registerForContextMenu(ge);
-            ge.initGameElement(fo.getId(), new Point(), true, fo.getType(), fo.getState());
+            ge.initGameElement(fo.getId(), new Point(), true, fo.getType(), fo.getState(), fo.getLocation());
 
             this.teleFieldObjects.put(fo.getId(), ge);
         }
@@ -294,11 +304,12 @@ public class MatchTeleModeActivity extends Activity {
     }
 
     private void saveData() {
-        for(Transaction t : transactionList) {
-            t.setReadyToExport(true);
-            HashMap<String, Object> values = t.getValuesHashMap();
-            long id = tmtdDBAdapter.createTeamMatchDataTransaction(values);
-            //if(id != -1) tmtDBAdapter.createTeamMatchTransaction(teamMatchID, id);
+        if(dataChanged) {
+            for (Transaction t : transactionList) {
+                t.setReadyToExport(true);
+                HashMap<String, Object> values = t.getValuesHashMap();
+                long id = tmtdDBAdapter.createTeamMatchDataTransaction(values);
+            }
         }
     }
 
@@ -381,6 +392,7 @@ public class MatchTeleModeActivity extends Activity {
                     }
                     break;
                 case DragEvent.ACTION_DROP:
+                    dataChanged = true;
                     lastViewTouched = view;
                     dragging = false;
                     int numRows = 0;
@@ -403,7 +415,7 @@ public class MatchTeleModeActivity extends Activity {
                             if(view.getClass() == GameElement.class) {
                                 GameElement ge2 = (GameElement)view;
                                 // TODO - Fix this to use a TransportContainer so I know what type of element this represents
-                                String from = "Floor";
+                                String from = ge2.getElementLocation().getLocation(); //"Floor";
                                 String to = gaugeLayout.getGaugeName();
                                 gr.activate(ge2.getElementType(), ge2.getElementState(), ge2.getDrawable(), new MyViewTouchListener());
                                 recordTransaction("Place", from, to, ge2, gr);

@@ -1,12 +1,8 @@
 package com.wilsonvillerobotics.firstteamscouter;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.view.Display;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -68,12 +64,40 @@ public class GameElement extends ImageView {
         }
     }
 
-    private Point               elementLocation;
+    public enum GameElementLocation {
+        ROBOT("ROBOT"),
+        GROUND("GROUND"),
+        FEEDER("FEEDER"),
+        STEP("STEP"),
+        PLATFORM("PLATFORM"),
+        UNKNOWN("UNKNOWN");
+
+        private String location;
+        GameElementLocation(String loc) {
+            this.location = loc;
+        }
+
+        static GameElementLocation getTypeByString(String loc) {
+            for(GameElementLocation gel : GameElementLocation.values()) {
+                if(gel.location.equals(loc)) {
+                    return gel;
+                }
+            }
+            return UNKNOWN;
+        }
+
+        String getLocation() {
+            return this.location;
+        }
+    }
+
+    private Point               elementCoordinates;
     private boolean             elementVisible;
     private int                 elementId;
     private GameElement         elementLink;
     private GameElementType     elementType;
     private GameElementState    elementState;
+    private GameElementLocation elementLocation;
     private boolean             elementActive;
 
     private Context context;
@@ -81,7 +105,7 @@ public class GameElement extends ImageView {
     GameElement(Context context) {
         super(context);
         this.context = context;
-        this.elementLocation = null;
+        this.elementCoordinates = null;
         this.elementId = -1;
         this.elementVisible = false;
         this.elementLink = null;
@@ -93,7 +117,7 @@ public class GameElement extends ImageView {
     public GameElement(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-        this.elementLocation = null;
+        this.elementCoordinates = null;
         this.elementId = -1;
         this.elementVisible = false;
         this.elementLink = null;
@@ -105,7 +129,7 @@ public class GameElement extends ImageView {
     public GameElement(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.context = context;
-        this.elementLocation = null;
+        this.elementCoordinates = null;
         this.elementId = -1;
         this.elementVisible = false;
         this.elementLink = null;
@@ -114,13 +138,14 @@ public class GameElement extends ImageView {
         this.elementActive = false;
     }
 
-    public void initGameElement(int id, Point loc, boolean vis, GameElementType et, GameElementState ges) {
+    public void initGameElement(int id, Point loc, boolean vis, GameElementType get, GameElementState ges, GameElementLocation gel) {
         this.elementId = id;
-        this.elementLocation = loc;
+        this.elementCoordinates = loc;
         this.elementVisible = vis;
         this.elementLink = null;
-        this.elementType = et;
+        this.elementType = get;
         this.elementState = ges;
+        this.elementLocation = gel;
         this.elementActive = vis;
     }
 
@@ -138,6 +163,12 @@ public class GameElement extends ImageView {
 
     public void setElementType(GameElementType et) {
         this.elementType = et;
+    }
+
+    public GameElementLocation getElementLocation() { return this.elementLocation; };
+
+    public void setElementLocation(GameElementLocation gel) {
+        this.elementLocation = gel;
     }
 
     public void setNextElement(GameElement el) {
@@ -299,15 +330,15 @@ public class GameElement extends ImageView {
     }
 
     public Point getLocation() {
-        return this.elementLocation;
+        return this.elementCoordinates;
     }
 
     public void setLocation(Point p) {
-        this.elementLocation = p;
+        this.elementCoordinates = p;
     }
 
     public void setLocation(int x, int y) {
-        this.elementLocation = new Point(x, y);
+        this.elementCoordinates = new Point(x, y);
     }
 
     public boolean isRobot() {

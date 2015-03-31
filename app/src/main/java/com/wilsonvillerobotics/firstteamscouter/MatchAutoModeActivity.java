@@ -104,6 +104,7 @@ public class MatchAutoModeActivity extends Activity {
     public int cansGrabbedFromStep;
 
     protected boolean autoModeSaved;
+    private boolean dataChanged;
 
 
 	@Override
@@ -112,6 +113,7 @@ public class MatchAutoModeActivity extends Activity {
 		setContentView(R.layout.activity_match_automode);
 
         this.autoModeSaved = false;
+        this.dataChanged = false;
 
         RelativeLayout automodeParentLayout = (RelativeLayout) findViewById(R.id.AutoMode_Field_LayoutRelative);
         automodeParentLayout.setOnDragListener(new MyViewDragListener());
@@ -435,57 +437,60 @@ public class MatchAutoModeActivity extends Activity {
     }
 
     private boolean saveData() {
-        Point robotFinalLocation = this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).getLocation();
-        Point tote1FinalLocation = this.autoFieldObjects.get(AutoFieldObject.YellowTote1.getId()).getLocation();
-        Point tote2FinalLocation = this.autoFieldObjects.get(AutoFieldObject.YellowTote2.getId()).getLocation();
-        Point tote3FinalLocation = this.autoFieldObjects.get(AutoFieldObject.YellowTote3.getId()).getLocation();
-        Point can1FinalLocation = this.autoFieldObjects.get(AutoFieldObject.GreenCan1.getId()).getLocation();
-        Point can2FinalLocation = this.autoFieldObjects.get(AutoFieldObject.GreenCan2.getId()).getLocation();
-        Point can3FinalLocation = this.autoFieldObjects.get(AutoFieldObject.GreenCan3.getId()).getLocation();
-        Point can4FinalLocation = this.autoFieldObjects.get(AutoFieldObject.GreenCan4.getId()).getLocation();
-        Point can5FinalLocation = this.autoFieldObjects.get(AutoFieldObject.GreenCan5.getId()).getLocation();
-        Point can6FinalLocation = this.autoFieldObjects.get(AutoFieldObject.GreenCan6.getId()).getLocation();
-        Point can7FinalLocation = this.autoFieldObjects.get(AutoFieldObject.GreenCan7.getId()).getLocation();
-        boolean robotVisibility = this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).isVisible();
-        boolean tote1Visibility = this.autoFieldObjects.get(AutoFieldObject.YellowTote1.getId()).isVisible();
-        boolean tote2Visibility = this.autoFieldObjects.get(AutoFieldObject.YellowTote2.getId()).isVisible();
-        boolean tote3Visibility = this.autoFieldObjects.get(AutoFieldObject.YellowTote3.getId()).isVisible();
-        boolean can1Visibility = this.autoFieldObjects.get(AutoFieldObject.GreenCan1.getId()).isVisible();
-        boolean can2Visibility = this.autoFieldObjects.get(AutoFieldObject.GreenCan2.getId()).isVisible();
-        boolean can3Visibility = this.autoFieldObjects.get(AutoFieldObject.GreenCan3.getId()).isVisible();
-        boolean can4Visibility = this.autoFieldObjects.get(AutoFieldObject.GreenCan4.getId()).isVisible();
-        boolean can5Visibility = this.autoFieldObjects.get(AutoFieldObject.GreenCan5.getId()).isVisible();
-        boolean can6Visibility = this.autoFieldObjects.get(AutoFieldObject.GreenCan6.getId()).isVisible();
-        boolean can7Visibility = this.autoFieldObjects.get(AutoFieldObject.GreenCan7.getId()).isVisible();
-        String robotStackList = this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).getStackList();
+        if(dataChanged) {
+            Point robotFinalLocation = this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).getLocation();
+            Point tote1FinalLocation = this.autoFieldObjects.get(AutoFieldObject.YellowTote1.getId()).getLocation();
+            Point tote2FinalLocation = this.autoFieldObjects.get(AutoFieldObject.YellowTote2.getId()).getLocation();
+            Point tote3FinalLocation = this.autoFieldObjects.get(AutoFieldObject.YellowTote3.getId()).getLocation();
+            Point can1FinalLocation = this.autoFieldObjects.get(AutoFieldObject.GreenCan1.getId()).getLocation();
+            Point can2FinalLocation = this.autoFieldObjects.get(AutoFieldObject.GreenCan2.getId()).getLocation();
+            Point can3FinalLocation = this.autoFieldObjects.get(AutoFieldObject.GreenCan3.getId()).getLocation();
+            Point can4FinalLocation = this.autoFieldObjects.get(AutoFieldObject.GreenCan4.getId()).getLocation();
+            Point can5FinalLocation = this.autoFieldObjects.get(AutoFieldObject.GreenCan5.getId()).getLocation();
+            Point can6FinalLocation = this.autoFieldObjects.get(AutoFieldObject.GreenCan6.getId()).getLocation();
+            Point can7FinalLocation = this.autoFieldObjects.get(AutoFieldObject.GreenCan7.getId()).getLocation();
+            boolean robotVisibility = this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).isVisible();
+            boolean tote1Visibility = this.autoFieldObjects.get(AutoFieldObject.YellowTote1.getId()).isVisible();
+            boolean tote2Visibility = this.autoFieldObjects.get(AutoFieldObject.YellowTote2.getId()).isVisible();
+            boolean tote3Visibility = this.autoFieldObjects.get(AutoFieldObject.YellowTote3.getId()).isVisible();
+            boolean can1Visibility = this.autoFieldObjects.get(AutoFieldObject.GreenCan1.getId()).isVisible();
+            boolean can2Visibility = this.autoFieldObjects.get(AutoFieldObject.GreenCan2.getId()).isVisible();
+            boolean can3Visibility = this.autoFieldObjects.get(AutoFieldObject.GreenCan3.getId()).isVisible();
+            boolean can4Visibility = this.autoFieldObjects.get(AutoFieldObject.GreenCan4.getId()).isVisible();
+            boolean can5Visibility = this.autoFieldObjects.get(AutoFieldObject.GreenCan5.getId()).isVisible();
+            boolean can6Visibility = this.autoFieldObjects.get(AutoFieldObject.GreenCan6.getId()).isVisible();
+            boolean can7Visibility = this.autoFieldObjects.get(AutoFieldObject.GreenCan7.getId()).isVisible();
+            String robotStackList = this.autoFieldObjects.get(AutoFieldObject.Robot.getId()).getStackList();
 
-        return this.tmDBAdapter != null &&
-                this.tmDBAdapter.setAutoModeActions(
-                this.teamMatchID, robotFinalLocation.x, robotFinalLocation.y,
-                tote1FinalLocation.x, tote1FinalLocation.y,
-                tote2FinalLocation.x, tote2FinalLocation.y,
-                tote3FinalLocation.x, tote3FinalLocation.y,
-                can1FinalLocation.x, can1FinalLocation.y,
-                can2FinalLocation.x, can2FinalLocation.y,
-                can3FinalLocation.x, can3FinalLocation.y,
-                can4FinalLocation.x, can4FinalLocation.y,
-                can5FinalLocation.x, can5FinalLocation.y,
-                can6FinalLocation.x, can6FinalLocation.y,
-                can7FinalLocation.x, can7FinalLocation.y,
-                robotVisibility, tote1Visibility, tote2Visibility, tote3Visibility,
-                can1Visibility, can2Visibility, can3Visibility, can4Visibility,
-                can5Visibility, can6Visibility, can7Visibility,
-                this.totesPickedUp, this.totesStacked, this.totesScored,
-                this.cansPickedUp, cansScored, cansGrabbedFromStep,
-                robotStackList
-                );
+            return this.tmDBAdapter != null &&
+                    this.tmDBAdapter.setAutoModeActions(
+                            this.teamMatchID, robotFinalLocation.x, robotFinalLocation.y,
+                            tote1FinalLocation.x, tote1FinalLocation.y,
+                            tote2FinalLocation.x, tote2FinalLocation.y,
+                            tote3FinalLocation.x, tote3FinalLocation.y,
+                            can1FinalLocation.x, can1FinalLocation.y,
+                            can2FinalLocation.x, can2FinalLocation.y,
+                            can3FinalLocation.x, can3FinalLocation.y,
+                            can4FinalLocation.x, can4FinalLocation.y,
+                            can5FinalLocation.x, can5FinalLocation.y,
+                            can6FinalLocation.x, can6FinalLocation.y,
+                            can7FinalLocation.x, can7FinalLocation.y,
+                            robotVisibility, tote1Visibility, tote2Visibility, tote3Visibility,
+                            can1Visibility, can2Visibility, can3Visibility, can4Visibility,
+                            can5Visibility, can6Visibility, can7Visibility,
+                            this.totesPickedUp, this.totesStacked, this.totesScored,
+                            this.cansPickedUp, cansScored, cansGrabbedFromStep,
+                            robotStackList
+                    );
+        }
+        return false;
     }
 
     private boolean saveTransactions() {
         for(Transaction t : transactionList) {
+            t.setReadyToExport(true);
             HashMap<String, Object> values = t.getValuesHashMap();
             long id = tmtdDBAdapter.createTeamMatchDataTransaction(values);
-            //if(id != -1) tmtDBAdapter.createTeamMatchTransaction(teamMatchID, id);
         }
         return false;
     }
@@ -868,6 +873,7 @@ public class MatchAutoModeActivity extends Activity {
                     //v.setBackgroundDrawable(normalShape);
                     break;
                 case DragEvent.ACTION_DROP:
+                    dataChanged = true;
                     lastGameElementTouched = gameElement;
                     dragging = false;
 

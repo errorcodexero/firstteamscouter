@@ -221,9 +221,11 @@ public class SelectMatchTeamActivity extends Activity {
                 for(FTSUtilities.ALLIANCE_POSITION ap : FTSUtilities.ALLIANCE_POSITION.validPositions()) {
                     Long teamID = Long.parseLong(teamIDs.getString(teamIDs.getColumnIndexOrThrow(arrayMatchDBFields[ap.allianceIndex()])));
                     Cursor team = tdDBAdapter.getEntry(teamID);
-                    int teamNum = team.getInt(team.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER));
-                    teamNumbersForMatch.put(ap.myAlliancePosition(), String.valueOf(teamNum));
-                    teamIDsForMatch.put(ap.myAlliancePosition(), teamID);
+                    if(team.getCount() > 0) {
+                        int teamNum = team.getInt(team.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER));
+                        teamNumbersForMatch.put(ap.myAlliancePosition(), String.valueOf(teamNum));
+                        teamIDsForMatch.put(ap.myAlliancePosition(), teamID);
+                    }
                 }
 
                 tdDBAdapter.close();
