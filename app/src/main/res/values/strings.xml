@@ -92,4 +92,5 @@
     <string name="label_tote_control">Tote Control</string>
     <string name="label_submit">Submit</string>
     <string name="label_bluetooth_export">Export Via Bluetooth</string>
+    <string name="label_select_competition">Select Competition</string>
 </resources>

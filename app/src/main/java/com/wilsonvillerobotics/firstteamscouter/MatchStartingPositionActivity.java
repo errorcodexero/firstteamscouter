@@ -26,6 +26,7 @@ public class MatchStartingPositionActivity extends Activity {
     protected Long teamMatchID;
 	protected long teamID;
 	protected long matchID;
+    protected long competitionID;
     protected int teamNumber;
 	protected Button btnSubmit;
     private ALLIANCE_POSITION tabletAlliancePosition;
@@ -83,6 +84,7 @@ public class MatchStartingPositionActivity extends Activity {
         this.matchNumber = intent.getIntExtra("match_number", 0);
         this.teamMatchID = intent.getLongExtra("tmID", -1);
         this.teamNumber  = intent.getIntExtra("team_number", -1);
+        this.competitionID = intent.getLongExtra("competition_id", -1);
     }
 
     private void setBackground(RelativeLayout startingPositionParentLayout) {
@@ -164,6 +166,7 @@ public class MatchStartingPositionActivity extends Activity {
         intent.putExtra("match_number", matchNumber);
         intent.putExtra("team_number", teamNumber);
         intent.putExtra("tmID", teamMatchID);
+        intent.putExtra("competition_id", competitionID);
         intent.putExtra("robot_x", robotX);
         intent.putExtra("robot_y", robotY);
     }

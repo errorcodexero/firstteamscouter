@@ -36,6 +36,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SelectCompetitionActivity"
+            android:label="@string/label_select_competition"
+            android:screenOrientation="landscape" >
+        </activity>
         <activity android:name=".SelectMatchTeamActivity"
             android:label="@string/title_activity_team_match_list"
             android:screenOrientation="landscape" >

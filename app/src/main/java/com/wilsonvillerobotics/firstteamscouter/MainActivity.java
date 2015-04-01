@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), SelectMatchTeamActivity.class);
+                Intent intent = new Intent(v.getContext(), SelectCompetitionActivity.class);
                 intent.putExtra("tablet_id", FTSUtilities.getTabletID(tabletAlliancePosition));
                 intent.putExtra("field_orientation", fieldOrientRedOnRight);
                 startActivity(intent);

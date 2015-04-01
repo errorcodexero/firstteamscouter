@@ -76,6 +76,7 @@ public class MatchTeleModeActivity extends Activity {
     protected long teamMatchID;
 	protected long teamID;
 	protected long matchID;
+    protected long competitionID;
     protected int teamNumber;
 	protected Button btnSubmit, btnRotateElements;
     private ALLIANCE_POSITION tabletAlliancePosition;
@@ -120,6 +121,7 @@ public class MatchTeleModeActivity extends Activity {
         this.matchNumber = intent.getIntExtra("match_number", 0);
         this.teamMatchID = intent.getLongExtra("tmID", -1);
         this.teamNumber  = intent.getIntExtra("team_number", -1);
+        this.competitionID = intent.getLongExtra("competition_id", -1);
     }
 
     private void buildIntent(Intent intent) {
@@ -128,6 +130,7 @@ public class MatchTeleModeActivity extends Activity {
         intent.putExtra("match_number", matchNumber);
         intent.putExtra("tmID", teamMatchID);
         intent.putExtra("team_number", teamNumber);
+        intent.putExtra("competition_id", competitionID);
     }
 
     private void initFieldObjects() {

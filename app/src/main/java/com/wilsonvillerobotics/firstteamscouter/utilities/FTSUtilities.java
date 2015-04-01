@@ -126,7 +126,7 @@ public class FTSUtilities {
 			return this.strAlliancePositionString;
 		}
 		
-		public static String getAlliancePositionForIndex(int index) {
+		public static String getAlliancePositionStringForIndex(int index) {
 			switch(index) {
 			case 0:
 				return RED1.strAlliancePositionString;
@@ -144,6 +144,25 @@ public class FTSUtilities {
 				return NOT_SET.strAlliancePositionString;
 			}
 		}
+
+        public static ALLIANCE_POSITION getAlliancePositionForIndex(int index) {
+            switch(index) {
+                case 0:
+                    return RED1;
+                case 1:
+                    return RED2;
+                case 2:
+                    return RED3;
+                case 3:
+                    return BLUE1;
+                case 4:
+                    return BLUE2;
+                case 5:
+                    return BLUE3;
+                default:
+                    return NOT_SET;
+            }
+        }
 
         public static ALLIANCE_POSITION getAlliancePositionForString(String s) {
             ALLIANCE_POSITION AP = NOT_SET;
@@ -169,6 +188,7 @@ public class FTSUtilities {
     }
 
     public static String getTabletID(ALLIANCE_POSITION ap) {
+        if(ap == null) return ALLIANCE_POSITION.NOT_SET.myAlliancePosition();
         return ap.myAlliancePosition();
     }
 

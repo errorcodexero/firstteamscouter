@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.channels.FileChannel;
 
+import com.wilsonvillerobotics.firstteamscouter.dbAdapters.CompetitionDataDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.DBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.ImportTransactionsDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.MatchDataDBAdapter;
@@ -42,6 +43,7 @@ public class DataImportActivity extends Activity implements View.OnClickListener
 	private MatchDataDBAdapter matchDataDBAdapter;
 	private TeamMatchDBAdapter teamMatchDBAdapter;
 	private TeamDataDBAdapter teamDataDBAdapter;
+    private CompetitionDataDBAdapter cdDBAdapter;
     private RobotDataDBAdapter robotDataDBAdapter;
 
     private TextView txtStatus;
@@ -114,12 +116,14 @@ public class DataImportActivity extends Activity implements View.OnClickListener
 			teamMatchDBAdapter = new TeamMatchDBAdapter(this);
 			teamDataDBAdapter = new TeamDataDBAdapter(this);
             robotDataDBAdapter = new RobotDataDBAdapter(this);
+            cdDBAdapter = new CompetitionDataDBAdapter(this);
 		} catch(SQLException e) {
 			e.printStackTrace();
 			matchDataDBAdapter = null;
 			teamMatchDBAdapter = null;
 			teamDataDBAdapter = null;
             robotDataDBAdapter = null;
+            cdDBAdapter = null;
 		}
 		
 		String statusMessage = "";
@@ -284,6 +288,8 @@ public class DataImportActivity extends Activity implements View.OnClickListener
         try {
             if (FTSUtilities.POPULATE_TEST_DATA) {
                 dbAdapter.deleteTableData();
+                cdDBAdapter.populateTestData();
+                competition_id = 1;
                 teamMatchDBAdapter.populateTestData(competition_id, matchDataDBAdapter.populateTestData(numTestMatches), teamDataDBAdapter.populateTestData());
                 importStatusMessage = "Test data import complete";
             } else {
@@ -344,8 +350,9 @@ public class DataImportActivity extends Activity implements View.OnClickListener
                                 }
 
                                 long matchID;
+                                long compID = -1;
                                 try {
-                                    long compID = Long.parseLong(lineArray[0]);
+                                    compID = Long.parseLong(lineArray[0]);
                                     matchID = matchDataDBAdapter.createMatchData(compID, lineArray[1], lineArray[2], lineArray[3], teamNumbers[0], teamNumbers[1], teamNumbers[2], teamNumbers[3], teamNumbers[4], teamNumbers[5]);
                                     if (matchID >= 0) {
                                         matchCount += 1;
@@ -361,7 +368,7 @@ public class DataImportActivity extends Activity implements View.OnClickListener
                                 long teamMatchID;
                                 try {
                                     for (int i = 0; i < FTSUtilities.ALLIANCE_POSITION.NOT_SET.allianceIndex(); i++) {
-                                        teamMatchID = teamMatchDBAdapter.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForIndex(i) /*.alliancePositions[i]*/, teamNumbers[i], matchID);
+                                        teamMatchID = teamMatchDBAdapter.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionStringForIndex(i), compID, teamNumbers[i], matchID);
                                         if (teamMatchID >= 0) {
                                             teamCount += 1;
                                         }

@@ -23,6 +23,7 @@ public class MatchNotesActivity extends Activity {
 	protected String[] teamNumberArray;
 	protected long teamID;
 	protected long matchID;
+    protected long competitionID;
     protected long teamMatchID;
 	protected Button btnSubmit;
 	protected Intent matchAutoIntent;
@@ -46,6 +47,7 @@ public class MatchNotesActivity extends Activity {
         this.matchNumber = intent.getIntExtra("match_number", 0);
         this.teamMatchID = intent.getLongExtra("tmID", -1);
         this.teamNumber = intent.getIntExtra("team_number", -1);
+        this.competitionID = intent.getLongExtra("competition_id", -1);
 
 		teamID = -1;
 		matchID = -1;
@@ -76,6 +78,7 @@ public class MatchNotesActivity extends Activity {
                 notesIntent.putExtra("tablet_id", tabletID);
                 notesIntent.putExtra("field_orientation", fieldOrientationRedOnRight);
                 notesIntent.putExtra("match_number", matchNumber + 1);
+                notesIntent.putExtra("competition_id", competitionID);
                 startActivity(notesIntent);
             }
         });

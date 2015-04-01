@@ -27,6 +27,7 @@ public class SelectMatchTeamActivity extends Activity {
 	protected TeamMatchDBAdapter tmDBAdapter;
 	protected long teamID;
 	protected long matchID;
+    protected long competitionID;
 	protected Button btnSubmit;
 	protected Intent teamMatchIntent;
     FTSUtilities.ALLIANCE_POSITION tabletAlliancePosition;
@@ -72,7 +73,7 @@ public class SelectMatchTeamActivity extends Activity {
 
 		teamID = -1;
 		matchID = -1;
-		
+
 		try {
 			FTSUtilities.printToConsole("SelectTeamMatchActivity::onCreate : OPENING DB\n");
 			tmDBAdapter = new TeamMatchDBAdapter(this.getBaseContext()).openForWrite();
@@ -108,6 +109,7 @@ public class SelectMatchTeamActivity extends Activity {
         this.tabletAlliancePosition = FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForString(intent.getStringExtra("tablet_id"));
         this.fieldOrientationRedOnRight = intent.getBooleanExtra("field_orientation", false);
         this.matchNumber = intent.getIntExtra("match_number", 0);
+        this.competitionID = intent.getLongExtra("competition_id", -1);
     }
 
     @Override
@@ -172,7 +174,8 @@ public class SelectMatchTeamActivity extends Activity {
 	private void populateMatchNumberSpinner() {
 		if(tmDBAdapter == null || !tabletAlliancePosition.positionIsSet()) return;
 		
-		final Cursor matchNumbers = tmDBAdapter.getAllMatchNumbers();
+		//final Cursor matchNumbers = tmDBAdapter.getAllMatchNumbers();
+        final Cursor matchNumbers = tmDBAdapter.getMatchesForCompetition(competitionID);
 		FTSUtilities.printToConsole("SelectMatchTeamActivity::populateMatchNumberSpinner : Number of Matches Returned: " + String.valueOf(matchNumbers.getCount()));
 		
 		final Spinner spinMatchNum = (Spinner)findViewById(R.id.spinMatchNumber);
@@ -218,13 +221,20 @@ public class SelectMatchTeamActivity extends Activity {
 
                 TeamDataDBAdapter tdDBAdapter = new TeamDataDBAdapter(getBaseContext()).openForRead();
 
-                for(FTSUtilities.ALLIANCE_POSITION ap : FTSUtilities.ALLIANCE_POSITION.validPositions()) {
-                    Long teamID = Long.parseLong(teamIDs.getString(teamIDs.getColumnIndexOrThrow(arrayMatchDBFields[ap.allianceIndex()])));
-                    Cursor team = tdDBAdapter.getEntry(teamID);
-                    if(team.getCount() > 0) {
-                        int teamNum = team.getInt(team.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER));
-                        teamNumbersForMatch.put(ap.myAlliancePosition(), String.valueOf(teamNum));
-                        teamIDsForMatch.put(ap.myAlliancePosition(), teamID);
+                //for(FTSUtilities.ALLIANCE_POSITION ap : FTSUtilities.ALLIANCE_POSITION.validPositions()) {
+                for(int k = 0; k < 6; k++) {
+                    FTSUtilities.ALLIANCE_POSITION ap = FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForIndex(k);
+                    String indexName = arrayMatchDBFields[ap.allianceIndex()];
+                    int colIndex = teamIDs.getColumnIndexOrThrow(indexName);
+                    String tid = teamIDs.getString(colIndex);
+                    if(tid != null) {
+                        Long teamID = Long.parseLong(tid);
+                        Cursor team = tdDBAdapter.getEntry(teamID);
+                        if (team.getCount() > 0) {
+                            int teamNum = team.getInt(team.getColumnIndex(TeamDataDBAdapter.COLUMN_NAME_TEAM_NUMBER));
+                            teamNumbersForMatch.put(ap.myAlliancePosition(), String.valueOf(teamNum));
+                            teamIDsForMatch.put(ap.myAlliancePosition(), teamID);
+                        }
                     }
                 }
 
@@ -256,20 +266,23 @@ public class SelectMatchTeamActivity extends Activity {
                 Long teamIDToScout = teamIDsForMatch.get(FTSUtilities.getTabletID(tabletAlliancePosition));
                 //teamID = (teamIDToScout == null) ? -1 : Long.parseLong(teamIDToScout);
 
-            	long tmID = tmDBAdapter.getTeamMatchID(matchID, teamIDToScout);
-            	
-            	FTSUtilities.printToConsole("SelectTeamMatchActivity::spinTeamNum.onItemSelected : teamID: " + String.valueOf(teamID) + "  tmID: " + String.valueOf(tmID));
+                if(teamIDToScout != null) {
+                    long tmID = tmDBAdapter.getTeamMatchID(matchID, teamIDToScout);
 
-                if(arg1 != null) {
-                    teamMatchIntent = new Intent(arg1.getContext(), MatchTeamNumberDisplayActivity.class);
-                } else {
-                    teamMatchIntent = new Intent(arg0.getContext(), MatchTeamNumberDisplayActivity.class);
+                    FTSUtilities.printToConsole("SelectTeamMatchActivity::spinTeamNum.onItemSelected : teamID: " + String.valueOf(teamID) + "  tmID: " + String.valueOf(tmID));
+
+                    if (arg1 != null) {
+                        teamMatchIntent = new Intent(arg1.getContext(), MatchTeamNumberDisplayActivity.class);
+                    } else {
+                        teamMatchIntent = new Intent(arg0.getContext(), MatchTeamNumberDisplayActivity.class);
+                    }
+                    teamMatchIntent.putExtra("tablet_id", FTSUtilities.getTabletID(tabletAlliancePosition));
+                    teamMatchIntent.putExtra("field_orientation", fieldOrientationRedOnRight);
+                    teamMatchIntent.putExtra("match_number", matchNumber);
+                    teamMatchIntent.putExtra("tmID", tmID);
+                    teamMatchIntent.putExtra("team_number", Integer.valueOf(strCurrTeamNum));
+                    teamMatchIntent.putExtra("competition_id", competitionID);
                 }
-                teamMatchIntent.putExtra("tablet_id", FTSUtilities.getTabletID(tabletAlliancePosition));
-                teamMatchIntent.putExtra("field_orientation", fieldOrientationRedOnRight);
-                teamMatchIntent.putExtra("match_number", matchNumber);
-                teamMatchIntent.putExtra("tmID", tmID);
-                teamMatchIntent.putExtra("team_number", Integer.valueOf(strCurrTeamNum));
             }
 
             public void onNothingSelected(AdapterView<?> arg0) {

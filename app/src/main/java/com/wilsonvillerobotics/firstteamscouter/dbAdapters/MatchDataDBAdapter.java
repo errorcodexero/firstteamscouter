@@ -174,6 +174,13 @@ public class MatchDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
         */
     }
 
+    public Cursor getMatchesForCompetition(long compID) throws SQLException {
+        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, allColumns,
+                COLUMN_NAME_COMPETITION_ID + "=" + compID, null, null, null, null, null);
+        if(mCursor != null) mCursor.moveToFirst();
+        return mCursor;
+    }
+
     /**
      * Return a Cursor containing all entries with updated data
      * @return Cursor of all updated entries

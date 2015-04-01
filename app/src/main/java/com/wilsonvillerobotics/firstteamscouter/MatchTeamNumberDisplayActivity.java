@@ -14,6 +14,7 @@ import android.widget.TextView;
 public class MatchTeamNumberDisplayActivity extends Activity {
 
 	protected Long teamMatchID;
+    protected long competitionID;
 	public static String myTitle = "Team Number Display";
     private String tabletID;
     private boolean fieldOrientationRedOnRight;
@@ -64,6 +65,7 @@ public class MatchTeamNumberDisplayActivity extends Activity {
         this.matchNumber = intent.getIntExtra("match_number", 0);
         this.teamMatchID = intent.getLongExtra("tmID", -1);
         this.teamNumber = intent.getIntExtra("team_number", -1);
+        this.competitionID = intent.getLongExtra("competition_id", -1);
     }
 
     private void buildIntent(Intent intent) {
@@ -72,6 +74,7 @@ public class MatchTeamNumberDisplayActivity extends Activity {
         intent.putExtra("match_number", matchNumber);
         intent.putExtra("team_number", teamNumber);
         intent.putExtra("tmID", teamMatchID);
+        intent.putExtra("competition_id", competitionID);
     }
 
     @Override

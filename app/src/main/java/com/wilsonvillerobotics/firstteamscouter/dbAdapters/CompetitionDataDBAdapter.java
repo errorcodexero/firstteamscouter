@@ -40,46 +40,8 @@ public class CompetitionDataDBAdapter extends FTSDBAdapter implements BaseColumn
         return allColumns;
     }
 
-    private DatabaseHelper mDbHelper;
-    private SQLiteDatabase mDb;
-
-    private Context mCtx;
-
     public static boolean restoreTableData(ArrayList<Object> data) {
         return false;
-    }
-
-    private static class DatabaseHelper extends SQLiteOpenHelper {
-
-        private static DatabaseHelper mInstance = null;
-
-        DatabaseHelper(Context context) {
-            super(context, DBAdapter.DATABASE_NAME, null, DBAdapter.DATABASE_VERSION);
-        }
-
-        public static DatabaseHelper getInstance(Context ctx) {
-
-            // Use the application context, which will ensure that you
-            // don't accidentally leak an Activity's context.
-            // See this article for more information: http://bit.ly/6LRzfx
-            if (mInstance == null) {
-                mInstance = new DatabaseHelper(ctx.getApplicationContext());
-            }
-            return mInstance;
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        }
-        
-        @Override
-    	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            onUpgrade(db, oldVersion, newVersion);
-        }
     }
 
     /**
@@ -91,7 +53,6 @@ public class CompetitionDataDBAdapter extends FTSDBAdapter implements BaseColumn
      */
     public CompetitionDataDBAdapter(Context ctx) {
         super(ctx);
-        //this.mCtx = ctx;
     }
 
     /**
@@ -131,7 +92,7 @@ public class CompetitionDataDBAdapter extends FTSDBAdapter implements BaseColumn
      * @param location
      * @return rowId or -1 if failed
      */
-    public long createCompetitionDataEntry(int id, String name, String location){
+    public long createCompetitionDataEntry(String name, String location){
         ContentValues initialValues = new ContentValues();
         initialValues.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
         initialValues.put(COLUMN_NAME_COMPETITION_NAME, name);
@@ -230,5 +191,11 @@ public class CompetitionDataDBAdapter extends FTSDBAdapter implements BaseColumn
     public boolean deleteAllEntries() {
         return super.deleteAllEntries(TABLE_NAME);
         //return this.openForWrite().mDb.delete(TABLE_NAME, null, null) > 0;
+    }
+
+    public void populateTestData() {
+        createCompetitionDataEntry("Auburn District", "Auburn");
+        createCompetitionDataEntry("Wilsonville District", "Wilsonville");
+        createCompetitionDataEntry("PNW Regional Championships", "Cheney");
     }
 }

@@ -11,8 +11,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTSTable {
@@ -265,13 +263,13 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
      * @param match_id
      * @return rowId or -1 if failed
      */
-    public long createTeamMatch(String alliancePosition, long team_id, long match_id) {
+    public long createTeamMatch(String alliancePosition, long comp_id, long team_id, long match_id) {
         ContentValues args = new ContentValues();
         args.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
         args.put(COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION, alliancePosition);
         args.put(COLUMN_NAME_TEAM_ID, team_id);
         args.put(COLUMN_NAME_MATCH_ID, String.valueOf(match_id));
-        //args.put(COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_COMPETITION_ID, comp_id);
         args.put(COLUMN_NAME_AUTO_MODE_SAVED, Boolean.FALSE.toString());
         args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
         long id = this.openForWrite().mDb.insert(TABLE_NAME, null, args);
@@ -430,6 +428,16 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
     	return mCursor;
     }
 
+    public Cursor getMatchesForCompetition(long compID) throws SQLException {
+        String SELECT_QUERY = "SELECT DISTINCT t2." + MatchDataDBAdapter.COLUMN_NAME_MATCH_NUMBER + ", t2." + MatchDataDBAdapter._ID;
+        SELECT_QUERY += " FROM " + TeamMatchDBAdapter.TABLE_NAME + " AS t1";
+        SELECT_QUERY += " INNER JOIN " + MatchDataDBAdapter.TABLE_NAME + " AS t2";
+        SELECT_QUERY += " ON t1." + TeamMatchDBAdapter.COLUMN_NAME_MATCH_ID + " = t2." + MatchDataDBAdapter._ID;
+        SELECT_QUERY += " AND t1." + TeamMatchDBAdapter.COLUMN_NAME_COMPETITION_ID + "=" + compID;
+        SELECT_QUERY += " ORDER BY " + MatchDataDBAdapter.COLUMN_NAME_MATCH_NUMBER + " ASC";
+        return this.openForRead().mDb.rawQuery(SELECT_QUERY, null);
+    }
+
     /**
      * Return a Cursor positioned at the entry that matches the given rowId
      * @param rowId
@@ -498,10 +506,10 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
             lineCount++;
             FTSUtilities.printToConsole("TeamMatchDBAdapter::populateTestData : Creating matchID: " + matchID + "\n");
     		long tempTeamIDs[] = new long[6];
-	    	for(int i = 0; i < FTSUtilities.ALLIANCE_POSITION.NOT_SET.allianceIndex(); i++) {
+	    	for(int i = 0; i < 6; i++) {
 	    		int teamIndex = (i + teamOffset) % teamIDs.length;
 	    		tempTeamIDs[i] = teamIDs[teamIndex];
-	    		result &= (this.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionForIndex(i), teamIDs[teamIndex], matchID) >= 0);
+	    		result &= (this.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionStringForIndex(i), competition_id, teamIDs[teamIndex], matchID) >= 0);
 	    	}
 	    	if(++teamOffset >= teamIDs.length) {
 	    		teamOffset = 0;
