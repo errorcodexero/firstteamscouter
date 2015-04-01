@@ -85,7 +85,10 @@ public class FTSUtilities {
 		BLUE1 (3, "Blue1"),
 		BLUE2 (4, "Blue2"),
 		BLUE3 (5, "Blue3"),
-		NOT_SET (6, "Not Set");
+        PIT1 (6, "Pit1"),
+        PIT2 (7, "Pit2"),
+        PIT3 (8, "Pit3"),
+		NOT_SET (9, "Not Set");
 		
 		private final int index;
 		private String strAlliancePositionString;
