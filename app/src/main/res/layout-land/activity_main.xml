@@ -12,7 +12,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity"
-    android:background="@android:color/black">
+    android:background="@android:color/black"
+    android:id="@+id/mainLinearLayout">
 
     <TextView
         android:id="@+id/txtTabletID"

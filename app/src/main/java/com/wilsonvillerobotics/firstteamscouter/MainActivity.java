@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -35,6 +36,14 @@ public class MainActivity extends Activity {
         this.txtTabletID.setTextColor(Color.WHITE);
         this.loadPref();
         FTSUtilities.generateDeviceID(getApplicationContext());
+
+        if(FTSUtilities.POPULATE_TEST_DATA) {
+            LinearLayout linearLayout = (LinearLayout)findViewById(R.id.mainLinearLayout);
+            if(linearLayout != null) {
+                linearLayout.setBackgroundColor(Color.RED);
+                this.txtTabletID.setText(this.txtTabletID.getText() + " **** TEST MODE ****");
+            }
+        }
 
         this.mDBAdapter = new DBAdapter(this).openForWrite();
         //this.mDBAdapter = new DBAdapter(getApplicationContext());

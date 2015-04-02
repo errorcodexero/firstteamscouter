@@ -87,13 +87,33 @@ public class CompetitionDataDBAdapter extends FTSDBAdapter implements BaseColumn
      * Create a new Competition entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
      * 
-     * @param id
      * @param name
      * @param location
      * @return rowId or -1 if failed
      */
     public long createCompetitionDataEntry(String name, String location){
         ContentValues initialValues = new ContentValues();
+        initialValues.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
+        initialValues.put(COLUMN_NAME_COMPETITION_NAME, name);
+        initialValues.put(COLUMN_NAME_COMPETITION_LOCATION, location);
+        initialValues.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
+        long retVal = this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
+        if(!this.dbIsClosed()) this.close();
+        return retVal;
+    }
+
+    /**
+     * Create a new Competition entry. If the entry is successfully created return the new
+     * rowId for that entry, otherwise return a -1 to indicate failure.
+     *
+     * @param id
+     * @param name
+     * @param location
+     * @return rowId or -1 if failed
+     */
+    public long createCompetitionDataEntry(long id, String name, String location){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(_ID, id);
         initialValues.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
         initialValues.put(COLUMN_NAME_COMPETITION_NAME, name);
         initialValues.put(COLUMN_NAME_COMPETITION_LOCATION, location);
@@ -194,8 +214,8 @@ public class CompetitionDataDBAdapter extends FTSDBAdapter implements BaseColumn
     }
 
     public void populateTestData() {
-        createCompetitionDataEntry("Auburn District", "Auburn");
-        createCompetitionDataEntry("Wilsonville District", "Wilsonville");
-        createCompetitionDataEntry("PNW Regional Championships", "Cheney");
+        createCompetitionDataEntry(1, "Lunar District", "Moon");
+        createCompetitionDataEntry(2, "Great Spot District", "Jupiter");
+        createCompetitionDataEntry(3, "Martian Regional Championships", "Mars");
     }
 }

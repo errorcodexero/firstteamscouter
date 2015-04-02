@@ -24,7 +24,7 @@ public class FTSDBAdapter {
         protected static DatabaseHelper mInstance = null;
 
         protected DatabaseHelper(Context context) {
-            super(context, DBAdapter.DATABASE_NAME, null, DBAdapter.DATABASE_VERSION);
+            super(context, DBAdapter.dbName, null, DBAdapter.dbVersion);
         }
 
         public static DatabaseHelper getInstance(Context ctx) {

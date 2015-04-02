@@ -128,7 +128,7 @@ public class DataImportActivity extends Activity implements View.OnClickListener
 		
 		String statusMessage = "";
 		String testDataAlertMessage = "";
-        Button btnImportTestData = (Button)findViewById(R.id.btnImportTestMatchData);
+        Button btnImportTestData = (Button)findViewById(R.id.btnImportTestData);
 		if(FTSUtilities.POPULATE_TEST_DATA) {
 			statusMessage += "Press the Import Test Data button to import test data for " + numTestMatches + " teams\n";
 			testDataAlertMessage = "TEST DATA MODE";
@@ -152,7 +152,7 @@ public class DataImportActivity extends Activity implements View.OnClickListener
 	}
 
     private void configureButtons() {
-        Button btnImportTestMatchData = (Button)findViewById(R.id.btnImportTestMatchData);
+        Button btnImportTestMatchData = (Button)findViewById(R.id.btnImportTestData);
         if(btnImportTestMatchData != null) btnImportTestMatchData.setOnClickListener(this);
 
         Button btnImportFromXml = (Button)findViewById(R.id.btnImportFromXml);
@@ -268,8 +268,8 @@ public class DataImportActivity extends Activity implements View.OnClickListener
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnImportTestMatchData:
-                btnImportDataOnClick();
+            case R.id.btnImportTestData:
+                btnImportTestDataOnClick();
                 break;
             case R.id.btnImportFromXml:
                 btnImportFromXmlOnClick();
@@ -283,122 +283,22 @@ public class DataImportActivity extends Activity implements View.OnClickListener
         }
     }
 
-    private void btnImportDataOnClick() {
-        String importStatusMessage = "";
-        try {
-            if (FTSUtilities.POPULATE_TEST_DATA) {
+    private void btnImportTestDataOnClick() {
+        String importStatusMessage = "Import Test Data Clicked";
+        if (FTSUtilities.POPULATE_TEST_DATA) {
+            try {
                 dbAdapter.deleteTableData();
                 cdDBAdapter.populateTestData();
-                competition_id = 1;
-                teamMatchDBAdapter.populateTestData(competition_id, matchDataDBAdapter.populateTestData(numTestMatches), teamDataDBAdapter.populateTestData());
+                matchDataDBAdapter.populateTestData();
+                teamDataDBAdapter.populateTestData();
+                teamMatchDBAdapter.populateTestData();
+                //teamMatchDBAdapter.populateTestData(competition_id, matchDataDBAdapter.populateTestData(numTestMatches), teamDataDBAdapter.populateTestData());
                 importStatusMessage = "Test data import complete";
-            } else {
-                String storageState = Environment.getExternalStorageState();
-                if (storageState.equals(Environment.MEDIA_MOUNTED)) {
-                    FTPFileDownloader ftpDL = new FTPFileDownloader();
-                    FTPFile[] files = ftpDL.execute().get();
-
-                    FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : getting file\n");
-                    File file = new File(FTSUtilities.getFileDirectory("download"), "match_list_data.csv");
-                    FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : file " + ((file.exists()) ? "EXISTS" : "IS MISSING") + "\n");
-
-                    if (file.exists() && file.isFile()) {
-                        txtStatus.setText("File Found, Import Commencing\n");
-                        //teamDataDBAdapter.deleteAllEntries();
-                        //matchDataDBAdapter.deleteAllEntries();
-                        //teamMatchDBAdapter.deleteAllEntries();
-                        //robotDataDBAdapter.getAllRobotDataEntries();
-
-                        BufferedReader inputReader = new BufferedReader(
-                                new InputStreamReader(new FileInputStream(file)));
-                        String line;
-                        int lineCount = 0;
-                        int matchCount = 0;
-                        int teamCount = 0;
-                        String lineArray[];
-                        inputReader.mark((int) file.length());
-                        line = inputReader.readLine();
-                        lineArray = line.split(",");
-                        //String headerArray[] = {"CompetitionID", "Time", "Type", "#", FTSUtilities.alliancePositions[0], FTSUtilities.alliancePositions[1], FTSUtilities.alliancePositions[2],
-                        //		FTSUtilities.alliancePositions[3], FTSUtilities.alliancePositions[4], FTSUtilities.alliancePositions[5]};
-
-                        if (lineArray[2].startsWith("Type")) {
-                            FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : Header Row Detected");
-                        } else {
-                            FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : NO Header Row Detected");
-                            inputReader.reset();
-                        }
-
-                        while ((line = inputReader.readLine()) != null) {
-                            lineCount += 1;
-                            lineArray = line.split(",");
-
-                            if (lineArray.length > 9) {
-                                //FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : " + lineArray[0] + ":" + lineArray[1] + ":" + lineArray[2] + ":" + lineArray[3] + ":" + lineArray[4] + ":" + lineArray[5] + ":" + lineArray[6] + ":" + lineArray[7]);
-                                //CompetitionID : Time : Type : MatchNum : Red1 : Red2 : Red3 : Blue1 : Blue2 : Blue3
-                                int teamNumbers[] = {-1, -1, -1, -1, -1, -1};
-                                try {
-                                    teamDataDBAdapter.openForWrite();
-                                    for (int i = 0; i < 6; i++) {
-                                        teamNumbers[i] = teamDataDBAdapter.createTeamDataEntryIfNotExist(Integer.parseInt(lineArray[i + 4]), 0)[0];
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                } finally {
-                                    if (teamDataDBAdapter != null && !teamDataDBAdapter.dbIsClosed())
-                                        teamDataDBAdapter.close();
-                                }
-
-                                long matchID;
-                                long compID = -1;
-                                try {
-                                    compID = Long.parseLong(lineArray[0]);
-                                    matchID = matchDataDBAdapter.createMatchData(compID, lineArray[1], lineArray[2], lineArray[3], teamNumbers[0], teamNumbers[1], teamNumbers[2], teamNumbers[3], teamNumbers[4], teamNumbers[5]);
-                                    if (matchID >= 0) {
-                                        matchCount += 1;
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    matchID = -1;
-                                } finally {
-                                    if (matchDataDBAdapter != null && !matchDataDBAdapter.dbIsClosed())
-                                        matchDataDBAdapter.close();
-                                }
-
-                                long teamMatchID;
-                                try {
-                                    for (int i = 0; i < FTSUtilities.ALLIANCE_POSITION.NOT_SET.allianceIndex(); i++) {
-                                        teamMatchID = teamMatchDBAdapter.createTeamMatch(FTSUtilities.ALLIANCE_POSITION.getAlliancePositionStringForIndex(i), compID, teamNumbers[i], matchID);
-                                        if (teamMatchID >= 0) {
-                                            teamCount += 1;
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    matchID = -1;
-                                } finally {
-                                    if (teamMatchDBAdapter != null && !teamMatchDBAdapter.dbIsClosed())
-                                        teamMatchDBAdapter.close();
-                                }
-                            } else {
-                                FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : line not in proper format: " + line);
-                            }
-                        }
-                        inputReader.close();
-
-                        importStatusMessage = txtStatus.getText() + "\nLines Parsed: " + lineCount + "\nMatches Created: " + matchCount + "\nTeamMatch Records Created: " + teamCount;
-                    } else {
-                        importStatusMessage = "ERROR: could not find file:\n" + file.toString();
-                    }
-
-
-                    file.renameTo(new File(file.getAbsolutePath() + ".bak"));
-                }
+            } catch (Exception e) {
+                FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : ERROR");
+                importStatusMessage = "ERROR importing data: " + e.getMessage();
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            FTSUtilities.printToConsole("ImportMatchDataActivity::btnOK.onClick : ERROR");
-            importStatusMessage = "ERROR importing data";
-            e.printStackTrace();
         }
         txtStatus.setText(importStatusMessage);
     }

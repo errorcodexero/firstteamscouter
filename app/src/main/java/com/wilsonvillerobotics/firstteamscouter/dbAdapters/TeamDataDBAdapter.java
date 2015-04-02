@@ -105,6 +105,33 @@ public class TeamDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTST
     /**
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
+     *
+     * @param team_number
+     * @param team_name
+     * @param team_city
+     * @param num_team_members
+     * @return rowId or -1 if failed
+     */
+    public boolean createTeamDataEntry(long id, int team_number, int team_sub_number, String team_name, String team_city, String team_state, int num_team_members){
+        long new_id = -1;
+        ContentValues args = new ContentValues();
+        args.put(_ID, id);
+        args.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
+        args.put(COLUMN_NAME_TEAM_NUMBER, team_number);
+        args.put(COLUMN_NAME_TEAM_SUB_NUMBER, team_sub_number);
+        args.put(COLUMN_NAME_TEAM_NAME, team_name);
+        args.put(COLUMN_NAME_TEAM_CITY, team_city);
+        args.put(COLUMN_NAME_TEAM_STATE, team_state);
+        args.put(COLUMN_NAME_TEAM_NUM_MEMBERS, num_team_members);
+        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
+        new_id = this.openForWrite().mDb.insert(TABLE_NAME, null, args);
+        if(!this.dbIsClosed()) this.close();
+        return new_id == id;
+    }
+
+    /**
+     * Create a new entry. If the entry is successfully created return the new
+     * rowId for that entry, otherwise return a -1 to indicate failure.
      * 
      * @param team_number
      * @param team_name
@@ -270,8 +297,23 @@ public class TeamDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTST
         return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
         */
     }
-    
-    public long[] populateTestData() {
+
+    public void populateTestData() {
+        createTeamDataEntry(1,  1999, 0, "Prince's Revolution", "Purpleville", "MA", 6);
+        createTeamDataEntry(2,  2178, 0, "Bambi", "Forest", "MD", 4);
+        createTeamDataEntry(3,  1638, 0, "Rockets", "Cape Canaveral", "FL", 16);
+        createTeamDataEntry(4,  6776, 0, "Mirrors", "New York", "NY", 24);
+        createTeamDataEntry(5,  9137, 0, "Newbies Too", "Bothell", "WA", 9);
+        createTeamDataEntry(6,  5998, 0, "Newbies", "Lynnwood", "WA", 15);
+        createTeamDataEntry(7,   425, 0, "Phoners", "Seattle", "WA", 24);
+        createTeamDataEntry(8,   283, 0, "Mobile Shots", "Portland", "OR", 12);
+        createTeamDataEntry(9,  6170, 0, "Ringers", "Providence", "RI", 6);
+        createTeamDataEntry(10,  574, 0, "Locals", "Essex", "MD", 2);
+        createTeamDataEntry(11, 7876, 0, "Grands", "Chicago", "IL", 22);
+        createTeamDataEntry(12, 1965, 0, "Old Timers", "Cleveland", "OH", 50);
+    }
+
+    public long[] populateTestData(String name) {
     	FTSUtilities.printToConsole("TeamDataDBAdapter::populateTestData\n");
     	//deleteAllEntries();
     	

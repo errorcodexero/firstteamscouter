@@ -87,6 +87,44 @@ public class MatchDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
      * @param blue_three_id
      * @return rowId or -1 if failed
      */
+    public boolean createMatchData(long id, long competition_id, String match_time, String match_type, int match_num, long red_one_id, long red_two_id, long red_three_id,
+                                long blue_one_id, long blue_two_id, long blue_three_id){
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(_ID, id);
+        initialValues.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
+        initialValues.put(COLUMN_NAME_COMPETITION_ID, competition_id);
+        initialValues.put(COLUMN_NAME_MATCH_TIME, match_time);
+        initialValues.put(COLUMN_NAME_MATCH_TYPE, match_type);
+        initialValues.put(COLUMN_NAME_MATCH_NUMBER, match_num);
+        initialValues.put(COLUMN_NAME_RED_TEAM_ONE_ID, red_one_id);
+        initialValues.put(COLUMN_NAME_RED_TEAM_TWO_ID, red_two_id);
+        initialValues.put(COLUMN_NAME_RED_TEAM_THREE_ID, red_three_id);
+        initialValues.put(COLUMN_NAME_BLUE_TEAM_ONE_ID, blue_one_id);
+        initialValues.put(COLUMN_NAME_BLUE_TEAM_TWO_ID, blue_two_id);
+        initialValues.put(COLUMN_NAME_BLUE_TEAM_THREE_ID, blue_three_id);
+        initialValues.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
+
+        long new_id = this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
+        if(!this.dbIsClosed()) this.close();
+        return id == new_id;
+    }
+
+    /**
+     * Create a new entry. If the entry is successfully created return the new
+     * rowId for that entry, otherwise return a -1 to indicate failure.
+     *
+     * @param competition_id
+     * @param match_time
+     * @param match_type
+     * @param match_num
+     * @param red_one_id
+     * @param red_two_id
+     * @param red_three_id
+     * @param blue_one_id
+     * @param blue_two_id
+     * @param blue_three_id
+     * @return rowId or -1 if failed
+     */
     public long createMatchData(long competition_id, String match_time, String match_type, String match_num, long red_one_id, long red_two_id, long red_three_id,
     		long blue_one_id, long blue_two_id, long blue_three_id){
         ContentValues initialValues = new ContentValues();
@@ -101,7 +139,6 @@ public class MatchDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
         initialValues.put(COLUMN_NAME_BLUE_TEAM_ONE_ID, blue_one_id);
         initialValues.put(COLUMN_NAME_BLUE_TEAM_TWO_ID, blue_two_id);
         initialValues.put(COLUMN_NAME_BLUE_TEAM_THREE_ID, blue_three_id);
-        //initialValues.put(COLUMN_NAME_MATCH_DATA_UPDATED, Boolean.TRUE.toString());
         initialValues.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
 
         long id = this.openForWrite().mDb.insert(TABLE_NAME, null, initialValues);
@@ -123,7 +160,7 @@ public class MatchDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
     /**
      * Delete the entry with the given rowId
      * 
-     * @param matchId
+     * @param rowId
      * @return true if deleted, false otherwise
      */
     @Override
@@ -153,7 +190,7 @@ public class MatchDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
 
     /**
      * Return a Cursor positioned at the entry that matches the given rowId
-     * @param matchID
+     * @param iD
      * @return Cursor positioned to matching entry, if found
      * @throws SQLException if entry could not be found/retrieved
      */
@@ -303,6 +340,16 @@ public class MatchDataDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
     	}
     	
 	}
+
+    public void populateTestData() {
+        createMatchData(1, 1, "9:00am", "Qualification", 1, 1, 3, 5, 2, 4, 6);
+        createMatchData(2, 1, "9:07am", "Qualification", 2, 10, 8, 6, 9, 7, 5);
+        createMatchData(3, 1, "9:14am", "Qualification", 3, 1, 12, 6, 2, 11, 5);
+        createMatchData(4, 1, "9:21am", "Qualification", 4, 1, 4, 7, 6, 9, 12);
+        createMatchData(5, 1, "9:28am", "Qualification", 5, 10, 12, 2, 4, 11, 7);
+        createMatchData(6, 2, "9:00am", "Qualification", 1, 4, 8, 12, 3, 6, 9);
+        createMatchData(7, 2, "9:07am", "Qualification", 2, 2, 7, 12, 3, 5, 11);
+    }
 
 	public long[] populateTestData(int numMatches) {
     	FTSUtilities.printToConsole("MatchDataDBAdapter::populateTestData\n");

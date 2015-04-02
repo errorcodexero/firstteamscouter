@@ -186,7 +186,6 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
      */
     public TeamMatchDBAdapter(Context ctx) {
         super(ctx);
-        //this.mCtx = ctx;
     }
 
     /**
@@ -201,25 +200,6 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
      */
     public TeamMatchDBAdapter openForWrite() throws SQLException {
         return (TeamMatchDBAdapter)openDBForWrite();
-        /*
-    	if(this.dbIsClosed()) {
-    		if(this.mDbHelper == null) {
-    			this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
-    		}
-
-    		try {
-    			FTSUtilities.printToConsole("TeamMatchDBAdapter::openForWrite : GETTING WRITABLE DB\n");
-    			this.mDb = this.mDbHelper.getWritableDatabase();
-    		}
-    		catch (SQLException e) {
-    			FTSUtilities.printToConsole("TeamMatchDBAdapter::openForWrite : SQLException\n");
-    			this.mDb = null;
-    		}
-    	} else {
-    		FTSUtilities.printToConsole("TeamMatchDBAdapter::openForWrite : DB ALREADY OPEN\n");
-    	}
-    	return this;
-    	*/
     }
 
     /**
@@ -234,27 +214,26 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
      */
     public TeamMatchDBAdapter openForRead() throws SQLException {
         return (TeamMatchDBAdapter)openDBForRead();
-        /*
-        if(this.dbIsClosed()) {
-            if(this.mDbHelper == null) {
-                this.mDbHelper = DatabaseHelper.getInstance(this.mCtx);
-            }
-
-            try {
-                FTSUtilities.printToConsole("TeamMatchDBAdapter::openForRead : GETTING READABLE DB\n");
-                this.mDb = this.mDbHelper.getReadableDatabase();
-            }
-            catch (SQLException e) {
-                FTSUtilities.printToConsole("TeamMatchDBAdapter::openForRead : SQLException\n");
-                this.mDb = null;
-            }
-        } else {
-            FTSUtilities.printToConsole("TeamMatchDBAdapter::openForRead : DB ALREADY OPEN\n");
-        }
-        return this;
-        */
     }
-    
+
+    /**
+     * Create a new entry. If the entry is successfully created return the new
+     * rowId for that entry, otherwise return a -1 to indicate failure.
+     * @param alliancePosition
+     * @param team_id
+     * @param match_id
+     * @return rowId or -1 if failed
+     */
+    public boolean createTeamMatch(long id, long match_id, long comp_id, long team_id, String alliancePosition) {
+        ContentValues args = new ContentValues();
+        args.put(_ID, id);
+        addArgs(args, match_id, comp_id, team_id, alliancePosition);
+
+        long new_id = this.openForWrite().mDb.insert(TABLE_NAME, null, args);
+        if(!this.dbIsClosed()) this.close();
+        return id == new_id;
+    }
+
     /**
      * Create a new entry. If the entry is successfully created return the new
      * rowId for that entry, otherwise return a -1 to indicate failure.
@@ -265,16 +244,78 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
      */
     public long createTeamMatch(String alliancePosition, long comp_id, long team_id, long match_id) {
         ContentValues args = new ContentValues();
+        addArgs(args, match_id, comp_id, team_id, alliancePosition);
+        long id = this.openForWrite().mDb.insert(TABLE_NAME, null, args);
+        if(!this.dbIsClosed()) this.close();
+        return id;
+    }
+
+    private void addArgs(ContentValues args, long match_id, long comp_id, long team_id, String alliancePosition) {
         args.put(COLUMN_NAME_TABLET_ID, FTSUtilities.wifiID);
         args.put(COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION, alliancePosition);
         args.put(COLUMN_NAME_TEAM_ID, team_id);
         args.put(COLUMN_NAME_MATCH_ID, String.valueOf(match_id));
         args.put(COLUMN_NAME_COMPETITION_ID, comp_id);
         args.put(COLUMN_NAME_AUTO_MODE_SAVED, Boolean.FALSE.toString());
+        args.put(COLUMN_NAME_BROKE_DOWN, Boolean.FALSE.toString());
+        args.put(COLUMN_NAME_NO_MOVE, Boolean.FALSE.toString());
+        args.put(COLUMN_NAME_LOST_CONNECTION, Boolean.FALSE.toString());
+        args.put(COLUMN_NAME_START_LOCATION, "none");
+        args.put(COLUMN_NAME_AUTO_ROBOT_START_LOCATION_X, 0);
+        args.put(COLUMN_NAME_AUTO_ROBOT_START_LOCATION_Y, 0);
+        args.put(COLUMN_NAME_START_LOCATION_ON_FIELD, "none");
+        args.put(COLUMN_NAME_AUTO_TOTES_PICKED_UP, 0);
+        args.put(COLUMN_NAME_AUTO_TOTES_STACKED, 0);
+        args.put(COLUMN_NAME_AUTO_TOTES_SCORED, 0);
+        args.put(COLUMN_NAME_AUTO_CANS_PICKED_UP, 0);
+        args.put(COLUMN_NAME_AUTO_CANS_SCORED, 0);
+        args.put(COLUMN_NAME_AUTO_CANS_GRABBED_FROM_STEP, 0);
+        args.put(COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_X, 0);
+        args.put(COLUMN_NAME_AUTO_ROBOT_FINAL_LOCATION_Y, 0);
+        args.put(COLUMN_NAME_AUTO_TOTE_1_LOCATION_X, 0);
+        args.put(COLUMN_NAME_AUTO_TOTE_1_LOCATION_Y, 0);
+        args.put(COLUMN_NAME_AUTO_TOTE_2_LOCATION_X, 0);
+        args.put(COLUMN_NAME_AUTO_TOTE_2_LOCATION_Y, 0);
+        args.put(COLUMN_NAME_AUTO_TOTE_3_LOCATION_X, 0);
+        args.put(COLUMN_NAME_AUTO_TOTE_3_LOCATION_Y, 0);
+        args.put(COLUMN_NAME_AUTO_CAN_1_LOCATION_X, 0);
+        args.put(COLUMN_NAME_AUTO_CAN_1_LOCATION_Y, 0);
+        args.put(COLUMN_NAME_AUTO_CAN_2_LOCATION_X, 0);
+        args.put(COLUMN_NAME_AUTO_CAN_2_LOCATION_Y, 0);
+        args.put(COLUMN_NAME_AUTO_CAN_3_LOCATION_X, 0);
+        args.put(COLUMN_NAME_AUTO_CAN_3_LOCATION_Y, 0);
+        args.put(COLUMN_NAME_AUTO_CAN_4_LOCATION_X, 0);
+        args.put(COLUMN_NAME_AUTO_CAN_4_LOCATION_Y, 0);
+        args.put(COLUMN_NAME_AUTO_CAN_5_LOCATION_X, 0);
+        args.put(COLUMN_NAME_AUTO_CAN_5_LOCATION_Y, 0);
+        args.put(COLUMN_NAME_AUTO_CAN_6_LOCATION_X, 0);
+        args.put(COLUMN_NAME_AUTO_CAN_6_LOCATION_Y, 0);
+        args.put(COLUMN_NAME_AUTO_CAN_7_LOCATION_X, 0);
+        args.put(COLUMN_NAME_AUTO_CAN_7_LOCATION_Y, 0);
+        args.put(COLUMN_NAME_AUTO_ROBOT_VISIBLE, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_AUTO_TOTE1_VISIBLE, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_AUTO_TOTE2_VISIBLE, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_AUTO_TOTE3_VISIBLE, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_AUTO_CAN1_VISIBLE, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_AUTO_CAN2_VISIBLE, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_AUTO_CAN3_VISIBLE, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_AUTO_CAN4_VISIBLE, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_AUTO_CAN5_VISIBLE, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_AUTO_CAN6_VISIBLE, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_AUTO_CAN7_VISIBLE, Boolean.TRUE.toString());
+        args.put(COLUMN_NAME_AUTO_ROBOT_STACK_LIST, "none");
+        args.put(COLUMN_NAME_TEAM_MATCH_NOTES, "none");
+        args.put(COLUMN_NAME_TOTE_STACKER, Boolean.FALSE.toString());
+        args.put(COLUMN_NAME_CAN_KINGER, Boolean.FALSE.toString());
+        args.put(COLUMN_NAME_COOPERATIVE, Boolean.FALSE.toString());
+        args.put(COLUMN_NAME_NOODLER, Boolean.FALSE.toString());
+        args.put(COLUMN_NAME_NI_SAYER, Boolean.FALSE.toString());
+        args.put(COLUMN_NAME_TOTE_CONTROL_INSIDE, Boolean.FALSE.toString());
+        args.put(COLUMN_NAME_TOTE_CONTROL_FORK_LIFT, Boolean.FALSE.toString());
+        args.put(COLUMN_NAME_TOTE_CONTROL_HANDLE_GRABBER, Boolean.FALSE.toString());
+        args.put(COLUMN_NAME_TOTE_CONTROL_DROP_ALOT, Boolean.FALSE.toString());
+        args.put(COLUMN_NAME_TOTE_CONTROL_GREAT_CONTROL, Boolean.FALSE.toString());
         args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.TRUE.toString());
-        long id = this.openForWrite().mDb.insert(TABLE_NAME, null, args);
-        if(!this.dbIsClosed()) this.close();
-        return id;
     }
 
     /**
@@ -341,16 +382,6 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
     @Override
     public Cursor getAllEntries() {
         return super.getAllEntries(TABLE_NAME, allColumns);
-        /*
-        String cols[] = {
-                _ID,
-                COLUMN_NAME_TEAM_ID,
-                COLUMN_NAME_MATCH_ID,
-                COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION,
-                //COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA
-        };
-        return this.openForRead().mDb.query(TABLE_NAME, cols, null, null, null, null, null);
-        */
     }
 
     /**
@@ -447,14 +478,6 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
     @Override
     public Cursor getEntry(long rowId) throws SQLException {
         return super.getEntry(rowId, TABLE_NAME, allColumns);
-        /*
-        Cursor mCursor = this.openForRead().mDb.query(true, TABLE_NAME, this.allColumns,
-        		_ID + "=" + rowId, null, null, null, null, null);
-        if (mCursor != null) {
-            mCursor.moveToFirst();
-        }
-        return mCursor;
-        */
     }
 
     /**
@@ -491,7 +514,51 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
     @Override
     public boolean deleteAllEntries() {
         return super.deleteAllEntries(TABLE_NAME);
-        //this.openForWrite().mDb.delete(TABLE_NAME, null, null);
+    }
+
+    public void populateTestData() {
+        createTeamMatch(1,1,1,1, "Red1");
+        createTeamMatch(2, 1, 1, 3, "Red2");
+        createTeamMatch(3, 1, 1, 5, "Red3");
+        createTeamMatch(4, 1, 1, 2, "Blue1");
+        createTeamMatch(5, 1, 1, 4, "Blue2");
+        createTeamMatch(6, 1, 1, 6, "Blue3");
+        createTeamMatch(7, 2, 1, 10, "Red1");
+        createTeamMatch(8, 2, 1, 8, "Red2");
+        createTeamMatch(9, 2, 1, 6, "Red3");
+        createTeamMatch(10, 2, 1, 9, "Blue1");
+        createTeamMatch(11, 2, 1, 7, "Blue2");
+        createTeamMatch(12, 2, 1, 5, "Blue3");
+        createTeamMatch(13, 3, 1, 1, "Red1");
+        createTeamMatch(14, 3, 1, 12, "Red2");
+        createTeamMatch(15, 3, 1, 6, "Red3");
+        createTeamMatch(16, 3, 1, 2, "Blue1");
+        createTeamMatch(17, 3, 1, 11, "Blue2");
+        createTeamMatch(18, 3, 1, 5, "Blue3");
+        createTeamMatch(19, 4, 1, 1, "Red1");
+        createTeamMatch(20, 4, 1, 4, "Red2");
+        createTeamMatch(21, 4, 1, 7, "Red3");
+        createTeamMatch(22, 4, 1, 6, "Blue1");
+        createTeamMatch(23, 4, 1, 9, "Blue2");
+        createTeamMatch(24, 4, 1, 12, "Blue3");
+        createTeamMatch(25, 5, 1, 10, "Red1");
+        createTeamMatch(26, 5, 1, 12, "Red2");
+        createTeamMatch(27, 5, 1, 2, "Red3");
+        createTeamMatch(28, 5, 1, 4, "Blue1");
+        createTeamMatch(29, 5, 1, 11, "Blue2");
+        createTeamMatch(30, 5, 1, 7, "Blue3");
+        createTeamMatch(31, 6, 2, 4, "Red1");
+        createTeamMatch(32, 6, 2, 8, "Red2");
+        createTeamMatch(33, 6, 2, 12, "Red3");
+        createTeamMatch(34, 6, 2, 3, "Blue1");
+        createTeamMatch(35, 6, 2, 6, "Blue2");
+        createTeamMatch(36, 6, 2, 9, "Blue3");
+        createTeamMatch(37, 7, 2, 2, "Red1");
+        createTeamMatch(38, 7, 2, 7, "Red2");
+        createTeamMatch(39, 7, 2, 12, "Red3");
+        createTeamMatch(40, 7, 2, 3, "Blue1");
+        createTeamMatch(41, 7, 2, 5, "Blue2");
+        createTeamMatch(42, 7, 2, 11, "Blue3");
     }
 
     public boolean populateTestData(long competition_id, long[] matchIDs, long[] teamIDs) {
@@ -740,22 +807,11 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
     @Override
     public boolean setEntryExported(long rowId) {
         return super.setEntryExported(rowId, TABLE_NAME);
-        /*
-        ContentValues args = new ContentValues();
-        args.put(COLUMN_NAME_READY_TO_EXPORT, Boolean.FALSE.toString());
-        boolean retVal = this.openForWrite().mDb.update(TABLE_NAME, args, _ID + "=" + rowId, null) > 0;
-        if(!this.dbIsClosed()) this.close();
-        return retVal;
-        */
     }
 
     @Override
     public Cursor getAllEntriesToExport() {
         return super.getAllEntriesToExport(TABLE_NAME, allColumns);
-        /*
-        String WHERE = COLUMN_NAME_READY_TO_EXPORT + "=" + Boolean.TRUE.toString();
-        return this.openForRead().mDb.query(TABLE_NAME, allColumns, WHERE, null, null, null, null);
-        */
     }
 }
 

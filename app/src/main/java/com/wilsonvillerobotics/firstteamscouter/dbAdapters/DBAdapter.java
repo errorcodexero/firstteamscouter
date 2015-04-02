@@ -22,8 +22,10 @@ import java.util.HashMap;
 public class DBAdapter {
 
     public static final String DATABASE_NAME = "FIRSTTeamScouter.sqlite"; //$NON-NLS-1$
+    public static final String TEST_DATABASE_NAME = "FIRSTTeamScouter_TEST.sqlite";
 
     public static final int DATABASE_VERSION = 54;
+    public static final int TEST_DATABASE_VERSION = 1;
 
     private static final int TABLE_NAME        = 0;
     private static final int CREATE_TABLE_SQL  = 1;
@@ -425,6 +427,9 @@ public class DBAdapter {
     public DatabaseHelper DBHelper;
     protected SQLiteDatabase db;
 
+    protected static String dbName;
+    protected static int dbVersion;
+
     /**
      * Constructor
      * @param ctx
@@ -432,6 +437,13 @@ public class DBAdapter {
     public DBAdapter(Context ctx)
     {
     	FTSUtilities.printToConsole("Constructor::DBAdapter");
+        if(FTSUtilities.POPULATE_TEST_DATA) {
+            dbName = TEST_DATABASE_NAME;
+            dbVersion = TEST_DATABASE_VERSION;
+        } else {
+            dbName = DATABASE_NAME;
+            dbVersion = DATABASE_VERSION;
+        }
         this.context = ctx.getApplicationContext();
         this.DBHelper = DatabaseHelper.getInstance(this.context);
 
@@ -470,8 +482,8 @@ public class DBAdapter {
 
         private DatabaseHelper(Context context)
         {
-            super(context, DATABASE_NAME, null, DATABASE_VERSION);
-            FTSUtilities.printToConsole("Constructor::DBAdapter::DatabaseHelper : DB: " + DATABASE_NAME + "    Version: " + DATABASE_VERSION);
+            super(context, dbName, null, dbVersion);
+            FTSUtilities.printToConsole("Constructor::DBAdapter::DatabaseHelper : DB: " + dbName + "    Version: " + dbVersion);
             this.ctx = context;
         }
 
@@ -545,9 +557,30 @@ public class DBAdapter {
         	}
 
             ArrayList<HashMap<String, String>> data = new ArrayList<HashMap<String, String>>();
-            String table = ImportTransactionsDBAdapter.TABLE_NAME;
+            backupImportTransactionsTable(db, data);
+            dropImportTransactionsTable(db);
+            createImportTransactionsTable(db);
+            restoreImportTransactionsTable(db, data);
+
+            //setSequenceIDs(db);
+        }
+
+        private void restoreImportTransactionsTable(SQLiteDatabase db, ArrayList<HashMap<String, String>> data) {
+            String query;
             try {
-                FTSUtilities.printToConsole("Backing up data from table: " + table + "\n\n");
+                FTSUtilities.printToConsole("Restoring data to table: " + ImportTransactionsDBAdapter.TABLE_NAME + "\n\n");
+                query = "SELECT * FROM " + ImportTransactionsDBAdapter.TABLE_NAME;
+                //data.clear();
+                restoreTable(db, query, "import_transactions", data);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void backupImportTransactionsTable(SQLiteDatabase db, ArrayList<HashMap<String, String>> data) {
+            String query;
+            try {
+                FTSUtilities.printToConsole("Backing up data from table: " + ImportTransactionsDBAdapter.TABLE_NAME + "\n\n");
                 // Import Transactions - special case
                 query = "SELECT * FROM " + ImportTransactionsDBAdapter.TABLE_NAME;
 
@@ -555,38 +588,6 @@ public class DBAdapter {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            try {
-                FTSUtilities.printToConsole("Deleting/Re-Creating table: " + table + "\n\n");
-                query = "DROP TABLE IF EXISTS " + ImportTransactionsDBAdapter.TABLE_NAME;
-                db.execSQL(query);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            try {
-                query = "CREATE TABLE " + ImportTransactionsDBAdapter.TABLE_NAME + " (" +
-                        AUTO_INC_ID +
-                        ImportTransactionsDBAdapter.COLUMN_NAME_TABLET_ID + INT_TYPE + COMMA_SEP +
-                        ImportTransactionsDBAdapter.COLUMN_NAME_IMPORTED_FILE_NAME + TEXT_TYPE + COMMA_SEP +
-                        ImportTransactionsDBAdapter.COLUMN_NAME_READY_TO_EXPORT + BOOL_TYPE +
-                        ")";
-                FTSUtilities.printToConsole("Create query: " + query + "\n\n");
-                db.execSQL(query);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            try {
-                FTSUtilities.printToConsole("Restoring data to table: " + table + "\n\n");
-                query = "SELECT * FROM " + ImportTransactionsDBAdapter.TABLE_NAME;
-                //data.clear();
-                restoreTable(db, query, "import_transactions", data);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            //setSequenceIDs(db);
         }
 
         private void setSequenceIDs(SQLiteDatabase db) {
@@ -655,23 +656,6 @@ public class DBAdapter {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            /*
-            seqQuery = "UPDATE sqlite_sequence SET seq=" + seqNum + " WHERE name=" + NotesDataDBAdapter.TABLE_NAME;
-            db.execSQL(seqQuery);
-
-            seqQuery = "UPDATE sqlite_sequence SET seq=" + seqNum + " WHERE name=" + PictureDataDBAdapter.TABLE_NAME;
-            db.execSQL(seqQuery);
-
-            seqQuery = "UPDATE sqlite_sequence SET seq=" + seqNum + " WHERE name=" + PitDataDBAdapter.TABLE_NAME;
-            db.execSQL(seqQuery);
-
-            seqQuery = "UPDATE sqlite_sequence SET seq=" + seqNum + " WHERE name=" + RobotDataDBAdapter.TABLE_NAME;
-            db.execSQL(seqQuery);
-
-            seqQuery = "UPDATE sqlite_sequence SET seq=" + seqNum + " WHERE name=" + TeamMatchTransactionDataDBAdapter.TABLE_NAME;
-            db.execSQL(seqQuery);
-            */
         }
 
         private void restoreTable(SQLiteDatabase db, String query, String table, ArrayList<HashMap<String, String>> data) {
@@ -776,6 +760,10 @@ public class DBAdapter {
                     FTSUtilities.printToConsole("Create table: " + table.name() + "\n\n");
                     db.execSQL(query);
                 }
+
+                String table = ImportTransactionsDBAdapter.TABLE_NAME;
+                dropImportTransactionsTable(db);
+                createImportTransactionsTable(db);
             }
         } catch (Exception e) {
             if(db != null && db.isOpen()) this.close();
@@ -785,13 +773,40 @@ public class DBAdapter {
         }
     }
 
+    protected static void createImportTransactionsTable(SQLiteDatabase db) {
+        String query;
+        try {
+            query = "CREATE TABLE " + ImportTransactionsDBAdapter.TABLE_NAME + " (" +
+                    AUTO_INC_ID +
+                    ImportTransactionsDBAdapter.COLUMN_NAME_TABLET_ID + INT_TYPE + COMMA_SEP +
+                    ImportTransactionsDBAdapter.COLUMN_NAME_IMPORTED_FILE_NAME + TEXT_TYPE + COMMA_SEP +
+                    ImportTransactionsDBAdapter.COLUMN_NAME_READY_TO_EXPORT + BOOL_TYPE +
+                    ")";
+            FTSUtilities.printToConsole("Create query: " + query + "\n\n");
+            db.execSQL(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected static void dropImportTransactionsTable(SQLiteDatabase db) {
+        String query;
+        try {
+            FTSUtilities.printToConsole("Deleting/Re-Creating table: " + ImportTransactionsDBAdapter.TABLE_NAME + "\n\n");
+            query = "DROP TABLE IF EXISTS " + ImportTransactionsDBAdapter.TABLE_NAME;
+            db.execSQL(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public int exportDatabase() {
         int exportCount = 0;
 
         try {
             this.openForRead();
             DataXmlExporter dataXmlExporter = new DataXmlExporter(this.db);
-            exportCount = dataXmlExporter.export(DATABASE_NAME);
+            exportCount = dataXmlExporter.export(dbName);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -805,7 +820,7 @@ public class DBAdapter {
         try {
             this.openForRead();
             DataXmlExporter dataXmlExporter = new DataXmlExporter(this.db);
-            exportCount = dataXmlExporter.exportWholeTable(DATABASE_NAME, TeamMatchTransactionDataDBAdapter.TABLE_NAME);
+            exportCount = dataXmlExporter.exportWholeTable(dbName, TeamMatchTransactionDataDBAdapter.TABLE_NAME);
         } catch (Exception e) {
             e.printStackTrace();
         }
