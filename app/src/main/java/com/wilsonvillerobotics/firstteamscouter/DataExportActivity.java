@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -216,36 +215,24 @@ public class DataExportActivity extends Activity {
     }
 
     private void configButtons() {
-        Button buttonbtnExportAllTransactions = (Button) findViewById(R.id.btnExportAllTransactions);
-        buttonbtnExportAllTransactions.setOnClickListener(new View.OnClickListener() {
+        /*
+        Button btnExportAllTransactions = (Button) findViewById(R.id.btnExportAllTransactions);
+        btnExportAllTransactions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 exportAllTransactionsToXML();
             }
         });
-
+        */
         Button btnRepeatDataExport = (Button) findViewById(R.id.btnRepeatDataExport);
         btnRepeatDataExport.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if(exportDir.mkdir() || exportDir.isDirectory()) {
-					File[] exportedFileList = exportDir.listFiles(new CSVFilenameFilter(".csv"));
-					int fileCount = exportedFileList.length;
-
-					File myReExportFile = new File(exportDir, exportTeamMatchDataFileNamePrefix + "_" + fileCount + csvExt);
-					if(myReExportFile.exists() && myReExportFile.isFile()) {
-						FTSUtilities.printToConsole("ExportMatchDataActivity::btnRepeatDataExport.onClick : Exporting: " + myReExportFile.getName());
-						Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-						sharingIntent.setType("text/plain");
-						sharingIntent.setComponent(new ComponentName("com.android.bluetooth", "com.android.bluetooth.opp.BluetoothOppLauncherActivity"));
-						sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(myReExportFile));
-						startActivityForResult(sharingIntent, BLUETOOTH_SEND);
-						FTSUtilities.printToConsole("ExportMatchDataActivity::btnRepeatDataExport.onClick : Sharing Activity Started");
-					}
-				}
-			}
+                repeatExportOnClick();
+            }
 		});
+        btnRepeatDataExport.setEnabled(false);
 
         Button btnExportDataXML = (Button)findViewById(R.id.btnExportDataXML);
         btnExportDataXML.setOnClickListener(new View.OnClickListener() {
@@ -257,127 +244,149 @@ public class DataExportActivity extends Activity {
 
         Button btnExportDataBluetooth = (Button) findViewById(R.id.btnExportDataBluetooth);
         btnExportDataBluetooth.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
-                // This relies on the data being written to CSV files as well as to the DB
-                // TODO - update this to run a query to grab the data, make the CSV files, and then export it.
-				String csvFiles[] = filePath.list();
-				String exportedFiles[] = new String[1024];
-				Hashtable<Integer, String> lines = new Hashtable<Integer, String>();
-				int entryNum = 0;
-				int exportNum = 0;
+                exportToBTOnClick();
+            }
+        });
+        btnExportDataBluetooth.setEnabled(false);
+    }
 
-				for(String csvFile : csvFiles) {
-					String localFileName = filePath.getAbsolutePath() + "/" + csvFile;
-					File tempFile = new File(localFileName);
-					if(tempFile.isFile()) {
-						FTSUtilities.printToConsole("ExportMatchDataActivity::btnExportDataBluetooth : csvFile is a file: " + csvFile);
-						if(csvFile.endsWith("match_data_export")) {
-							exportedFiles[exportNum++] = csvFile;
-							FTSUtilities.printToConsole("ExportMatchDataActivity::btnExportDataBluetooth : csvFile contains match_data_export: " + csvFile);
-							FileReader fi = null;
-							try {
-								fi = new FileReader(tempFile);
-							} catch (FileNotFoundException e) {
-								e.printStackTrace();
-							}
-							try {
-                                BufferedReader bufferedReader = new BufferedReader(fi);
-                                String line = "";
-                                int lineNum = 0;
-                                while((line = bufferedReader.readLine()) != null) {
-									if(lineNum > 0) {
-										FTSUtilities.printToConsole("ExportMatchDataActivity::btnExportDataBluetooth : line: " + line);
-										lines.put(entryNum++, line);
-									}
-									lineNum++;
+    private void repeatExportOnClick() {
+        if(exportDir.mkdir() || exportDir.isDirectory()) {
+            File[] exportedFileList = exportDir.listFiles(new CSVFilenameFilter(".csv"));
+            int fileCount = exportedFileList.length;
 
-									if(entryNum > 1023) break;
-								}
-							} catch (IOException e) {
-								e.printStackTrace();
-							} catch (NullPointerException e) {
-                                e.printStackTrace();
-                            } catch (Exception e) {
-                                e.printStackTrace();
+            File myReExportFile = new File(exportDir, exportTeamMatchDataFileNamePrefix + "_" + fileCount + csvExt);
+            if(myReExportFile.exists() && myReExportFile.isFile()) {
+                FTSUtilities.printToConsole("ExportMatchDataActivity::btnRepeatDataExport.onClick : Exporting: " + myReExportFile.getName());
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.setComponent(new ComponentName("com.android.bluetooth", "com.android.bluetooth.opp.BluetoothOppLauncherActivity"));
+                sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(myReExportFile));
+                startActivityForResult(sharingIntent, BLUETOOTH_SEND);
+                FTSUtilities.printToConsole("ExportMatchDataActivity::btnRepeatDataExport.onClick : Sharing Activity Started");
+            }
+        }
+    }
+
+    private void exportToBTOnClick() {
+        // This relies on the data being written to CSV files as well as to the DB
+        // TODO - update this to run a query to grab the data, make the CSV files, and then export it.
+        String csvFiles[] = filePath.list();
+        String exportedFiles[] = new String[1024];
+        Hashtable<Integer, String> lines = new Hashtable<Integer, String>();
+        int entryNum = 0;
+        int exportNum = 0;
+
+        for(String csvFile : csvFiles) {
+            String localFileName = filePath.getAbsolutePath() + "/" + csvFile;
+            File tempFile = new File(localFileName);
+            if(tempFile.isFile()) {
+                FTSUtilities.printToConsole("ExportMatchDataActivity::btnExportDataBluetooth : csvFile is a file: " + csvFile);
+                if(csvFile.endsWith("match_data_export")) {
+                    exportedFiles[exportNum++] = csvFile;
+                    FTSUtilities.printToConsole("ExportMatchDataActivity::btnExportDataBluetooth : csvFile contains match_data_export: " + csvFile);
+                    FileReader fi = null;
+                    try {
+                        fi = new FileReader(tempFile);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+BufferedReader bufferedReader = new BufferedReader(fi);
+String line = "";
+int lineNum = 0;
+while((line = bufferedReader.readLine()) != null) {
+                            if(lineNum > 0) {
+                                FTSUtilities.printToConsole("ExportMatchDataActivity::btnExportDataBluetooth : line: " + line);
+                                lines.put(entryNum++, line);
                             }
-						}
-					} else {
-						FTSUtilities.printToConsole("ExportMatchDataActivity::btnExportDataBluetooth : csvFile is NOT a file: " + csvFile);
-					}
-				}
+                            lineNum++;
 
-				if(!lines.isEmpty() && (exportDir.mkdir() || exportDir.isDirectory())) {
-					if(myTeamMatchDataExportFile != null && myTeamMatchDataExportFile.exists()) myTeamMatchDataExportFile.delete();
-
-					FileOutputStream fo =  null;
-					boolean append = true;
-					try {
-						File[] exportedFileList = exportDir.listFiles(new CSVFilenameFilter(".csv"));
-						int fileCount = exportedFileList.length + 1;
-
-						myTeamMatchDataExportFile = new File(filePath.getAbsolutePath() + "/" + exportTeamMatchDataFileNamePrefix + "_" + fileCount + csvExt);
-						boolean fileCreated = myTeamMatchDataExportFile.createNewFile();
-                        if(fileCreated) {
-                            String header = FTSUtilities.getCSVHeaderString();
-                            fo = new FileOutputStream(myTeamMatchDataExportFile, append);
-
-                            fo.write(header.getBytes());
-                            fo.close();
+                            if(entryNum > 1023) break;
                         }
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (NullPointerException e) {
+e.printStackTrace();
+} catch (Exception e) {
+e.printStackTrace();
+}
+                }
+            } else {
+                FTSUtilities.printToConsole("ExportMatchDataActivity::btnExportDataBluetooth : csvFile is NOT a file: " + csvFile);
+            }
+        }
 
-					if(myTeamMatchDataExportFile.exists()) {
-						try {
-							fo = new FileOutputStream(myTeamMatchDataExportFile, append);
-							for(String line : lines.values()) {
-								if(line != null) {
-									line += "\n";
-									fo.write(line.getBytes());
-								}
-							}
-							fo.close();
+        if(!lines.isEmpty() && (exportDir.mkdir() || exportDir.isDirectory())) {
+            if(myTeamMatchDataExportFile != null && myTeamMatchDataExportFile.exists()) myTeamMatchDataExportFile.delete();
 
-							String exportedFileName = myTeamMatchDataExportFile.getName();
-							File exportFile = new File(exportDir, exportedFileName);
-							myTeamMatchDataExportFile.renameTo(exportFile);
+            FileOutputStream fo =  null;
+            boolean append = true;
+            try {
+                File[] exportedFileList = exportDir.listFiles(new CSVFilenameFilter(".csv"));
+                int fileCount = exportedFileList.length + 1;
 
-							Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-							sharingIntent.setType("text/plain");
-							sharingIntent.setComponent(new ComponentName("com.android.bluetooth", "com.android.bluetooth.opp.BluetoothOppLauncherActivity"));
-							sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(exportFile));
-							startActivityForResult(sharingIntent, BLUETOOTH_SEND);
-							FTSUtilities.printToConsole("ExportMatchDataActivity::btnExportDataBluetooth : Sharing Activity Started");
-						} catch (FileNotFoundException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
+                myTeamMatchDataExportFile = new File(filePath.getAbsolutePath() + "/" + exportTeamMatchDataFileNamePrefix + "_" + fileCount + csvExt);
+                boolean fileCreated = myTeamMatchDataExportFile.createNewFile();
+if(fileCreated) {
+String header = FTSUtilities.getCSVHeaderString();
+fo = new FileOutputStream(myTeamMatchDataExportFile, append);
 
-						if(saveDir.mkdir() || saveDir.isDirectory()) {
-							entryNum = 0;
-							for(String exportedFile : exportedFiles) {
-								if(exportedFile != null) {
-									FTSUtilities.printToConsole("ExportMatchDataActivity::btnExportDataBluetooth : exportedFile: " + exportedFile);
-									File tempFile = new File(filePath.getAbsolutePath() + "/" + exportedFile);
-									String saveFileName = exportedFile + csvExt;
-									File saveFile = new File(saveDir, saveFileName);
-									if(tempFile.renameTo(saveFile)) entryNum++;
-								}
-							}
+fo.write(header.getBytes());
+fo.close();
+}
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-							Toast.makeText(getBaseContext(), "File(s) Saved: " + entryNum, Toast.LENGTH_SHORT).show();
-						}
-					} else {
-						String message = "File not found: " + myTeamMatchDataExportFile.getName();
-						Toast.makeText(getBaseContext(), message , Toast.LENGTH_SHORT).show();
-					}
-				}
-			}
-		});
+            if(myTeamMatchDataExportFile.exists()) {
+                try {
+                    fo = new FileOutputStream(myTeamMatchDataExportFile, append);
+                    for(String line : lines.values()) {
+                        if(line != null) {
+                            line += "\n";
+                            fo.write(line.getBytes());
+                        }
+                    }
+                    fo.close();
+
+                    String exportedFileName = myTeamMatchDataExportFile.getName();
+                    File exportFile = new File(exportDir, exportedFileName);
+                    myTeamMatchDataExportFile.renameTo(exportFile);
+
+                    Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                    sharingIntent.setType("text/plain");
+                    sharingIntent.setComponent(new ComponentName("com.android.bluetooth", "com.android.bluetooth.opp.BluetoothOppLauncherActivity"));
+                    sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(exportFile));
+                    startActivityForResult(sharingIntent, BLUETOOTH_SEND);
+                    FTSUtilities.printToConsole("ExportMatchDataActivity::btnExportDataBluetooth : Sharing Activity Started");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if(saveDir.mkdir() || saveDir.isDirectory()) {
+                    entryNum = 0;
+                    for(String exportedFile : exportedFiles) {
+                        if(exportedFile != null) {
+                            FTSUtilities.printToConsole("ExportMatchDataActivity::btnExportDataBluetooth : exportedFile: " + exportedFile);
+                            File tempFile = new File(filePath.getAbsolutePath() + "/" + exportedFile);
+                            String saveFileName = exportedFile + csvExt;
+                            File saveFile = new File(saveDir, saveFileName);
+                            if(tempFile.renameTo(saveFile)) entryNum++;
+                        }
+                    }
+
+                    Toast.makeText(getBaseContext(), "File(s) Saved: " + entryNum, Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                String message = "File not found: " + myTeamMatchDataExportFile.getName();
+                Toast.makeText(getBaseContext(), message , Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override

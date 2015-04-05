@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class FTSUtilities {
 
 	public static Boolean DEBUG = true;
-	public static Boolean POPULATE_TEST_DATA = false;
+	public static Boolean TEST_MODE = false;
     public static String strUuid = "";
     public static Long wifiID = -1l;
 
@@ -265,7 +265,7 @@ public class FTSUtilities {
 */
         String message = "WIFI Adapter MAC: " + deviceWiFiMAC + "\nMAC Numeric Value: " + deviceWiFiMAC;
         FTSUtilities.printToConsole(message);
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+        //Toast.makeText(context, message, Toast.LENGTH_LONG).show();
 
     }
 

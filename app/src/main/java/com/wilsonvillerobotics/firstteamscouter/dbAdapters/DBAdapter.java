@@ -437,13 +437,14 @@ public class DBAdapter {
     public DBAdapter(Context ctx)
     {
     	FTSUtilities.printToConsole("Constructor::DBAdapter");
-        if(FTSUtilities.POPULATE_TEST_DATA) {
+        if(FTSUtilities.TEST_MODE) {
             dbName = TEST_DATABASE_NAME;
             dbVersion = TEST_DATABASE_VERSION;
         } else {
             dbName = DATABASE_NAME;
             dbVersion = DATABASE_VERSION;
         }
+        FTSUtilities.printToConsole("DBAdapter: Using Database: " + dbName + "  Version: " + dbVersion);
         this.context = ctx.getApplicationContext();
         this.DBHelper = DatabaseHelper.getInstance(this.context);
 

@@ -1,12 +1,10 @@
 package com.wilsonvillerobotics.firstteamscouter;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.channels.FileChannel;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.CompetitionDataDBAdapter;
@@ -129,7 +127,7 @@ public class DataImportActivity extends Activity implements View.OnClickListener
 		String statusMessage = "";
 		String testDataAlertMessage = "";
         Button btnImportTestData = (Button)findViewById(R.id.btnImportTestData);
-		if(FTSUtilities.POPULATE_TEST_DATA) {
+		if(FTSUtilities.TEST_MODE) {
 			statusMessage += "Press the Import Test Data button to import test data for " + numTestMatches + " teams\n";
 			testDataAlertMessage = "TEST DATA MODE";
             if(btnImportTestData != null) btnImportTestData.setEnabled(true);
@@ -285,7 +283,7 @@ public class DataImportActivity extends Activity implements View.OnClickListener
 
     private void btnImportTestDataOnClick() {
         String importStatusMessage = "Import Test Data Clicked";
-        if (FTSUtilities.POPULATE_TEST_DATA) {
+        if (FTSUtilities.TEST_MODE) {
             try {
                 dbAdapter.deleteTableData();
                 cdDBAdapter.populateTestData();

@@ -21,7 +21,6 @@ public class TeamMatchDBAdapter extends FTSDBAdapter implements BaseColumns, FTS
     public static final String COLUMN_NAME_MATCH_ID = "match_id";
     public static final String COLUMN_NAME_COMPETITION_ID = "competition_id";
     public static final String COLUMN_NAME_TEAM_MATCH_ALLIANCE_POSITION = "alliance_position";
-    //public static final String COLUMN_NAME_TEAM_MATCH_HAS_SAVED_DATA = "team_match_has_saved_data";
     public static final String COLUMN_NAME_BROKE_DOWN = "broke_down";
     public static final String COLUMN_NAME_NO_MOVE = "no_move";
     public static final String COLUMN_NAME_LOST_CONNECTION = "lost_connection";

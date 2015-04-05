@@ -84,7 +84,7 @@ public class MatchTeleModeActivity extends Activity {
 
     private View lastViewTouched;
 
-	protected Boolean fieldOrientationRedOnRight;
+    protected Boolean fieldOrientationRedOnRight;
     private boolean dataChanged;
 
     protected ArrayList<Transaction> transactionList;
@@ -163,7 +163,7 @@ public class MatchTeleModeActivity extends Activity {
             GaugeLayout gauge = (GaugeLayout) findViewById(id);
             gauge.init(new MyViewDragListener());
             gauge.setGaugeType(teleGaugeTypes.get(id));
-            gauge.setGaugeName(teleGaugeTypes.get(id).getGaugeTypeString());
+            gauge.setGaugeName(teleGaugeTypes.get(id).getGaugeName());
             teleGauges.put(id, gauge);
         }
     }
@@ -424,6 +424,7 @@ public class MatchTeleModeActivity extends Activity {
                                 recordTransaction("Place", from, to, ge2, gr);
 
                                 if(gaugeLayout.getGaugeType() == GaugeType.ROBOT) {
+
                                     this.resetNonRobotGauges();
                                 }
                             } else if(view.getClass() == TransportContainer.class) {

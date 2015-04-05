@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
         this.loadPref();
         FTSUtilities.generateDeviceID(getApplicationContext());
 
-        if(FTSUtilities.POPULATE_TEST_DATA) {
+        if(FTSUtilities.TEST_MODE) {
             LinearLayout linearLayout = (LinearLayout)findViewById(R.id.mainLinearLayout);
             if(linearLayout != null) {
                 linearLayout.setBackgroundColor(Color.RED);

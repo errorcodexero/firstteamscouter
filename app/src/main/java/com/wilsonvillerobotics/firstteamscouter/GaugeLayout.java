@@ -19,15 +19,17 @@ import java.util.List;
 public class GaugeLayout extends TableLayout {
 
     public enum GaugeType {
-        ROBOT ("Robot Gauge"),
-        FLOOR ("Floor Gauge"),
-        PLATFORM ("Platform Gauge"),
-        STEP ("Step Gauge"),
-        UNKNOWN ("Unknown Gauge");
+        ROBOT ("Robot Gauge", "ROBOT"),
+        FLOOR ("Floor Gauge", "GROUND"),
+        PLATFORM ("Platform Gauge", "PLATFORM"),
+        STEP ("Step Gauge", "STEP"),
+        UNKNOWN ("Unknown Gauge", "UNKNOWN");
 
         String type;
-        GaugeType(String type) {
+        String name;
+        GaugeType(String type, String name) {
             this.type = type;
+            this.name = name;
         }
 
         public GaugeType getGaugeByString(String type) {
@@ -39,6 +41,10 @@ public class GaugeLayout extends TableLayout {
 
         public String getGaugeTypeString() {
             return this.type;
+        }
+
+        public String getGaugeName() {
+            return this.name;
         }
     }
 
