@@ -155,14 +155,14 @@ public class MatchTeleModeActivity extends Activity {
         teleGaugeTypes.put(R.id.Platform_Gauge_TableView, GaugeType.PLATFORM);
         teleGaugeTypes.put(R.id.Robot_Gauge_TableView, GaugeType.ROBOT);
         teleGaugeTypes.put(R.id.Step_Gauge_TableView, GaugeType.STEP);
-        teleGaugeTypes.put(R.id.Floor_Gauge_TableView, GaugeType.FLOOR);
+        teleGaugeTypes.put(R.id.Floor_Gauge_TableView, GaugeType.GROUND);
 
         teleGauges = new HashMap<Integer, GaugeLayout>();
 
         for(int id : teleGaugeTypes.keySet()) {
             GaugeLayout gauge = (GaugeLayout) findViewById(id);
-            gauge.init(new MyViewDragListener());
-            gauge.setGaugeType(teleGaugeTypes.get(id));
+            gauge.init(teleGaugeTypes.get(id), new MyViewDragListener());
+            //gauge.setGaugeType(teleGaugeTypes.get(id));
             gauge.setGaugeName(teleGaugeTypes.get(id).getGaugeName());
             teleGauges.put(id, gauge);
         }
@@ -225,36 +225,12 @@ public class MatchTeleModeActivity extends Activity {
                             GaugeLayout gl = (GaugeLayout)grandparent;
                             GaugeRow gr    = (GaugeRow)parent;
 
-                            TransportContainer tp = new TransportContainer(gl.getContext());
-                            tp.setVisibility(View.VISIBLE);
-                            tp.setOrientation(LinearLayout.VERTICAL);
-                            gl.addView(tp);
+                            TransportContainer tp = buildTransportContainer(gl, gr);
 
-                            int numElements = 0;
-                            ArrayList<GaugeRow> activeRowsAbove = gl.getActiveRowsAbove(gr);
-                            String log = "Active Row Above Count: " + activeRowsAbove.size() + "\n";
-                            for(int i = activeRowsAbove.size() - 1; i >= 0; i--) {
-                                GaugeRow gRow = activeRowsAbove.get(i);
-                                log += "Received row at index " + gRow.getRowIndex() + "\n";
-
-                                GameElement ge = new GameElement(gl.getContext());
-                                ge.setImageDrawable(gRow.getGameElement().getDrawable());
-                                ge.setElementType(gRow.getGameElement().getElementType());
-                                ge.setElementState(gRow.getGameElement().getElementState());
-                                gRow.deactivate(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, new MyViewDragListener());
-                                tp.addGameElement(ge);
-                            }
-                            FTSUtilities.printToConsole(log);
-
-                            ClipData.Item item = new ClipData.Item(String.valueOf(numElements));
+                            ClipData.Item item = new ClipData.Item(String.valueOf(tp.getNumElements()));
                             String[] mimeType  = {"text/plain"};
-                            ClipData clipData  = new ClipData(String.valueOf(numElements),mimeType,item);
+                            ClipData clipData  = new ClipData(String.valueOf(tp.getNumElements()),mimeType,item);
 
-                            tp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                            final int size=View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
-                            tp.measure(size, size);
-                            tp.layout(0, 0, tp.getMeasuredWidth(), tp.getMeasuredHeight());
-                            tp.invalidate();
                             View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(tp);
                             tp.startDrag(clipData, shadowBuilder, tp, 0);
                             return true;
@@ -273,10 +249,24 @@ public class MatchTeleModeActivity extends Activity {
                          */
                         } else if(grandparent != null && grandparent.getClass() == RelativeLayout.class) {
                             RelativeLayout rl = (RelativeLayout)grandparent;
+                            TransportContainer tp = buildTransportContainer(rl, gameElement);
+                            // TODO - Fix this - currently puts transport container image in upper left of screen until it's dropped on gauge
+                            // but it's left there if the tp is not dropped on a gauge
+                            /*
                             GameElement ge = new GameElement(rl.getContext());
                             ge.setImageDrawable(gameElement.getDrawable());
                             ge.setElementType(gameElement.getElementType());
                             ge.setElementState(gameElement.getElementState());
+                            */
+
+                            ClipData.Item item = new ClipData.Item(String.valueOf(tp.getNumElements()));
+                            String[] mimeType  = {"text/plain"};
+                            ClipData clipData  = new ClipData(String.valueOf(tp.getNumElements()),mimeType,item);
+
+                            View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(tp);
+                            tp.startDrag(clipData, shadowBuilder, tp, 0);
+                            return true;
+
                         }
                     }
                     ClipData data = ClipData.newPlainText("", "");
@@ -286,6 +276,70 @@ public class MatchTeleModeActivity extends Activity {
             }
             return false;
         }
+    }
+
+    private TransportContainer buildTransportContainer(GaugeLayout gl, GaugeRow gr) {
+        TransportContainer tp = new TransportContainer(gl.getContext());
+        tp.setVisibility(View.VISIBLE);
+        tp.setOrientation(LinearLayout.VERTICAL);
+        tp.setStartLocation(gl.getElementLocation());
+        gl.addView(tp);
+
+        ArrayList<GaugeRow> activeRowsAbove = gl.getActiveRowsAbove(gr);
+        String log = "Active Row Above Count: " + activeRowsAbove.size() + "\n";
+        for(int i = activeRowsAbove.size() - 1; i >= 0; i--) {
+            GaugeRow gRow = activeRowsAbove.get(i);
+            log += "Received row at index " + gRow.getRowIndex() + "\n";
+
+            GameElement ge = new GameElement(gl.getContext());
+            ge.setImageDrawable(gRow.getGameElement().getDrawable());
+            ge.setElementType(gRow.getGameElement().getElementType());
+            ge.setElementState(gRow.getGameElement().getElementState());
+            ge.setElementLocation(gl.getElementLocation());
+            gRow.deactivate(GameElementType.GRAY_TOTE, GameElementState.UPRIGHT, new MyViewDragListener());
+            tp.addGameElement(ge);
+        }
+        FTSUtilities.printToConsole(log);
+
+        tp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        final int size=View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+        tp.measure(size, size);
+        tp.layout(0, 0, tp.getMeasuredWidth(), tp.getMeasuredHeight());
+        tp.invalidate();
+
+        return tp;
+    }
+
+    private TransportContainer buildTransportContainer(RelativeLayout rl, GameElement ge) {
+        TransportContainer tp = new TransportContainer(rl.getContext());
+        tp.setVisibility(View.VISIBLE);
+        tp.setOrientation(LinearLayout.VERTICAL);
+        rl.addView(tp);
+
+        //GameElement gameElement = new GameElement(rl.getContext(), ge);
+
+        //final android.view.ViewParent parent = gameElement.getParent ();
+        //if (parent instanceof android.view.ViewManager)
+        //{
+        //    final android.view.ViewManager viewManager = (android.view.ViewManager) parent;
+        //    viewManager.removeView(gameElement);
+        //}
+
+        GameElement gameElement = new GameElement(tp.getContext());
+        gameElement.setImageDrawable(ge.getDrawable());
+        gameElement.setElementType(ge.getElementType());
+        gameElement.setElementState(ge.getElementState());
+        gameElement.setElementLocation(ge.getElementLocation());
+        tp.addGameElement(gameElement);
+        tp.setStartLocation(gameElement.getElementLocation());
+
+        tp.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+        final int size=View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+        tp.measure(size, size);
+        tp.layout(0, 0, tp.getMeasuredWidth(), tp.getMeasuredHeight());
+        tp.invalidate();
+
+        return tp;
     }
 
     private void openDatabase() {
@@ -430,16 +484,24 @@ public class MatchTeleModeActivity extends Activity {
                             } else if(view.getClass() == TransportContainer.class) {
                                 TransportContainer transportContainer = (TransportContainer)view;
                                 FTSUtilities.printToConsole("DROP on Gauge: " + gaugeLayout.getGaugeName());
-                                String fromGauge = ((GaugeLayout)transportContainer.getParent()).getGaugeName();
+                                String from = transportContainer.getStartLocation().getLocation();// ((GaugeLayout)transportContainer.getParent()).getGaugeName();
                                 String toGauge = gaugeLayout.getGaugeName();
 
                                 gaugeLayout.activateRows(gr, transportContainer, new MyViewTouchListener());
-                                recordTransaction("Place", fromGauge, toGauge, transportContainer, gr);
+                                recordTransaction("Place", from, toGauge, transportContainer, gr);
                                 if(gaugeLayout.getGaugeType() == GaugeType.ROBOT) {
                                     this.resetNonRobotGauges();
                                 }
                                 // ditch the linear layout so garbage collection can do its job
-                                ((GaugeLayout)transportContainer.getParent()).removeView(transportContainer);
+                                ViewParent par = transportContainer.getParent();
+                                if(par.getClass() == GaugeLayout.class) {
+                                    ((GaugeLayout) transportContainer.getParent()).removeView(transportContainer);
+                                } else if(par.getClass() == RelativeLayout.class) {
+                                    ((RelativeLayout) transportContainer.getParent()).removeView(transportContainer);
+                                } else if (par instanceof android.view.ViewManager) {
+                                    final android.view.ViewManager viewManager = (android.view.ViewManager)par;
+                                    viewManager.removeView(transportContainer);
+                                }
                             }
                         }
                     }

@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class FTSUtilities {
 
 	public static Boolean DEBUG = true;
-	public static Boolean TEST_MODE = false;
+	public static Boolean TEST_MODE = true;
     public static String strUuid = "";
     public static Long wifiID = -1l;
 

@@ -40,7 +40,7 @@ public class MainActivity extends Activity {
         if(FTSUtilities.TEST_MODE) {
             LinearLayout linearLayout = (LinearLayout)findViewById(R.id.mainLinearLayout);
             if(linearLayout != null) {
-                linearLayout.setBackgroundColor(Color.RED);
+                linearLayout.setBackgroundColor(Color.DKGRAY);
                 this.txtTabletID.setText(this.txtTabletID.getText() + " **** TEST MODE ****");
             }
         }

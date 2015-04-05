@@ -3,7 +3,6 @@ package com.wilsonvillerobotics.firstteamscouter;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 import android.widget.TableRow;
 
 /**
@@ -34,12 +33,18 @@ public class GaugeRow extends TableRow {
     private GameElement ge;
     private int rowIndex;
     private RowState rowState;
+    private GameElement.GameElementType defaultGameElementType;
+    private Drawable inactiveCan;
+    private Drawable inactiveTote;
 
     public GaugeRow(Context context) {
         super(context);
         this.ge = null;
         this.rowIndex = -1;
         this.rowState = RowState.INACTIVE;
+        this.defaultGameElementType = GameElement.GameElementType.UNKNOWN;
+        this.inactiveCan = getResources().getDrawable(R.drawable.green_can_side_up_silhouette_106x50);
+        this.inactiveTote = getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50);
     }
 
     public void setRowIndex(int ri) {
@@ -55,6 +60,9 @@ public class GaugeRow extends TableRow {
         this.ge = new GameElement(context);
         this.rowIndex = -1;
         this.rowState = RowState.INACTIVE;
+        this.defaultGameElementType = GameElement.GameElementType.UNKNOWN;
+        this.inactiveCan = getResources().getDrawable(R.drawable.green_can_side_up_silhouette_106x50);
+        this.inactiveTote = getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50);
     }
 
     public void setGameElement(GameElement ge) {
@@ -63,6 +71,14 @@ public class GaugeRow extends TableRow {
 
     public GameElement getGameElement() {
         return this.ge;
+    }
+
+    public void setDefaultGameElementType(GameElement.GameElementType get) {
+        this.defaultGameElementType = get;
+    }
+
+    public GameElement.GameElementType getDefaultGameElementType() {
+        return this.defaultGameElementType;
     }
 
     public boolean isInactive() {
@@ -105,7 +121,11 @@ public class GaugeRow extends TableRow {
     }
 
     public void deactivate(GameElement.GameElementType get, GameElement.GameElementState ges, OnDragListener dragger) {
-        this.ge.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
+        if(this.defaultGameElementType == GameElement.GameElementType.CAN) {
+            this.ge.setImageDrawable(this.inactiveCan);
+        } else {
+            this.ge.setImageDrawable(this.inactiveTote);
+        }
         this.ge.setOnTouchListener(null);
         this.ge.setElementType(get);
         this.ge.setElementState(ges);

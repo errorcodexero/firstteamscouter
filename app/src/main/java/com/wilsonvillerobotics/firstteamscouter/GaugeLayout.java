@@ -6,12 +6,9 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by SommervilleT on 2/13/2015.
@@ -20,7 +17,7 @@ public class GaugeLayout extends TableLayout {
 
     public enum GaugeType {
         ROBOT ("Robot Gauge", "ROBOT"),
-        FLOOR ("Floor Gauge", "GROUND"),
+        GROUND("Floor Gauge", "GROUND"),
         PLATFORM ("Platform Gauge", "PLATFORM"),
         STEP ("Step Gauge", "STEP"),
         UNKNOWN ("Unknown Gauge", "UNKNOWN");
@@ -71,11 +68,11 @@ public class GaugeLayout extends TableLayout {
     }
 
     private void init() {
-        this.init(null);
+        this.init(GaugeType.UNKNOWN, null);
     }
 
-    public void init(OnDragListener odl) {
-        this.gaugeType = GaugeType.UNKNOWN;
+    public void init(GaugeType gaugeType, OnDragListener odl) {
+        this.gaugeType = gaugeType;
         this.numRows = this.getChildCount();
         for(int i = 0; i < numRows; i++) {
             GaugeRow gr = (GaugeRow)this.getChildAt(i);
@@ -88,6 +85,14 @@ public class GaugeLayout extends TableLayout {
             ge.setVisibility(true);
             ge.setElementType(GameElement.GameElementType.UNKNOWN);
             ge.setElementState(GameElement.GameElementState.UNKNOWN);
+
+            GameElement.GameElementType get = GameElement.GameElementType.GRAY_TOTE;
+            if(i == 0 && this.getGaugeType() != GaugeType.STEP) {
+                get = GameElement.GameElementType.CAN;
+            } else {
+                get = GameElement.GameElementType.GRAY_TOTE;
+            }
+            gr.setDefaultGameElementType(get);
 
             gr.setGameElement(ge);
             gaugeRows.add(i, gr);
@@ -116,16 +121,35 @@ public class GaugeLayout extends TableLayout {
         return gaugeRows.get(index);
     }
 
-    public void addRow() {
+    public void addRow(GameElement.GameElementType get) {
         GameElement ge = new GameElement(context);
+        ge.setElementType(get);
 
-        ge.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
+        switch(get) {
+            case GRAY_TOTE:
+            case YELLOW_TOTE:
+                ge.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
+                break;
+            case CAN:
+                ge.setImageDrawable(getResources().getDrawable(R.drawable.green_can_side_up_silhouette_106x50));
+                break;
+            case TRASH:
+                break;
+            case UNKNOWN:
+                ge.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
+                break;
+            default:
+                ge.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
+                break;
+        }
+
         ge.setTag("rowImageView");
 
         TableLayout.LayoutParams lp = new TableLayout.LayoutParams(ge.getWidth(), ge.getHeight());
         ge.setLayoutParams(lp);
 
         GaugeRow gr = new GaugeRow(this.context);
+        gr.setDefaultGameElementType(get);
         gr.setGameElement(ge);
         gr.setTag(String.valueOf(numRows++));
         gr.addView(ge);
@@ -133,8 +157,10 @@ public class GaugeLayout extends TableLayout {
     }
 
     private void populateTableRows(int nRows) {
+        GameElement.GameElementType get = GameElement.GameElementType.GRAY_TOTE;
         for(int i = 0; i < nRows; i++) {
-            this.addRow();
+            if(i == nRows - 1 && this.getGaugeType() != GaugeType.STEP) get = GameElement.GameElementType.CAN;
+            this.addRow(get);
         }
     }
 
@@ -161,6 +187,22 @@ public class GaugeLayout extends TableLayout {
     public void deactivateRow(int rowIndex, OnDragListener dragger) {
         if(rowIndex >= numRows) return;
         this.gaugeRows.get(rowIndex).deactivate(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, dragger);
+    }
+
+    public GameElement.GameElementLocation getElementLocation() {
+        switch(this.getGaugeType()) {
+            case ROBOT:
+                return GameElement.GameElementLocation.ROBOT;
+            case STEP:
+                return GameElement.GameElementLocation.STEP;
+            case GROUND:
+                return GameElement.GameElementLocation.GROUND;
+            case PLATFORM:
+                return GameElement.GameElementLocation.PLATFORM;
+            case UNKNOWN:
+            default:
+                return GameElement.GameElementLocation.UNKNOWN;
+        }
     }
 
     private Drawable getDrawableForElementTypeAndState(GameElement.GameElementType get, GameElement.GameElementState ges) {
@@ -294,7 +336,7 @@ public class GaugeLayout extends TableLayout {
 
                 if (foundAllInactiveRows) {
                     for (GaugeRow gr : rowsToHighlight) {
-                        Drawable d = getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_light_106x50);
+                        Drawable d = getResources().getDrawable(R.drawable.green_can_side_up_silhouette_light_106x50);
                         gr.highlight(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, d);
                     }
                 }

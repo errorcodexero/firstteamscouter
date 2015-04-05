@@ -11,20 +11,32 @@ import java.util.ArrayList;
  */
 public class TransportContainer extends LinearLayout {
     private ArrayList<GameElement> gameElements;
+    private int numElements;
+    private GameElement.GameElementLocation startLocation;
+    private int startIndex;
 
     public TransportContainer(Context context) {
         super(context);
         this.gameElements = new ArrayList<GameElement>();
+        numElements = 0;
+        startIndex = -1;
+        startLocation = null;
     }
 
     public TransportContainer(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.gameElements = new ArrayList<GameElement>();
+        numElements = 0;
+        startIndex = -1;
+        startLocation = null;
     }
 
     public TransportContainer(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         this.gameElements = new ArrayList<GameElement>();
+        numElements = 0;
+        startIndex = -1;
+        startLocation = null;
     }
 
     public ArrayList<GameElement> getGameElements() {
@@ -36,7 +48,6 @@ public class TransportContainer extends LinearLayout {
         boolean added = false;
         if(ge != null) {
             this.gameElements.add(index, ge);
-            //this.addView(ge.getImageView());
             this.addView(ge);
         }
         if(index == gameElements.size()) return -1;
@@ -49,6 +60,26 @@ public class TransportContainer extends LinearLayout {
             return this.gameElements.get(index);
         }
         return null;
+    }
+
+    public int getStartIndex() {
+        return this.startIndex;
+    }
+
+    public void setStartIndex(int startIndex) {
+        this.startIndex = startIndex;
+    }
+
+    public int getNumElements() {
+        return this.numElements;
+    }
+
+    public GameElement.GameElementLocation getStartLocation() {
+        return this.startLocation;
+    }
+
+    public void setStartLocation(GameElement.GameElementLocation gel) {
+        this.startLocation = gel;
     }
 
     public boolean deleteGameElement(int index) {

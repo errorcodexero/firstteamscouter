@@ -138,6 +138,23 @@ public class GameElement extends ImageView {
         this.elementActive = false;
     }
 
+    ///
+    /// Copy Constructor
+    ///
+    public GameElement(Context context, GameElement ge) {
+        super(context);
+        this.context = context;
+        this.setImageDrawable(ge.getDrawable());
+        elementCoordinates = ge.getLocation();
+        elementVisible = ge.isVisible();
+        elementId = ge.getId();
+        elementLink = ge.nextElement();
+        elementType = ge.getElementType();
+        elementState = ge.getElementState();
+        elementLocation = ge.getElementLocation();
+        elementActive = ge.isActive();
+    }
+
     public void initGameElement(int id, Point loc, boolean vis, GameElementType get, GameElementState ges, GameElementLocation gel) {
         this.elementId = id;
         this.elementCoordinates = loc;
