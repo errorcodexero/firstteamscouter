@@ -181,7 +181,7 @@ public class GaugeLayout extends TableLayout {
 
     public void activateRow(int rowIndex, GameElement.GameElementType get, GameElement.GameElementState ges, OnTouchListener touchy) {
         if(rowIndex >= numRows) return;
-        this.gaugeRows.get(rowIndex).activate(get, ges, getDrawableForElementTypeAndState(get, ges), touchy);
+        this.gaugeRows.get(rowIndex).activate(get, ges, GameElement.getDrawableForElementTypeAndState(get, ges, getResources()), touchy);
     }
 
     public void deactivateRow(int rowIndex, OnDragListener dragger) {
@@ -205,6 +205,7 @@ public class GaugeLayout extends TableLayout {
         }
     }
 
+/*
     private Drawable getDrawableForElementTypeAndState(GameElement.GameElementType get, GameElement.GameElementState ges) {
         Drawable d = null;
         switch (get) {
@@ -317,6 +318,7 @@ public class GaugeLayout extends TableLayout {
         return d;
     }
 
+*/
     public void highlightRows(GaugeRow gaugeRow, int numRows) {
         /// TODO Pass in TransportContainer so I can set each row image to silhouette of what it represents
         if(gaugeRow.isInactive()) {

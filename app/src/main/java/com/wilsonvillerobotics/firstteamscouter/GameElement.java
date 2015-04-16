@@ -1,7 +1,9 @@
 package com.wilsonvillerobotics.firstteamscouter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -204,6 +206,25 @@ public class GameElement extends ImageView {
         this.elementState = state;
     }
 
+    public void rotateElement() {
+        switch(this.getElementState()) {
+            case UPRIGHT:
+                this.setElementState(GameElementState.ONSIDE);
+                break;
+            case ONSIDE:
+                this.setElementState(GameElementState.UPSIDEDOWN);
+                break;
+            case UPSIDEDOWN:
+                this.setElementState(GameElementState.UPRIGHT);
+                break;
+            default:
+                this.setElementState(GameElementState.UPRIGHT);
+                break;
+        }
+        this.setImageDrawable(GameElement.getDrawableForElementTypeAndState(this.elementType, this.elementState, getResources()));
+        this.invalidate();
+    }
+
     public void pushToStack(GameElement el) {
         el.makeInvisible();
         GameElement currElement = this;
@@ -374,5 +395,117 @@ public class GameElement extends ImageView {
 
     public boolean isTrash() {
         return this.elementType == GameElementType.TRASH;
+    }
+
+    public static Drawable getDrawableForElementTypeAndState(GameElement.GameElementType get, GameElement.GameElementState ges, Resources resources) {
+        Drawable d = null;
+        switch (get) {
+            case ROBOT:
+                d = resources.getDrawable(R.drawable.robot_50x50);
+                break;
+            case GRAY_TOTE:
+                switch (ges){
+                    case UPRIGHT:
+                        d = resources.getDrawable(R.drawable.gray_tote_side_up_106x50);
+                        break;
+                    case ONSIDE:
+                        d = resources.getDrawable(R.drawable.gray_tote_side_up_106x50);
+                        break;
+                    case UPSIDEDOWN:
+                        d = resources.getDrawable(R.drawable.gray_tote_side_down_106x50);
+                        break;
+                    case ONEND:
+                        d = resources.getDrawable(R.drawable.gray_tote_side_up_106x50);
+                        break;
+                    default:
+                    case UNKNOWN:
+                        d = resources.getDrawable(R.drawable.gray_tote_side_up_106x50);
+                        break;
+                }
+                break;
+            case YELLOW_TOTE:
+                switch (ges){
+                    case UPRIGHT:
+                        d = resources.getDrawable(R.drawable.yellow_tote_side_up_106x50);
+                        break;
+                    case ONSIDE:
+                        d = resources.getDrawable(R.drawable.yellow_tote_side_up_106x50);
+                        break;
+                    case UPSIDEDOWN:
+                        d = resources.getDrawable(R.drawable.yellow_tote_side_up_106x50);
+                        break;
+                    case ONEND:
+                        d = resources.getDrawable(R.drawable.yellow_tote_side_up_106x50);
+                        break;
+                    default:
+                    case UNKNOWN:
+                        d = resources.getDrawable(R.drawable.yellow_tote_side_up_106x50);
+                        break;
+                }
+                break;
+            case CAN:
+                switch (ges){
+                    case UPRIGHT:
+                        d = resources.getDrawable(R.drawable.green_can_side_up_63x75);
+                        break;
+                    case ONSIDE:
+                        d = resources.getDrawable(R.drawable.green_can_side_side_75x63);
+                        break;
+                    case UPSIDEDOWN:
+                        d = resources.getDrawable(R.drawable.green_can_side_down_63x75);
+                        break;
+                    case ONEND:
+                        d = resources.getDrawable(R.drawable.green_can_side_up_63x75);
+                        break;
+                    default:
+                    case UNKNOWN:
+                        d = resources.getDrawable(R.drawable.green_can_side_up_63x75);
+                        break;
+                }
+                break;
+            case TRASH:
+                switch (ges){
+                    case UPRIGHT:
+                        d = resources.getDrawable(R.drawable.green_can_side_up_63x75);
+                        break;
+                    case ONSIDE:
+                        d = resources.getDrawable(R.drawable.green_can_side_side_75x63);
+                        break;
+                    case UPSIDEDOWN:
+                        d = resources.getDrawable(R.drawable.green_can_side_down_63x75);
+                        break;
+                    case ONEND:
+                        d = resources.getDrawable(R.drawable.green_can_side_up_63x75);
+                        break;
+                    default:
+                    case UNKNOWN:
+                        d = resources.getDrawable(R.drawable.green_can_side_up_63x75);
+                        break;
+                }
+                break;
+            default:
+            case UNKNOWN:
+                switch (ges){
+                    case UPRIGHT:
+                        d = resources.getDrawable(R.drawable.gray_tote_side_up_106x50);
+                        break;
+                    case ONSIDE:
+                        d = resources.getDrawable(R.drawable.gray_tote_side_up_106x50);
+                        break;
+                    case UPSIDEDOWN:
+                        d = resources.getDrawable(R.drawable.gray_tote_side_down_106x50);
+                        break;
+                    case ONEND:
+                        d = resources.getDrawable(R.drawable.gray_tote_side_up_106x50);
+                        break;
+                    default:
+                    case UNKNOWN:
+                        d = resources.getDrawable(R.drawable.gray_tote_side_up_106x50);
+                        break;
+                }
+                break;
+        }
+
+        return d;
     }
 }

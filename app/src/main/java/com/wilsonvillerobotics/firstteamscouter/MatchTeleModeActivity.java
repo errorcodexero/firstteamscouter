@@ -184,7 +184,11 @@ public class MatchTeleModeActivity extends Activity {
         btnRotateElements.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                for(GameElement ge : teleFieldObjects.values()) {
+                    if(ge.getElementType() != GameElementType.ROBOT) {
+                        ge.rotateElement();
+                    }
+                }
             }
         });
     }
