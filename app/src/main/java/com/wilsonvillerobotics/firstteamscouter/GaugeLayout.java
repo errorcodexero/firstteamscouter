@@ -318,6 +318,7 @@ public class GaugeLayout extends TableLayout {
     }
 
     public void highlightRows(GaugeRow gaugeRow, int numRows) {
+        /// TODO Pass in TransportContainer so I can set each row image to silhouette of what it represents
         if(gaugeRow.isInactive()) {
             int rowsModTwo = numRows % 2;
             int halfNumRows = numRows / 2;
@@ -336,7 +337,7 @@ public class GaugeLayout extends TableLayout {
 
                 if (foundAllInactiveRows) {
                     for (GaugeRow gr : rowsToHighlight) {
-                        Drawable d = getResources().getDrawable(R.drawable.green_can_side_up_silhouette_light_106x50);
+                        Drawable d = getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_light_106x50);
                         gr.highlight(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, d);
                     }
                 }

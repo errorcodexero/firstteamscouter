@@ -8,7 +8,8 @@
     android:rowCount="18"
     android:rowOrderPreserved="true"
     android:id="@+id/Tele_LayoutRelative"
-    android:paddingRight="25dp">
+    android:paddingRight="25dp"
+    android:background="@android:color/black">
 
     <Switch
         android:id="@+id/switchUndo"
@@ -18,7 +19,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_height="50dp"
-        android:layout_width="200dp" />
+        android:layout_width="200dp"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="900dp"
@@ -32,6 +34,7 @@
         android:paddingRight="25dp">
 
         <!-- imgGroundToteUp -->
+
         <TextView
             android:layout_width="346dp"
             android:layout_height="30dp"
@@ -40,7 +43,8 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="14dp"
             android:layout_marginBottom="0dp"
-            android:text="Ground"/>
+            android:text="Ground"
+            android:textColor="@android:color/white" />
 
         <com.wilsonvillerobotics.firstteamscouter.GameElement
             android:layout_width="106dp"
@@ -88,7 +92,8 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="374dp"
             android:layout_marginBottom="0dp"
-            android:text="Human"/>
+            android:text="Human"
+            android:textColor="@android:color/white" />
 
         <com.wilsonvillerobotics.firstteamscouter.GameElement
             android:layout_width="106dp"
@@ -110,7 +115,8 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="494dp"
             android:layout_marginBottom="0dp"
-            android:text="Step"/>
+            android:text="Step"
+            android:textColor="@android:color/white" />
 
         <com.wilsonvillerobotics.firstteamscouter.GameElement
             android:layout_width="106dp"
@@ -132,7 +138,8 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="612dp"
             android:layout_marginBottom="0dp"
-            android:text="Can"/>
+            android:text="Can"
+            android:textColor="@android:color/white" />
 
         <com.wilsonvillerobotics.firstteamscouter.GameElement
             android:layout_width="63dp"
@@ -173,137 +180,262 @@
 
 
         <!-- Robot_Gauge_TableView -->
+
         <TextView
             android:layout_width="125dp"
             android:layout_height="wrap_content"
             android:text="@string/label_robot_gauge_title"
             android:id="@+id/txtRobotGaugeLabel"
-            android:layout_marginLeft="160dp"
+            android:layout_marginLeft="135dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="15dp"
             android:textStyle="bold"
-            android:textColor="#ff0000ff"
+            android:textColor="@android:color/white"
             android:gravity="center" />
 
-        <com.wilsonvillerobotics.firstteamscouter.GaugeLayout
-            android:layout_width="125dp"
-            android:layout_height="350dp"
-            android:layout_alignParentTop="false"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="160dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="150dp"
-            android:id="@+id/Robot_Gauge_TableView"
-            android:showDividers="middle|beginning|end"
-            android:orientation="vertical"
-            android:background="#ffe4fdff">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="350dp"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|bottom"
+            android:id="@+id/RobotLinearLayout"
+            android:layout_marginRight="10dp">
 
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
+            <com.wilsonvillerobotics.firstteamscouter.GaugeLayout
+                android:layout_width="125dp"
+                android:layout_height="350dp"
+                android:id="@+id/Robot_Gauge_TableView"
+                android:showDividers="middle|beginning|end"
+                android:orientation="vertical"
+                android:background="@android:color/black"
+                android:layout_marginBottom="110dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp">
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
                     android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/green_can_side_up_silhouette_106x50"
-                    android:id="@+id/imgRobotLvl7" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/green_can_side_up_silhouette_106x50"
+                        android:id="@+id/imgRobotLvl7" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
 
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
                     android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgRobotLvl6" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgRobotLvl6" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
 
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
                     android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgRobotLvl5" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgRobotLvl5" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
 
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
                     android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgRobotLvl4" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgRobotLvl4" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
 
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
                     android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgRobotLvl3" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgRobotLvl3" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
 
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
                     android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgRobotLvl2" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgRobotLvl2" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
 
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
                     android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgRobotLvl1" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
-        </com.wilsonvillerobotics.firstteamscouter.GaugeLayout>
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgRobotLvl1" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+            </com.wilsonvillerobotics.firstteamscouter.GaugeLayout>
+
+            <com.wilsonvillerobotics.firstteamscouter.GaugeLayout
+                android:layout_width="125dp"
+                android:layout_height="350dp"
+                android:id="@+id/Robot2_Gauge_TableView"
+                android:showDividers="middle|beginning|end"
+                android:orientation="vertical"
+                android:background="@android:color/black"
+                android:layout_marginBottom="110dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/green_can_side_up_silhouette_106x50"
+                        android:id="@+id/imgRobot2Lvl7" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgRobot2Lvl6" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgRobot2Lvl5" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgRobot2Lvl4" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgRobot2Lvl3" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgRobot2Lvl2" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgRobot2Lvl1" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+            </com.wilsonvillerobotics.firstteamscouter.GaugeLayout>
+        </LinearLayout>
 
         <!-- Platform_Gauge_TableView -->
         <TextView
@@ -311,132 +443,13 @@
             android:layout_height="wrap_content"
             android:text="Platform"
             android:id="@+id/txtPlatformGaugeLabel"
-            android:layout_marginLeft="600dp"
+            android:layout_marginLeft="375dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="15dp"
             android:textStyle="bold"
-            android:textColor="#ff0000ff"
+            android:textColor="@android:color/white"
             android:gravity="center" />
-
-        <com.wilsonvillerobotics.firstteamscouter.GaugeLayout
-            android:layout_width="125dp"
-            android:layout_height="350dp"
-            android:layout_alignParentTop="false"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="450dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="150dp"
-            android:id="@+id/Platform_Gauge_TableView"
-            android:showDividers="middle|beginning|end"
-            android:orientation="vertical"
-            android:background="#ffe4fdff">
-
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
-                    android:layout_width="fill_parent"
-                    android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/green_can_side_up_silhouette_106x50"
-                    android:id="@+id/imgPlatformLvl7" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
-
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
-                    android:layout_width="fill_parent"
-                    android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgPlatformLvl6" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
-
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
-                    android:layout_width="fill_parent"
-                    android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgPlatformLvl5" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
-
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
-                    android:layout_width="fill_parent"
-                    android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgPlatformLvl4" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
-
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
-                    android:layout_width="fill_parent"
-                    android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgPlatformLvl3" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
-
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
-                    android:layout_width="fill_parent"
-                    android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgPlatformLvl2" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
-
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
-                    android:layout_width="fill_parent"
-                    android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgPlatformLvl1" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
-        </com.wilsonvillerobotics.firstteamscouter.GaugeLayout>
 
         <!-- Floor_Gauge_TableView -->
         <TextView
@@ -444,222 +457,349 @@
             android:layout_height="wrap_content"
             android:text="Floor"
             android:id="@+id/txtFloorGaugeLabel"
-            android:layout_marginLeft="450dp"
+            android:layout_marginLeft="500dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="15dp"
             android:textStyle="bold"
-            android:textColor="#ff0000ff"
+            android:textColor="@android:color/white"
             android:gravity="center" />
 
-        <com.wilsonvillerobotics.firstteamscouter.GaugeLayout
-            android:layout_width="125dp"
-            android:layout_height="350dp"
-            android:layout_alignParentTop="false"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="600dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="150dp"
-            android:id="@+id/Floor_Gauge_TableView"
-            android:showDividers="middle|beginning|end"
-            android:orientation="vertical"
-            android:background="#ffe4fdff">
-
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
-                    android:layout_width="fill_parent"
-                    android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/green_can_side_up_silhouette_106x50"
-                    android:id="@+id/imgFloorLvl7" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
-
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
-                    android:layout_width="fill_parent"
-                    android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgFloorLvl6" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
-
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
-                    android:layout_width="fill_parent"
-                    android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgFloorLvl5" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
-
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
-                    android:layout_width="fill_parent"
-                    android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgFloorLvl4" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
-
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
-                    android:layout_width="fill_parent"
-                    android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgFloorLvl3" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
-
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
-                    android:layout_width="fill_parent"
-                    android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgFloorLvl2" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
-
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
-                    android:layout_width="fill_parent"
-                    android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgFloorLvl1" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
-        </com.wilsonvillerobotics.firstteamscouter.GaugeLayout>
-
-        <!-- Step_Gauge_TableView -->
         <TextView
             android:layout_width="125dp"
             android:layout_height="wrap_content"
             android:text="Step"
             android:id="@+id/txtStepGaugeLabel"
-            android:layout_marginLeft="750dp"
+            android:layout_marginLeft="650dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="15dp"
             android:textStyle="bold"
-            android:textColor="#ff0000ff"
+            android:textColor="@android:color/white"
             android:gravity="center" />
 
-        <com.wilsonvillerobotics.firstteamscouter.GaugeLayout
-            android:layout_width="125dp"
-            android:layout_height="200dp"
-            android:layout_alignParentTop="false"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="750dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="150dp"
-            android:id="@+id/Step_Gauge_TableView"
-            android:showDividers="middle|beginning|end"
-            android:orientation="vertical"
-            android:background="#ffe4fdff">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="450dp"
+            android:layout_height="match_parent"
+            android:id="@+id/ScoringLinearLayout"
+            android:layout_toRightOf="@+id/RobotLinearLayout"
+            android:gravity="bottom"
+            android:layout_marginLeft="10dp">
 
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
+            <com.wilsonvillerobotics.firstteamscouter.GaugeLayout
+                android:layout_width="125dp"
+                android:layout_height="350dp"
+                android:layout_marginBottom="110dp"
+                android:id="@+id/Platform_Gauge_TableView"
+                android:showDividers="middle|beginning|end"
+                android:orientation="vertical"
+                android:background="@android:color/black"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
                     android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgStepLvl4" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/green_can_side_up_silhouette_106x50"
+                        android:id="@+id/imgPlatformLvl7" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
 
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible"
-                android:layout_gravity="center">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
                     android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgStepLvl3"
-                    android:layout_gravity="center" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgPlatformLvl6" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
 
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
                     android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgStepLvl2" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgPlatformLvl5" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
 
-            <com.wilsonvillerobotics.firstteamscouter.GaugeRow
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:gravity="center"
-                android:showDividers="beginning|end"
-                android:visibility="visible">
-                <com.wilsonvillerobotics.firstteamscouter.GameElement
-                    android:layout_height="50dp"
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
                     android:layout_width="fill_parent"
                     android:gravity="center"
-                    android:tag="rowImageView"
-                    android:src="@drawable/gray_tote_side_up_silhouette_106x50"
-                    android:id="@+id/imgStepLvl1" />
-            </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
-        </com.wilsonvillerobotics.firstteamscouter.GaugeLayout>
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgPlatformLvl4" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgPlatformLvl3" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgPlatformLvl2" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgPlatformLvl1" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+            </com.wilsonvillerobotics.firstteamscouter.GaugeLayout>
+
+            <com.wilsonvillerobotics.firstteamscouter.GaugeLayout
+                android:layout_width="125dp"
+                android:layout_height="350dp"
+                android:layout_marginBottom="110dp"
+                android:id="@+id/Floor_Gauge_TableView"
+                android:showDividers="middle|beginning|end"
+                android:orientation="vertical"
+                android:background="@android:color/black"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/green_can_side_up_silhouette_106x50"
+                        android:id="@+id/imgFloorLvl7" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgFloorLvl6" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgFloorLvl5" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgFloorLvl4" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgFloorLvl3" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgFloorLvl2" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgFloorLvl1" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+            </com.wilsonvillerobotics.firstteamscouter.GaugeLayout>
+
+            <com.wilsonvillerobotics.firstteamscouter.GaugeLayout
+                android:layout_width="125dp"
+                android:layout_height="200dp"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="110dp"
+                android:id="@+id/Step_Gauge_TableView"
+                android:showDividers="middle|beginning|end"
+                android:orientation="vertical"
+                android:background="@android:color/black"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgStepLvl4" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible"
+                    android:layout_gravity="center">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgStepLvl3"
+                        android:layout_gravity="center" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgStepLvl2" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+
+                <com.wilsonvillerobotics.firstteamscouter.GaugeRow
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:gravity="center"
+                    android:showDividers="beginning|end"
+                    android:visibility="visible">
+                    <com.wilsonvillerobotics.firstteamscouter.GameElement
+                        android:layout_height="50dp"
+                        android:layout_width="fill_parent"
+                        android:gravity="center"
+                        android:tag="rowImageView"
+                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:id="@+id/imgStepLvl1" />
+                </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
+            </com.wilsonvillerobotics.firstteamscouter.GaugeLayout>
+        </LinearLayout>
+
+        <!-- Step_Gauge_TableView -->
 
     </RelativeLayout>
 
@@ -668,36 +808,43 @@
         android:layout_height="wrap_content"
         android:text="Knock Over"
         android:id="@+id/btnKnockOverElements"
+        android:background="@drawable/custom_btn_shakespeare"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="225dp"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="100dp" />
 
     <Button
         android:layout_width="115dp"
         android:layout_height="wrap_content"
         android:text="Drop Element(s)"
         android:id="@+id/btnDropElements"
+        android:background="@drawable/custom_btn_shakespeare"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="150dp"
-        android:layout_alignParentBottom="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="To Notes"
-        android:id="@+id/btnSubmitMatchTele"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/switchUndo"
-        android:layout_marginRight="0dp"
-        android:layout_marginBottom="40dp" />
+        android:layout_alignParentBottom="false"
+        android:layout_below="@+id/btnKnockOverElements"
+        android:layout_marginTop="50dp" />
 
     <Button
         android:layout_width="115dp"
         android:layout_height="wrap_content"
         android:text="Rotate Element(s)"
         android:id="@+id/btnRotateElements"
+        android:background="@drawable/custom_btn_shakespeare"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="90dp"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="false"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/btnDropElements" />
+
+    <Button
+        android:layout_width="115dp"
+        android:layout_height="wrap_content"
+        android:text="To Notes"
+        android:id="@+id/btnSubmitMatchTele"
+        android:background="@drawable/custom_btn_shakespeare"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/btnRotateElements"
+        android:layout_marginTop="50dp" />
 
 </RelativeLayout>
