@@ -128,7 +128,7 @@ public class GaugeLayout extends TableLayout {
         switch(get) {
             case GRAY_TOTE:
             case YELLOW_TOTE:
-                ge.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50));
+                ge.setImageDrawable(getResources().getDrawable(R.drawable.gray_tote_side_up_outline_106x50));
                 break;
             case CAN:
                 ge.setImageDrawable(getResources().getDrawable(R.drawable.green_can_side_up_silhouette_106x50));
@@ -339,7 +339,7 @@ public class GaugeLayout extends TableLayout {
 
                 if (foundAllInactiveRows) {
                     for (GaugeRow gr : rowsToHighlight) {
-                        Drawable d = getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_light_106x50);
+                        Drawable d = getResources().getDrawable(R.drawable.gray_tote_side_up_filled_106x50);
                         gr.highlight(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, d);
                     }
                 }
@@ -366,7 +366,7 @@ public class GaugeLayout extends TableLayout {
 
                 if (foundOnlyHighlightedRows) {
                     for (GaugeRow gr : rowsToUnhighlight) {
-                        Drawable d = getResources().getDrawable(R.drawable.gray_tote_side_up_silhouette_106x50);
+                        Drawable d = getResources().getDrawable(R.drawable.gray_tote_side_up_outline_106x50);
                         gr.unhighlight(GameElement.GameElementType.GRAY_TOTE, GameElement.GameElementState.UPRIGHT, d);
                     }
                 }

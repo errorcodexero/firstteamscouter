@@ -239,7 +239,7 @@
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:tag="rowImageView"
-                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:src="@drawable/gray_tote_side_up_outline_106x50"
                         android:id="@+id/imgRobotLvl6" />
                 </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
 
@@ -254,7 +254,7 @@
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:tag="rowImageView"
-                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:src="@drawable/gray_tote_side_up_outline_106x50"
                         android:id="@+id/imgRobotLvl5" />
                 </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
 
@@ -269,7 +269,7 @@
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:tag="rowImageView"
-                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:src="@drawable/gray_tote_side_up_outline_106x50"
                         android:id="@+id/imgRobotLvl4" />
                 </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
 
@@ -284,7 +284,7 @@
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:tag="rowImageView"
-                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:src="@drawable/gray_tote_side_up_outline_106x50"
                         android:id="@+id/imgRobotLvl3" />
                 </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
 
@@ -299,7 +299,7 @@
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:tag="rowImageView"
-                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:src="@drawable/gray_tote_side_up_outline_106x50"
                         android:id="@+id/imgRobotLvl2" />
                 </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
 
@@ -314,7 +314,7 @@
                         android:layout_width="fill_parent"
                         android:gravity="center"
                         android:tag="rowImageView"
-                        android:src="@drawable/gray_tote_side_up_silhouette_106x50"
+                        android:src="@drawable/gray_tote_side_up_outline_106x50"
                         android:id="@+id/imgRobotLvl1" />
                 </com.wilsonvillerobotics.firstteamscouter.GaugeRow>
             </com.wilsonvillerobotics.firstteamscouter.GaugeLayout>
