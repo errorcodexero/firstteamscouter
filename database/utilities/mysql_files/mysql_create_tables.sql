@@ -1,3 +1,9 @@
+CREATE TABLE IF NOT EXISTS season_data (
+_id integer primary key auto_increment,
+season_name varchar(255),
+season_year integer,
+ready_to_export varchar(5));
+
 CREATE TABLE IF NOT EXISTS competition_data (
 _id integer primary key auto_increment,
 tablet_id integer,

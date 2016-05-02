@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Choose which defenses are on the field:"
+        android:id="@+id/textView2"
+        android:textSize="50sp"
+        android:paddingBottom="25dp" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="50dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Defense A"
+                android:id="@+id/textView3"
+                android:layout_column="0"
+                android:textSize="40sp"
+                android:paddingLeft="15dp"
+                android:paddingRight="35dp"
+                android:paddingTop="25dp"
+                android:paddingBottom="15dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Defense B"
+                android:id="@+id/textView4"
+                android:layout_column="8"
+                android:textSize="40sp"
+                android:paddingLeft="35dp"
+                android:paddingRight="35dp"
+                android:paddingTop="25dp"
+                android:paddingBottom="15dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Defense C"
+                android:id="@+id/textView5"
+                android:layout_column="9"
+                android:textSize="40sp"
+                android:paddingLeft="35dp"
+                android:paddingRight="35dp"
+                android:paddingTop="25dp"
+                android:paddingBottom="15dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Defense D"
+                android:id="@+id/textView6"
+                android:layout_column="10"
+                android:textSize="40sp"
+                android:singleLine="false"
+                android:paddingLeft="35dp"
+                android:paddingRight="10dp"
+                android:paddingTop="25dp"
+                android:paddingBottom="15dp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:text="Portcullis"
+                android:id="@+id/btnPortcullis"
+                android:checked="false"
+                android:textOff="Portcullis"
+                android:textOn="Portcullis"
+                android:textSize="25dp" />
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:text="New Button"
+                android:id="@+id/btnRamparts"
+                android:layout_column="8"
+                android:checked="false"
+                android:textOff="Ramparts"
+                android:textOn="Ramparts"
+                android:textSize="25dp" />
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:text="New Button"
+                android:id="@+id/btnDrawbridge"
+                android:layout_column="9"
+                android:checked="false"
+                android:textOff="Drawbridge"
+                android:textOn="Drawbridge"
+                android:textSize="25dp" />
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:text="New Button"
+                android:id="@+id/btnRockWall"
+                android:layout_column="10"
+                android:checked="false"
+                android:textOff="Rock Wall"
+                android:textOn="Rock Wall"
+                android:textSize="25dp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:text="New Button"
+                android:id="@+id/btnChevalDeFrise"
+                android:checked="false"
+                android:textOff="Cheval de Frise"
+                android:textOn="Cheval de Frise"
+                android:textSize="25dp" />
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:text="New Button"
+                android:id="@+id/btnMoat"
+                android:layout_column="8"
+                android:checked="false"
+                android:textOff="Moat"
+                android:textOn="Moat"
+                android:textSize="25dp" />
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:text="New Button"
+                android:id="@+id/btnSallyPort"
+                android:layout_column="9"
+                android:textOff="Sally Port"
+                android:textOn="Sally Port"
+                android:checked="false"
+                android:textSize="25dp" />
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:text="New Button"
+                android:id="@+id/btnRoughTerrain"
+                android:layout_column="10"
+                android:textOff="Rough Terrain"
+                android:textOn="Rough Terrain"
+                android:checked="false"
+                android:textSize="25dp" />
+        </TableRow>
+
+    </TableLayout>
+
+    <Button
+        android:layout_width="132dp"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:id="@+id/btnNext"
+        android:layout_gravity="right" />
+
+</LinearLayout>

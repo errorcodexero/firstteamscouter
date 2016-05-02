@@ -86,6 +86,10 @@
             android:screenOrientation="landscape" />
         <activity android:name=".DataExportActivity"
             android:screenOrientation="landscape" />
+        <activity android:name=".MatchStartingDefensesActivity"
+        android:screenOrientation="landscape" />
+        <activity android:name=".MatchTeleopActivity"
+            android:screenOrientation="landscape" />
 
     </application>
 

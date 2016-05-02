@@ -15,6 +15,7 @@ import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchDBAdapter;
 import com.wilsonvillerobotics.firstteamscouter.dbAdapters.TeamMatchTransactionDataDBAdapter;
@@ -29,6 +30,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MatchTeleModeActivity extends Activity {
+
+    protected String defenseA, defenseB, defenseC, defenseD;
 
     public enum TeleFieldObject {
         Robot(R.id.imgRobot, GameElementType.ROBOT, GameElementState.UPRIGHT, GameElementLocation.GROUND),
@@ -53,6 +56,8 @@ public class MatchTeleModeActivity extends Activity {
             this.state = state;
             this.location = loc;
         }
+
+
 
         public int getId() {
             return this.id;
@@ -116,21 +121,27 @@ public class MatchTeleModeActivity extends Activity {
 	}
 
     private void processIntent(Intent intent) {
-        this.tabletAlliancePosition = ALLIANCE_POSITION.getAlliancePositionForString(intent.getStringExtra("tablet_id"));
-        this.fieldOrientationRedOnRight = intent.getBooleanExtra("field_orientation", false);
-        this.matchNumber = intent.getIntExtra("match_number", 0);
-        this.teamMatchID = intent.getLongExtra("tmID", -1);
-        this.teamNumber  = intent.getIntExtra("team_number", -1);
-        this.competitionID = intent.getLongExtra("competition_id", -1);
+        //this.tabletAlliancePosition = ALLIANCE_POSITION.getAlliancePositionForString(intent.getStringExtra("tablet_id"));
+        //this.fieldOrientationRedOnRight = intent.getBooleanExtra("field_orientation", false);
+        //this.matchNumber = intent.getIntExtra("match_number", 0);
+        //this.teamMatchID = intent.getLongExtra("tmID", -1);
+        //this.teamNumber  = intent.getIntExtra("team_number", -1);
+        //this.competitionID = intent.getLongExtra("competition_id", -1);
+        this.defenseA = intent.getStringExtra("DefenseA");
+        this.defenseB = intent.getStringExtra("DefenseB");
+        this.defenseC = intent.getStringExtra("DefenseC");
+        this.defenseD = intent.getStringExtra("DefenseD");
+
+        Toast.makeText(this,this.defenseA,Toast.LENGTH_LONG);
     }
 
     private void buildIntent(Intent intent) {
-        intent.putExtra("tablet_id", FTSUtilities.getTabletID(tabletAlliancePosition));
-        intent.putExtra("field_orientation", fieldOrientationRedOnRight);
-        intent.putExtra("match_number", matchNumber);
-        intent.putExtra("tmID", teamMatchID);
-        intent.putExtra("team_number", teamNumber);
-        intent.putExtra("competition_id", competitionID);
+        //intent.putExtra("tablet_id", FTSUtilities.getTabletID(tabletAlliancePosition));
+        //intent.putExtra("field_orientation", fieldOrientationRedOnRight);
+        //intent.putExtra("match_number", matchNumber);
+        //intent.putExtra("tmID", teamMatchID);
+        //intent.putExtra("team_number", teamNumber);
+        //intent.putExtra("competition_id", competitionID);
     }
 
     private void initFieldObjects() {

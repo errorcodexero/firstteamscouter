@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Score"
+                android:id="@+id/lblScore"
+                android:textSize="30sp"
+                android:layout_column="2"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Miss"
+                android:id="@+id/lblMiss"
+                android:textSize="30sp"
+                android:layout_column="3"
+                android:layout_weight="1"
+                android:layout_marginLeft="90dp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="High Goal"
+                android:id="@+id/lblHighGoal"
+                android:textSize="30sp"
+                android:layout_marginRight="165dp"
+                android:layout_marginLeft="10dp" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="-"
+                android:id="@+id/btnHighGoalScoreMinus" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/lblHighGoalScore"
+                android:focusable="false"
+                android:textSize="30sp"
+                android:layout_gravity="center" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="+"
+                android:id="@+id/btnHighGoalScorePlus" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="-"
+                android:id="@+id/btnHighGoalMissMinus"
+                android:layout_marginLeft="100dp" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/lblHighGoalMiss"
+                android:textSize="30sp"
+                android:layout_gravity="center" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="+"
+                android:id="@+id/btnHighGoalMissPlus" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Low Goal"
+                android:id="@+id/lblLowGoal"
+                android:textSize="30sp"
+                android:layout_marginLeft="10dp" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="-"
+                android:id="@+id/btnLowGoalScoreMinus" />
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/lblLowGoalScore"
+                android:focusable="false"
+                android:textSize="30sp"
+                android:layout_gravity="center" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="+"
+                android:id="@+id/btnLowGoalScorePlus" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="-"
+                android:id="@+id/btnLowGoalMissMinus"
+                android:layout_marginLeft="100dp" />
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/lblLowGoalMiss"
+                android:textSize="30sp"
+                android:layout_gravity="center" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="+"
+                android:id="@+id/btnLowGoalMissPlus" />
+        </TableRow>
+
+    </TableLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Scored Cross"
+                android:id="@+id/lblScoredCross"
+                android:textSize="30sp"
+                android:layout_column="1"
+                android:paddingLeft="10dp"
+                android:layout_span="3"
+                android:layout_marginLeft="28dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Unscored Cross"
+                android:id="@+id/lblScoredCross"
+                android:layout_column="4"
+                android:textSize="30sp"
+                android:layout_span="1"
+                android:layout_weight="1"
+                android:layout_gravity="left|top"
+                android:paddingLeft="110dp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Low Bar"
+                android:id="@+id/lblLowBar"
+                android:layout_marginRight="50dp"
+                android:textSize="30sp"
+                android:layout_marginLeft="10dp" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="-"
+                android:id="@+id/btnLowBarScoreMinus" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/lblLowBarScore"
+                android:focusable="false"
+                android:textSize="30sp"
+                android:layout_gravity="center" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="+"
+                android:id="@+id/btnLowBarScorePlus" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="-"
+                android:id="@+id/btnLowBarUnscoreMinus"
+                android:layout_marginLeft="100dp" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/lblLowBarUnscore"
+                android:focusable="false"
+                android:textSize="30sp"
+                android:layout_gravity="center" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="+"
+                android:id="@+id/btnLowBarUnscorePlus" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:focusable="false">
+
+            <TextView
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Defense A"
+                android:id="@+id/lblDefenseA"
+                android:layout_marginRight="50dp"
+                android:textSize="30sp"
+                android:layout_marginLeft="10dp" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="-"
+                android:id="@+id/btnDefenseAScoreMinus" />
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/lblDefenseAScore"
+                android:focusable="false"
+                android:textSize="30sp"
+                android:layout_gravity="center" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="+"
+                android:id="@+id/btnDefenseAScorePlus" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="-"
+                android:id="@+id/btnDefenseAUnscoreMinus"
+                android:layout_marginLeft="100dp" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/lblDefenseAUnscore"
+                android:focusable="false"
+                android:textSize="30sp"
+                android:layout_gravity="center" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="+"
+                android:id="@+id/btnDefenseAUnscorePlus" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Defense B"
+                android:id="@+id/lblDefenseB"
+                android:layout_marginRight="50dp"
+                android:textSize="30sp"
+                android:layout_marginLeft="10dp" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="-"
+                android:id="@+id/btnDefenseBScoreMinus" />
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/lblDefenseBScore"
+                android:focusable="false"
+                android:textSize="30sp"
+                android:layout_gravity="center" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="+"
+                android:id="@+id/btnDefenseBScorePlus" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="-"
+                android:id="@+id/btnDefenseBUnscoreMinus"
+                android:layout_marginLeft="100dp" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/lblDefenseBUnscore"
+                android:focusable="false"
+                android:textSize="30sp"
+                android:layout_gravity="center" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="+"
+                android:id="@+id/btnDefenseBUnscorePlus" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Defense C"
+                android:id="@+id/lblDefenseC"
+                android:layout_marginRight="50dp"
+                android:textSize="30sp"
+                android:layout_marginLeft="10dp" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="-"
+                android:id="@+id/btnDefenseCScoreMinus" />
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/lblDefenseCScore"
+                android:focusable="false"
+                android:textSize="30sp"
+                android:layout_gravity="center" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="+"
+                android:id="@+id/btnDefenseCScorePlus" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="-"
+                android:id="@+id/btnDefenseCUnscoreMinus"
+                android:layout_marginLeft="100dp" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/lblDefenseCUnscore"
+                android:focusable="false"
+                android:textSize="30sp"
+                android:layout_gravity="center" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="+"
+                android:id="@+id/btnDefenseCUnscorePlus" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Defense D"
+                android:id="@+id/lblDefenseD"
+                android:layout_marginRight="50dp"
+                android:textSize="30sp"
+                android:layout_marginLeft="10dp" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="-"
+                android:id="@+id/btnDefenseDScoreMinus" />
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/lblDefenseDScore"
+                android:focusable="false"
+                android:textSize="30sp"
+                android:layout_gravity="center" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="+"
+                android:id="@+id/btnDefenseDScorePlus" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="-"
+                android:id="@+id/btnDefenseDUnscoreMinus"
+                android:layout_marginLeft="100dp" />
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/lblDefenseDUnscore"
+                android:focusable="false"
+                android:textSize="30sp"
+                android:layout_gravity="center" />
+
+            <Button
+                android:layout_width="95dp"
+                android:layout_height="60dp"
+                android:text="+"
+                android:id="@+id/btnDefenseDUnscorePlus" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Next"
+                android:id="@+id/btnNext"
+                android:layout_column="7"
+                android:layout_gravity="right"
+                android:layout_marginRight="35dp" />
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>
